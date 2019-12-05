@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@looker/sdk": "^0.2.0-beta.26",
     "body-parser": "^1.19.0",
     "concurrently": "^5.0.0",
     "express": "^4.17.1",
