@@ -3,7 +3,6 @@
 const { LookerNodeSDK } = require('@looker/sdk')
 
 module.exports.main = async (req, res, next) => {
-    console.log('inside index controller')
     const sdk = LookerNodeSDK.createClient() //valid client :D
 
     // for testing purposes
