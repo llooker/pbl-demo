@@ -1,0 +1,44 @@
+{
+   authSession: NodeSession {
+     sudoId: '',
+     settings: NodeSettingsIniFile {
+       base_url: 'https: //localhost:19999',
+       api_version: '3.1',
+       verify_ssl: true,
+       timeout: 120,
+       fileName: 'looker.ini'
+        },
+     transport: NodeTransport {
+       options: [NodeSettingsIniFile
+            ],
+       apiPath: 'https: //localhost:19999/api/3.1'
+        },
+     apiPath: '/api/3.1',
+     _authToken: AuthToken {
+       access_token: '',
+       token_type: '',
+       expires_in: 0,
+       expiresAt: 2019-12-05T22: 07: 43.582Z
+        },
+     _sudoToken: AuthToken {
+       access_token: '',
+       token_type: '',
+       expires_in: 0,
+       expiresAt: 2019-12-05T22: 07: 43.582Z
+        }
+    },
+   stream: LookerSDKStream {
+     authSession: NodeSession {
+       sudoId: '',
+       settings: [NodeSettingsIniFile
+            ],
+       transport: [NodeTransport
+            ],
+       apiPath: '/api/3.1',
+       _authToken: [AuthToken
+            ],
+       _sudoToken: [AuthToken
+            ]
+        }
+    }
+}
