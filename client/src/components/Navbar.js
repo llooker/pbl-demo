@@ -6,7 +6,7 @@ function Navbar(props) {
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <ul className="nav nav-pills mr-auto">
           <li className="nav-item">
-            yooo loooking fire
+            Navigation text
           </li>
         </ul>
       </nav>

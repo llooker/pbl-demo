@@ -1,4 +1,5 @@
 import React from 'react';
+import './Home.css';
 
 class Home extends React.Component {
     constructor() {
@@ -44,7 +45,12 @@ class Home extends React.Component {
                 <h3>looks</h3>
                 <ul>
                     {this.state.looks.length ? this.state.looks.map((key, index) => {
-                        return <li key={index}>{this.state.looks[index].title}</li>
+                        return <li key={index}><iframe id="inlineFrameExample"
+                            title="Inline Frame Example"
+                            width="500"
+                            height="500"
+                            src={this.state.looks[index].embed_url}>
+                        </iframe></li>
                     }) : <li>no looks!</li>}
                 </ul>
             </div>
