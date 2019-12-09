@@ -11,6 +11,7 @@ module.exports.main = async (req, res, next) => {
     // // console.log({ me }) //working :D
 
     const looks = await sdk.ok(sdk.all_looks())
-    // console.log({ looks }) //working :D
-    res.send(looks)
+    const session = await sdk.ok(sdk.session())
+    let resObj = { looks, session }
+    res.send(resObj)
 }
