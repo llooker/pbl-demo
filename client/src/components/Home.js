@@ -52,8 +52,8 @@ class Home extends React.Component {
                             // private -- https://localhost:9999/embed/looks/1?allow_login_screen=true
                             // requires following embed settings
                             // sso disabled, embed authentication enabled
-                            src={'https://localhost:9999/embed' + this.state.looks[index].short_url + '?allow_login_screen=true'}>
-
+                            // src={'https://localhost:9999/embed' + this.state.looks[index].short_url + '?allow_login_screen=true'}>
+                            src={this.state.looks[index].embed_url ? this.state.looks[index].embed_url : 'https://localhost:9999/embed' + this.state.looks[index].short_url + '?allow_login_screen=true'} >
                         </iframe></li>
                     }) : <li>no looks!</li>}
                 </ul>
