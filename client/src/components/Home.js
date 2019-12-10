@@ -11,11 +11,11 @@ class Home extends React.Component {
 
     componentDidMount() {
         console.log('componentDidMount')
-        this.getLooks();
+        this.getLookerData();
     }
 
-    async getLooks() {
-        console.log('getLooks')
+    async getLookerData() {
+        console.log('getLookerData')
         let lookerResposnse = await fetch('/home', {
             method: 'GET',
             headers: {
@@ -28,7 +28,10 @@ class Home extends React.Component {
         console.log('lookerResposnseData')
         console.log(lookerResposnseData)
         this.setState({
-            looks: lookerResposnseData.looks
+            // looks: lookerResposnseData.looks,
+            // dashboards: lookerResposnseData.dashboards,
+            // session: lookerResposnseData.session,
+            embed_url: lookerResposnseData.embed_url
         }, () => {
             // console.log('this.state.looks')
             // console.log(this.state.looks)
@@ -36,26 +39,22 @@ class Home extends React.Component {
     }
 
     render() {
-        console.log('this.state.looks', this.state.looks)
+        // console.log('this.state.looks', this.state.looks)
+        // console.log('this.state.dashboards', this.state.dashboards)
+        // console.log('this.state.session', this.state.session)
+        console.log('this.state.embed_url', this.state.embed_url)
         return (
             <div className="home container p-5">
                 <h1>the start of a cool app</h1>
                 <h3>looks</h3>
-                <ul>
-                    {this.state.looks.length ? this.state.looks.map((key, index) => {
-                        return <li key={index}><iframe id='embedLook'
-                            title="Inline Frame Example"
-                            width="500"
-                            height="500"
-                            // public url -- https://localhost:9999/embed/public/wnJ9f4T3D2DJc6rtWttmZhNxCNj33kqz
-                            // src={this.state.looks[index].embed_url} >
-                            // private -- https://localhost:9999/embed/looks/1?allow_login_screen=true
-                            // requires following embed settings
-                            // sso disabled, embed authentication enabled
-                            // src={'https://localhost:9999/embed' + this.state.looks[index].short_url + '?allow_login_screen=true'}>
-                            src={this.state.looks[index].embed_url ? this.state.looks[index].embed_url : 'https://localhost:9999/embed' + this.state.looks[index].short_url + '?allow_login_screen=true'} >
-                        </iframe></li>
-                    }) : <li>no looks!</li>}
+                <ul><iframe id='embedLook'
+                    title="Inline Frame Example"
+                    width="500"
+                    height="500"
+                    // src={this.state.dashboards[index].embed_url ? this.state.dashboards[index].embed_url : 'https://localhost:9999/embed' + this.state.dashboards[index].short_url + '?allow_login_screen=true'} >
+                    // src={'https://localhost:9999/embed/dashboards/' + this.state.dashboards[index].id} >
+                    src={this.state.embed_url}>
+                </iframe>
                 </ul>
             </div >
         )
@@ -63,3 +62,4 @@ class Home extends React.Component {
 }
 
 export default Home;
+
