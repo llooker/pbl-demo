@@ -1,6 +1,18 @@
-const app = require('express')();
+var app = require('express')();
 const bodyParser = require('body-parser');
+var session = require('express-session');
 
+var sess = {
+    secret: 'keyboard cat',
+    cookie: {},
+}
+
+if (app.get('env') === 'production') {
+    app.set('trust proxy', 1) // trust first proxy
+    sess.cookie.secure = true // serve secure cookies
+}
+
+app.use(session(sess))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 

@@ -7,7 +7,13 @@ var crypto = require('crypto');
 var querystring = require('querystring')
 
 module.exports.main = async (req, res, next) => {
-    const sdk = LookerNodeSDK.createClient() //valid client :D
+    console.log('indexController main');
+
+    req.session.first_name = 'Elliot'
+    req.session.last_name = 'Glasenk'
+    console.log('req.session', req.session)
+
+    // const sdk = LookerNodeSDK.createClient() //valid client :D
 
     // for testing purposes
     // const me = await sdk.ok(sdk.me(
@@ -19,8 +25,9 @@ module.exports.main = async (req, res, next) => {
     // const dashboards = await sdk.ok(sdk.all_dashboards())
     // const session = await sdk.ok(sdk.session())
 
-    var embed_url = await sample();
+    var embed_url = await sample(req.session);
     // let resObj = { looks, dashboards, session, embed_url }
+    console.log('embed_url', embed_url)
     let resObj = { embed_url }
 
     res.send(resObj)
@@ -108,18 +115,18 @@ function created_signed_embed_url(options) {
     return host + embed_path + '?' + query_string;
 }
 
-function sample() {
+function sample(session) {
     var fifteen_minutes = 15 * 60;
 
     var url_data = {
         host: config.looker.host,
         secret: config.looker.embed_secret,
-        external_user_id: 'test-id-123',
-        first_name: 'Testy',
-        last_name: 'McTestFace',
-        group_ids: [4],
-        external_group_id: 'awesome_engineers',
-        permissions: ['access_data', 'see_looks'],
+        external_user_id: '000',
+        first_name: session.first_name,
+        last_name: session.last_name,
+        group_ids: [1], //not required?
+        // external_group_id: 'awesome_engineers', //not required
+        permissions: ['access_data', 'see_looks', 'see_user_dashboards'],
         models: ['citibike'],
         access_filters: {
             fake_model: {
@@ -128,7 +135,7 @@ function sample() {
         },
         //user_attributes: { "an_attribute_name": "my_attribute_value", "my_number_attribute": "42" },
         session_length: fifteen_minutes,
-        embed_url: "/embed/looks/2",
+        embed_url: "/embed/dashboards/2",
         force_logout_login: true
     };
 

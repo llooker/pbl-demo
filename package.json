@@ -18,6 +18,7 @@
     "concurrently": "^5.0.0",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
     "nodemon": "^2.0.1",
     "querystring": "^0.2.0"
   }
