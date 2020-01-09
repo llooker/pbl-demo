@@ -4,7 +4,9 @@ const { LookerNodeSDK } = require('@looker/sdk')
 const config = require('../config');
 
 var crypto = require('crypto');
-var querystring = require('querystring')
+var querystring = require('querystring');
+
+
 
 module.exports.main = async (req, res, next) => {
     console.log('indexController main');
@@ -143,4 +145,8 @@ function sample(session) {
     return "https://" + url;
 }
 
+
+module.exports.auth = async (req, res, next) => {
+    console.log('indexController auth');
+}
 
