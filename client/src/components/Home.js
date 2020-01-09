@@ -1,6 +1,5 @@
 import React from 'react';
 import './Home.css';
-import { GoogleLogin } from 'react-google-login';
 
 class Home extends React.Component {
     constructor() {
@@ -12,21 +11,13 @@ class Home extends React.Component {
 
     componentDidMount() {
         console.log('componentDidMount')
-        console.log('GoogleLogin')
-        console.log(GoogleLogin)
-        // this.getLookerData();
-        // this.performAuth();
-
-
-        // const responseGoogle = (response) => {
-        //     console.log(response);
-        // }
+        this.getLookerData();
     }
 
 
     async getLookerData() {
         console.log('getLookerData')
-        let lookerResposnse = await fetch('/home', {
+        let lookerResposnse = await fetch('/looker', {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -48,34 +39,6 @@ class Home extends React.Component {
         });
     }
 
-
-    async performAuth() {
-        console.log('performAuth')
-        let authResponse = await fetch('/login', {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        console.log('authResponse')
-        console.log(authResponse)
-    }
-
-    // onSignIn = (googleUser) => {
-    //     var profile = googleUser.getBasicProfile();
-    //     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    //     console.log('Name: ' + profile.getName());
-    //     console.log('Image URL: ' + profile.getImageUrl());
-    //     console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-    // }
-
-
-    responseGoogle = (response) => {
-        console.log(response);
-    }
-
-
     render() {
         // console.log('this.state.looks', this.state.looks)
         // console.log('this.state.dashboards', this.state.dashboards)
@@ -83,7 +46,6 @@ class Home extends React.Component {
         console.log('this.state.embed_url', this.state.embed_url)
         return (
             <div className="home container p-5">
-                {/* <h1>the start of a cool app</h1>
                 <h3>looks</h3>
                 <ul><iframe id='embedLook'
                     title="Inline Frame Example"
@@ -93,15 +55,7 @@ class Home extends React.Component {
                     // src={'https://localhost:9999/embed/dashboards/' + this.state.dashboards[index].id} >
                     src={this.state.embed_url}>
                 </iframe>
-                </ul> */}
-                {/* <div class="g-signin2" data-onsuccess={() => this.onSignIn()} ></div> */}
-                <GoogleLogin
-                    clientId="1026815692414-cdeeupbmb7bbjcmfovmr6bqktsi86c2u.apps.googleusercontent.com"
-                    buttonText="Login"
-                    onSuccess={() => this.responseGoogle()}
-                    onFailure={() => this.responseGoogle()}
-                    cookiePolicy={'single_host_origin'}
-                />
+                </ul>
             </div >
         )
     }

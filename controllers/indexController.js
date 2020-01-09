@@ -124,8 +124,8 @@ function sample(session) {
         host: config.looker.host,
         secret: config.looker.embed_secret,
         external_user_id: '000',
-        first_name: session.first_name,
-        last_name: session.last_name,
+        first_name: 'Elliot', //session.first_name,
+        last_name: 'Glasenk', //session.last_name,
         group_ids: [1], //not required?
         // external_group_id: 'awesome_engineers', //not required
         permissions: ['access_data', 'see_looks', 'see_user_dashboards'],
@@ -145,8 +145,4 @@ function sample(session) {
     return "https://" + url;
 }
 
-
-module.exports.auth = async (req, res, next) => {
-    console.log('indexController auth');
-}
 

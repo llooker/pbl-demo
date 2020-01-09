@@ -5,7 +5,6 @@ const router = express.Router();
 
 const indexCtrl = require('../controllers/indexController')
 
-router.get('/home', indexCtrl.main)
-router.get('/login', indexCtrl.auth)
+router.get('/looker', indexCtrl.main)
 
 module.exports = router
