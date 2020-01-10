@@ -43,7 +43,7 @@ class Login extends React.Component {
           <GoogleLogout
             clientId="1026815692414-cdeeupbmb7bbjcmfovmr6bqktsi86c2u.apps.googleusercontent.com"
             buttonText="Logout"
-            onLogoutSuccess={() => { this.props.applySession({}) }}
+            onLogoutSuccess={() => { this.props.applySession({}) }} //send blank object
           >
           </GoogleLogout>
           <Redirect to={from} />
@@ -90,6 +90,7 @@ class App extends React.Component {
   }
 
   checkForSession = async () => {
+    console.log('checkForSession')
     let sessionResponse = await fetch('/session', {
       method: 'GET',
       headers: {
@@ -98,32 +99,43 @@ class App extends React.Component {
       }
     })
     let sessionResponseData = await sessionResponse.json();
-    if (sessionResponseData.session.userProfile) {
+    console.log('sessionResponseData', sessionResponseData)
+    const { userProfile } = sessionResponseData.session
+    console.log('userProfile', userProfile)
+    //make sure defined and contains properties
+    if (userProfile && Object.keys(userProfile).length) {
       auth.authenticated(() => {
         this.setState({
-          userProfile: sessionResponseData.session.userProfile
+          userProfile
+        }, () => {
+          console.log('checkForSession callback')
+          console.log('this.state.userProfile', this.state.userProfile)
+
         })
       })
-    }
+    } else { console.log('else') }
   }
 
-  applySession = (userProfileFromSignIn) => {
+  applySession = (userProfile) => {
+    console.log('applySession')
+    console.log('userProfile', userProfile)
     fetch('/writesession', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(userProfileFromSignIn)
+      body: JSON.stringify(userProfile)
     }).then(response => {
       if (response.status === 200) {
-
-        if (Object.keys(userProfileFromSignIn).length == 0) {
+        if (Object.keys(userProfile).length == 0) {
           auth.signout()
         }
-
         this.setState({
-          userProfile: userProfileFromSignIn
+          userProfile
+        }, () => {
+          console.log('applySession callback')
+          console.log('this.state.userProfile', this.state.userProfile)
         });
       }
     });

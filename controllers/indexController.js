@@ -10,9 +10,6 @@ var querystring = require('querystring');
 
 module.exports.main = async (req, res, next) => {
     console.log('indexController main');
-
-    req.session.first_name = 'Elliot'
-    req.session.last_name = 'Glasenk'
     console.log('req.session', req.session)
 
     // const sdk = LookerNodeSDK.createClient() //valid client :D
@@ -28,7 +25,6 @@ module.exports.main = async (req, res, next) => {
     // const session = await sdk.ok(sdk.session())
 
     var embed_url = await sample(req.session);
-    // let resObj = { looks, dashboards, session, embed_url }
     console.log('embed_url', embed_url)
     let resObj = { embed_url }
 
@@ -123,9 +119,9 @@ function sample(session) {
     var url_data = {
         host: config.looker.host,
         secret: config.looker.embed_secret,
-        external_user_id: '000',
-        first_name: 'Elliot', //session.first_name,
-        last_name: 'Glasenk', //session.last_name,
+        external_user_id: session.userProfile.googleId,
+        first_name: session.userProfile.givenName,
+        last_name: session.userProfile.familyName,
         group_ids: [1], //not required?
         // external_group_id: 'awesome_engineers', //not required
         permissions: ['access_data', 'see_looks', 'see_user_dashboards'],
@@ -147,19 +143,13 @@ function sample(session) {
 
 
 module.exports.session = async (req, res, next) => {
-    console.log('indexController session');
-    console.log('req.session', req.session);
-    let session = req.session
-    res.status(200).send({ session })
+    let session = req.session //get session
+    res.status(200).send({ session }) //send whole session back
 }
 
 
 module.exports.writeSession = async (req, res, next) => {
-    console.log('indexController writeSession');
-    console.log('req.body', req.body)
-    console.log('000 req.session', req.session)
-    req.session.userProfile = req.body
-    console.log('111 req.session', req.session)
     let session = req.session
-    res.status(200).send('go fuck yourself');
+    session.userProfile = req.body //overwrite userprofile
+    res.status(200).send({ session });
 }

@@ -10,8 +10,6 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        console.log('Home componentDidMount')
-        console.log('this.props', this.props)
         this.getLookerData();
     }
 
@@ -30,9 +28,6 @@ class Home extends React.Component {
         console.log('lookerResposnseData')
         console.log(lookerResposnseData)
         this.setState({
-            // looks: lookerResposnseData.looks,
-            // dashboards: lookerResposnseData.dashboards,
-            // session: lookerResposnseData.session,
             embed_url: lookerResposnseData.embed_url
         }, () => {
             // console.log('this.state.looks')
@@ -41,23 +36,17 @@ class Home extends React.Component {
     }
 
     render() {
-        // console.log('this.state.looks', this.state.looks)
-        // console.log('this.state.dashboards', this.state.dashboards)
-        // console.log('this.state.session', this.state.session)
         console.log('this.state.embed_url', this.state.embed_url)
         return (
             <div className="home container p-5">
-                <h1>hoommmme</h1>
-                {/* <h3>looks</h3>
+                <h3>looks</h3>
                 <ul><iframe id='embedLook'
                     title="Inline Frame Example"
                     width="500"
                     height="500"
-                    // src={this.state.dashboards[index].embed_url ? this.state.dashboards[index].embed_url : 'https://localhost:9999/embed' + this.state.dashboards[index].short_url + '?allow_login_screen=true'} >
-                    // src={'https://localhost:9999/embed/dashboards/' + this.state.dashboards[index].id} >
                     src={this.state.embed_url}>
                 </iframe>
-                </ul> */}
+                </ul>
             </div >
         )
     }
