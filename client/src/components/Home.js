@@ -2,15 +2,16 @@ import React from 'react';
 import './Home.css';
 
 class Home extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             looks: []
         }
     }
 
     componentDidMount() {
-        console.log('componentDidMount')
+        console.log('Home componentDidMount')
+        console.log('this.props', this.props)
         this.getLookerData();
     }
 

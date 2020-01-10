@@ -146,3 +146,20 @@ function sample(session) {
 }
 
 
+module.exports.session = async (req, res, next) => {
+    console.log('indexController session');
+    console.log('req.session', req.session);
+    let session = req.session
+    res.status(200).send({ session })
+}
+
+
+module.exports.writeSession = async (req, res, next) => {
+    console.log('indexController writeSession');
+    console.log('req.body', req.body)
+    console.log('000 req.session', req.session)
+    req.session.userProfile = req.body
+    console.log('111 req.session', req.session)
+    let session = req.session
+    res.status(200).send('go fuck yourself');
+}

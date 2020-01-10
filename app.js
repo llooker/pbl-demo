@@ -1,10 +1,10 @@
 var app = require('express')();
 const bodyParser = require('body-parser');
 var session = require('express-session');
-
 var sess = {
     secret: 'keyboard cat',
     cookie: {},
+    expires: new Date(Date.now() + 3600000) //hour
 }
 
 if (app.get('env') === 'production') {
