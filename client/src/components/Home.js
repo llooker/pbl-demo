@@ -47,7 +47,8 @@ class Home extends React.Component {
         console.log('this.state.embed_url', this.state.embed_url)
         return (
             <div className="home container p-5">
-                <h3>looks</h3>
+                <h1>hoommmme</h1>
+                {/* <h3>looks</h3>
                 <ul><iframe id='embedLook'
                     title="Inline Frame Example"
                     width="500"
@@ -56,7 +57,7 @@ class Home extends React.Component {
                     // src={'https://localhost:9999/embed/dashboards/' + this.state.dashboards[index].id} >
                     src={this.state.embed_url}>
                 </iframe>
-                </ul>
+                </ul> */}
             </div >
         )
     }

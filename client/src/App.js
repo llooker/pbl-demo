@@ -6,6 +6,7 @@ import Home from './components/Home'
 
 
 //unncessary?
+//to discuss with wes -- how can I eliminate this
 const auth = {
   isAuthenticated: false,
   authenticated(cb) {
@@ -22,42 +23,36 @@ const auth = {
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      redirectToRefer: false,
-    };
-  }
-
-  componentDidMount() {
-    console.log('Login componentDidMount')
   }
 
   responseGoogle = (response) => {
     if (response.error) {
     } else {
-      auth.authenticated(() => {
-        this.setState(() => ({
-          redirectToRefer: true,
-        }))
-      })
-
+      auth.authenticated()
       this.props.applySession(response.profileObj)
     }
   }
 
   render() {
-    console.log('App render')
-    console.log('this.props', this.props)
-    const { redirectToRefer } = this.state
     const { from } = this.props.location.state || { from: { pathname: '/home' } }
-    console.log('redirectToRefer', redirectToRefer)
-    console.log('from', from)
-    if (redirectToRefer === true) {
+    const { userProfile } = this.props
+    // if (Object.keys(userProfile).length) {
+    if (auth.isAuthenticated === true) {
       return (
-        <Redirect to={from} />
+        <>
+          <GoogleLogout
+            clientId="1026815692414-cdeeupbmb7bbjcmfovmr6bqktsi86c2u.apps.googleusercontent.com"
+            buttonText="Logout"
+            onLogoutSuccess={() => { this.props.applySession({}) }}
+          >
+          </GoogleLogout>
+          <Redirect to={from} />
+        </>
       )
     } else {
       return (
-        <div>
+        <div className="fade">
+          <h1>You need to login</h1>
           <GoogleLogin
             clientId="1026815692414-cdeeupbmb7bbjcmfovmr6bqktsi86c2u.apps.googleusercontent.com"
             buttonText="Login"
@@ -81,24 +76,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   )} />
 )
 
-const AuthStatus = withRouter(({ history }) => (
-  auth.isAuthenticated === true
-    ?
-    <p>
-      Welcome!
-      <GoogleLogout
-        clientId="1026815692414-cdeeupbmb7bbjcmfovmr6bqktsi86c2u.apps.googleusercontent.com"
-        buttonText="Logout"
-        onLogoutSuccess={() => { auth.signout(() => history.push('/')) }}
-      >
-      </GoogleLogout>
-    </p >
-    :
-    <p>
-      You are not logged in
-    </p>
-))
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -113,7 +90,6 @@ class App extends React.Component {
   }
 
   checkForSession = async () => {
-    console.log('checkForSession')
     let sessionResponse = await fetch('/session', {
       method: 'GET',
       headers: {
@@ -122,18 +98,16 @@ class App extends React.Component {
       }
     })
     let sessionResponseData = await sessionResponse.json();
-    // console.log('sessionResponseData', sessionResponseData)
     if (sessionResponseData.session.userProfile) {
-      console.log('inside ifff')
-      this.setState({
-        userProfile: sessionResponseData.session.userProfile
+      auth.authenticated(() => {
+        this.setState({
+          userProfile: sessionResponseData.session.userProfile
+        })
       })
-    } else console.log("elllse")
+    }
   }
 
   applySession = (userProfileFromSignIn) => {
-    console.log('applySession')
-    console.log('userProfileFromSignIn', userProfileFromSignIn)
     fetch('/writesession', {
       method: 'POST',
       headers: {
@@ -142,27 +116,24 @@ class App extends React.Component {
       },
       body: JSON.stringify(userProfileFromSignIn)
     }).then(response => {
-      console.log('response', response)
       if (response.status === 200) {
-        console.log('inside ifff')
+
+        if (Object.keys(userProfileFromSignIn).length == 0) {
+          auth.signout()
+        }
+
         this.setState({
           userProfile: userProfileFromSignIn
-        }, () => {
-          console.log('applySession callback')
-          console.log('111 this.state.userProfile', this.state.userProfile)
         });
       }
     });
   }
 
   render() {
-    console.log('App render')
     const { userProfile } = this.state
-    console.log('userProfile', userProfile)
     return (
       <Router>
         <div>
-          <AuthStatus />
           <Route extact path='/' render={(props) => <Login {...props} applySession={this.applySession} userProfile={userProfile} />} />
           <PrivateRoute path='/home' component={Home} />
         </div>
