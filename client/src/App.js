@@ -29,7 +29,6 @@ class Login extends React.Component {
 
   componentDidMount() {
     console.log('Login componentDidMount')
-    console.log('this.props', this.props)
   }
 
   responseGoogle = (response) => {
@@ -46,6 +45,8 @@ class Login extends React.Component {
   }
 
   render() {
+    console.log('App render')
+    console.log('this.props', this.props)
     const { redirectToRefer } = this.state
     const { from } = this.props.location.state || { from: { pathname: '/home' } }
     console.log('redirectToRefer', redirectToRefer)
@@ -121,7 +122,7 @@ class App extends React.Component {
       }
     })
     let sessionResponseData = await sessionResponse.json();
-    console.log('sessionResponseData', sessionResponseData)
+    // console.log('sessionResponseData', sessionResponseData)
     if (sessionResponseData.session.userProfile) {
       console.log('inside ifff')
       this.setState({
@@ -162,10 +163,8 @@ class App extends React.Component {
       <Router>
         <div>
           <AuthStatus />
-          {/* call login */}
-          <Route extact path='/' render={(props) => <Login {...props} applySession={this.applySession} />} />
+          <Route extact path='/' render={(props) => <Login {...props} applySession={this.applySession} userProfile={userProfile} />} />
           <PrivateRoute path='/home' component={Home} />
-          {/* <PrivateRoute path='/home' render={(props) => <Home {...props} userProfile={userProfile} />} /> */}
         </div>
       </Router>
     )
