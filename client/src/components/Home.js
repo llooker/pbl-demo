@@ -1,5 +1,6 @@
 import React from 'react';
 import './Home.css';
+import Sidebar from './Sidebar'
 
 class Home extends React.Component {
     constructor(props) {
@@ -10,7 +11,7 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        this.getLookerData();
+        // this.getLookerData();
     }
 
 
@@ -36,17 +37,23 @@ class Home extends React.Component {
     }
 
     render() {
-        console.log('this.state.embed_url', this.state.embed_url)
+        const { pathname } = this.props.location
         return (
             <div className="home container p-5">
-                <h3>looks</h3>
-                <ul><iframe id='embedLook'
-                    title="Inline Frame Example"
-                    width="500"
-                    height="500"
-                    src={this.state.embed_url}>
-                </iframe>
-                </ul>
+                <div className="row pt-3">
+                    <Sidebar pathname={pathname} />
+                    <div className="col-sm-9">
+                        <h1>Home</h1>
+                        {/* <h3>looks</h3>
+                        <ul><iframe id='embedLook'
+                            title="Inline Frame Example"
+                            width="500"
+                            height="500"
+                            src={this.state.embed_url}>
+                        </iframe>
+                        </ul> */}
+                    </div>
+                </div >
             </div >
         )
     }

@@ -3,9 +3,13 @@ import './App.css';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from 'react-router-dom'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './config.json';
-import Navbar from './components/Navbar' //
-import Footer from './components/Footer' //
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+// import Sidebar from './components/Sidebar'
 import Home from './components/Home'
+import Lookup from './components/Lookup'
+import Report from './components/Report'
+import Explore from './components/Explore'
 import Customize from './components/Customize'
 
 console.log('Config', Config)
@@ -41,7 +45,8 @@ class Login extends React.Component {
 
   render() {
     console.log('Login render');
-    const { from } = this.props.location.state || { from: { pathname: '/home' } }
+    const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
+    const { pathname } = this.props.location
     const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
 
     console.log('from', from);
@@ -49,12 +54,17 @@ class Login extends React.Component {
     // if (Object.keys(userProfile).length) {
     if (auth.isAuthenticated === true) {
       return (
-        <div className="App fade">
+        <div className="App fade ">
           <Navbar
             clientId={googleClientId}
             buttonText="Logout"
             onLogoutSuccess={this.props.applySession} />
+
+          {/* <div className="row pt-3"> */}
+          {/* <Sidebar pathname={pathname} /> */}
           <Redirect to={from} />
+          {/* </div> */}
+
           <Footer location={this.props.location} />
         </div>
       )
@@ -155,6 +165,9 @@ class App extends React.Component {
         <div>
           <Route extact path='/' render={(props) => <Login {...props} applySession={this.applySession} userProfile={userProfile} />} />
           <PrivateRoute path='/home' component={Home} />
+          <PrivateRoute path='/lookup' component={Lookup} />
+          <PrivateRoute path='/report' component={Report} />
+          <PrivateRoute path='/explore' component={Explore} />
           <PrivateRoute path='/customize' component={Customize} />
         </div>
       </Router>

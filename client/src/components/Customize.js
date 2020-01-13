@@ -1,4 +1,5 @@
 import React from 'react';
+import Sidebar from './Sidebar'
 
 class Customize extends React.Component {
     constructor(props) {
@@ -7,7 +8,12 @@ class Customize extends React.Component {
     render() {
         return (
             <div className="home container p-5">
-                <h1>Customize</h1>
+                <div class="row pt-3">
+                    <Sidebar />
+                    <div class="col-sm-9">
+                        <h1>Customize</h1>
+                    </div>
+                </div >
             </div >
         )
     }
