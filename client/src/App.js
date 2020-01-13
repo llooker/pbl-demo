@@ -2,11 +2,17 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from 'react-router-dom'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import Config from './config.json';
+import Navbar from './components/Navbar' //
+import Footer from './components/Footer' //
 import Home from './components/Home'
+import Customize from './components/Customize'
+
+console.log('Config', Config)
 
 
-//unncessary?
-//to discuss with wes -- how can I eliminate this
+//to discuss with wes -- how can I eliminate this?
+//is this something I wanna replace with passport?
 const auth = {
   isAuthenticated: false,
   authenticated(cb) {
@@ -34,27 +40,30 @@ class Login extends React.Component {
   }
 
   render() {
+    console.log('Login render');
     const { from } = this.props.location.state || { from: { pathname: '/home' } }
-    const { userProfile } = this.props
+    const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
+
+    console.log('from', from);
+    // const { userProfile } = this.props
     // if (Object.keys(userProfile).length) {
     if (auth.isAuthenticated === true) {
       return (
-        <>
-          <GoogleLogout
-            clientId="1026815692414-cdeeupbmb7bbjcmfovmr6bqktsi86c2u.apps.googleusercontent.com"
+        <div className="App fade">
+          <Navbar
+            clientId={googleClientId}
             buttonText="Logout"
-            onLogoutSuccess={() => { this.props.applySession({}) }} //send blank object
-          >
-          </GoogleLogout>
+            onLogoutSuccess={this.props.applySession} />
           <Redirect to={from} />
-        </>
+          <Footer location={this.props.location} />
+        </div>
       )
     } else {
       return (
-        <div className="fade">
+        <div className="App fade">
           <h1>You need to login</h1>
           <GoogleLogin
-            clientId="1026815692414-cdeeupbmb7bbjcmfovmr6bqktsi86c2u.apps.googleusercontent.com"
+            clientId={googleClientId}
             buttonText="Login"
             onSuccess={this.responseGoogle}
             onFailure={this.responseGoogle}
@@ -69,9 +78,8 @@ class Login extends React.Component {
 const PrivateRoute = ({ component: Component, ...rest }) => (
   < Route {...rest} render={(props) => (
     auth.isAuthenticated === true ? <Component {...props} /> : <Redirect to={{
-      pathname: '/', state: {
-        from: props.location
-      }
+      pathname: '/',
+      state: { from: props.location }
     }} />
   )} />
 )
@@ -85,12 +93,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log('App componentDidMount')
+    // console.log('App componentDidMount')
     this.checkForSession()
   }
 
   checkForSession = async () => {
-    console.log('checkForSession')
+    // console.log('checkForSession')
     let sessionResponse = await fetch('/session', {
       method: 'GET',
       headers: {
@@ -99,26 +107,24 @@ class App extends React.Component {
       }
     })
     let sessionResponseData = await sessionResponse.json();
-    console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
-    console.log('userProfile', userProfile)
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
       auth.authenticated(() => {
         this.setState({
           userProfile
         }, () => {
-          console.log('checkForSession callback')
-          console.log('this.state.userProfile', this.state.userProfile)
+          // console.log('checkForSession callback')
+          // console.log('this.state.userProfile', this.state.userProfile)
 
         })
       })
-    } else { console.log('else') }
+    } //else { console.log('else') }
   }
 
   applySession = (userProfile) => {
-    console.log('applySession')
-    console.log('userProfile', userProfile)
+    // console.log('applySession')
+    // console.log('userProfile', userProfile)
     fetch('/writesession', {
       method: 'POST',
       headers: {
@@ -134,20 +140,22 @@ class App extends React.Component {
         this.setState({
           userProfile
         }, () => {
-          console.log('applySession callback')
-          console.log('this.state.userProfile', this.state.userProfile)
+          // console.log('applySession callback')
+          // console.log('this.state.userProfile', this.state.userProfile)
         });
       }
     });
   }
 
   render() {
+    // console.log('App render');
     const { userProfile } = this.state
     return (
       <Router>
         <div>
           <Route extact path='/' render={(props) => <Login {...props} applySession={this.applySession} userProfile={userProfile} />} />
           <PrivateRoute path='/home' component={Home} />
+          <PrivateRoute path='/customize' component={Customize} />
         </div>
       </Router>
     )
