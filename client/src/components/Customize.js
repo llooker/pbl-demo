@@ -25,11 +25,11 @@ class Customize extends React.Component {
                 'Content-Type': 'application/json'
             }
         })
-        console.log('customizationResponse', customizationResponse)
+        // console.log('customizationResponse', customizationResponse)
         let customizationResponseData = await customizationResponse.json();
         console.log('customizationResponseData', customizationResponseData)
         this.setState({
-            customizations: customizationResponseData[0]
+            customizations: customizationResponseData[0] || customizationResponseData
         }, () => {
             console.log('callback')
             console.log('this.state.customizations', this.state.customizations)
@@ -58,7 +58,7 @@ class Customize extends React.Component {
 
     render() {
         const { customizations } = this.state
-        console.log('customizations', customizations)
+        // console.log('customizations', customizations)
         return (
             <div className="home container p-5" >
                 <div className="row pt-3">

@@ -4,31 +4,41 @@ const Customization = require('../models/Customization');
 module.exports.main = (req, res, next) => {
     console.log('customizeController main')
     const { email } = req.session.userProfile
+    // let defaultCustomizationObj = {
+    //     username: email,
+    //     customizations: [{
+    //         companyname: 'WYSIWYG'
+    //     }]
+    // }
+    let defaultCustomizationObj = {
+        companyname: 'WYSIWYG'
+    }
     Customization.find({ username: email }).exec((err, customization) => {
         if (err) {
             console.log('err: ' + err);
         } else {
-            console.log('customization', customization)
             if (customization === undefined || customization.length == 0) {
                 // array empty or does not exist
-                console.log('inside ifff')
+                // create customization for user if first time
                 Customization.create(
                     {
-                        username: email
+                        username: email,
+                        customizations: [defaultCustomizationObj]
                     },
-                    (err, customization) => {
+                    (err, defaultCustomization) => {
+                        console.log('defaultCustomization', defaultCustomization)
                         if (err) {
                             console.log('err: ' + err);
+                            res.send('error');
                         } else {
-                            res.status(200).send(customization);
+                            console.log('default customization initialized');
+                            res.status(200).send(defaultCustomization);
                         }
                     }
                 );
             } else {
-                console.log('else')
                 res.status(200).send(customization);
             }
-
         }
     })
 }
