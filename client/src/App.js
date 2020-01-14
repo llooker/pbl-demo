@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from 'react-router-dom'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
-import Config from './config.json';
+import Config from './clientConfig.json';
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 // import Sidebar from './components/Sidebar'
@@ -12,7 +12,6 @@ import Report from './components/Report'
 import Explore from './components/Explore'
 import Customize from './components/Customize'
 
-console.log('Config', Config)
 
 
 //to discuss with wes -- how can I eliminate this?
@@ -44,12 +43,12 @@ class Login extends React.Component {
   }
 
   render() {
-    console.log('Login render');
+    // console.log('Login render');
     const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
     const { pathname } = this.props.location
     const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
 
-    console.log('from', from);
+    // console.log('from', from);
     // const { userProfile } = this.props
     // if (Object.keys(userProfile).length) {
     if (auth.isAuthenticated === true) {

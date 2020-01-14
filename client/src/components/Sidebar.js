@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 
 function Sidebar(props) {
-    console.log('Sidebar')
-    console.log('props', props)
+    // console.log('Sidebar')
+    // console.log('props', props)
     return (
         <div className="col-sm-3">
             <div className="list-group">

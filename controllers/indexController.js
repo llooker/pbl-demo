@@ -153,9 +153,3 @@ module.exports.writeSession = async (req, res, next) => {
     session.userProfile = req.body //overwrite userprofile
     res.status(200).send({ session });
 }
-
-
-module.exports.customize = (req, res, next) => {
-    console.log('customize')
-    res.status(200).send('we\'re good');
-}

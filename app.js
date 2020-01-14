@@ -1,5 +1,9 @@
-var app = require('express')();
-var bodyParser = require('body-parser');
+const app = require('express')();
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const config = require('./config.js')
+
+
 var session = require('express-session');
 var sess = {
     secret: 'keyboard cat',
@@ -19,6 +23,12 @@ app.use(session(sess))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 
+// let mongoDB = `mongodb+srv://${config.mongo.username}:${config.mongo.password}@cluster0-97hzq.mongodb.net/wysiwyg`
+let mongoDB = 'mongodb+srv://admin:XvfKTNxEAQ5kb3U0@cluster0-97hzq.mongodb.net/wysiwyg'
+mongoose.connect(mongoDB, { useNewUrlParser: true });
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 const port = 5000
 let routes = require('./routes/index')
