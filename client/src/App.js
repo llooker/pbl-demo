@@ -143,7 +143,7 @@ class App extends React.Component {
       body: JSON.stringify(userProfile)
     }).then(response => {
       if (response.status === 200) {
-        if (Object.keys(userProfile).length == 0) {
+        if (Object.keys(userProfile).length === 0) {
           auth.signout()
         }
         this.setState({

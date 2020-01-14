@@ -27,9 +27,9 @@ class Customize extends React.Component {
         })
         // console.log('customizationResponse', customizationResponse)
         let customizationResponseData = await customizationResponse.json();
-        console.log('customizationResponseData', customizationResponseData)
+        // console.log('customizationResponseData', customizationResponseData)
         this.setState({
-            customizations: customizationResponseData[0] || customizationResponseData
+            customizations: customizationResponseData[0].customizations || customizationResponseData.customizations
         }, () => {
             console.log('callback')
             console.log('this.state.customizations', this.state.customizations)
@@ -58,16 +58,19 @@ class Customize extends React.Component {
 
     render() {
         const { customizations } = this.state
-        // console.log('customizations', customizations)
+        console.log('customizations', customizations)
         return (
             <div className="home container p-5" >
                 <div className="row pt-3">
                     <Sidebar />
                     <div className="col-sm-9">
                         <h1>Customizations</h1>
-                        {/* {customizations.map((customization, index) => {
-                            <li data-key={index}>customization index: {index}</li>
-                        })} */}
+                        <ul>
+
+                            {customizations.map((customization, index) => {
+                                return <li key={index}>{customization.companyname}</li>
+                            })}
+                        </ul>
                         <form onSubmit={this.handleSubmit}>
                             <div className="form-group">
                                 <label htmlFor="companyname">Company name</label>
