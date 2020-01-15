@@ -7,7 +7,7 @@ function Navbar(props) {
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <ul className="nav nav-pills w-100">
           <li className="nav-item">
-            Navigation text
+            {props.companyname}
           </li>
           <li className="nav-item dropdown ml-auto">
             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

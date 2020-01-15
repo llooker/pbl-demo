@@ -6,6 +6,8 @@ const config = require('../config');
 var crypto = require('crypto');
 var querystring = require('querystring');
 
+const Customization = require('../models/Customization');
+
 
 
 module.exports.main = async (req, res, next) => {
@@ -151,5 +153,103 @@ module.exports.session = async (req, res, next) => {
 module.exports.writeSession = async (req, res, next) => {
     let session = req.session
     session.userProfile = req.body //overwrite userprofile
-    res.status(200).send({ session });
+
+    const { email } = req.session.userProfile
+    console.log('email', email)
+    let defaultCustomizationObj = {
+        companyname: 'WYSIWYG'
+    }
+    Customization.find({ username: email }).exec((err, customization) => {
+        console.log('customization', customization)
+        if (err) {
+            console.log('err: ' + err);
+        } else {
+            if (customization === undefined || customization.length === 0) {
+                // array empty or does not exist
+                // create customization for user if first time
+                Customization.create(
+                    {
+                        username: email,
+                        customizations: [defaultCustomizationObj]
+                    },
+                    (err, initializedCustomization) => {
+                        console.log('initializedCustomization', initializedCustomization)
+                        if (err) {
+                            console.log('err: ' + err);
+                            res.send('error');
+                        } else {
+                            console.log('customization initialized');
+                            // res.session.activeCustomization = initializedCustomization.customizations[0]
+                            // res.status(200).send([initializedCustomization]); //need to send back array
+                            session.customizations = [initializedCustomization]
+                        }
+                    }
+                );
+            } else {
+                // res.session.activeCustomization = customization.customizations[0]
+                // res.status(200).send(customization);
+                session.customizations = customization
+            }
+            console.log('req.session', req.session)
+            res.status(200).send({ session }) //send whole session back
+        }
+    })
+
+
+    // res.status(200).send({ session });
+}
+
+module.exports.userData = async (req, res, next) => {
+    console.log('userData')
+    // let session = req.session
+    // session.userProfile = req.body //overwrite userprofile
+    // res.status(200).send({ session });
+    console.log('indexController userData')
+    let session = req.session //get session
+    if (req.session.userProfile) {
+        console.log('inside ifff')
+        const { email } = req.session.userProfile
+        console.log('email', email)
+        let defaultCustomizationObj = {
+            companyname: 'WYSIWYG'
+        }
+        Customization.find({ username: email }).exec((err, customization) => {
+            console.log('customization', customization)
+            if (err) {
+                console.log('err: ' + err);
+            } else {
+                if (customization === undefined || customization.length === 0) {
+                    // array empty or does not exist
+                    // create customization for user if first time
+                    Customization.create(
+                        {
+                            username: email,
+                            customizations: [defaultCustomizationObj]
+                        },
+                        (err, initializedCustomization) => {
+                            console.log('initializedCustomization', initializedCustomization)
+                            if (err) {
+                                console.log('err: ' + err);
+                                res.send('error');
+                            } else {
+                                console.log('customization initialized');
+                                // res.session.activeCustomization = initializedCustomization.customizations[0]
+                                // res.status(200).send([initializedCustomization]); //need to send back array
+                                session.customizations = [initializedCustomization]
+                            }
+                        }
+                    );
+                } else {
+                    // res.session.activeCustomization = customization.customizations[0]
+                    // res.status(200).send(customization);
+                    session.customizations = customization
+                }
+                res.status(200).send({ session }) //send whole session back
+            }
+        })
+    } else {
+        console.log('inside else')
+        res.status(200).send({ session }) //send whole session back
+    }
+
 }

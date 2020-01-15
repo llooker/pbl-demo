@@ -4,20 +4,15 @@ const Customization = require('../models/Customization');
 module.exports.main = (req, res, next) => {
     console.log('customizeController main')
     const { email } = req.session.userProfile
-    // let defaultCustomizationObj = {
-    //     username: email,
-    //     customizations: [{
-    //         companyname: 'WYSIWYG'
-    //     }]
-    // }
     let defaultCustomizationObj = {
         companyname: 'WYSIWYG'
     }
     Customization.find({ username: email }).exec((err, customization) => {
+        console.log('customization', customization)
         if (err) {
             console.log('err: ' + err);
         } else {
-            if (customization === undefined || customization.length == 0) {
+            if (customization === undefined || customization.length === 0) {
                 // array empty or does not exist
                 // create customization for user if first time
                 Customization.create(
@@ -25,18 +20,20 @@ module.exports.main = (req, res, next) => {
                         username: email,
                         customizations: [defaultCustomizationObj]
                     },
-                    (err, defaultCustomization) => {
-                        console.log('defaultCustomization', defaultCustomization)
+                    (err, initializedCustomization) => {
+                        console.log('initializedCustomization', initializedCustomization)
                         if (err) {
                             console.log('err: ' + err);
                             res.send('error');
                         } else {
-                            console.log('default customization initialized');
-                            res.status(200).send(defaultCustomization);
+                            console.log('customization initialized');
+                            // res.session.activeCustomization = initializedCustomization.customizations[0]
+                            res.status(200).send([initializedCustomization]); //need to send back array
                         }
                     }
                 );
             } else {
+                // res.session.activeCustomization = customization.customizations[0]
                 res.status(200).send(customization);
             }
         }

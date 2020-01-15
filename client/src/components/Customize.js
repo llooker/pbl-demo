@@ -13,6 +13,7 @@ class Customize extends React.Component {
 
     componentDidMount() {
         console.log('Customize componentDidMount')
+        console.log('this.props', this.props)
         this.retrieveCustomizations()
     }
 
@@ -33,6 +34,7 @@ class Customize extends React.Component {
         }, () => {
             console.log('callback')
             console.log('this.state.customizations', this.state.customizations)
+            // this.props.additionalMethod(this.state.customizations[0])
         })
     }
 
@@ -58,11 +60,11 @@ class Customize extends React.Component {
 
     render() {
         const { customizations } = this.state
-        console.log('customizations', customizations)
+        // console.log('customizations', customizations)
         return (
             <div className="home container p-5" >
                 <div className="row pt-3">
-                    <Sidebar />
+                    {/* <Sidebar /> */}
                     <div className="col-sm-9">
                         <h1>Customizations</h1>
                         <ul>
