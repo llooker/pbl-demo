@@ -144,112 +144,78 @@ function sample(session) {
 }
 
 
-module.exports.session = async (req, res, next) => {
+module.exports.readSession = async (req, res, next) => {
+    console.log('readSession')
     let session = req.session //get session
+
+    if (session.userProfile) session = await checkForCustomizations(session)
+    console.log('session', session)
+
     res.status(200).send({ session }) //send whole session back
 }
 
 
 module.exports.writeSession = async (req, res, next) => {
     let session = req.session
-    session.userProfile = req.body //overwrite userprofile
+    session.userProfile = req.body
 
-    const { email } = req.session.userProfile
-    console.log('email', email)
+    session = await checkForCustomizations(session)
+    console.log('session', session)
+
+    res.status(200).send({ session });
+}
+
+async function checkForCustomizations(session) {
+    console.log('checkForCustomizations')
+    console.log('000 session', session)
+    const { email } = session.userProfile
+
     let defaultCustomizationObj = {
         companyname: 'WYSIWYG'
     }
-    Customization.find({ username: email }).exec((err, customization) => {
-        console.log('customization', customization)
-        if (err) {
-            console.log('err: ' + err);
-        } else {
-            if (customization === undefined || customization.length === 0) {
-                // array empty or does not exist
-                // create customization for user if first time
-                Customization.create(
-                    {
-                        username: email,
-                        customizations: [defaultCustomizationObj]
-                    },
-                    (err, initializedCustomization) => {
-                        console.log('initializedCustomization', initializedCustomization)
-                        if (err) {
-                            console.log('err: ' + err);
-                            res.send('error');
+
+    var myPromise = () => {
+        return new Promise((resolve, reject) => {
+
+            Customization
+                .find({ username: email })
+                .limit(1)
+                .exec(function (err, data) {
+                    console.log('data', data)
+                    if (err) {
+                        console.log('err: ' + err);
+                        reject(err)
+                    } else {
+                        if (data[0] === undefined || data.length === 0) {
+                            console.log('inside iffff')
+                            // array empty or does not exist
+                            // create customization for user if first time
+                            Customization.create(
+                                {
+                                    username: email,
+                                    customizations: [defaultCustomizationObj]
+                                },
+                                (err, initializedCustomization) => {
+                                    console.log('initializedCustomization', initializedCustomization)
+                                    if (err) {
+                                        console.log('err: ' + err);
+                                        reject(err)
+                                    } else {
+                                        console.log('customization initialized');
+                                        resolve(initializedCustomization.customizations)
+                                    }
+                                }
+                            );
                         } else {
-                            console.log('customization initialized');
-                            // res.session.activeCustomization = initializedCustomization.customizations[0]
-                            // res.status(200).send([initializedCustomization]); //need to send back array
-                            session.customizations = [initializedCustomization]
+                            resolve(data[0].customizations)
                         }
                     }
-                );
-            } else {
-                // res.session.activeCustomization = customization.customizations[0]
-                // res.status(200).send(customization);
-                session.customizations = customization
-            }
-            console.log('req.session', req.session)
-            res.status(200).send({ session }) //send whole session back
-        }
-    })
+                });
+        });
+    };
 
-
-    // res.status(200).send({ session });
-}
-
-module.exports.userData = async (req, res, next) => {
-    console.log('userData')
-    // let session = req.session
-    // session.userProfile = req.body //overwrite userprofile
-    // res.status(200).send({ session });
-    console.log('indexController userData')
-    let session = req.session //get session
-    if (req.session.userProfile) {
-        console.log('inside ifff')
-        const { email } = req.session.userProfile
-        console.log('email', email)
-        let defaultCustomizationObj = {
-            companyname: 'WYSIWYG'
-        }
-        Customization.find({ username: email }).exec((err, customization) => {
-            console.log('customization', customization)
-            if (err) {
-                console.log('err: ' + err);
-            } else {
-                if (customization === undefined || customization.length === 0) {
-                    // array empty or does not exist
-                    // create customization for user if first time
-                    Customization.create(
-                        {
-                            username: email,
-                            customizations: [defaultCustomizationObj]
-                        },
-                        (err, initializedCustomization) => {
-                            console.log('initializedCustomization', initializedCustomization)
-                            if (err) {
-                                console.log('err: ' + err);
-                                res.send('error');
-                            } else {
-                                console.log('customization initialized');
-                                // res.session.activeCustomization = initializedCustomization.customizations[0]
-                                // res.status(200).send([initializedCustomization]); //need to send back array
-                                session.customizations = [initializedCustomization]
-                            }
-                        }
-                    );
-                } else {
-                    // res.session.activeCustomization = customization.customizations[0]
-                    // res.status(200).send(customization);
-                    session.customizations = customization
-                }
-                res.status(200).send({ session }) //send whole session back
-            }
-        })
-    } else {
-        console.log('inside else')
-        res.status(200).send({ session }) //send whole session back
-    }
-
+    var result = await myPromise();
+    session.customizations = result
+    console.log('111 session', session)
+    return session;
 }

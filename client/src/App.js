@@ -43,16 +43,11 @@ class Login extends React.Component {
   }
 
   render() {
-    console.log('Login render');
     const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
     const { pathname } = this.props.location
     const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
     const { activeCustomization } = this.props
-    console.log('activeCustomization', activeCustomization);
 
-    // console.log('from', from);
-    // const { userProfile } = this.props
-    // if (Object.keys(userProfile).length) {
     if (auth.isAuthenticated === true) {
       return (
         <div className="App fade ">
@@ -60,15 +55,10 @@ class Login extends React.Component {
             clientId={googleClientId}
             buttonText="Logout"
             onLogoutSuccess={this.props.applySession}
-            companyname={activeCustomization.companyname || "Company name"}
+            companyname={activeCustomization.companyname || "WYSIWYG"} //default
           />
-
-          {/* <div className="row pt-3"> */}
-          {/* <Sidebar pathname={pathname} /> */}
           <Redirect to={from} />
-          {/* </div> */}
-
-          <Footer location={this.props.location} />
+          <Footer pathname={pathname} />
         </div>
       )
     } else {
@@ -106,19 +96,17 @@ class App extends React.Component {
     this.state = {
       userProfile: {},
       customizations: [],
-      activeCustomization: {}
     }
   }
 
   componentDidMount() {
     // console.log('App componentDidMount')
-    // this.checkForSession()
-    this.checkForUserData()
+    this.checkSession()
   }
 
-  checkForSession = async () => {
-    console.log('checkForSession')
-    let sessionResponse = await fetch('/session', {
+  checkSession = async () => {
+    console.log('checkSession')
+    let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -126,47 +114,24 @@ class App extends React.Component {
       }
     })
     let sessionResponseData = await sessionResponse.json();
-    console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
+    const { customizations } = sessionResponseData.session
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
       auth.authenticated(() => {
         this.setState({
-          userProfile
+          userProfile,
+          customizations
         }, () => {
-          // console.log('checkForSession callback')
-          // console.log('this.state.userProfile', this.state.userProfile)
+          console.log('checkSession callback')
+          console.log('this.state.userProfile', this.state.userProfile)
+          console.log('this.state.customizations', this.state.customizations)
 
         })
       })
-    } //else { console.log('else') }
+    } else console.log('ellse')
   }
 
-  checkForUserData = async () => {
-    console.log('checkForUserData')
-    let userData = await fetch('/userdata', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    let userDataResponse = await userData.json();
-    console.log('userDataResponse', userDataResponse)
-    const { userProfile } = userDataResponse.session
-    //make sure defined and contains properties
-    // if (userProfile && Object.keys(userProfile).length) {
-    //   auth.authenticated(() => {
-    //     this.setState({
-    //       userProfile
-    //     }, () => {
-    //       // console.log('checkForSession callback')
-    //       // console.log('this.state.userProfile', this.state.userProfile)
-
-    //     })
-    //   })
-    // } //else { console.log('else') }
-  }
 
   applySession = async (userProfile) => {
     console.log('applySession')
@@ -179,18 +144,19 @@ class App extends React.Component {
       },
       body: JSON.stringify(userProfile)
     })
-    let sessionDataResponse = await sessionData.json();
-    console.log('sessionDataResponse', sessionDataResponse)
+    let sessionResponseData = await sessionData.json();
     if (Object.keys(userProfile).length === 0) {
       auth.signout()
     }
     this.setState({
       userProfile,
-      customizations: sessionDataResponse.session.customizations
+      customizations: sessionResponseData.session.customizations,
+      // activeCustomization: sessionResponseData.session.customizations[0]
     }, () => {
       console.log('applySession callback')
       console.log('this.state.userProfile', this.state.userProfile)
       console.log('this.state.customizations', this.state.customizations)
+      // console.log('this.state.activeCustomization', this.state.activeCustomization)
     });
   }
 
@@ -203,6 +169,7 @@ class App extends React.Component {
   render() {
     // console.log('App render');
     const { userProfile } = this.state
+    const activeCustomization = this.state.customizations[0]
     return (
       <Router>
         <div>
@@ -210,7 +177,7 @@ class App extends React.Component {
             {...props}
             applySession={this.applySession}
             userProfile={userProfile}
-            activeCustomization={this.state.activeCustomization} />}
+            activeCustomization={activeCustomization} />}
           />
           <PrivateRoute path='/home' component={Home} />
           <PrivateRoute path='/lookup' component={Lookup} />

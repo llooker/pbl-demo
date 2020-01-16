@@ -6,7 +6,7 @@ function Footer(props) {
         <>
             <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
                 <div className="ml-auto">
-                    {props.location.pathname === "/customize" ? <Link to='/home'>
+                    {props.pathname === "/customize" ? <Link to='/home'>
                         <i className="fas fa-home cursor" /></Link> : <Link to='/customize'>
                             <i className="fas fa-cog cursor" /></Link>}
                 </div>
