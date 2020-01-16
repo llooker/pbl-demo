@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link, Redirect, withRouter, useHistory } from 'react-router-dom'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './clientConfig.json';
 import Navbar from './components/Navbar'
@@ -10,7 +10,8 @@ import Home from './components/Home'
 import Lookup from './components/Lookup'
 import Report from './components/Report'
 import Explore from './components/Explore'
-import Customize from './components/Customize'
+import Customizations from './components/Customizations'
+import NewCustomization from './components/NewCustomization'
 
 
 
@@ -43,10 +44,12 @@ class Login extends React.Component {
   }
 
   render() {
+    // console.log("Login render")
     const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
     const { pathname } = this.props.location
     const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
     const { activeCustomization } = this.props
+    // console.log('activeCustomization', activeCustomization)
 
     if (auth.isAuthenticated === true) {
       return (
@@ -78,11 +81,11 @@ class Login extends React.Component {
   }
 }
 
-// const PrivateRoute = ({ component: Component, additionalMethod, ...rest }) => (
-const PrivateRoute = ({ component: Component, ...rest }) => (
+const PrivateRoute = ({ component: Component, customizations, saveCustomization, deleteCustomization, ...rest }) => (
+  // const PrivateRoute = ({ component: Component, ...rest }) => (
   < Route {...rest} render={(props) => (
-    // auth.isAuthenticated === true ? <Component {...props} additionalMethod={additionalMethod} /> : <Redirect to={{
-    auth.isAuthenticated === true ? <Component {...props} /> : <Redirect to={{
+    auth.isAuthenticated === true ? <Component {...props} customizations={customizations} saveCustomization={saveCustomization} deleteCustomization={deleteCustomization} /> : <Redirect to={{
+      // auth.isAuthenticated === true ? <Component {...props} /> : <Redirect to={{
 
       pathname: '/',
       state: { from: props.location }
@@ -96,11 +99,13 @@ class App extends React.Component {
     this.state = {
       userProfile: {},
       customizations: [],
+      activeCustomization: {}
     }
   }
 
   componentDidMount() {
     // console.log('App componentDidMount')
+    // console.log('this.props', this.props)
     this.checkSession()
   }
 
@@ -121,15 +126,17 @@ class App extends React.Component {
       auth.authenticated(() => {
         this.setState({
           userProfile,
-          customizations
+          customizations,
+          activeCustomization: customizations[0]
         }, () => {
-          console.log('checkSession callback')
-          console.log('this.state.userProfile', this.state.userProfile)
-          console.log('this.state.customizations', this.state.customizations)
+          // console.log('checkSession callback')
+          // console.log('this.state.userProfile', this.state.userProfile)
+          // console.log('this.state.customizations', this.state.customizations)
+          // console.log('this.state.activeCustomization', this.state.activeCustomization)
 
         })
       })
-    } else console.log('ellse')
+    }
   }
 
 
@@ -151,25 +158,67 @@ class App extends React.Component {
     this.setState({
       userProfile,
       customizations: sessionResponseData.session.customizations,
-      // activeCustomization: sessionResponseData.session.customizations[0]
+      activeCustomization: sessionResponseData.session.customizations[0]
     }, () => {
-      console.log('applySession callback')
-      console.log('this.state.userProfile', this.state.userProfile)
-      console.log('this.state.customizations', this.state.customizations)
+      // console.log('applySession callback')
+      // console.log('this.state.userProfile', this.state.userProfile)
+      // console.log('this.state.customizations', this.state.customizations)
       // console.log('this.state.activeCustomization', this.state.activeCustomization)
     });
   }
 
-  applyCustomization = (customization) => {
-    console.log('applyCustomization')
-    console.log('customization', customization)
-    this.setState({ activeCustomization: customization })
+  saveCustomization = async (formData) => {
+    console.log('saveCustomization')
+    console.log('formData', formData)
+    let customizationResponse = await fetch('/savecustomization', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    let customizationResponseData = await customizationResponse.json();
+    this.setState({
+      customizations: customizationResponseData.customizations,
+      activeCustomization: customizationResponseData.customizations[customizationResponseData.customizations.length - 1]
+    }, () => {
+      // console.log('saveCustomization callback')
+      // console.log('this.state.userProfile', this.state.userProfile)
+      // console.log('this.state.customizations', this.state.customizations)
+      // console.log('this.state.activeCustomization', this.state.activeCustomization)
+    });
+  }
+
+  deleteCustomization = async (customizationId) => {
+    console.log('deleteCustomization')
+    console.log('customizationId', customizationId)
+    let customizationResponse = await fetch('/deletecustomization', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ customizationId })
+    })
+    let customizationResponseData = await customizationResponse.json();
+    this.setState({
+      customizations: customizationResponseData.customizations,
+      activeCustomization: customizationResponseData.customizations[customizationResponseData.customizations.length - 1]
+    }, () => {
+      console.log('deleteCustomization callback')
+      console.log('this.state.userProfile', this.state.userProfile)
+      console.log('this.state.customizations', this.state.customizations)
+      console.log('this.state.activeCustomization', this.state.activeCustomization)
+    });
+
   }
 
   render() {
-    // console.log('App render');
+    console.log('App render');
     const { userProfile } = this.state
-    const activeCustomization = this.state.customizations[0]
+    const { customizations } = this.state
+    const activeCustomization = this.state.activeCustomization//customizations[0]
     return (
       <Router>
         <div>
@@ -183,8 +232,16 @@ class App extends React.Component {
           <PrivateRoute path='/lookup' component={Lookup} />
           <PrivateRoute path='/report' component={Report} />
           <PrivateRoute path='/explore' component={Explore} />
-          <PrivateRoute path='/customize' component={Customize} />
-          {/* <PrivateRoute path='/customize' component={Customize} additionalMethod={this.applyCustomization} /> */}
+          {/* <PrivateRoute path='/customize' component={Customize} /> */}
+          <PrivateRoute exact path='/customize'
+            component={Customizations}
+            customizations={customizations}
+            deleteCustomization={this.deleteCustomization} />
+          <PrivateRoute path='/customize/new'
+            component={NewCustomization}
+            customizations={customizations}
+            saveCustomization={this.saveCustomization}
+          />
         </div>
       </Router>
     )

@@ -145,11 +145,9 @@ function sample(session) {
 
 
 module.exports.readSession = async (req, res, next) => {
-    console.log('readSession')
     let session = req.session //get session
 
     if (session.userProfile) session = await checkForCustomizations(session)
-    console.log('session', session)
 
     res.status(200).send({ session }) //send whole session back
 }
@@ -158,19 +156,17 @@ module.exports.readSession = async (req, res, next) => {
 module.exports.writeSession = async (req, res, next) => {
     let session = req.session
     session.userProfile = req.body
-
     session = await checkForCustomizations(session)
-    console.log('session', session)
-
     res.status(200).send({ session });
 }
 
 async function checkForCustomizations(session) {
     console.log('checkForCustomizations')
-    console.log('000 session', session)
+    // console.log('000 session', session)
     const { email } = session.userProfile
 
     let defaultCustomizationObj = {
+        id: 'defaultCustomization',
         companyname: 'WYSIWYG'
     }
 
@@ -181,13 +177,13 @@ async function checkForCustomizations(session) {
                 .find({ username: email })
                 .limit(1)
                 .exec(function (err, data) {
-                    console.log('data', data)
+                    // console.log('data', data)
                     if (err) {
-                        console.log('err: ' + err);
+                        // console.log('err: ' + err);
                         reject(err)
                     } else {
                         if (data[0] === undefined || data.length === 0) {
-                            console.log('inside iffff')
+                            // console.log('inside iffff')
                             // array empty or does not exist
                             // create customization for user if first time
                             Customization.create(
@@ -196,12 +192,12 @@ async function checkForCustomizations(session) {
                                     customizations: [defaultCustomizationObj]
                                 },
                                 (err, initializedCustomization) => {
-                                    console.log('initializedCustomization', initializedCustomization)
+                                    // console.log('initializedCustomization', initializedCustomization)
                                     if (err) {
-                                        console.log('err: ' + err);
+                                        // console.log('err: ' + err);
                                         reject(err)
                                     } else {
-                                        console.log('customization initialized');
+                                        // console.log('customization initialized');
                                         resolve(initializedCustomization.customizations)
                                     }
                                 }
@@ -216,6 +212,6 @@ async function checkForCustomizations(session) {
 
     var result = await myPromise();
     session.customizations = result
-    console.log('111 session', session)
+    // console.log('111 session', session)
     return session;
 }

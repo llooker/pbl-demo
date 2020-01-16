@@ -2,6 +2,8 @@ import React from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 
 function Navbar(props) {
+  console.log("Navbar")
+  console.log("props.companyname", props.companyname)
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
