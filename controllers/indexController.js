@@ -162,12 +162,12 @@ module.exports.writeSession = async (req, res, next) => {
 
 async function checkForCustomizations(session) {
     console.log('checkForCustomizations')
-    // console.log('000 session', session)
     const { email } = session.userProfile
 
     let defaultCustomizationObj = {
         id: 'defaultCustomization',
-        companyname: 'WYSIWYG'
+        companyname: 'WYSIWYG',
+        index: 0
     }
 
     var myPromise = () => {
@@ -177,13 +177,11 @@ async function checkForCustomizations(session) {
                 .find({ username: email })
                 .limit(1)
                 .exec(function (err, data) {
-                    // console.log('data', data)
                     if (err) {
                         // console.log('err: ' + err);
                         reject(err)
                     } else {
                         if (data[0] === undefined || data.length === 0) {
-                            // console.log('inside iffff')
                             // array empty or does not exist
                             // create customization for user if first time
                             Customization.create(
@@ -212,6 +210,5 @@ async function checkForCustomizations(session) {
 
     var result = await myPromise();
     session.customizations = result
-    // console.log('111 session', session)
     return session;
 }

@@ -81,15 +81,22 @@ class Login extends React.Component {
   }
 }
 
-const PrivateRoute = ({ component: Component, customizations, saveCustomization, deleteCustomization, ...rest }) => (
+const PrivateRoute = ({ component: Component, customizations, saveCustomization, deleteCustomization, editCustomization, customizationToEdit, ...rest }) => (
   // const PrivateRoute = ({ component: Component, ...rest }) => (
   < Route {...rest} render={(props) => (
-    auth.isAuthenticated === true ? <Component {...props} customizations={customizations} saveCustomization={saveCustomization} deleteCustomization={deleteCustomization} /> : <Redirect to={{
-      // auth.isAuthenticated === true ? <Component {...props} /> : <Redirect to={{
+    auth.isAuthenticated === true ?
+      <Component {...props}
+        customizations={customizations}
+        saveCustomization={saveCustomization}
+        deleteCustomization={deleteCustomization}
+        editCustomization={editCustomization}
+        customizationToEdit={customizationToEdit} />
+      : <Redirect to={{
+        // auth.isAuthenticated === true ? <Component {...props} /> : <Redirect to={{
 
-      pathname: '/',
-      state: { from: props.location }
-    }} />
+        pathname: '/',
+        state: { from: props.location }
+      }} />
   )} />
 )
 
@@ -99,7 +106,8 @@ class App extends React.Component {
     this.state = {
       userProfile: {},
       customizations: [],
-      activeCustomization: {}
+      activeCustomization: {},
+      customizationToEdit: ''
     }
   }
 
@@ -183,10 +191,10 @@ class App extends React.Component {
       customizations: customizationResponseData.customizations,
       activeCustomization: customizationResponseData.customizations[customizationResponseData.customizations.length - 1]
     }, () => {
-      // console.log('saveCustomization callback')
-      // console.log('this.state.userProfile', this.state.userProfile)
-      // console.log('this.state.customizations', this.state.customizations)
-      // console.log('this.state.activeCustomization', this.state.activeCustomization)
+      console.log('saveCustomization callback')
+      console.log('this.state.userProfile', this.state.userProfile)
+      console.log('this.state.customizations', this.state.customizations)
+      console.log('this.state.activeCustomization', this.state.activeCustomization)
     });
   }
 
@@ -211,14 +219,29 @@ class App extends React.Component {
       console.log('this.state.customizations', this.state.customizations)
       console.log('this.state.activeCustomization', this.state.activeCustomization)
     });
+  }
 
+
+  editCustomization = (customizationId, customizationIndex) => {
+    console.log('editCustomization')
+    console.log('customizationId', customizationId)
+    console.log('customizationIndex', customizationIndex)
+
+    this.setState({
+      customizationToEdit: customizationIndex,
+    }, () => {
+      console.log('editCustomization callback')
+      console.log('this.state.customizationToEdit', this.state.customizationToEdit)
+    });
   }
 
   render() {
     console.log('App render');
     const { userProfile } = this.state
     const { customizations } = this.state
-    const activeCustomization = this.state.activeCustomization//customizations[0]
+    const { activeCustomization } = this.state
+    const { customizationToEdit } = this.state
+    console.log('customizationToEdit', customizationToEdit)
     return (
       <Router>
         <div>
@@ -236,11 +259,13 @@ class App extends React.Component {
           <PrivateRoute exact path='/customize'
             component={Customizations}
             customizations={customizations}
-            deleteCustomization={this.deleteCustomization} />
+            deleteCustomization={this.deleteCustomization}
+            editCustomization={this.editCustomization} />
           <PrivateRoute path='/customize/new'
             component={NewCustomization}
             customizations={customizations}
             saveCustomization={this.saveCustomization}
+            customizationToEdit={customizationToEdit}
           />
         </div>
       </Router>

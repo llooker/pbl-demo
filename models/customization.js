@@ -9,7 +9,7 @@ const Customization = new Schema({
     customizations: {
         type: Array,
         default: null
-    },
+    }
 });
 
 module.exports = mongoose.model('Customization', Customization);
