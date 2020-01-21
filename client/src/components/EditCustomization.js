@@ -6,9 +6,9 @@ class NewCustomization extends React.Component {
     constructor(props) {
         super(props);
         const { customizations } = this.props
-        const { customizationToEdit } = this.props
+        const { indexOfCustomizationToEdit } = this.props
         this.state = {
-            companyname: customizationToEdit ? customizations[customizationToEdit].companyname : '',
+            companyname: indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].companyname : '',
         }
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -41,7 +41,7 @@ class NewCustomization extends React.Component {
 
     render() {
         const { customizations } = this.props
-        const { customizationToEdit } = this.props
+        const { indexOfCustomizationToEdit } = this.props
         return (
             <div className="home container p-5" >
                 <div className="row pt-3">
@@ -49,8 +49,8 @@ class NewCustomization extends React.Component {
                     <div className="col-sm-9">
                         <h1>Customizations</h1>
                         <form onSubmit={this.handleSubmit}>
-                            <input type="hidden" id="id" name="id" value={customizationToEdit ? customizations[customizationToEdit].id : ''} />
-                            <input type="hidden" id="index" name="index" value={customizationToEdit ? customizations[customizationToEdit].index : ''} />
+                            <input type="hidden" id="id" name="id" value={indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].id : ''} />
+                            <input type="hidden" id="customizationIndex" name="customizationIndex" value={indexOfCustomizationToEdit ? indexOfCustomizationToEdit : ''} />
                             <div className="form-group">
                                 <label htmlFor="companyname">Company name</label>
                                 <input id="companyname" className="form-control" name="companyname" type="text" value={this.state.companyname} onChange={e => this.updateInput(e)} />

@@ -167,7 +167,7 @@ async function checkForCustomizations(session) {
     let defaultCustomizationObj = {
         id: 'defaultCustomization',
         companyname: 'WYSIWYG',
-        index: 0
+        // index: 0
     }
 
     var myPromise = () => {

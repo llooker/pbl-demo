@@ -11,7 +11,7 @@ import Lookup from './components/Lookup'
 import Report from './components/Report'
 import Explore from './components/Explore'
 import Customizations from './components/Customizations'
-import NewCustomization from './components/NewCustomization'
+import EditCustomization from './components/EditCustomization'
 
 
 
@@ -81,16 +81,18 @@ class Login extends React.Component {
   }
 }
 
-const PrivateRoute = ({ component: Component, customizations, saveCustomization, deleteCustomization, editCustomization, customizationToEdit, ...rest }) => (
+const PrivateRoute = ({ component: Component, customizations, activeCustomization, saveCustomization, deleteCustomization, editCustomization, indexOfCustomizationToEdit, applyCustomization, ...rest }) => (
   // const PrivateRoute = ({ component: Component, ...rest }) => (
   < Route {...rest} render={(props) => (
     auth.isAuthenticated === true ?
       <Component {...props}
         customizations={customizations}
         saveCustomization={saveCustomization}
+        activeCustomization={activeCustomization}
         deleteCustomization={deleteCustomization}
         editCustomization={editCustomization}
-        customizationToEdit={customizationToEdit} />
+        indexOfCustomizationToEdit={indexOfCustomizationToEdit}
+        applyCustomization={applyCustomization} />
       : <Redirect to={{
         // auth.isAuthenticated === true ? <Component {...props} /> : <Redirect to={{
 
@@ -107,7 +109,7 @@ class App extends React.Component {
       userProfile: {},
       customizations: [],
       activeCustomization: {},
-      customizationToEdit: ''
+      indexOfCustomizationToEdit: null
     }
   }
 
@@ -189,25 +191,27 @@ class App extends React.Component {
     let customizationResponseData = await customizationResponse.json();
     this.setState({
       customizations: customizationResponseData.customizations,
-      activeCustomization: customizationResponseData.customizations[customizationResponseData.customizations.length - 1]
+      activeCustomization: customizationResponseData.customizations[customizationResponseData.customizations.length - 1],
+      indexOfCustomizationToEdit: null
     }, () => {
       console.log('saveCustomization callback')
       console.log('this.state.userProfile', this.state.userProfile)
       console.log('this.state.customizations', this.state.customizations)
       console.log('this.state.activeCustomization', this.state.activeCustomization)
+      console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
     });
   }
 
-  deleteCustomization = async (customizationId) => {
+  deleteCustomization = async (customizationIndex) => {
     console.log('deleteCustomization')
-    console.log('customizationId', customizationId)
+    console.log('customizationIndex', customizationIndex)
     let customizationResponse = await fetch('/deletecustomization', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ customizationId })
+      body: JSON.stringify({ customizationIndex })
     })
     let customizationResponseData = await customizationResponse.json();
     this.setState({
@@ -222,16 +226,27 @@ class App extends React.Component {
   }
 
 
-  editCustomization = (customizationId, customizationIndex) => {
+  editCustomization = (customizationIndex) => {
     console.log('editCustomization')
-    console.log('customizationId', customizationId)
     console.log('customizationIndex', customizationIndex)
 
     this.setState({
-      customizationToEdit: customizationIndex,
+      indexOfCustomizationToEdit: customizationIndex,
     }, () => {
       console.log('editCustomization callback')
-      console.log('this.state.customizationToEdit', this.state.customizationToEdit)
+      console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
+    });
+  }
+
+  applyCustomization = (customizationIndex) => {
+    console.log('applyCustomization')
+    console.log('customizationIndex', customizationIndex)
+
+    this.setState({
+      activeCustomization: this.state.customizations[customizationIndex],
+    }, () => {
+      console.log('applyCustomization callback')
+      console.log('this.state.activeCustomization', this.state.activeCustomization)
     });
   }
 
@@ -240,8 +255,7 @@ class App extends React.Component {
     const { userProfile } = this.state
     const { customizations } = this.state
     const { activeCustomization } = this.state
-    const { customizationToEdit } = this.state
-    console.log('customizationToEdit', customizationToEdit)
+    const { indexOfCustomizationToEdit } = this.state
     return (
       <Router>
         <div>
@@ -259,13 +273,15 @@ class App extends React.Component {
           <PrivateRoute exact path='/customize'
             component={Customizations}
             customizations={customizations}
+            activeCustomization={activeCustomization}
             deleteCustomization={this.deleteCustomization}
-            editCustomization={this.editCustomization} />
-          <PrivateRoute path='/customize/new'
-            component={NewCustomization}
+            editCustomization={this.editCustomization}
+            applyCustomization={this.applyCustomization} />
+          <PrivateRoute path='/customize/edit' //index
+            component={EditCustomization}
             customizations={customizations}
             saveCustomization={this.saveCustomization}
-            customizationToEdit={customizationToEdit}
+            indexOfCustomizationToEdit={indexOfCustomizationToEdit}
           />
         </div>
       </Router>

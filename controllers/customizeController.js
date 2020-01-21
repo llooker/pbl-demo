@@ -9,10 +9,17 @@ module.exports.saveCustomization = (req, res, next) => {
     console.log('customizeController saveCustomization')
     const { email } = req.session.userProfile
     const { customizations } = req.session
+    console.log('req.body', req.body)
     const customizationToSave = req.body
-    customizations.splice(customizationToSave.index, 1, customizationToSave)
+    const { customizationIndex } = req.body
+    delete customizationToSave.customizationIndex
+    console.log('customizationToSave', customizationToSave)
+    console.log('customizationIndex', customizationIndex)
+    //existing customization
     if (customizationToSave.id) {
-        //existing customization
+        console.log('inside ifff')
+        //update index of desired customization
+        customizations.splice(customizationIndex, 1, customizationToSave)
         Customization.findOneAndUpdate(
             { username: email },
             { $set: { customizations: customizations } },
@@ -26,16 +33,14 @@ module.exports.saveCustomization = (req, res, next) => {
                 }
             }
         );
-    } else {
-        //brand new customization
+    } else { //brand new customization
+        console.log('inside ellse')
         customizationToSave.id = makeid(16)
-        customizationToSave.index = req.session.customizations.length
         Customization.findOneAndUpdate(
             { username: email },
-            { $push: { customizations: customizationToSave } },
+            { $push: { customizations: customizationToSave } }, //push to end of array
             { new: true },
             (err, documents) => {
-                // res.send({ error: err, affected: documents });
                 if (err) {
                     console.log('error: ' + err);
                     res.status(400);
@@ -51,11 +56,14 @@ module.exports.saveCustomization = (req, res, next) => {
 module.exports.deleteCustomization = (req, res, next) => {
     console.log('customizeController deleteCustomization')
     const { email } = req.session.userProfile
-    const { customizationId } = req.body
+    // const { customizationId } = req.body
+    const { customizationIndex } = req.body
+    const { customizations } = req.session
 
+    customizations.splice(customizationIndex)
     Customization.findOneAndUpdate(
         { username: email },
-        { '$pull': { "customizations": { id: customizationId } } },
+        { $set: { customizations: customizations } },
         { new: true },
         (err, documents) => {
             if (err) {
@@ -66,6 +74,21 @@ module.exports.deleteCustomization = (req, res, next) => {
             }
         }
     );
+
+    // old deletion logic
+    // Customization.findOneAndUpdate(
+    //     { username: email },
+    //     { '$pull': { "customizations": { id: customizationId } } },
+    //     { new: true },
+    //     (err, documents) => {
+    //         if (err) {
+    //             console.log('error: ' + err);
+    //             res.status(400);
+    //         } else {
+    //             res.status(200).send(documents);
+    //         }
+    //     }
+    // );
 }
 
 // module.exports.editCustomization = (req, res, next) => {
