@@ -2,16 +2,16 @@
 const Customization = require('../models/Customization');
 
 module.exports.main = (req, res, next) => {
-    console.log('customizeController main')
+    // console.log('customizeController main')
 }
 
 module.exports.saveCustomization = (req, res, next) => {
-    console.log('customizeController saveCustomization')
+    // console.log('customizeController saveCustomization')
     const { email } = req.session.userProfile
     const { customizations } = req.session
     const customizationToSave = req.body
     const { customizationIndex } = req.body
-    delete customizationToSave.customizationIndex
+    delete customizationToSave.customizationIndex // we don't want to save index here
     //existing customization
     if (customizationToSave.id) {
         //update index of desired customization

@@ -8,11 +8,9 @@ class Customizations extends React.Component {
         this.applyCustomization = this.applyCustomization.bind(this);
     }
 
-
     componentDidMount() {
-        console.log('Customize componentDidMount')
-        console.log('this.props', this.props)
-        // this.retrieveCustomizations()
+        // console.log('Customize componentDidMount')
+        // console.log('this.props', this.props)
     }
 
     editCustomization(customizationIndex) {
@@ -46,7 +44,7 @@ class Customizations extends React.Component {
                                         <tr key={customization.id} index={index} >
                                             <td >{customization.companyname}</td>
                                             {
-                                                customization.companyname == activeCustomization.companyname ?
+                                                customization.companyname === activeCustomization.companyname ?
                                                     <td><span className="badge badge-info">Active</span></td>
                                                     : customization.id === "defaultCustomization" ?
                                                         <td>

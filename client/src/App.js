@@ -49,7 +49,6 @@ class Login extends React.Component {
     const { pathname } = this.props.location
     const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
     const { activeCustomization } = this.props
-    // console.log('activeCustomization', activeCustomization)
 
     if (auth.isAuthenticated === true) {
       return (
@@ -81,22 +80,23 @@ class Login extends React.Component {
   }
 }
 
-const PrivateRoute = ({ component: Component, customizations, activeCustomization, saveCustomization, editCustomization, indexOfCustomizationToEdit, applyCustomization, ...rest }) => (
-  < Route {...rest} render={(props) => (
-    auth.isAuthenticated === true ?
-      <Component {...props}
-        customizations={customizations}
-        saveCustomization={saveCustomization}
-        activeCustomization={activeCustomization}
-        editCustomization={editCustomization}
-        indexOfCustomizationToEdit={indexOfCustomizationToEdit}
-        applyCustomization={applyCustomization} />
-      : <Redirect to={{
-        pathname: '/',
-        state: { from: props.location }
-      }} />
-  )} />
-)
+const PrivateRoute = ({ component: Component,
+  customizations, activeCustomization, applyCustomization, editCustomization, indexOfCustomizationToEdit, saveCustomization, ...rest }) => (
+    < Route {...rest} render={(props) => (
+      auth.isAuthenticated === true ?
+        <Component {...props}
+          customizations={customizations}
+          activeCustomization={activeCustomization}
+          applyCustomization={applyCustomization}
+          editCustomization={editCustomization}
+          indexOfCustomizationToEdit={indexOfCustomizationToEdit}
+          saveCustomization={saveCustomization} />
+        : <Redirect to={{
+          pathname: '/',
+          state: { from: props.location }
+        }} />
+    )} />
+  )
 
 class App extends React.Component {
   constructor(props) {
@@ -115,8 +115,13 @@ class App extends React.Component {
     this.checkSession()
   }
 
+  componentDidUpdate() {
+    // console.log("componentDidUpdate")
+    // console.log('this.props', this.props)
+  }
+
   checkSession = async () => {
-    console.log('checkSession')
+    // console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -147,8 +152,8 @@ class App extends React.Component {
 
 
   applySession = async (userProfile) => {
-    console.log('applySession')
-    console.log('userProfile', userProfile)
+    // console.log('applySession')
+    // console.log('userProfile', userProfile)
     let sessionData = await fetch('/writesession', {
       method: 'POST',
       headers: {
@@ -174,30 +179,33 @@ class App extends React.Component {
   }
 
   applyCustomization = (customizationIndex) => {
-    console.log('applyCustomization')
-    console.log('customizationIndex', customizationIndex)
+    // console.log('applyCustomization')
+    // console.log('customizationIndex', customizationIndex)
     this.setState({
       activeCustomization: this.state.customizations[customizationIndex],
     }, () => {
-      console.log('applyCustomization callback')
-      console.log('this.state.activeCustomization', this.state.activeCustomization)
+      // console.log('applyCustomization callback')
+      // console.log('this.state.activeCustomization', this.state.activeCustomization)
     });
   }
 
   editCustomization = (customizationIndex) => {
-    console.log('editCustomization')
-    console.log('customizationIndex', customizationIndex)
+    // console.log('editCustomization')
+    // console.log('customizationIndex', customizationIndex)
+    const validCustomizationIndex = typeof this.state.customizations[customizationIndex] === 'undefined' ? null : customizationIndex
+    console.log('validCustomizationIndex', validCustomizationIndex)
     this.setState({
-      indexOfCustomizationToEdit: customizationIndex,
+      indexOfCustomizationToEdit: validCustomizationIndex,
     }, () => {
       // console.log('editCustomization callback')
       // console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
+      this.setState({ indexOfCustomizationToEdit: null })
     });
   }
 
   saveCustomization = async (formData) => {
-    console.log('saveCustomization')
-    console.log('formData', formData)
+    // console.log('saveCustomization')
+    // console.log('formData', formData)
     let customizationResponse = await fetch('/savecustomization', {
       method: 'POST',
       headers: {
@@ -207,9 +215,11 @@ class App extends React.Component {
       body: JSON.stringify(formData)
     })
     let customizationResponseData = await customizationResponse.json();
+    const { indexOfCustomizationToEdit } = this.state
     this.setState({
       customizations: customizationResponseData.customizations,
-      activeCustomization: customizationResponseData.customizations[customizationResponseData.customizations.length - 1],
+      activeCustomization: indexOfCustomizationToEdit ? customizationResponseData.customizations[indexOfCustomizationToEdit]
+        : customizationResponseData.customizations[customizationResponseData.customizations.length - 1],
       indexOfCustomizationToEdit: null
     }, () => {
       // console.log('saveCustomization callback')
@@ -221,11 +231,13 @@ class App extends React.Component {
   }
 
   render() {
-    console.log('App render');
+    // console.log('App render');
+    // console.log('this.props', this.props);
     const { userProfile } = this.state
     const { customizations } = this.state
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
+
     return (
       <Router>
         <div>
@@ -249,8 +261,8 @@ class App extends React.Component {
           <PrivateRoute path='/customize/edit' //index
             component={EditCustomization}
             customizations={customizations}
-            saveCustomization={this.saveCustomization}
             indexOfCustomizationToEdit={indexOfCustomizationToEdit}
+            saveCustomization={this.saveCustomization}
           />
         </div>
       </Router>
