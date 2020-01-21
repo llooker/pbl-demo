@@ -81,21 +81,17 @@ class Login extends React.Component {
   }
 }
 
-const PrivateRoute = ({ component: Component, customizations, activeCustomization, saveCustomization, deleteCustomization, editCustomization, indexOfCustomizationToEdit, applyCustomization, ...rest }) => (
-  // const PrivateRoute = ({ component: Component, ...rest }) => (
+const PrivateRoute = ({ component: Component, customizations, activeCustomization, saveCustomization, editCustomization, indexOfCustomizationToEdit, applyCustomization, ...rest }) => (
   < Route {...rest} render={(props) => (
     auth.isAuthenticated === true ?
       <Component {...props}
         customizations={customizations}
         saveCustomization={saveCustomization}
         activeCustomization={activeCustomization}
-        deleteCustomization={deleteCustomization}
         editCustomization={editCustomization}
         indexOfCustomizationToEdit={indexOfCustomizationToEdit}
         applyCustomization={applyCustomization} />
       : <Redirect to={{
-        // auth.isAuthenticated === true ? <Component {...props} /> : <Redirect to={{
-
         pathname: '/',
         state: { from: props.location }
       }} />
@@ -177,6 +173,28 @@ class App extends React.Component {
     });
   }
 
+  applyCustomization = (customizationIndex) => {
+    console.log('applyCustomization')
+    console.log('customizationIndex', customizationIndex)
+    this.setState({
+      activeCustomization: this.state.customizations[customizationIndex],
+    }, () => {
+      console.log('applyCustomization callback')
+      console.log('this.state.activeCustomization', this.state.activeCustomization)
+    });
+  }
+
+  editCustomization = (customizationIndex) => {
+    console.log('editCustomization')
+    console.log('customizationIndex', customizationIndex)
+    this.setState({
+      indexOfCustomizationToEdit: customizationIndex,
+    }, () => {
+      // console.log('editCustomization callback')
+      // console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
+    });
+  }
+
   saveCustomization = async (formData) => {
     console.log('saveCustomization')
     console.log('formData', formData)
@@ -194,59 +212,11 @@ class App extends React.Component {
       activeCustomization: customizationResponseData.customizations[customizationResponseData.customizations.length - 1],
       indexOfCustomizationToEdit: null
     }, () => {
-      console.log('saveCustomization callback')
-      console.log('this.state.userProfile', this.state.userProfile)
-      console.log('this.state.customizations', this.state.customizations)
-      console.log('this.state.activeCustomization', this.state.activeCustomization)
-      console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
-    });
-  }
-
-  deleteCustomization = async (customizationIndex) => {
-    console.log('deleteCustomization')
-    console.log('customizationIndex', customizationIndex)
-    let customizationResponse = await fetch('/deletecustomization', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ customizationIndex })
-    })
-    let customizationResponseData = await customizationResponse.json();
-    this.setState({
-      customizations: customizationResponseData.customizations,
-      activeCustomization: customizationResponseData.customizations[customizationResponseData.customizations.length - 1]
-    }, () => {
-      console.log('deleteCustomization callback')
-      console.log('this.state.userProfile', this.state.userProfile)
-      console.log('this.state.customizations', this.state.customizations)
-      console.log('this.state.activeCustomization', this.state.activeCustomization)
-    });
-  }
-
-
-  editCustomization = (customizationIndex) => {
-    console.log('editCustomization')
-    console.log('customizationIndex', customizationIndex)
-
-    this.setState({
-      indexOfCustomizationToEdit: customizationIndex,
-    }, () => {
-      console.log('editCustomization callback')
-      console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
-    });
-  }
-
-  applyCustomization = (customizationIndex) => {
-    console.log('applyCustomization')
-    console.log('customizationIndex', customizationIndex)
-
-    this.setState({
-      activeCustomization: this.state.customizations[customizationIndex],
-    }, () => {
-      console.log('applyCustomization callback')
-      console.log('this.state.activeCustomization', this.state.activeCustomization)
+      // console.log('saveCustomization callback')
+      // console.log('this.state.userProfile', this.state.userProfile)
+      // console.log('this.state.customizations', this.state.customizations)
+      // console.log('this.state.activeCustomization', this.state.activeCustomization)
+      // console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit) //needs work
     });
   }
 
@@ -269,14 +239,13 @@ class App extends React.Component {
           <PrivateRoute path='/lookup' component={Lookup} />
           <PrivateRoute path='/report' component={Report} />
           <PrivateRoute path='/explore' component={Explore} />
-          {/* <PrivateRoute path='/customize' component={Customize} /> */}
           <PrivateRoute exact path='/customize'
             component={Customizations}
             customizations={customizations}
             activeCustomization={activeCustomization}
-            deleteCustomization={this.deleteCustomization}
+            applyCustomization={this.applyCustomization}
             editCustomization={this.editCustomization}
-            applyCustomization={this.applyCustomization} />
+          />
           <PrivateRoute path='/customize/edit' //index
             component={EditCustomization}
             customizations={customizations}

@@ -1,11 +1,9 @@
 import React from 'react';
-import Sidebar from './Sidebar'
 import { Link } from 'react-router-dom'
 
 class Customizations extends React.Component {
     constructor(props) {
         super(props);
-        this.deleteCustomization = this.deleteCustomization.bind(this);
         this.editCustomization = this.editCustomization.bind(this);
         this.applyCustomization = this.applyCustomization.bind(this);
     }
@@ -17,25 +15,12 @@ class Customizations extends React.Component {
         // this.retrieveCustomizations()
     }
 
-
-    deleteCustomization(customizationIndex) {
-        console.log('deleteCustomization')
-        console.log('customizationIndex', customizationIndex)
-        this.props.deleteCustomization(customizationIndex)
-        this.props.history.push('/home')
-    }
-
-
     editCustomization(customizationIndex) {
-        console.log('editCustomization')
-        console.log('customizationIndex', customizationIndex)
         this.props.editCustomization(customizationIndex)
         this.props.history.push('/customize/edit')
     }
 
     applyCustomization(customizationIndex) {
-        console.log('applyCustomization')
-        console.log('customizationIndex', customizationIndex)
         this.props.applyCustomization(customizationIndex)
         this.props.history.push('/customize')
     }
@@ -46,7 +31,6 @@ class Customizations extends React.Component {
         return (
             <div className="home container p-5" >
                 <div className="row pt-3">
-                    {/* <Sidebar /> */}
                     <div className="col-sm-12">
                         <h1>Customizations</h1>
                         <table className="table">
@@ -69,9 +53,8 @@ class Customizations extends React.Component {
                                                             <button type="button" className="btn btn-secondary mr-2" data-index={index} onClick={() => this.applyCustomization(index)}>Apply</button>
                                                         </td> :
                                                         <td>
-                                                            <button type="button" className="btn btn-secondary mr-2" data-index={index} onClick={() => this.applyCustomization(index)}>Apply</button>
+                                                            <button type="button" className="btn btn-primary mr-2" data-index={index} onClick={() => this.applyCustomization(index)}>Apply</button>
                                                             <button type="button" className="btn btn-secondary mr-2" data-index={index} onClick={() => this.editCustomization(index)}>Edit</button>
-                                                            <button type="button" className="btn btn-danger" data-index={index} onClick={() => this.deleteCustomization(index)} >Delete</button>
                                                         </td>
                                             }
                                         </tr>

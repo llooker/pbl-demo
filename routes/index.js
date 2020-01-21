@@ -12,6 +12,5 @@ router.post('/writesession', indexCtrl.writeSession)
 
 router.get('/customize', customizeCtrl.main)
 router.post('/savecustomization', customizeCtrl.saveCustomization)
-router.post('/deletecustomization', customizeCtrl.deleteCustomization)
 
 module.exports = router
