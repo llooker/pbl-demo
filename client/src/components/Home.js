@@ -11,7 +11,7 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        // this.getLookerData();
+        this.getLookerData();
     }
 
 
@@ -31,8 +31,8 @@ class Home extends React.Component {
         this.setState({
             embed_url: lookerResposnseData.embed_url
         }, () => {
-            // console.log('this.state.looks')
-            // console.log(this.state.looks)
+            console.log('this.state.embed_url')
+            console.log(this.state.embed_url)
         });
     }
 
@@ -43,15 +43,14 @@ class Home extends React.Component {
                 <div className="row pt-3">
                     <Sidebar pathname={pathname} />
                     <div className="col-sm-9">
-                        <h1>Home</h1>
-                        {/* <h3>looks</h3>
+                        {/* <h1>Home</h1> */}
                         <ul><iframe id='embedLook'
                             title="Inline Frame Example"
-                            width="500"
-                            height="500"
+                            width="750"
+                            height="750"
                             src={this.state.embed_url}>
                         </iframe>
-                        </ul> */}
+                        </ul>
                     </div>
                 </div >
             </div >

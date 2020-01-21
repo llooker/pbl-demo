@@ -199,6 +199,7 @@ class App extends React.Component {
     }, () => {
       // console.log('editCustomization callback')
       // console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
+      //set back to null immediately after rendering to prevent edge case
       this.setState({ indexOfCustomizationToEdit: null })
     });
   }

@@ -127,7 +127,8 @@ function sample(session) {
         group_ids: [1], //not required?
         // external_group_id: 'awesome_engineers', //not required
         permissions: ['access_data', 'see_looks', 'see_user_dashboards'],
-        models: ['citibike'],
+        // models: ['citibike'],
+        models: ['thelook_adwords'],
         access_filters: {
             fake_model: {
                 id: 1
@@ -135,7 +136,8 @@ function sample(session) {
         },
         //user_attributes: { "an_attribute_name": "my_attribute_value", "my_number_attribute": "42" },
         session_length: fifteen_minutes,
-        embed_url: "/embed/dashboards/2",
+        // embed_url: "/embed/dashboards/2",
+        embed_url: "/embed/dashboards/5277",//"/embed/dashboards/2",
         force_logout_login: true
     };
 
@@ -166,8 +168,7 @@ async function checkForCustomizations(session) {
 
     let defaultCustomizationObj = {
         id: 'defaultCustomization',
-        companyname: 'WYSIWYG',
-        // index: 0
+        companyname: 'WYSIWYG'
     }
 
     var myPromise = () => {
