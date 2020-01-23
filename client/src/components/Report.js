@@ -12,7 +12,7 @@ class Report extends React.Component {
             < div className="home container p-5" >
                 <div className="row pt-3">
                     <Sidebar pathname={pathname} />
-                    <div className="col-sm-9">
+                    <div className="col-sm-10">
                         <h1>Report</h1>
                     </div>
                 </div >

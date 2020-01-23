@@ -9,25 +9,57 @@ var querystring = require('querystring');
 const Customization = require('../models/Customization');
 
 
+// keep for sdk example for now
+// module.exports.main = async (req, res, next) => {
+//     console.log('indexController main');
+//     console.log('req.session', req.session)
 
-module.exports.main = async (req, res, next) => {
-    console.log('indexController main');
-    console.log('req.session', req.session)
+//     // const sdk = LookerNodeSDK.createClient() //valid client :D
 
-    // const sdk = LookerNodeSDK.createClient() //valid client :D
+//     // for testing purposes
+//     // const me = await sdk.ok(sdk.me(
+//     //     "id, first_name, last_name, display_name, email, personal_space_id, home_space_id, group_ids, role_ids"))
+//     // // console.log({ me }) //working :D
 
-    // for testing purposes
-    // const me = await sdk.ok(sdk.me(
-    //     "id, first_name, last_name, display_name, email, personal_space_id, home_space_id, group_ids, role_ids"))
-    // // console.log({ me }) //working :D
+//     //api calls
+//     // const looks = await sdk.ok(sdk.all_looks())
+//     // const dashboards = await sdk.ok(sdk.all_dashboards())
+//     // const session = await sdk.ok(sdk.session())
 
-    //api calls
-    // const looks = await sdk.ok(sdk.all_looks())
-    // const dashboards = await sdk.ok(sdk.all_dashboards())
-    // const session = await sdk.ok(sdk.session())
+//     var embed_url = await sample(req.session);
+//     console.log('embed_url', embed_url)
+//     let resObj = { embed_url }
 
-    var embed_url = await sample(req.session);
-    console.log('embed_url', embed_url)
+//     res.send(resObj)
+// }
+
+
+module.exports.buildLookerDashboardUrl = async (req, res, next) => {
+    // console.log('indexController buildLookerDashboardUrl');
+    // console.log('req.session', req.session)
+    // console.log('req.params', req.params)
+
+    const { params } = req
+    const { session } = req
+
+
+    var embed_url = await sample(params, session);
+    // console.log('embed_url', embed_url)
+    let resObj = { embed_url }
+
+    res.send(resObj)
+}
+
+module.exports.buildLookerExploreUrl = async (req, res, next) => {
+    // console.log('indexController buildLookerExploreUrl');
+    // console.log('req.session', req.session)
+    // console.log('req.params', req.params)
+
+    const { params } = req
+    const { session } = req
+
+    var embed_url = await sample(params, session);
+    // console.log('embed_url', embed_url)
     let resObj = { embed_url }
 
     res.send(resObj)
@@ -115,8 +147,17 @@ function created_signed_embed_url(options) {
     return host + embed_path + '?' + query_string;
 }
 
-function sample(session) {
+function sample(params, session) {
     var fifteen_minutes = 15 * 60;
+
+    var dynamic_embed_url
+
+    if (params.content_type === "dashboards") {
+        dynamic_embed_url = `/embed/${params.content_type}/${params.content_id}`
+    } else {
+        dynamic_embed_url = `/embed/${params.content_type}/${params.model_name}/${params.explore_name}?${params.qid}`
+    }
+    console.log('dynamic_embed_url', dynamic_embed_url)
 
     var url_data = {
         host: config.looker.host,
@@ -126,7 +167,7 @@ function sample(session) {
         last_name: session.userProfile.familyName,
         group_ids: [1], //not required?
         // external_group_id: 'awesome_engineers', //not required
-        permissions: ['access_data', 'see_looks', 'see_user_dashboards'],
+        permissions: ['access_data', 'see_looks', 'see_user_dashboards', 'explore'],
         // models: ['citibike'],
         models: ['thelook_adwords'],
         access_filters: {
@@ -136,8 +177,7 @@ function sample(session) {
         },
         //user_attributes: { "an_attribute_name": "my_attribute_value", "my_number_attribute": "42" },
         session_length: fifteen_minutes,
-        // embed_url: "/embed/dashboards/2",
-        embed_url: "/embed/dashboards/5277",//"/embed/dashboards/2",
+        embed_url: dynamic_embed_url,
         force_logout_login: true
     };
 

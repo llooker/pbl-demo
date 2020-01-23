@@ -6,18 +6,16 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            looks: []
+            embed_url: ''
         }
     }
 
     componentDidMount() {
-        this.getLookerData();
+        this.buildLookerUrl();
     }
 
-
-    async getLookerData() {
-        console.log('getLookerData')
-        let lookerResposnse = await fetch('/looker', {
+    async buildLookerUrl() {
+        let lookerResposnse = await fetch('/buildlookerdashboardurl/dashboards/5277', {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -26,14 +24,13 @@ class Home extends React.Component {
         })
 
         let lookerResposnseData = await lookerResposnse.json();
-        console.log('lookerResposnseData')
-        console.log(lookerResposnseData)
         this.setState({
             embed_url: lookerResposnseData.embed_url
         }, () => {
-            console.log('this.state.embed_url')
-            console.log(this.state.embed_url)
+            // console.log('this.state.embed_url')
+            // console.log(this.state.embed_url)
         });
+
     }
 
     render() {
@@ -42,11 +39,10 @@ class Home extends React.Component {
             <div className="home container p-5">
                 <div className="row pt-3">
                     <Sidebar pathname={pathname} />
-                    <div className="col-sm-9">
-                        {/* <h1>Home</h1> */}
+                    <div className="col-sm-10">
                         <ul><iframe id='embedLook'
                             title="Inline Frame Example"
-                            width="750"
+                            width="850"
                             height="750"
                             src={this.state.embed_url}>
                         </iframe>
