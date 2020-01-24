@@ -8,6 +8,7 @@ const customizeCtrl = require('../controllers/customizeController')
 
 router.get('/buildlookerdashboardurl/:content_type/:content_id', indexCtrl.buildLookerDashboardUrl)
 router.get('/buildlookerexploreurl/:content_type/:model_name/:explore_name/:qid', indexCtrl.buildLookerExploreUrl)
+router.get('/fetchfolder/:folder_id', indexCtrl.fetchFolder)
 router.get('/readsession', indexCtrl.readSession)
 router.post('/writesession', indexCtrl.writeSession)
 

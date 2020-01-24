@@ -14,7 +14,7 @@ const Customization = require('../models/Customization');
 //     console.log('indexController main');
 //     console.log('req.session', req.session)
 
-//     // const sdk = LookerNodeSDK.createClient() //valid client :D
+// const sdk = LookerNodeSDK.createClient() //valid client :D
 
 //     // for testing purposes
 //     // const me = await sdk.ok(sdk.me(
@@ -61,6 +61,17 @@ module.exports.buildLookerExploreUrl = async (req, res, next) => {
     var embed_url = await sample(params, session);
     // console.log('embed_url', embed_url)
     let resObj = { embed_url }
+
+    res.send(resObj)
+}
+
+module.exports.fetchFolder = async (req, res, next) => {
+    console.log('indexController fetchFolder');
+
+    const { params } = req
+    const sdk = LookerNodeSDK.createClient() //valid client :D
+    const folder = await sdk.ok(sdk.folder(params.folder_id))
+    let resObj = { folder }
 
     res.send(resObj)
 }
@@ -157,7 +168,6 @@ function sample(params, session) {
     } else {
         dynamic_embed_url = `/embed/${params.content_type}/${params.model_name}/${params.explore_name}?${params.qid}`
     }
-    console.log('dynamic_embed_url', dynamic_embed_url)
 
     var url_data = {
         host: config.looker.host,
