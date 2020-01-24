@@ -41,7 +41,7 @@ class Report extends React.Component {
                 <div className="row pt-3">
                     <Sidebar pathname={pathname} />
                     <div className="col-sm-10">
-                        <h1>Report builder?</h1>
+                        <h1>demo.looker > folder 1827</h1>
                         <h3>Dashboards</h3>
                         <ul>
                             {folder_contents.dashboards && folder_contents.dashboards.length ? folder_contents.dashboards.map((item, index) => {
