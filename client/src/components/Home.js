@@ -3,7 +3,7 @@ import './Home.css';
 import Sidebar from './Sidebar'
 
 // import { LookerEmbedSDK, LookerEmbedDashboard } from '../embed-sdk-src/index.ts'
-import { LookerEmbedSDK, LookerEmbedDashboard } from '../../node_modules/@looker/embed-sdk/src/index.ts'
+import { LookerEmbedSDK, LookerEmbedDashboard } from '../../node_modules/@looker/embed-sdk/src/index'
 console.log('LookerEmbedSDK', LookerEmbedSDK)
 console.log('LookerEmbedDashboard', LookerEmbedDashboard)
 
