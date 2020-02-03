@@ -263,3 +263,9 @@ async function checkForCustomizations(session) {
     session.customizations = result
     return session;
 }
+
+
+
+module.exports.auth = (req, res, next) => {
+    console.log('indexController auth');
+}

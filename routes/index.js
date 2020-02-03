@@ -15,4 +15,7 @@ router.post('/writesession', indexCtrl.writeSession)
 router.get('/customize', customizeCtrl.main)
 router.post('/savecustomization', customizeCtrl.saveCustomization)
 
+//for embed sdk
+router.get('/auth', indexCtrl.auth)
+
 module.exports = router
