@@ -13,9 +13,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@looker/embed-sdk": "^1.0.0-beta.6",
     "@looker/sdk": "^0.2.0-beta.26",
     "body-parser": "^1.19.0",
     "concurrently": "^5.0.0",
+    "create-hmac": "^1.1.7",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
     "express-session": "^1.17.0",

@@ -5,3 +5,8 @@ ul li {
     right: 0; 
     left: auto; 
 }
+
+.iframe{
+    width: 800px;
+    height: 700px
+}

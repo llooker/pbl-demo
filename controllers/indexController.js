@@ -2,11 +2,14 @@
 
 const { LookerNodeSDK } = require('@looker/sdk')
 const config = require('../config');
+const user = require('../demoUser.json');
 
 var crypto = require('crypto');
 var querystring = require('querystring');
 
 const Customization = require('../models/Customization');
+var { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
+
 
 
 // keep for sdk example for now
@@ -68,12 +71,13 @@ module.exports.buildLookerExploreUrl = async (req, res, next) => {
 module.exports.fetchFolder = async (req, res, next) => {
     console.log('indexController fetchFolder');
 
-    const { params } = req
-    const sdk = LookerNodeSDK.createClient() //valid client :D
-    const folder = await sdk.ok(sdk.folder(params.folder_id))
-    let resObj = { folder }
+    // const { params } = req
+    // const sdk = LookerNodeSDK.createClient() //valid client :D
+    // const folder = await sdk.ok(sdk.folder(params.folder_id))
+    // let resObj = { folder }
 
-    res.send(resObj)
+    // res.send(resObj)
+    res.send('yadayadayda')
 }
 
 function nonce(len) {
@@ -265,7 +269,13 @@ async function checkForCustomizations(session) {
 }
 
 
-
+//function createSignedUrl(src, user, host, secret, nonce) {
 module.exports.auth = (req, res, next) => {
-    console.log('indexController auth');
+    console.log('indexController authh');
+    // Authenticate the request is from a valid user here
+    const src = req.query.src;
+    const url = createSignedUrl(src, user, config.looker.host, config.looker.embed_secret);
+    console.log('url', url)
+    res.json({ url });
+
 }
