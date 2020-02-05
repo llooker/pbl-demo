@@ -37,6 +37,7 @@ class Login extends React.Component {
 
   responseGoogle = (response) => {
     if (response.error) {
+      console.log('response.error', response.error)
     } else {
       auth.authenticated()
       this.props.applySession(response.profileObj)

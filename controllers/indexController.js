@@ -271,11 +271,9 @@ async function checkForCustomizations(session) {
 
 //function createSignedUrl(src, user, host, secret, nonce) {
 module.exports.auth = (req, res, next) => {
-    console.log('indexController authh');
+    // console.log('indexController authh');
     // Authenticate the request is from a valid user here
     const src = req.query.src;
     const url = createSignedUrl(src, user, config.looker.host, config.looker.embed_secret);
-    console.log('url', url)
     res.json({ url });
-
 }
