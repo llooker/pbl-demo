@@ -71,13 +71,40 @@ module.exports.buildLookerExploreUrl = async (req, res, next) => {
 module.exports.fetchFolder = async (req, res, next) => {
     console.log('indexController fetchFolder');
 
-    // const { params } = req
-    // const sdk = LookerNodeSDK.createClient() //valid client :D
-    // const folder = await sdk.ok(sdk.folder(params.folder_id))
-    // let resObj = { folder }
+    const { params } = req
+    const sdk = LookerNodeSDK.createClient() //valid client :D
+    const folder = await sdk.ok(sdk.folder(params.folder_id))
+    let resObj = { folder }
 
-    // res.send(resObj)
-    res.send('yadayadayda')
+    res.send(resObj)
+}
+
+module.exports.retrieveDashboardFilters = async (req, res, next) => {
+    console.log('indexController retrieveDashboardFilters');
+
+    const { params } = req
+    console.log('params', params)
+    const sdk = LookerNodeSDK.createClient() //valid client :D
+
+    const queryObject = {
+        "model": "thelook_adwords",
+        "view": "events", //view = explore
+        "fields": ["users.gender",
+            // "user_session_fact.site_acquisition_source",
+            // "session_attribution.purchase_session_traffic_source",
+            // "sessions.traffic_source"
+        ],
+        "filters": {},
+        "sorts": [],
+        "limit": "500",
+        "query_timezone": "America/Los_Angeles"
+    }
+
+
+    let query = await sdk.ok(sdk.run_inline_query({ body: queryObject, result_format: 'json' }))
+    let resObj = { query }
+
+    res.send(resObj)
 }
 
 function nonce(len) {

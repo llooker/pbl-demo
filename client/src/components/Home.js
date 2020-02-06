@@ -12,14 +12,16 @@ class Home extends React.Component {
         this.state = {
             embed_url: '',
             dropdownValue: '',
+            genderDropdownValue: '',
+            genderDropdownOptions: [],
             dashboard: ''
         }
-        // let gDashboard;
     }
 
     componentDidMount() {
         // this.buildLookerUrl();
         this.embedSdkInit()
+        this.retrieveDashboardFilters()
     }
 
     // async buildLookerUrl() {
@@ -40,6 +42,40 @@ class Home extends React.Component {
     //     });
 
     // }
+
+    async retrieveDashboardFilters() {
+        console.log('retrieveDashboardFilters')
+
+
+
+        let lookerResposnse = await fetch('/retievedashboardfilters/5277', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+
+
+
+        let lookerResposnseData = await lookerResposnse.json();
+        console.log('lookerResposnseData', lookerResposnseData)
+        let optionsArr = [];
+        lookerResposnseData.query.map(item => {
+            console.log('item', item)
+            console.log('item["users.gender"]', item["users.gender"])
+            optionsArr.push(item["users.gender"] || null)
+        })
+        console.log('optionsArr', optionsArr)
+        this.setState({
+            genderDropdownOptions: optionsArr
+        }, () => {
+            console.log('retrieveDashboardFilters callback')
+            console.log('this.state.genderDropdownOptions', this.state.genderDropdownOptions)
+        })
+    }
+
+
 
 
     embedSdkInit() {
@@ -93,9 +129,8 @@ class Home extends React.Component {
         console.log('setupDashboard')
         console.log('dashboard', dashboard)
 
-
-        //make dashboard available across functions
-        //by applying to state
+        //save dashboard to state
+        //to make available across functions
         this.setState({
             dashboard: dashboard
         }, () => {
@@ -106,7 +141,7 @@ class Home extends React.Component {
     }
 
     dropdownSelect = (e) => {
-        console.log('genderDropdownSelect')
+        console.log('dropdownSelect')
         // console.log('e', e)
         this.setState({
             dropdownValue: e.target.value
@@ -120,19 +155,36 @@ class Home extends React.Component {
         })
 
     }
+    generdropdownSelect = (e) => {
+        console.log('genderDropdownSelect')
+        // console.log('e', e)
+        this.setState({
+            genderDropdownValue: e.target.value
+        }, () => {
+            console.log('dropdownSelect callback')
+            console.log('this.state.genderDropdownValue', this.state.genderDropdownValue)
+
+            this.state.dashboard.updateFilters({ "User Gender": this.state.genderDropdownValue })
+            this.state.dashboard.run()
+
+        })
+
+    }
 
     render() {
         console.log('this.state.dropdownValue', this.state.dropdownValue)
         const { pathname } = this.props.location
+        const { genderDropdownOptions } = this.state
         return (
             <div className="home container p-5">
-                <div className="row pt-3">
+                <div className="row pt-5">
                     <Sidebar pathname={pathname} />
                     <div className="col-sm-10">
 
                         <div className="row">
-
-                            <div>
+                            {/* Attribution Source */}
+                            <div className="col-sm-3">
+                                <label htmlFor="modalForm">Select Attribution Source</label>
                                 <select
                                     id="dropdownSelect"
                                     className="form-control"
@@ -154,16 +206,34 @@ class Home extends React.Component {
                                     </option>
                                     <option
                                         key="multi_touch_linear"
-                                        value="Multi-touch Linear"
+                                        value="Multi-Touch Linear"
                                     >
                                         Multi-touch Linear
                                     </option>
                                 </select>
                             </div>
+                            {/* User Gender */}
+                            <div className="col-sm-3">
+                                <label htmlFor="modalForm">Select User Gender</label>
+                                <select
+                                    id="dropdownSelect"
+                                    className="form-control"
+                                    onChange={(e) => this.generdropdownSelect(e)}
+                                    type="select-one"
+                                    value={this.state['genderDropdownValue']}
+                                >
+                                    {genderDropdownOptions.map(item => {
+                                        return <option
+                                            key={item == null ? 'Any' : item}
+                                            value={item == null ? 'Any' : item}
+                                        > {item == null ? 'Any' : item}</option>
+                                    })}
+                                </select>
+                            </div>
 
 
                         </div>
-                        <div id="embedContainer" >
+                        <div id="embedContainer" className="mt-3 pt-3 border-top">
                         </div>
                     </div>
                 </div >

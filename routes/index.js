@@ -11,6 +11,7 @@ router.get('/buildlookerexploreurl/:content_type/:model_name/:explore_name/:qid'
 router.get('/fetchfolder/:folder_id', indexCtrl.fetchFolder)
 router.get('/readsession', indexCtrl.readSession)
 router.post('/writesession', indexCtrl.writeSession)
+router.get('/retievedashboardfilters/:content_id', indexCtrl.retrieveDashboardFilters)
 
 router.get('/customize', customizeCtrl.main)
 router.post('/savecustomization', customizeCtrl.saveCustomization)
