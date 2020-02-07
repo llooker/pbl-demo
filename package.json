@@ -14,16 +14,16 @@
   "license": "ISC",
   "dependencies": {
     "@looker/embed-sdk": "^1.0.0-beta.6",
-    "@looker/sdk": "^0.2.0-beta.26",
+    "@looker/sdk": "^0.2.0-beta.29",
     "body-parser": "^1.19.0",
-    "concurrently": "^5.0.0",
+    "concurrently": "^5.1.0",
     "create-hmac": "^1.1.7",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
-    "mongodb": "^3.4.1",
-    "mongoose": "^5.8.7",
-    "nodemon": "^2.0.1",
+    "mongodb": "^3.5.2",
+    "mongoose": "^5.8.11",
+    "nodemon": "^2.0.2",
     "querystring": "^0.2.0"
   }
 }

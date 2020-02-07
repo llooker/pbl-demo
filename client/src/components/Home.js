@@ -10,9 +10,9 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            embed_url: '',
-            dropdownValue: '',
+            attributionDropdownValue: '',
             genderDropdownValue: '',
+            attributionDropdownOptions: [],
             genderDropdownOptions: [],
             dashboard: ''
         }
@@ -20,33 +20,12 @@ class Home extends React.Component {
 
     componentDidMount() {
         // this.buildLookerUrl();
-        this.embedSdkInit()
         this.retrieveDashboardFilters()
+        this.embedSdkInit()
     }
-
-    // async buildLookerUrl() {
-    //     let lookerResposnse = await fetch('/buildlookerdashboardurl/dashboards/5277', {
-    //         method: 'GET',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json'
-    //         }
-    //     })
-
-    //     let lookerResposnseData = await lookerResposnse.json();
-    //     this.setState({
-    //         embed_url: lookerResposnseData.embed_url
-    //     }, () => {
-    //         // console.log('this.state.embed_url')
-    //         // console.log(this.state.embed_url)
-    //     });
-
-    // }
 
     async retrieveDashboardFilters() {
         console.log('retrieveDashboardFilters')
-
-
 
         let lookerResposnse = await fetch('/retievedashboardfilters/5277', {
             method: 'GET',
@@ -55,8 +34,6 @@ class Home extends React.Component {
                 'Content-Type': 'application/json'
             },
         })
-
-
 
         let lookerResposnseData = await lookerResposnse.json();
         console.log('lookerResposnseData', lookerResposnseData)
@@ -107,13 +84,13 @@ class Home extends React.Component {
             })
     }
 
-
-    loadEvent = (dashboard) => {
+    // only available in Looker7
+    /*loadEvent = (dashboard) => {
         console.log('loadEvent')
         console.log('dashboard', dashboard)
         // setDashboard(dashboard)
 
-    }
+    }*/
 
     filtersUpdates = (event) => {
         console.log('filtersUpdates')
@@ -126,8 +103,8 @@ class Home extends React.Component {
     }
 
     setupDashboard = (dashboard) => {
-        console.log('setupDashboard')
-        console.log('dashboard', dashboard)
+        // console.log('setupDashboard')
+        // console.log('dashboard', dashboard)
 
         //save dashboard to state
         //to make available across functions
@@ -140,39 +117,31 @@ class Home extends React.Component {
 
     }
 
-    dropdownSelect = (e) => {
-        console.log('dropdownSelect')
+
+    dropdownSelect = (e, desiredDropdown) => {
+        // console.log('dropdownSelect')
         // console.log('e', e)
+        // console.log('desiredDropdown', desiredDropdown)
+
         this.setState({
-            dropdownValue: e.target.value
+            [desiredDropdown + 'DropdownValue']: e.target.value
         }, () => {
             console.log('dropdownSelect callback')
-            console.log('this.state.dropdownValue', this.state.dropdownValue)
+            console.log("this.state[desiredDropdown + 'DropdownValue']", this.state[desiredDropdown + 'DropdownValue'])
 
-            this.state.dashboard.updateFilters({ "Attribution Source": this.state.dropdownValue })
+            let filterName;
+            if (desiredDropdown === "gender") {
+                filterName = "User Gender"
+            } else if (desiredDropdown === "attribution") {
+                filterName = "Attribution Source"
+            }
+            this.state.dashboard.updateFilters({ [filterName]: this.state[desiredDropdown + 'DropdownValue'] })
             this.state.dashboard.run()
 
         })
-
-    }
-    generdropdownSelect = (e) => {
-        console.log('genderDropdownSelect')
-        // console.log('e', e)
-        this.setState({
-            genderDropdownValue: e.target.value
-        }, () => {
-            console.log('dropdownSelect callback')
-            console.log('this.state.genderDropdownValue', this.state.genderDropdownValue)
-
-            this.state.dashboard.updateFilters({ "User Gender": this.state.genderDropdownValue })
-            this.state.dashboard.run()
-
-        })
-
     }
 
     render() {
-        console.log('this.state.dropdownValue', this.state.dropdownValue)
         const { pathname } = this.props.location
         const { genderDropdownOptions } = this.state
         return (
@@ -188,9 +157,10 @@ class Home extends React.Component {
                                 <select
                                     id="dropdownSelect"
                                     className="form-control"
-                                    onChange={(e) => this.dropdownSelect(e)}
+                                    onChange={(e) => this.dropdownSelect(e, "attribution")}
+
                                     type="select-one"
-                                    value={this.state['dropdownValue']}
+                                    value={this.state['attributionDropdownValue']}
                                 >
                                     <option
                                         key="first_touch"
@@ -218,7 +188,7 @@ class Home extends React.Component {
                                 <select
                                     id="dropdownSelect"
                                     className="form-control"
-                                    onChange={(e) => this.generdropdownSelect(e)}
+                                    onChange={(e) => this.dropdownSelect(e, "gender")}
                                     type="select-one"
                                     value={this.state['genderDropdownValue']}
                                 >

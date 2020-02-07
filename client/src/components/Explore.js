@@ -1,36 +1,49 @@
 import React from 'react';
 import Sidebar from './Sidebar'
 
+import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
+
+
 class Explore extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            embed_url: ''
+            embed_url: '',
+            explore: ''
         }
     }
 
     componentDidMount() {
-        this.buildLookerUrl();
+        this.embedSdkInit()
     }
 
-    async buildLookerUrl() {
-        let lookerResposnse = await fetch('/buildlookerexploreurl/explore/thelook_adwords/events/qid=BIn3Feb2BUN0UGTzJ2cGyO&origin_space=1097&toggle=vis', {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
+    embedSdkInit() {
+        LookerEmbedSDK.createExploreWithId('thelook_adwords::events')
+            .appendTo('#embedContainer')
+            .withClassName('iframe')
+            .build()
+            .connect()
+            .then(this.setupExplore)
+            .catch((error) => {
+                console.error('Connection error', error)
+            })
+    }
+
+    setupExplore = (explore) => {
+        console.log('setupExplore')
+        console.log('explore', explore)
+
+        //save dashboard to state
+        //to make available across functions
+        this.setState({
+            explore: explore
+        }, () => {
+            // console.log('setupDashboard callback')
+            // console.log('this.state.dashboard', this.state.dashboard)
         })
 
-        let lookerResposnseData = await lookerResposnse.json();
-        this.setState({
-            embed_url: lookerResposnseData.embed_url
-        }, () => {
-            // console.log('this.state.embed_url')
-            // console.log(this.state.embed_url)
-        });
-
     }
+
     render() {
         const { pathname } = this.props.location
         return (
@@ -38,13 +51,8 @@ class Explore extends React.Component {
                 <div className="row pt-3">
                     <Sidebar pathname={pathname} />
                     <div className="col-sm-10">
-                        <ul><iframe id='embedLook'
-                            title="Inline Frame Example"
-                            width="850"
-                            height="750"
-                            src={this.state.embed_url}>
-                        </iframe>
-                        </ul>
+                        <div id="embedContainer" className="mt-3 pt-3 border-top">
+                        </div>
                     </div>
                 </div >
             </div >
