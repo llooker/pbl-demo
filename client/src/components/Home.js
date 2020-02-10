@@ -21,7 +21,7 @@ class Home extends React.Component {
             genderDropdownOptions: [],
             dashboard: '',
             codeBarIsVisible: false,
-            markdown: ''
+            sampleCode: ''
         }
     }
 
@@ -39,15 +39,15 @@ class Home extends React.Component {
             })
             .then(text => {
                 this.setState({
-                    markdown: text //marked(text)
+                    sampleCode: text //marked(text)
                 }, () => {
-                    console.log('then callback this.state.markdown', this.state.markdown)
+                    // console.log('then callback this.state.markdown', this.state.markdown)
                 })
             })
     }
 
     async retrieveDashboardFilters() {
-        console.log('retrieveDashboardFilters')
+        // console.log('retrieveDashboardFilters')
 
         let lookerResposnse = await fetch('/retievedashboardfilters/5277', {
             method: 'GET',
@@ -56,21 +56,17 @@ class Home extends React.Component {
                 'Content-Type': 'application/json'
             },
         })
-
         let lookerResposnseData = await lookerResposnse.json();
-        console.log('lookerResposnseData', lookerResposnseData)
+
         let optionsArr = [];
         lookerResposnseData.query.map(item => {
-            console.log('item', item)
-            console.log('item["users.gender"]', item["users.gender"])
             optionsArr.push(item["users.gender"] || null)
         })
-        console.log('optionsArr', optionsArr)
         this.setState({
             genderDropdownOptions: optionsArr
         }, () => {
-            console.log('retrieveDashboardFilters callback')
-            console.log('this.state.genderDropdownOptions', this.state.genderDropdownOptions)
+            // console.log('retrieveDashboardFilters callback')
+            // console.log('this.state.genderDropdownOptions', this.state.genderDropdownOptions)
         })
     }
 
@@ -114,12 +110,13 @@ class Home extends React.Component {
 
     }*/
 
+    //never finished
     filtersUpdates = (event) => {
-        console.log('filtersUpdates')
-        console.log('event', event)
+        // console.log('filtersUpdates')
+        // console.log('event', event)
         const dashboard_filters = event.dashboard.dashboard_filters
         // let new_filters = query_object.filters
-        console.log('dashboard_filters', dashboard_filters)
+        // console.log('dashboard_filters', dashboard_filters)
         // console.log('new_filters', new_filters)
 
     }
@@ -133,8 +130,8 @@ class Home extends React.Component {
         this.setState({
             dashboard: dashboard
         }, () => {
-            console.log('setupDashboard callback')
-            console.log('this.state.dashboard', this.state.dashboard)
+            // console.log('setupDashboard callback')
+            // console.log('this.state.dashboard', this.state.dashboard)
         })
 
     }
@@ -148,8 +145,6 @@ class Home extends React.Component {
         this.setState({
             [desiredDropdown + 'DropdownValue']: e.target.value
         }, () => {
-            console.log('dropdownSelect callback')
-            console.log("this.state[desiredDropdown + 'DropdownValue']", this.state[desiredDropdown + 'DropdownValue'])
 
             let filterName;
             if (desiredDropdown === "gender") {
@@ -176,7 +171,7 @@ class Home extends React.Component {
         const { pathname } = this.props.location
         const { genderDropdownOptions } = this.state
         const { codeBarIsVisible } = this.state
-        const { markdown } = this.state
+        const { sampleCode } = this.state
         return (
             <div className="home container p-5 position-relative">
                 <Navigation pathname={pathname} toggleCodeBar={this.toggleCodeBar} />
@@ -239,7 +234,7 @@ class Home extends React.Component {
                         <div id="embedContainer" className="mt-3 pt-3 border-top w-100">
                         </div>
                     </div>
-                    <div className="col-sm-6 position-absolute right-abs top-abs p-3">
+                    <div className="col-sm-8 position-absolute right-abs top-abs p-3">
                         <ReactCSSTransitionGroup
                             transitionName="slide"
                             transitionAppear={true}
@@ -248,7 +243,7 @@ class Home extends React.Component {
                             transitionLeaveTimeout={500}>
                             {codeBarIsVisible ?
                                 <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true}>
-                                    {markdown}
+                                    {sampleCode}
                                 </SyntaxHighlighter>
                                 : ''}
                         </ReactCSSTransitionGroup>
@@ -260,19 +255,3 @@ class Home extends React.Component {
 }
 
 export default Home;
-
-function readTextFile(file) {
-    console.log('readTextFile')
-    console.log('file', file)
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function () {
-        if (rawFile.readyState === 4) {
-            if (rawFile.status === 200 || rawFile.status == 0) {
-                var allText = rawFile.responseText;
-                alert(allText);
-            }
-        }
-    }
-    rawFile.send(null);
-}
