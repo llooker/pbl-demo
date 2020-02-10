@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter, useHistory } from 'react-router-dom'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './clientConfig.json';
-import Navbar from './components/Navbar'
+import Header from './components/Header'
 import Footer from './components/Footer'
 // import Sidebar from './components/Sidebar'
 import Home from './components/Home'
@@ -54,7 +54,7 @@ class Login extends React.Component {
     if (auth.isAuthenticated === true) {
       return (
         <div className="App fade ">
-          <Navbar
+          <Header
             clientId={googleClientId}
             buttonText="Logout"
             onLogoutSuccess={this.props.applySession}

@@ -1,14 +1,16 @@
 import React from 'react';
-import Sidebar from './Sidebar'
+import Navigation from './Navigation'
 
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 
 
 class Lookup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            embed_url: ''
+            embed_url: '',
+            codeBarIsVisible: false
         }
     }
 
@@ -58,15 +60,36 @@ class Lookup extends React.Component {
 
     }
 
+    toggleCodeBar = () => {
+        console.log('toggleCodeBar')
+        this.setState(prevState => ({
+            codeBarIsVisible: prevState.codeBarIsVisible ? false : true
+        }), () => {
+            console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
+        })
+    }
+
     render() {
         const { pathname } = this.props.location
+        const { codeBarIsVisible } = this.state
         return (
             <div className="home container p-5">
-                <div className="row pt-3">
-                    <Sidebar pathname={pathname} />
+                <Navigation pathname={pathname} toggleCodeBar={this.toggleCodeBar} />
+                <div className="row pt-5">
                     <div className="col-sm-10">
                         <div id="embedContainer" className="mt-3 pt-3 border-top">
                         </div>
+                    </div>
+                    <div className="col-sm-2">
+                        <ReactCSSTransitionGroup
+                            transitionName="slide"
+                            transitionAppear={true}
+                            transitionAppearTimeout={500}
+                            transitionEnterTimeout={500}
+                            transitionLeaveTimeout={500}>
+                            {codeBarIsVisible ? <p>For example, <code>&lt;section&gt;</code> should be wrapped as inline.</p>
+                                : ''}
+                        </ReactCSSTransitionGroup>
                     </div>
                 </div >
             </div >

@@ -1,8 +1,13 @@
 import React from 'react';
 import './Home.css';
-import Sidebar from './Sidebar'
+import Navigation from './Navigation'
 
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
+
 
 LookerEmbedSDK.init('demo.looker.com', '/auth')
 
@@ -14,7 +19,9 @@ class Home extends React.Component {
             genderDropdownValue: '',
             attributionDropdownOptions: [],
             genderDropdownOptions: [],
-            dashboard: ''
+            dashboard: '',
+            codeBarIsVisible: false,
+            markdown: ''
         }
     }
 
@@ -22,6 +29,21 @@ class Home extends React.Component {
         // this.buildLookerUrl();
         this.retrieveDashboardFilters()
         this.embedSdkInit()
+
+
+        const sampleCodeFilePath = require("../sample-code/Home.sample.txt");
+        console.log('sampleCodeFilePath', sampleCodeFilePath)
+        fetch(sampleCodeFilePath)
+            .then(response => {
+                return response.text()
+            })
+            .then(text => {
+                this.setState({
+                    markdown: text //marked(text)
+                }, () => {
+                    console.log('then callback this.state.markdown', this.state.markdown)
+                })
+            })
     }
 
     async retrieveDashboardFilters() {
@@ -141,14 +163,25 @@ class Home extends React.Component {
         })
     }
 
+    toggleCodeBar = () => {
+        console.log('toggleCodeBar')
+        this.setState(prevState => ({
+            codeBarIsVisible: prevState.codeBarIsVisible ? false : true
+        }), () => {
+            console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
+        })
+    }
+
     render() {
         const { pathname } = this.props.location
         const { genderDropdownOptions } = this.state
+        const { codeBarIsVisible } = this.state
+        const { markdown } = this.state
         return (
-            <div className="home container p-5">
+            <div className="home container p-5 position-relative">
+                <Navigation pathname={pathname} toggleCodeBar={this.toggleCodeBar} />
                 <div className="row pt-5">
-                    <Sidebar pathname={pathname} />
-                    <div className="col-sm-10">
+                    <div className="col-sm-12">
 
                         <div className="row">
                             {/* Attribution Source */}
@@ -203,8 +236,22 @@ class Home extends React.Component {
 
 
                         </div>
-                        <div id="embedContainer" className="mt-3 pt-3 border-top">
+                        <div id="embedContainer" className="mt-3 pt-3 border-top w-100">
                         </div>
+                    </div>
+                    <div className="col-sm-6 position-absolute right-abs top-abs p-3">
+                        <ReactCSSTransitionGroup
+                            transitionName="slide"
+                            transitionAppear={true}
+                            transitionAppearTimeout={500}
+                            transitionEnterTimeout={500}
+                            transitionLeaveTimeout={500}>
+                            {codeBarIsVisible ?
+                                <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true}>
+                                    {markdown}
+                                </SyntaxHighlighter>
+                                : ''}
+                        </ReactCSSTransitionGroup>
                     </div>
                 </div >
             </div >
@@ -214,3 +261,18 @@ class Home extends React.Component {
 
 export default Home;
 
+function readTextFile(file) {
+    console.log('readTextFile')
+    console.log('file', file)
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                var allText = rawFile.responseText;
+                alert(allText);
+            }
+        }
+    }
+    rawFile.send(null);
+}

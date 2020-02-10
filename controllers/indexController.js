@@ -69,7 +69,7 @@ module.exports.buildLookerExploreUrl = async (req, res, next) => {
 }
 
 module.exports.fetchFolder = async (req, res, next) => {
-    console.log('indexController fetchFolder');
+    // console.log('indexController fetchFolder');
 
     const { params } = req
     const sdk = LookerNodeSDK.createClient() //valid client :D

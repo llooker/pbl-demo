@@ -1,11 +1,13 @@
 import React from 'react';
-import Sidebar from './Sidebar'
+import Navigation from './Navigation'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 
 class Report extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            folder_contents: {}
+            folder_contents: {},
+            codeBarIsVisible: false
         }
     }
 
@@ -32,14 +34,24 @@ class Report extends React.Component {
 
     }
 
+    toggleCodeBar = () => {
+        console.log('toggleCodeBar')
+        this.setState(prevState => ({
+            codeBarIsVisible: prevState.codeBarIsVisible ? false : true
+        }), () => {
+            console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
+        })
+    }
+
     render() {
         // console.log('this.props', this.props)
         const { pathname } = this.props.location
         const { folder_contents } = this.state
+        const { codeBarIsVisible } = this.state
         return (
             < div className="home container p-5" >
-                <div className="row pt-3">
-                    <Sidebar pathname={pathname} />
+                <Navigation pathname={pathname} toggleCodeBar={this.toggleCodeBar} />
+                <div className="row pt-5">
                     <div className="col-sm-10">
                         <h1>demo.looker > folder 1827</h1>
                         <h3>Dashboards</h3>
@@ -54,6 +66,17 @@ class Report extends React.Component {
                                 return <li key={item.id}>{item.title}</li>
                             }) : <span>no looks :(</span>}
                         </ul>
+                    </div>
+                    <div className="col-sm-2">
+                        <ReactCSSTransitionGroup
+                            transitionName="slide"
+                            transitionAppear={true}
+                            transitionAppearTimeout={500}
+                            transitionEnterTimeout={500}
+                            transitionLeaveTimeout={500}>
+                            {codeBarIsVisible ? <p>For example, <code>&lt;section&gt;</code> should be wrapped as inline.</p>
+                                : ''}
+                        </ReactCSSTransitionGroup>
                     </div>
                 </div >
             </div >

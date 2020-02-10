@@ -24,6 +24,7 @@
     "mongodb": "^3.5.2",
     "mongoose": "^5.8.11",
     "nodemon": "^2.0.2",
-    "querystring": "^0.2.0"
+    "querystring": "^0.2.0",
+    "react-addons-css-transition-group": "^15.6.2"
   }
 }
