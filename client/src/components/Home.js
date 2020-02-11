@@ -1,6 +1,6 @@
 import React from 'react';
-import './Home.css';
 import Navigation from './Navigation'
+import './Home.css';
 
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -21,7 +21,7 @@ class Home extends React.Component {
             genderDropdownOptions: [],
             dashboard: '',
             codeBarIsVisible: false,
-            sampleCode: ''
+            sampleCode: {}
         }
     }
 
@@ -31,7 +31,6 @@ class Home extends React.Component {
 
 
         const sampleCodeFilePath = require("../sample-code/Home.sample.txt");
-        console.log('sampleCodeFilePath', sampleCodeFilePath)
         fetch(sampleCodeFilePath)
             .then(response => {
                 return response.text()
@@ -175,78 +174,75 @@ class Home extends React.Component {
             <div className="home container p-5 position-relative">
                 <Navigation pathname={pathname} toggleCodeBar={this.toggleCodeBar} />
                 <div className="row pt-5">
-                    <div className="col-sm-12">
+                    {/* Attribution Source */}
+                    <div className="col-sm-3">
+                        <label htmlFor="modalForm">Select Attribution Source</label>
+                        <select
+                            id="dropdownSelect"
+                            className="form-control"
+                            onChange={(e) => this.dropdownSelect(e, "attribution")}
 
-                        <div className="row">
-                            {/* Attribution Source */}
-                            <div className="col-sm-3">
-                                <label htmlFor="modalForm">Select Attribution Source</label>
-                                <select
-                                    id="dropdownSelect"
-                                    className="form-control"
-                                    onChange={(e) => this.dropdownSelect(e, "attribution")}
-
-                                    type="select-one"
-                                    value={this.state['attributionDropdownValue']}
-                                >
-                                    <option
-                                        key="first_touch"
-                                        value="First Touch"
-                                    >
-                                        First Touch
+                            type="select-one"
+                            value={this.state['attributionDropdownValue']}
+                        >
+                            <option
+                                key="first_touch"
+                                value="First Touch"
+                            >
+                                First Touch
                                     </option>
-                                    <option
-                                        key="last_touch"
-                                        value="Last Touch"
-                                    >
-                                        Last Touch
+                            <option
+                                key="last_touch"
+                                value="Last Touch"
+                            >
+                                Last Touch
                                     </option>
-                                    <option
-                                        key="multi_touch_linear"
-                                        value="Multi-Touch Linear"
-                                    >
-                                        Multi-touch Linear
+                            <option
+                                key="multi_touch_linear"
+                                value="Multi-Touch Linear"
+                            >
+                                Multi-touch Linear
                                     </option>
-                                </select>
-                            </div>
-                            {/* User Gender */}
-                            <div className="col-sm-3">
-                                <label htmlFor="modalForm">Select User Gender</label>
-                                <select
-                                    id="dropdownSelect"
-                                    className="form-control"
-                                    onChange={(e) => this.dropdownSelect(e, "gender")}
-                                    type="select-one"
-                                    value={this.state['genderDropdownValue']}
-                                >
-                                    {genderDropdownOptions.map(item => {
-                                        return <option
-                                            key={item == null ? 'Any' : item}
-                                            value={item == null ? 'Any' : item}
-                                        > {item == null ? 'Any' : item}</option>
-                                    })}
-                                </select>
-                            </div>
-
-
-                        </div>
-                        <div id="embedContainer" className="mt-3 pt-3 border-top w-100">
-                        </div>
+                        </select>
                     </div>
-                    <div className="col-sm-8 position-absolute right-abs top-abs p-3">
-                        <ReactCSSTransitionGroup
-                            transitionName="slide"
-                            transitionAppear={true}
-                            transitionAppearTimeout={500}
-                            transitionEnterTimeout={500}
-                            transitionLeaveTimeout={500}>
-                            {codeBarIsVisible ?
-                                <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true}>
+                    {/* User Gender */}
+                    <div className="col-sm-3">
+                        <label htmlFor="modalForm">Select User Gender</label>
+                        <select
+                            id="dropdownSelect"
+                            className="form-control"
+                            onChange={(e) => this.dropdownSelect(e, "gender")}
+                            type="select-one"
+                            value={this.state['genderDropdownValue']}
+                        >
+                            {genderDropdownOptions.map(item => {
+                                return <option
+                                    key={item == null ? 'Any' : item}
+                                    value={item == null ? 'Any' : item}
+                                > {item == null ? 'Any' : item}</option>
+                            })}
+                        </select>
+                    </div>
+                </div>
+                {/* works but does push embed container :() */}
+                <div className="row">
+                    <div id="embedContainer" className="col-sm-12 mt-3 pt-3 border-top w-100">
+                    </div>
+                    <ReactCSSTransitionGroup
+                        transitionName="slide"
+                        transitionAppear={true}
+                        transitionAppearTimeout={500}
+                        transitionEnterTimeout={500}
+                        transitionLeaveTimeout={500}>
+                        {codeBarIsVisible ?
+                            <div className="col-sm-8 position-absolute right-abs top-abs p-3 bg-light rounded">
+                                <h4>Sample code that makes this work:</h4>
+                                <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
                                     {sampleCode}
                                 </SyntaxHighlighter>
-                                : ''}
-                        </ReactCSSTransitionGroup>
-                    </div>
+                            </div>
+                            : ''}
+                    </ReactCSSTransitionGroup>
                 </div >
             </div >
         )
