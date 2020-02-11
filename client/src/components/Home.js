@@ -26,7 +26,6 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        // this.buildLookerUrl();
         this.retrieveDashboardFilters()
         this.embedSdkInit()
 
