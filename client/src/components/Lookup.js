@@ -13,6 +13,7 @@ class Lookup extends React.Component {
         super(props);
         this.state = {
             embed_url: '',
+            dashboard: '',
             codeBarIsVisible: false,
             sampleCode: ''
         }
@@ -83,7 +84,7 @@ class Lookup extends React.Component {
         this.setState(prevState => ({
             codeBarIsVisible: prevState.codeBarIsVisible ? false : true
         }), () => {
-            console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
+            // console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
         })
     }
 

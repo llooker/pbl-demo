@@ -1,5 +1,6 @@
 import React from 'react';
 import Navigation from './Navigation'
+import './Home.css';
 
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6

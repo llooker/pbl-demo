@@ -161,7 +161,7 @@ class Home extends React.Component {
         this.setState(prevState => ({
             codeBarIsVisible: prevState.codeBarIsVisible ? false : true
         }), () => {
-            console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
+            // console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
         })
     }
 

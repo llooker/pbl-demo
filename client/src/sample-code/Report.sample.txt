@@ -1,0 +1,52 @@
+//Report.sample.txt
+
+//client side code
+componentDidMount() {
+    this.fetchFolderContents();
+}
+
+async fetchFolderContents() {
+    let lookerResposnse = await fetch('/fetchfolder/1827', {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+
+    let lookerResposnseData = await lookerResposnse.json();
+    this.setState({
+        folder_contents: lookerResposnseData.folder
+    });
+}
+
+//server side code
+const { LookerNodeSDK } = require('@looker/sdk')
+
+module.exports.fetchFolder = async (req, res, next) => {
+    const { params } = req
+    const sdk = LookerNodeSDK.createClient() //valid client :D
+    const folder = await sdk.ok(sdk.folder(params.folder_id))
+    let resObj = { folder }
+    res.send(resObj)
+}
+
+//back to client side
+render() {
+    return (
+        ...
+        <h3>Dashboards</h3>
+        <ul>
+            {folder_contents.dashboards && folder_contents.dashboards.length ? folder_contents.dashboards.map((item, index) => {
+                return <li key={item.id}>{item.title}</li>
+            }) : <span>no dashboards :(</span>}
+        </ul>
+        <h3>Looks</h3>
+        <ul>
+            {folder_contents.looks && folder_contents.looks.length ? folder_contents.looks.map((item, index) => {
+                return <li key={item.id}>{item.title}</li>
+            }) : <span>no looks :(</span>}
+        </ul>
+        ...
+    )
+}
