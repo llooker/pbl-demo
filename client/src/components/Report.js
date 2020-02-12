@@ -66,7 +66,6 @@ class Report extends React.Component {
             console.log('item', item)
             let lookId = item.id
             let embedContainerId = '#embedContainer' + item.id
-            console.log('embedContainerId', embedContainerId)
             LookerEmbedSDK.createLookWithId(lookId)
                 .appendTo(embedContainerId)
                 .withClassName('iframe')
@@ -150,7 +149,7 @@ class Report extends React.Component {
                         transitionLeaveTimeout={500}>
                         {codeBarIsVisible ?
                             <div className="col-sm-8 position-absolute right-abs top-abs p-3 bg-light rounded">
-                                <h4>Sample code that makes this work:</h4>
+                                <h4>Sample code:</h4>
                                 <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
                                     {sampleCode}
                                 </SyntaxHighlighter>

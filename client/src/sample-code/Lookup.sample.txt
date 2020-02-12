@@ -31,12 +31,12 @@ embedSdkInit() {
 setupDashboard = (dashboard) => {
     this.setState({
         dashboard: dashboard
-    }})
+    })
 }
 
 //render embedContainer on the page so the dashboard can be appeneded
 render() {
     return (
-        <div id="embedContainer" className="mt-3 pt-3 border-top"></div>
+                    <div id="embedContainer" className="col-sm-12 w-100">
     )
 }
