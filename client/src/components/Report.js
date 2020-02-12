@@ -112,12 +112,12 @@ class Report extends React.Component {
         return (
             < div className="home container p-5  position-relative" >
                 <Navigation pathname={pathname} toggleCodeBar={this.toggleCodeBar} />
-                <div className="row pt-5">
+                {/* <div className="row pt-5">
                     <h3>demo.looker > folder 1827</h3>
-                </div>
-
-                <div className="row">
-                    <div className="col-3">
+                </div> */}
+                <div className="row pt-3">
+                    <div className="col-3 border-right">
+                        <h6 className="text-dark">Select Report</h6>
                         <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 
                             {folder_contents.looks && folder_contents.looks.length ? folder_contents.looks.map((item, index) => {
@@ -133,7 +133,7 @@ class Report extends React.Component {
                             {folder_contents.looks && folder_contents.looks.length ? folder_contents.looks.map((item, index) => {
                                 return (
                                     <div key={item.id} className={index === 0 ? "tab-pane fade active show" : "tab-pane fade"} id={`v-pills-${item.id}`} role="tabpanel" aria-labelledby={`v-pills-${item.id}-tab`}>
-                                        {/* <h6>{item.title}</h6> */}
+                                        <h6 className="text-dark">{item.title}</h6>
                                         <div id={`embedContainer${item.id}`} className="col-sm-12">
                                         </div>
                                     </div>

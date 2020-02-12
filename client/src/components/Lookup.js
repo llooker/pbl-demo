@@ -80,7 +80,7 @@ class Lookup extends React.Component {
     }
 
     toggleCodeBar = () => {
-        console.log('toggleCodeBar')
+        // console.log('toggleCodeBar')
         this.setState(prevState => ({
             codeBarIsVisible: prevState.codeBarIsVisible ? false : true
         }), () => {
@@ -95,8 +95,9 @@ class Lookup extends React.Component {
         return (
             <div className="home container p-5 position-relative">
                 <Navigation pathname={pathname} toggleCodeBar={this.toggleCodeBar} />
-                <div className="row pt-5">
-                    <div id="embedContainer" className="col-sm-12 mt-3 pt-3 border-top w-100">
+                <div className="row pt-3">
+                    {/* mt-3 pt-3 border-top */}
+                    <div id="embedContainer" className="col-sm-12 w-100">
                     </div>
                     <ReactCSSTransitionGroup
                         transitionName="slide"

@@ -26,6 +26,8 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
+        console.log('Home componentDidMount')
+        console.log('this.state.isLoading', this.state.isLoading)
         this.retrieveDashboardFilters()
         this.embedSdkInit()
 
@@ -61,7 +63,8 @@ class Home extends React.Component {
             optionsArr.push(item["users.gender"] || null)
         })
         this.setState({
-            genderDropdownOptions: optionsArr
+            genderDropdownOptions: optionsArr,
+            isLoading: false
         }, () => {
             // console.log('retrieveDashboardFilters callback')
             // console.log('this.state.genderDropdownOptions', this.state.genderDropdownOptions)
@@ -166,6 +169,8 @@ class Home extends React.Component {
     }
 
     render() {
+        console.log('Home render')
+        console.log('this.state.isLoading', this.state.isLoading)
         const { pathname } = this.props.location
         const { genderDropdownOptions } = this.state
         const { codeBarIsVisible } = this.state
@@ -173,7 +178,7 @@ class Home extends React.Component {
         return (
             <div className="home container p-5 position-relative">
                 <Navigation pathname={pathname} toggleCodeBar={this.toggleCodeBar} />
-                <div className="row pt-5">
+                <div className="row pt-3">
                     {/* Attribution Source */}
                     <div className="col-sm-3">
                         <label htmlFor="modalForm">Select Attribution Source</label>
@@ -190,19 +195,19 @@ class Home extends React.Component {
                                 value="First Touch"
                             >
                                 First Touch
-                                    </option>
+                                        </option>
                             <option
                                 key="last_touch"
                                 value="Last Touch"
                             >
                                 Last Touch
-                                    </option>
+                                        </option>
                             <option
                                 key="multi_touch_linear"
                                 value="Multi-Touch Linear"
                             >
                                 Multi-touch Linear
-                                    </option>
+                                        </option>
                         </select>
                     </div>
                     {/* User Gender */}

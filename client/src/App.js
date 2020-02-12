@@ -53,7 +53,7 @@ class Login extends React.Component {
 
     if (auth.isAuthenticated === true) {
       return (
-        <div className="App fade ">
+        <div className="App  ">
           <Header
             clientId={googleClientId}
             buttonText="Logout"
@@ -66,7 +66,7 @@ class Login extends React.Component {
       )
     } else {
       return (
-        <div className="App fade">
+        <div className="App ">
           <h1>You need to login</h1>
           <GoogleLogin
             clientId={googleClientId}
