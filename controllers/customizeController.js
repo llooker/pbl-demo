@@ -10,6 +10,7 @@ module.exports.saveCustomization = (req, res, next) => {
     const { email } = req.session.userProfile
     const { customizations } = req.session
     const customizationToSave = req.body
+    customizationToSave.date = new Date() //add date to customization
     const { customizationIndex } = req.body
     delete customizationToSave.customizationIndex // we don't want to save index here
     //existing customization

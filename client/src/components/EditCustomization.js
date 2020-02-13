@@ -14,8 +14,13 @@ class NewCustomization extends React.Component {
 
 
     componentDidMount() {
-        console.log('NewCustomization componentDidMount')
-        console.log('this.props', this.props)
+        // console.log('NewCustomization componentDidMount')
+        // console.log('this.props', this.props)
+    }
+
+    componentWillUnmount() {
+        console.log('NewCustomization componentWillUnmount')
+        this.props.cancelIndexOfCustomizationToEdit()
     }
 
     handleSubmit(event) {

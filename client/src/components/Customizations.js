@@ -1,11 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
+import Moment from 'moment'
 
 class Customizations extends React.Component {
     constructor(props) {
         super(props);
         this.editCustomization = this.editCustomization.bind(this);
         this.applyCustomization = this.applyCustomization.bind(this);
+        this.state = {
+            customizations: this.props.customizations,
+            isOrdered: null
+        }
     }
 
     componentDidMount() {
@@ -23,9 +28,35 @@ class Customizations extends React.Component {
         this.props.history.push('/customize')
     }
 
+    sortByCreatedDate() {
+        console.log('sortByCreatedDate')
+        let { isOrdered } = this.state
+        console.log('isOrdered', isOrdered)
+        let sortedCustomizations;
+        if (isOrdered === null || isOrdered === "DESC") {
+            console.log('inside iff')
+            sortedCustomizations = this.state.customizations.sort((a, b) => (a.date > b.date) ? 1 : -1)
+            this.setState({
+                isOrdered: "ASC"
+            })
+        } else if (isOrdered === "ASC") {
+            console.log('else iff')
+            sortedCustomizations = this.state.customizations.sort((a, b) => (a.date > b.date) ? -1 : 1)
+            this.setState({
+                isOrdered: "DESC"
+            })
+
+        }
+        console.log('sortedCustomizations', sortedCustomizations)
+        this.setState({
+            customizations: sortedCustomizations
+        })
+    }
+
     render() {
-        const { customizations } = this.props
         const { activeCustomization } = this.props
+        const { customizations } = this.state
+        const { isOrdered } = this.state
         return (
             <div className="home container p-5" >
                 <div className="row pt-3">
@@ -35,14 +66,16 @@ class Customizations extends React.Component {
                             <thead>
                                 <tr>
                                     <th scope="col">Name</th>
+                                    <th scope="col" className="cursor" onClick={() => this.sortByCreatedDate()}><a>Last Saved {isOrdered === null ? '' : isOrdered === "ASC" ? '∧' : '∨'}</a></th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {customizations.map((customization, index) => {
                                     return (
-                                        <tr key={customization.id} index={index} >
+                                        <tr key={customization.id} id={customization.id} index={index} >
                                             <td >{customization.companyname}</td>
+                                            <td >{Moment(customization.date).format('LLL')}</td>
                                             {
                                                 customization.companyname === activeCustomization.companyname ?
                                                     <td><span className="badge badge-info">Active</span></td>

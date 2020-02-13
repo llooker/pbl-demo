@@ -26,8 +26,8 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        console.log('Home componentDidMount')
-        console.log('this.state.isLoading', this.state.isLoading)
+        // console.log('Home componentDidMount')
+        // console.log('this.state.isLoading', this.state.isLoading)
         this.retrieveDashboardFilters()
         this.embedSdkInit()
 
@@ -169,8 +169,7 @@ class Home extends React.Component {
     }
 
     render() {
-        console.log('Home render')
-        console.log('this.state.isLoading', this.state.isLoading)
+        // console.log('Home render')
         const { pathname } = this.props.location
         const { genderDropdownOptions } = this.state
         const { codeBarIsVisible } = this.state

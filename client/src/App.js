@@ -82,7 +82,7 @@ class Login extends React.Component {
 }
 
 const PrivateRoute = ({ component: Component,
-  customizations, activeCustomization, applyCustomization, editCustomization, indexOfCustomizationToEdit, saveCustomization, ...rest }) => (
+  customizations, activeCustomization, applyCustomization, editCustomization, indexOfCustomizationToEdit, saveCustomization, cancelIndexOfCustomizationToEdit, ...rest }) => (
     < Route {...rest} render={(props) => (
       auth.isAuthenticated === true ?
         <Component {...props}
@@ -91,7 +91,8 @@ const PrivateRoute = ({ component: Component,
           applyCustomization={applyCustomization}
           editCustomization={editCustomization}
           indexOfCustomizationToEdit={indexOfCustomizationToEdit}
-          saveCustomization={saveCustomization} />
+          saveCustomization={saveCustomization}
+          cancelIndexOfCustomizationToEdit={cancelIndexOfCustomizationToEdit} />
         : <Redirect to={{
           pathname: '/',
           state: { from: props.location }
@@ -194,14 +195,14 @@ class App extends React.Component {
     // console.log('editCustomization')
     // console.log('customizationIndex', customizationIndex)
     const validCustomizationIndex = typeof this.state.customizations[customizationIndex] === 'undefined' ? null : customizationIndex
-    console.log('validCustomizationIndex', validCustomizationIndex)
+    // console.log('validCustomizationIndex', validCustomizationIndex)
     this.setState({
       indexOfCustomizationToEdit: validCustomizationIndex,
     }, () => {
       // console.log('editCustomization callback')
       // console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
-      //set back to null immediately after rendering to prevent edge case
-      this.setState({ indexOfCustomizationToEdit: null })
+      // set back to null immediately after rendering to prevent edge case
+      // this.setState({ indexOfCustomizationToEdit: null }) //creates error?
     });
   }
 
@@ -230,6 +231,16 @@ class App extends React.Component {
       // console.log('this.state.activeCustomization', this.state.activeCustomization)
       // console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit) //needs work
     });
+  }
+
+  cancelIndexOfCustomizationToEdit = () => {
+    // console.log("cancelIndexOfCustomizationToEdit")
+    this.setState({
+      indexOfCustomizationToEdit: null
+    }, () => {
+      // console.log('cancelIndexOfCustomizationToEdit callback')
+      // console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
+    })
   }
 
   render() {
@@ -265,6 +276,7 @@ class App extends React.Component {
             customizations={customizations}
             indexOfCustomizationToEdit={indexOfCustomizationToEdit}
             saveCustomization={this.saveCustomization}
+            cancelIndexOfCustomizationToEdit={this.cancelIndexOfCustomizationToEdit}
           />
         </div>
       </Router>
