@@ -108,7 +108,8 @@ async function checkForCustomizations(session) {
 
     let defaultCustomizationObj = {
         id: 'defaultCustomization',
-        companyname: 'WYSIWYG',
+        companyName: 'WYSIWYG',
+        logoUrl: 'https://looker.com/assets/img/images/logos/looker_black.svg',
         date: new Date() //save date with default customization
     }
 

@@ -8,7 +8,8 @@ class NewCustomization extends React.Component {
         const { indexOfCustomizationToEdit } = this.props
         const { customizations } = this.props
         this.state = {
-            companyname: indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].companyname : ''
+            companyName: indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].companyName : '',
+            logoUrl: indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].logoUrl : ''
         }
     }
 
@@ -35,8 +36,13 @@ class NewCustomization extends React.Component {
     }
 
     updateInput(e) {
+        console.log('updateInput');
+        console.log('e.target.id', e.target.id)
+        console.log('e.target.value', e.target.value)
         this.setState({
-            companyname: e.target.value
+            [e.target.id]: e.target.value
+        }, () => {
+            // console.log('this.state[e.target.id]', this.state[e.target.id])
         });
     }
 
@@ -45,15 +51,19 @@ class NewCustomization extends React.Component {
         const { customizations } = this.props
         return (
             <div className="home container p-5" >
-                <div className="row pt-3">
+                <div className="row pt-5">
                     <div className="col-sm-9">
                         <h1>Customizations</h1>
                         <form onSubmit={this.handleSubmit}>
                             <input type="hidden" id="id" name="id" value={indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].id : ''} />
                             <input type="hidden" id="customizationIndex" name="customizationIndex" value={indexOfCustomizationToEdit ? indexOfCustomizationToEdit : ''} />
                             <div className="form-group">
-                                <label htmlFor="companyname">Company name</label>
-                                <input id="companyname" className="form-control" name="companyname" type="text" value={this.state.companyname} onChange={e => this.updateInput(e)} />
+                                <label htmlFor="companyName">Company name</label>
+                                <input id="companyName" className="form-control" name="companyName" type="text" value={this.state.companyName} onChange={e => this.updateInput(e)} />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="logoUrl">Logo url</label>
+                                <input id="logoUrl" className="form-control" name="logoUrl" type="text" value={this.state.logoUrl} onChange={e => this.updateInput(e)} />
                             </div>
                             <button className="btn btn-primary mr-2">Save customization</button>
                             <Link to='/customize'>

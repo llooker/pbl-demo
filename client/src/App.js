@@ -58,7 +58,8 @@ class Login extends React.Component {
             clientId={googleClientId}
             buttonText="Logout"
             onLogoutSuccess={this.props.applySession}
-            companyname={activeCustomization.companyname || "WYSIWYG"} //default
+            companyName={activeCustomization.companyName || "WYSIWYG"} //default
+            logoUrl={activeCustomization.logoUrl || "https://looker.com/assets/img/images/logos/looker_black.svg"} //default
           />
           <Redirect to={from} />
           <Footer pathname={pathname} />
@@ -123,7 +124,10 @@ class App extends React.Component {
   }
 
   checkSession = async () => {
-    // console.log('checkSession')
+    console.log('checkSession')
+    console.log('this.state.userProfile', this.state.userProfile)
+    console.log('this.state.customizations', this.state.customizations)
+    console.log('this.state.activeCustomization', this.state.activeCustomization)
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -142,10 +146,10 @@ class App extends React.Component {
           customizations,
           activeCustomization: customizations[0]
         }, () => {
-          // console.log('checkSession callback')
-          // console.log('this.state.userProfile', this.state.userProfile)
-          // console.log('this.state.customizations', this.state.customizations)
-          // console.log('this.state.activeCustomization', this.state.activeCustomization)
+          console.log('checkSession callback')
+          console.log('this.state.userProfile', this.state.userProfile)
+          console.log('this.state.customizations', this.state.customizations)
+          console.log('this.state.activeCustomization', this.state.activeCustomization)
 
         })
       })
@@ -154,8 +158,8 @@ class App extends React.Component {
 
 
   applySession = async (userProfile) => {
-    // console.log('applySession')
-    // console.log('userProfile', userProfile)
+    console.log('applySession')
+    console.log('userProfile', userProfile)
     let sessionData = await fetch('/writesession', {
       method: 'POST',
       headers: {
@@ -181,8 +185,8 @@ class App extends React.Component {
   }
 
   applyCustomization = (customizationIndex) => {
-    // console.log('applyCustomization')
-    // console.log('customizationIndex', customizationIndex)
+    console.log('applyCustomization')
+    console.log('customizationIndex', customizationIndex)
     this.setState({
       activeCustomization: this.state.customizations[customizationIndex],
     }, () => {
@@ -250,7 +254,7 @@ class App extends React.Component {
     const { customizations } = this.state
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
-
+    console.log('activeCustomization', activeCustomization)
     return (
       <Router>
         <div>

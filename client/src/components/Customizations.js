@@ -58,8 +58,8 @@ class Customizations extends React.Component {
         const { customizations } = this.state
         const { isOrdered } = this.state
         return (
-            <div className="home container p-5" >
-                <div className="row pt-3">
+            <div className="home container p-5 position-relative">
+                <div className="row pt-5">
                     <div className="col-sm-12">
                         <h1>Customizations</h1>
                         <table className="table">
@@ -74,10 +74,10 @@ class Customizations extends React.Component {
                                 {customizations.map((customization, index) => {
                                     return (
                                         <tr key={customization.id} id={customization.id} index={index} >
-                                            <td >{customization.companyname}</td>
+                                            <td >{customization.companyName}</td>
                                             <td >{Moment(customization.date).format('LLL')}</td>
                                             {
-                                                customization.companyname === activeCustomization.companyname ?
+                                                customization.companyName === activeCustomization.companyName ?
                                                     <td><span className="badge badge-info">Active</span></td>
                                                     : customization.id === "defaultCustomization" ?
                                                         <td>

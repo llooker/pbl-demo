@@ -41,3 +41,12 @@ ul li {
 .top-abs{
     top: 140px;
 }
+
+#logoUrlNav{
+  height: 75%;
+  width: auto;
+}
+
+.navbar li  a{
+  line-height: 50px;
+ }
