@@ -165,3 +165,26 @@ module.exports.auth = (req, res, next) => {
     const url = createSignedUrl(src, user, config.looker.host, config.looker.embed_secret);
     res.json({ url });
 }
+
+
+
+module.exports.performApiCall = async (req, res, next) => {
+    console.log('indexController performApiCall');
+
+    const { params } = req
+    console.log('params', params)
+    // console.log('params.type', params.type)
+    // console.log('params.type === "dashboard"', params.type === "dashboard")
+    // console.log('params.type === "look"', params.type === "look")
+    let returnVal;
+    const sdk = LookerNodeSDK.createClient() //valid client :D
+    if (params.type === 'dashboard') {
+        returnVal = await sdk.ok(sdk.all_dashboards())
+    } else if (params.type === 'look') {
+        returnVal = await sdk.ok(sdk.all_looks())
+    }
+    console.log('returnVal', returnVal)
+    let resObj = { returnVal }
+
+    res.send({ resObj })
+}

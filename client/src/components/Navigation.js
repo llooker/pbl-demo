@@ -18,6 +18,7 @@ function Navigation(props) {
                 <li className="nav-item">
                     <Link className={props.pathname === "/explore" ? "nav-link active" : "nav-link"} to='/explore'>Explore</Link>
                 </li>
+                <li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={props.toggleModal} /></li>
                 <li className="nav-item ml-auto"><i className="fas fa-code cursor text-secondary" onClick={props.toggleCodeBar ? props.toggleCodeBar : ''} /></li>
 
             </ul>

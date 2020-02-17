@@ -1,6 +1,7 @@
 import React from 'react';
 import Navigation from './Navigation'
 import './Home.css';
+import Modal from './Modal'
 
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -26,8 +27,12 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        // console.log('Home componentDidMount')
+        console.log('Home componentDidMount')
         // console.log('this.state.isLoading', this.state.isLoading)
+        console.log('this.props.renderModal', this.props.renderModal)
+        // console.log('this.props.performApiCall', this.props.performApiCall)
+        // console.log('this.props.toggleModal', this.props.toggleModal)
+
         this.retrieveDashboardFilters()
         this.embedSdkInit()
 
@@ -169,14 +174,18 @@ class Home extends React.Component {
     }
 
     render() {
-        // console.log('Home render')
+        console.log('Home render')
         const { pathname } = this.props.location
         const { genderDropdownOptions } = this.state
         const { codeBarIsVisible } = this.state
         const { sampleCode } = this.state
+        const { renderModal } = this.props
+        // const { performApiCall } = this.props
+        // console.log('renderModal', renderModal)
+        // console.log('performApiCall', performApiCall)
         return (
             <div className="home container p-5 position-relative">
-                <Navigation pathname={pathname} toggleCodeBar={this.toggleCodeBar} />
+                <Navigation pathname={pathname} toggleCodeBar={this.toggleCodeBar} toggleModal={this.props.toggleModal} />
                 <div className="row pt-3">
                     {/* Attribution Source */}
                     <div className="col-sm-3">
@@ -248,6 +257,9 @@ class Home extends React.Component {
                             : ''}
                     </ReactCSSTransitionGroup>
                 </div >
+                {renderModal ?
+                    <Modal title="Select Looker Content to Add" />
+                    : ''}
             </div >
         )
     }

@@ -53,3 +53,16 @@
 		opacity: 1;
 	}
 }
+
+/* col d-flex align-items-center justify-content-center h-100 */
+.v-center {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+body > #root > div {
+  height: 100vh;
+}

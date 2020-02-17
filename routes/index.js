@@ -17,4 +17,7 @@ router.post('/savecustomization', customizeCtrl.saveCustomization)
 //for embed sdk
 router.get('/auth', indexCtrl.auth)
 
+
+router.get('/performapicall/:type', indexCtrl.performApiCall)
+
 module.exports = router

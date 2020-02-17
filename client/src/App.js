@@ -14,6 +14,8 @@ import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
 
 
+import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
+LookerEmbedSDK.init('demo.looker.com', '/auth')
 
 //to discuss with wes -- how can I eliminate this?
 //is this something I wanna replace with passport?
@@ -67,23 +69,36 @@ class Login extends React.Component {
       )
     } else {
       return (
-        <div className="App ">
-          <h1>You need to login</h1>
-          <GoogleLogin
-            clientId={googleClientId}
-            buttonText="Login"
-            onSuccess={this.responseGoogle}
-            onFailure={this.responseGoogle}
-            cookiePolicy={'single_host_origin'}
-          />
-        </div>
+        <div className="App h-100">
+          <div className="home container p-5 position-relative h-100">
+            <div className="row pt-3 h-25"></div>
+            <div className="row pt-3 h-50">
+              <div className="col-sm-4">
+              </div>
+              <div className="col-sm-4 bg-light h-100 v-center border rounded p-5">
+                <div>
+                  <h2>PBL App</h2>
+                  <p>Login with Google to get started</p>
+                </div>
+                <div className="pt-1">
+                  <GoogleLogin
+                    clientId={googleClientId}
+                    buttonText="Login"
+                    onSuccess={this.responseGoogle}
+                    onFailure={this.responseGoogle}
+                    cookiePolicy={'single_host_origin'}
+                  /></div>
+              </div>
+            </div>
+          </div>
+        </div >
       )
     }
   }
 }
 
 const PrivateRoute = ({ component: Component,
-  customizations, activeCustomization, applyCustomization, editCustomization, indexOfCustomizationToEdit, saveCustomization, cancelIndexOfCustomizationToEdit, ...rest }) => (
+  customizations, activeCustomization, applyCustomization, editCustomization, indexOfCustomizationToEdit, saveCustomization, cancelIndexOfCustomizationToEdit, toggleModal, renderModal, ...rest }) => (
     < Route {...rest} render={(props) => (
       auth.isAuthenticated === true ?
         <Component {...props}
@@ -93,7 +108,10 @@ const PrivateRoute = ({ component: Component,
           editCustomization={editCustomization}
           indexOfCustomizationToEdit={indexOfCustomizationToEdit}
           saveCustomization={saveCustomization}
-          cancelIndexOfCustomizationToEdit={cancelIndexOfCustomizationToEdit} />
+          cancelIndexOfCustomizationToEdit={cancelIndexOfCustomizationToEdit}
+          renderModal={renderModal}
+          toggleModal={toggleModal}
+        />
         : <Redirect to={{
           pathname: '/',
           state: { from: props.location }
@@ -108,7 +126,8 @@ class App extends React.Component {
       userProfile: {},
       customizations: [],
       activeCustomization: {},
-      indexOfCustomizationToEdit: null
+      indexOfCustomizationToEdit: null,
+      renderModal: false
     }
   }
 
@@ -247,14 +266,44 @@ class App extends React.Component {
     })
   }
 
+  toggleModal = () => {
+    console.log('toggleModal')
+    this.setState(prevState => ({
+      renderModal: prevState.renderModal ? false : true
+    }), () => {
+      // console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
+    })
+  }
+
+  /*performApiCall = async (type) => {
+    console.log('performApiCall')
+    console.log('type', type)
+    let apiResponse = await fetch('/performapicall/' + type, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    let apiResponseData = await apiResponse.json();
+    console.log('apiResponseData', apiResponseData)
+  }*/
+
+  dynamicEmbeddedContent = async (obj) => {
+    console.log('dynamicEmbeddedContent');
+    console.log('obj', obj)
+  }
+
   render() {
-    // console.log('App render');
+    console.log('App render');
     // console.log('this.props', this.props);
     const { userProfile } = this.state
     const { customizations } = this.state
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
-    console.log('activeCustomization', activeCustomization)
+    const { renderModal } = this.state
+    // console.log('activeCustomization', activeCustomization)
+    console.log('renderModal', renderModal)
     return (
       <Router>
         <div>
@@ -264,7 +313,10 @@ class App extends React.Component {
             userProfile={userProfile}
             activeCustomization={activeCustomization} />}
           />
-          <PrivateRoute path='/home' component={Home} />
+          <PrivateRoute path='/home' component={Home}
+            toggleModal={this.toggleModal}
+            renderModal={renderModal}
+            performApiCall={this.performApiCall} />
           <PrivateRoute path='/lookup' component={Lookup} />
           <PrivateRoute path='/report' component={Report} />
           <PrivateRoute path='/explore' component={Explore} />

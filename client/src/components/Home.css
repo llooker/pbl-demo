@@ -50,3 +50,19 @@ ul li {
 .navbar li  a{
   line-height: 50px;
  }
+
+ .dialog {
+  display: inline-block;
+}
+.modal {
+  display: block !important; /* I added this to see the modal, you don't need this */
+  top: 3em;
+}
+
+.modal-dialog {
+  overflow-y: initial !important;
+}
+.modal-body {
+  height: 300px;
+  overflow-y: auto;
+}
