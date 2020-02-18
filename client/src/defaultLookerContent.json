@@ -2,22 +2,30 @@
     {
         "type": "dashboard",
         "id": "5277",
-        "dropdownOptions": [
-            "Female",
-            "Male",
-            "Any"
-        ]
+        "customDropdown": {
+            "title": "Select User Gender",
+            "options": [
+                "Female",
+                "Male",
+                "Any"
+            ],
+            "filterName": "User Gender"
+        },
+        "name": "Home"
     },
     {
         "type": "dashboard",
-        "id": "3106"
+        "id": "3106",
+        "name": "Lookup"
     },
     {
         "type": "folder",
-        "id": "1827"
+        "id": "1827",
+        "name": "Report"
     },
     {
         "type": "explore",
-        "id": "thelook_adwords::events"
+        "id": "thelook_adwords::events",
+        "name": "Explore"
     }
 ]

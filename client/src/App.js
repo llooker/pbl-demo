@@ -10,7 +10,7 @@ import Home from './components/Home'
 import Lookup from './components/Lookup'
 import Report from './components/Report'
 import Explore from './components/Explore'
-import LookerContent from './components/LookerContent'
+import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
 import DefaultLookerContent from './defaultLookerContent.json';
@@ -100,7 +100,7 @@ class Login extends React.Component {
 }
 
 const PrivateRoute = ({ component: Component,
-  customizations, activeCustomization, applyCustomization, editCustomization, indexOfCustomizationToEdit, saveCustomization, cancelIndexOfCustomizationToEdit, toggleModal, renderModal, ...rest }) => (
+  customizations, activeCustomization, applyCustomization, editCustomization, indexOfCustomizationToEdit, saveCustomization, cancelIndexOfCustomizationToEdit, toggleModal, renderModal, lookerContent, ...rest }) => (
     < Route {...rest} render={(props) => (
       auth.isAuthenticated === true ?
         <Component {...props}
@@ -113,6 +113,7 @@ const PrivateRoute = ({ component: Component,
           cancelIndexOfCustomizationToEdit={cancelIndexOfCustomizationToEdit}
           renderModal={renderModal}
           toggleModal={toggleModal}
+          lookerContent={lookerContent}
         />
         : <Redirect to={{
           pathname: '/',
@@ -284,7 +285,7 @@ class App extends React.Component {
     })
   }
 
-  createLookerContent = (content) => {
+  /*createLookerContent = (content) => {
     console.log('createLookerContent');
     console.log('content', content)
     for (let i = 0; i < content.length; i++) {
@@ -315,7 +316,7 @@ class App extends React.Component {
 
       }
     }
-  }
+  }*/
 
   render() {
     console.log('App render');
@@ -327,8 +328,8 @@ class App extends React.Component {
     const { renderModal } = this.state
     const { lookerContent } = this.state
     // console.log('activeCustomization', activeCustomization)
-    console.log('lookerContent', lookerContent)
     console.log('renderModal', renderModal)
+    console.log('lookerContent', lookerContent)
     return (
       <Router>
         <div>
@@ -349,7 +350,7 @@ class App extends React.Component {
 
 
 
-          <PrivateRoute path='/home' component={LookerContent}
+          <PrivateRoute path='/home' component={Content}
             toggleModal={this.toggleModal}
             renderModal={renderModal}
             lookerContent={lookerContent}
