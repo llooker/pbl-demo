@@ -10,8 +10,10 @@ import Home from './components/Home'
 import Lookup from './components/Lookup'
 import Report from './components/Report'
 import Explore from './components/Explore'
+import LookerContent from './components/LookerContent'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
+import DefaultLookerContent from './defaultLookerContent.json';
 
 
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
@@ -127,13 +129,15 @@ class App extends React.Component {
       customizations: [],
       activeCustomization: {},
       indexOfCustomizationToEdit: null,
-      renderModal: false
+      renderModal: false,
+      lookerContent: []
     }
   }
 
   componentDidMount() {
-    // console.log('App componentDidMount')
-    // console.log('this.props', this.props)
+    console.log('App componentDidMount')
+    console.log('this.props', this.props)
+    console.log('DefaultLookerContent', DefaultLookerContent)
     this.checkSession()
   }
 
@@ -154,7 +158,7 @@ class App extends React.Component {
         'Content-Type': 'application/json'
       }
     })
-    let sessionResponseData = await sessionResponse.json();
+    const sessionResponseData = await sessionResponse.json();
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
     //make sure defined and contains properties
@@ -163,16 +167,19 @@ class App extends React.Component {
         this.setState({
           userProfile,
           customizations,
-          activeCustomization: customizations[0]
+          activeCustomization: customizations[0],
+          lookerContent: DefaultLookerContent
         }, () => {
           console.log('checkSession callback')
           console.log('this.state.userProfile', this.state.userProfile)
           console.log('this.state.customizations', this.state.customizations)
           console.log('this.state.activeCustomization', this.state.activeCustomization)
-
+          console.log('this.state.lookerContent', this.state.lookerContent)
         })
       })
-    }
+    } else { console.log('elllse') }
+    // why here???
+    // this.createLookerContent(DefaultLookerContent)
   }
 
 
@@ -194,12 +201,14 @@ class App extends React.Component {
     this.setState({
       userProfile,
       customizations: sessionResponseData.session.customizations,
-      activeCustomization: sessionResponseData.session.customizations[0]
+      activeCustomization: sessionResponseData.session.customizations[0],
+      lookerContent: DefaultLookerContent
     }, () => {
-      // console.log('applySession callback')
-      // console.log('this.state.userProfile', this.state.userProfile)
-      // console.log('this.state.customizations', this.state.customizations)
-      // console.log('this.state.activeCustomization', this.state.activeCustomization)
+      console.log('applySession callback')
+      console.log('this.state.userProfile', this.state.userProfile)
+      console.log('this.state.customizations', this.state.customizations)
+      console.log('this.state.activeCustomization', this.state.activeCustomization)
+      console.log('this.state.lookerContent', this.state.lookerContent)
     });
   }
 
@@ -275,23 +284,37 @@ class App extends React.Component {
     })
   }
 
-  /*performApiCall = async (type) => {
-    console.log('performApiCall')
-    console.log('type', type)
-    let apiResponse = await fetch('/performapicall/' + type, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    let apiResponseData = await apiResponse.json();
-    console.log('apiResponseData', apiResponseData)
-  }*/
+  createLookerContent = (content) => {
+    console.log('createLookerContent');
+    console.log('content', content)
+    for (let i = 0; i < content.length; i++) {
+      console.log('content[i]', content[i])
+      if (content[i].type === 'dashboard') {
+        console.log('if dashboard')
+        LookerEmbedSDK.createDashboardWithId(content.id)
+          // .appendTo('#embedContainer')
+          .withClassName('iframe')
+          .withNext()
+          .on('dashboard:run:start', (e) => { console.log(e) })
+          // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
+          .build()
+          .connect()
+          .then((dashboard) => {
+            this.setState(prevState => ({
+              lookerContent: [...prevState.lookerContent, dashboard]
+            }))
+          })
+          .catch((error) => {
+            console.error('Connection error', error)
+          })
+      } else if (content[i].type === 'explore') {
+        console.log('else if explore')
 
-  dynamicEmbeddedContent = async (obj) => {
-    console.log('dynamicEmbeddedContent');
-    console.log('obj', obj)
+      } else if (content[i].type === 'folder') {
+        console.log('else if folder')
+
+      }
+    }
   }
 
   render() {
@@ -302,7 +325,9 @@ class App extends React.Component {
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
     const { renderModal } = this.state
+    const { lookerContent } = this.state
     // console.log('activeCustomization', activeCustomization)
+    console.log('lookerContent', lookerContent)
     console.log('renderModal', renderModal)
     return (
       <Router>
@@ -313,13 +338,23 @@ class App extends React.Component {
             userProfile={userProfile}
             activeCustomization={activeCustomization} />}
           />
-          <PrivateRoute path='/home' component={Home}
+
+          {/* <PrivateRoute path='/home' component={Home}
             toggleModal={this.toggleModal}
             renderModal={renderModal}
             performApiCall={this.performApiCall} />
           <PrivateRoute path='/lookup' component={Lookup} />
           <PrivateRoute path='/report' component={Report} />
-          <PrivateRoute path='/explore' component={Explore} />
+          <PrivateRoute path='/explore' component={Explore} /> */}
+
+
+
+          <PrivateRoute path='/home' component={LookerContent}
+            toggleModal={this.toggleModal}
+            renderModal={renderModal}
+            lookerContent={lookerContent}
+          />
+
           <PrivateRoute exact path='/customize'
             component={Customizations}
             customizations={customizations}

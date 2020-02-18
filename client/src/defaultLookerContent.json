@@ -1,0 +1,23 @@
+[
+    {
+        "type": "dashboard",
+        "id": "5277",
+        "dropdownOptions": [
+            "Female",
+            "Male",
+            "Any"
+        ]
+    },
+    {
+        "type": "dashboard",
+        "id": "3106"
+    },
+    {
+        "type": "folder",
+        "id": "1827"
+    },
+    {
+        "type": "explore",
+        "id": "thelook_adwords::events"
+    }
+]
