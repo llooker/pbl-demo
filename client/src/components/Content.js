@@ -16,13 +16,14 @@ class Content extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            attributionDropdownValue: '',
-            genderDropdownValue: '',
-            attributionDropdownOptions: [],
-            genderDropdownOptions: [],
-            dashboard: '',
-            codeBarIsVisible: false,
-            sampleCode: {}
+            // attributionDropdownValue: '',
+            // genderDropdownValue: '',
+            // attributionDropdownOptions: [],
+            // genderDropdownOptions: [],
+            // dashboard: '',
+            renderSampleCode: false,
+            sampleCode: {},
+            activeTabType: 'dashboard' //forhome
         }
     }
 
@@ -33,6 +34,17 @@ class Content extends React.Component {
         const { lookerContent } = this.props
         this.setupLookerContent(lookerContent)
 
+
+        const sampleCodeFilePath = require("../sample-code/dashboard.sample.txt");
+        fetch(sampleCodeFilePath)
+            .then(response => {
+                return response.text()
+            })
+            .then(text => {
+                this.setState({
+                    sampleCode: text
+                })
+            })
     }
 
     async setupLookerContent(lookerContent) {
@@ -121,9 +133,39 @@ class Content extends React.Component {
         })
     }
 
+
+    toggleCodeBar = () => {
+        this.setState(prevState => ({
+            renderSampleCode: prevState.renderSampleCode ? false : true
+        }))
+    }
+
+    setActiveTab = (e) => {
+
+        if (this.state.renderSampleCode) this.toggleCodeBar()
+
+        const tabContentType = e.target.getAttribute("contentType");
+        this.setState({
+            activeTabType: tabContentType
+        }, () => {
+            const sampleCodeFilePath = require(`../sample-code/${tabContentType}.sample.txt`);
+            fetch(sampleCodeFilePath)
+                .then(response => {
+                    return response.text()
+                })
+                .then(text => {
+                    this.setState({
+                        sampleCode: text
+                    })
+                })
+        })
+    }
+
     render() {
         console.log('LookerContent render')
         const { lookerContent } = this.props
+        const { renderSampleCode } = this.state
+        const { sampleCode } = this.state
         return (
 
             <div className="home container p-5 position-relative">
@@ -134,11 +176,23 @@ class Content extends React.Component {
                         {lookerContent.map((item, index) => {
                             return (
                                 <li className="nav-item">
-                                    <a key={validIdHelper(item.id)} className={index === 0 ? "nav-link active show" : "nav-link"} id={validIdHelper(`${item.id}-tab`)} data-toggle="tab" href={validIdHelper(`#${item.id}`)} role="tab" aria-controls={validIdHelper(`${item.id}`)} aria-selected="true">{item.name} </a>
+                                    <a key={validIdHelper(item.id)}
+                                        className={index === 0 ? "nav-link active show" : "nav-link"}
+                                        id={validIdHelper(`${item.id}-tab`)}
+                                        data-toggle="tab"
+                                        href={validIdHelper(`#${item.id}`)}
+                                        role="tab"
+                                        aria-controls={validIdHelper(`${item.id}`)}
+                                        aria-selected="true"
+                                        contentType={item.type}
+                                        onClick={(e) => this.setActiveTab(e)}>
+                                        {item.name}
+                                    </a>
                                 </li>
 
                             )
                         })}
+                        <li className="nav-item ml-auto"><i className="fas fa-code cursor text-secondary" onClick={this.toggleCodeBar} /></li>
                     </ul>
                 </div>
 
@@ -177,6 +231,22 @@ class Content extends React.Component {
                                         <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12">
 
                                         </div>
+
+                                        <ReactCSSTransitionGroup
+                                            transitionName="slide"
+                                            transitionAppear={true}
+                                            transitionAppearTimeout={500}
+                                            transitionEnterTimeout={500}
+                                            transitionLeaveTimeout={500}>
+                                            {renderSampleCode ?
+                                                <div className="col-sm-8 position-absolute right-abs top-abs p-3 bg-light rounded">
+                                                    <h4>Sample code:</h4>
+                                                    <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
+                                                        {sampleCode}
+                                                    </SyntaxHighlighter>
+                                                </div>
+                                                : ''}
+                                        </ReactCSSTransitionGroup>
                                     </div>
                                 </div>
 

@@ -1,8 +1,8 @@
-//Lookup.sample.txt
+//dashboard.sample.txt
 //import the emebed sdk
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
 
-//initialize the embed sdk, only needs to be done once
+//initialize the embed sdk
 LookerEmbedSDK.init('demo.looker.com', '/auth')
 
 //call helper method when page loads to create dashboard and setup events
@@ -12,7 +12,7 @@ componentDidMount() {
 
 //create dashboard using embed sdk method
 embedSdkInit() {
-    LookerEmbedSDK.createDashboardWithId(3106)
+    LookerEmbedSDK.createDashboardWithId(5277)
         .appendTo('#embedContainer')
         .withClassName('iframe')
         .withNext()
@@ -31,12 +31,12 @@ embedSdkInit() {
 setupDashboard = (dashboard) => {
     this.setState({
         dashboard: dashboard
-    })
+    }})
 }
 
 //render embedContainer on the page so the dashboard can be appeneded
 render() {
     return (
-                    <div id="embedContainer" className="col-sm-12 w-100">
+        <div id="embedContainer" className="mt-3 pt-3 border-top"></div>
     )
 }

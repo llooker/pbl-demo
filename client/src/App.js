@@ -5,11 +5,6 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './clientConfig.json';
 import Header from './components/Header'
 import Footer from './components/Footer'
-// import Sidebar from './components/Sidebar'
-import Home from './components/Home'
-import Lookup from './components/Lookup'
-import Report from './components/Report'
-import Explore from './components/Explore'
 import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
@@ -284,39 +279,6 @@ class App extends React.Component {
       // console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
     })
   }
-
-  /*createLookerContent = (content) => {
-    console.log('createLookerContent');
-    console.log('content', content)
-    for (let i = 0; i < content.length; i++) {
-      console.log('content[i]', content[i])
-      if (content[i].type === 'dashboard') {
-        console.log('if dashboard')
-        LookerEmbedSDK.createDashboardWithId(content.id)
-          // .appendTo('#embedContainer')
-          .withClassName('iframe')
-          .withNext()
-          .on('dashboard:run:start', (e) => { console.log(e) })
-          // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
-          .build()
-          .connect()
-          .then((dashboard) => {
-            this.setState(prevState => ({
-              lookerContent: [...prevState.lookerContent, dashboard]
-            }))
-          })
-          .catch((error) => {
-            console.error('Connection error', error)
-          })
-      } else if (content[i].type === 'explore') {
-        console.log('else if explore')
-
-      } else if (content[i].type === 'folder') {
-        console.log('else if folder')
-
-      }
-    }
-  }*/
 
   render() {
     console.log('App render');

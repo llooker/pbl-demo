@@ -1,4 +1,4 @@
-//Explore.sample.txt
+//explore.sample.txt
 //import the emebed sdk
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
 

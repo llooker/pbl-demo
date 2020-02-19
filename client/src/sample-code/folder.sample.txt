@@ -1,4 +1,4 @@
-//Report.sample.txt
+//folder.sample.txt
 
 //client side code
 componentDidMount() {
