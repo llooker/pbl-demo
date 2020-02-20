@@ -30,7 +30,8 @@ class Content extends React.Component {
             newLookerContent: {
                 type: {
                     value: '',
-                    type: 'select-one'
+                    type: 'select-one',
+                    options: ['dashboard', 'explore', 'folder']
                 },
                 id: {
                     value: '',
@@ -64,7 +65,24 @@ class Content extends React.Component {
             })
     }
 
+    // componentDidUpdate() {
+    //     console.log('LookerContent componentDidUpdate')
+    //     console.log('this.props.lookerContent', this.props.lookerContent)
+    //     const { lookerContent } = this.props
+    // }
+
+    componentDidUpdate(prevProps) {
+        // Typical usage (don't forget to compare props):
+        console.log('LookerContent componentDidUpdate')
+        if (this.props.lookerContent != undefined && this.props.lookerContent !== prevProps.lookerContent) {
+            console.log('inside iffff')
+            this.setupLookerContent(this.props.lookerContent)
+        }
+    }
+
     async setupLookerContent(lookerContent) {
+        console.log('setupLookerContent')
+        console.log('lookerContent', lookerContent)
         for (let i = 0; i < lookerContent.length; i++) {
             console.log('lookerContent[i]', lookerContent[i])
             if (lookerContent[i].type === 'dashboard') {
@@ -202,7 +220,6 @@ class Content extends React.Component {
             renderModal: true,
             newLookerContent: objCopy
         })
-
     }
 
     render() {
@@ -212,6 +229,8 @@ class Content extends React.Component {
         const { sampleCode } = this.state
         const { renderModal } = this.state
         const { newLookerContent } = this.state
+        console.log('lookerContent', lookerContent)
+        console.log('renderModal', renderModal)
         return (
 
             <div className="home container p-5 position-relative">
@@ -304,7 +323,7 @@ class Content extends React.Component {
 
 
                 {renderModal ?
-                    <Modal title="Select Looker Content to Add" toggleModal={this.toggleModal} objForModal={newLookerContent} handleModalFormChange={this.handleModalFormChange} />
+                    <Modal title="Select Looker Content to Add" toggleModal={this.toggleModal} objForModal={newLookerContent} handleModalFormChange={this.handleModalFormChange} updateAction={this.props.updateLookerContent} />
                     : ''}
 
             </div>

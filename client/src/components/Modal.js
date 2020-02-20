@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Modal({ title, toggleModal, objForModal, handleModalFormChange }) {
+function Modal({ title, toggleModal, objForModal, handleModalFormChange, updateAction }) {
     return (
 
         <div className="modal block" tabIndex="-1" role="dialog">
@@ -26,15 +26,19 @@ function Modal({ title, toggleModal, objForModal, handleModalFormChange }) {
                         <ModalForm objForModal={objForModal} handleModalFormChange={handleModalFormChange} />
 
                     </div>
-                    <div className="modal-footer"></div>
+                    <div className="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-primary ml-auto"
+                            onClick={() => {
+                                toggleModal()
+                                updateAction(objForModal)
+                            }}
+                        >
+                            Save changes
+                        </button>
+                    </div>
 
-                    <button
-                        type="button"
-                        className="btn btn-primary ml-auto"
-                    // onClick={() => updateAction({ objForModal })}
-                    >
-                        Save changes
-              </button>
                 </div>
             </div>
         </div>
@@ -119,12 +123,11 @@ class ModalForm extends React.Component {
                         />
                     </div>
                     <div className="pt-3">
-                        <label htmlFor="modalForm">Tab Title</label>
+                        <label htmlFor="modalForm">Tab Name</label>
                         <input
                             type="text"
                             className="form-control"
-                            id="contentId"
-                            // value={this.state.tabTitleValue}
+                            id="tabName"
                             value={this.props.objForModal.name ? this.props.objForModal.name.value : ''}
                             placeholder='E.g. Home, Lookup, Report, Explore'
                             onChange={this.props.handleModalFormChange}

@@ -95,7 +95,8 @@ class Login extends React.Component {
 }
 
 const PrivateRoute = ({ component: Component,
-  customizations, activeCustomization, applyCustomization, editCustomization, indexOfCustomizationToEdit, saveCustomization, cancelIndexOfCustomizationToEdit, toggleModal, renderModal, lookerContent, ...rest }) => (
+  // toggleModal, renderModal,
+  customizations, activeCustomization, applyCustomization, editCustomization, indexOfCustomizationToEdit, saveCustomization, cancelIndexOfCustomizationToEdit, lookerContent, updateLookerContent, ...rest }) => (
     < Route {...rest} render={(props) => (
       auth.isAuthenticated === true ?
         <Component {...props}
@@ -106,9 +107,10 @@ const PrivateRoute = ({ component: Component,
           indexOfCustomizationToEdit={indexOfCustomizationToEdit}
           saveCustomization={saveCustomization}
           cancelIndexOfCustomizationToEdit={cancelIndexOfCustomizationToEdit}
-          renderModal={renderModal}
-          toggleModal={toggleModal}
+          // renderModal={renderModal}
+          // toggleModal={toggleModal}
           lookerContent={lookerContent}
+          updateLookerContent={updateLookerContent}
         />
         : <Redirect to={{
           pathname: '/',
@@ -125,7 +127,7 @@ class App extends React.Component {
       customizations: [],
       activeCustomization: {},
       indexOfCustomizationToEdit: null,
-      renderModal: false,
+      // renderModal: false,
       lookerContent: []
     }
   }
@@ -280,6 +282,29 @@ class App extends React.Component {
   //   })
   // }
 
+
+
+  updateLookerContent = (newLookerContent) => {
+    console.log('updateLookerContent')
+    console.log('newLookerContent', newLookerContent)
+    let objToUse = {
+      type: newLookerContent.type.value,
+      id: newLookerContent.id.value,
+      name: newLookerContent.name.value
+    }
+    console.log('objToUse', objToUse)
+
+    this.setState(prevState => ({
+      lookerContent: [...prevState.lookerContent, objToUse],
+      // renderModal: false
+    }), () => {
+      console.log('updateLookerContent setState callback')
+      console.log('this.state.lookerContent', this.state.lookerContent)
+      // console.log('this.state.renderModal', this.state.renderModal)
+    })
+
+  }
+
   render() {
     console.log('App render');
     // console.log('this.props', this.props);
@@ -299,7 +324,8 @@ class App extends React.Component {
             {...props}
             applySession={this.applySession}
             userProfile={userProfile}
-            activeCustomization={activeCustomization} />}
+            activeCustomization={activeCustomization}
+          />}
           />
 
           {/* <PrivateRoute path='/home' component={Home}
@@ -313,7 +339,9 @@ class App extends React.Component {
 
 
           <PrivateRoute path='/home' component={Content}
+            activeCustomization={activeCustomization}
             lookerContent={lookerContent}
+            updateLookerContent={this.updateLookerContent}
           />
 
           <PrivateRoute exact path='/customize'
