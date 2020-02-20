@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Modal({ title, performApiCall }) {
+function Modal({ title, toggleModal, objForModal, handleModalFormChange }) {
     return (
 
         <div className="modal block" tabIndex="-1" role="dialog">
@@ -15,7 +15,7 @@ function Modal({ title, performApiCall }) {
                             className="close"
                             data-dismiss="modal"
                             aria-label="Close"
-                            onClick={() => this.props.toggleModal()}
+                            onClick={() => toggleModal()}
                         >
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -23,7 +23,7 @@ function Modal({ title, performApiCall }) {
 
                     <div className="modal-body">
 
-                        <ModalForm objForModal={{ contentType: 'dashboard' }} performApiCall={performApiCall} />
+                        <ModalForm objForModal={objForModal} handleModalFormChange={handleModalFormChange} />
 
                     </div>
                     <div className="modal-footer"></div>
@@ -46,28 +46,31 @@ class ModalForm extends React.Component {
         super();
         this.state = {
             contentTypeValue: '',
-            contentIdValue: '',
-            tabTitleValue: ''
+            // contentIdValue: '',
+            // tabTitleValue: ''
         }
     }
 
     componentDidMount() {
+        console.log('ModalForm componentDidMount')
         this.setState({
             contentTypeValue: this.props.objForModal.contentType ? this.props.objForModal.contentType : '',
-            contentIdValue: this.props.objForModal.contentId ? this.props.objForModal.contentId : '',
-            tabTitleValue: this.props.objForModal.tabTitle ? this.props.objForModal.tabTitle : '',
+            // contentIdValue: this.props.objForModal.contentId ? this.props.objForModal.contentId : '',
+            // tabTitleValue: this.props.objForModal.tabTitle ? this.props.objForModal.tabTitle : '',
         }, () => {
             console.log('componentDidMount callback this.state.contentTypeValue', this.state.contentTypeValue)
-            console.log('componentDidMount callback this.state.contentIdValue', this.state.contentIdValue)
-            console.log('tabTitleValue callback this.state.tabTitleValue', this.state.tabTitleValue)
+            // console.log('componentDidMount callback this.state.contentIdValue', this.state.contentIdValue)
+            // console.log('tabTitleValue callback this.state.tabTitleValue', this.state.tabTitleValue)
         })
     }
 
     render() {
+        console.log('ModalForm render')
+        console.log('this.props.objForModal', this.props.objForModal)
         return (
             <form id="contentForm" className="text-left">
                 <div className="form-group">
-                    <div>
+                    <div className="pt-3">
                         <label htmlFor="modalForm">Content Type</label>
                         <select
                             className="form-control"
@@ -78,11 +81,11 @@ class ModalForm extends React.Component {
                                     console.log('onChange callback this.state.contentTypeValue', this.state.contentTypeValue)
 
                                 });
-                                // this.props.handleFormChange(e); //not changed by state
+                                this.props.handleModalFormChange(e); //not changed by state
                             }}
                             type="select-one"
                             value={this.state.contentTypeValue}
-                            data-key="contentTypeValue"
+                            data-key="type"
                         >
                             <option
                                 key="dashboard"
@@ -90,41 +93,42 @@ class ModalForm extends React.Component {
                             >
                                 Dashboard
                             </option>
-                            {/* not seeing this in api so commenting out for now */}
-                            {/* <option
+                            <option
                                 key="explore"
                                 value="explore"
                             >
                                 Explore
-                            </option> */}
+                            </option>
                             <option
-                                key="look"
-                                value="look"
+                                key="folder"
+                                value="folder"
                             >
-                                Look
+                                Folder
                             </option>
                         </select>
                     </div>
-                    <div>
+                    <div className="pt-3">
                         <label htmlFor="modalForm">Content Id</label>
                         <input
                             type="text"
                             className="form-control"
                             id="contentId"
-                            value={this.state.contentIdValue}
-                        // onChange={this.props.handleFormChange}
-                        // data-key={key}
+                            value={this.props.objForModal.id ? this.props.objForModal.id.value : ''}
+                            onChange={this.props.handleModalFormChange}
+                            data-key="id"
                         />
                     </div>
-                    <div>
+                    <div className="pt-3">
                         <label htmlFor="modalForm">Tab Title</label>
                         <input
                             type="text"
                             className="form-control"
                             id="contentId"
-                            value={this.state.tabTitleValue}
-                        // onChange={this.props.handleFormChange}
-                        // data-key={key}
+                            // value={this.state.tabTitleValue}
+                            value={this.props.objForModal.name ? this.props.objForModal.name.value : ''}
+                            placeholder='E.g. Home, Lookup, Report, Explore'
+                            onChange={this.props.handleModalFormChange}
+                            data-key="name"
                         />
                     </div>
                 </div>

@@ -12,6 +12,7 @@ import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 LookerEmbedSDK.init('demo.looker.com', '/auth')
 
+
 class Content extends React.Component {
     constructor(props) {
         super(props);
@@ -23,7 +24,23 @@ class Content extends React.Component {
             // dashboard: '',
             renderSampleCode: false,
             sampleCode: {},
-            activeTabType: 'dashboard' //forhome
+            activeTabType: 'dashboard', //forhome,
+            renderModal: false,
+            //set to desired empty object onload
+            newLookerContent: {
+                type: {
+                    value: '',
+                    type: 'select-one'
+                },
+                id: {
+                    value: '',
+                    type: 'text'
+                },
+                name: {
+                    value: '',
+                    type: 'text'
+                }
+            }
         }
     }
 
@@ -161,11 +178,40 @@ class Content extends React.Component {
         })
     }
 
+    toggleModal = () => {
+        console.log('toggleModal')
+        this.setState(prevState => ({
+            renderModal: prevState.renderModal ? false : true
+        }), () => {
+            console.log('toggleModal callback this.state.renderModal', this.state.renderModal)
+        })
+    }
+
+    handleModalFormChange = (e) => {
+        console.log('handleModalFormChange')
+        console.log('e.target.dataset.key', e.target.dataset.key)
+        let objCopy = { ...this.state.newLookerContent }
+        console.log('000 objCopy', objCopy)
+        objCopy[e.target.dataset.key] = {
+            value: e.target.value,
+            type: e.target.type
+        }
+
+        console.log('111 objCopy', objCopy)
+        this.setState({
+            renderModal: true,
+            newLookerContent: objCopy
+        })
+
+    }
+
     render() {
         console.log('LookerContent render')
         const { lookerContent } = this.props
         const { renderSampleCode } = this.state
         const { sampleCode } = this.state
+        const { renderModal } = this.state
+        const { newLookerContent } = this.state
         return (
 
             <div className="home container p-5 position-relative">
@@ -192,6 +238,7 @@ class Content extends React.Component {
 
                             )
                         })}
+                        <li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
                         <li className="nav-item ml-auto"><i className="fas fa-code cursor text-secondary" onClick={this.toggleCodeBar} /></li>
                     </ul>
                 </div>
@@ -254,6 +301,11 @@ class Content extends React.Component {
                         })}
                     </div>
                 </div>
+
+
+                {renderModal ?
+                    <Modal title="Select Looker Content to Add" toggleModal={this.toggleModal} objForModal={newLookerContent} handleModalFormChange={this.handleModalFormChange} />
+                    : ''}
 
             </div>
         )

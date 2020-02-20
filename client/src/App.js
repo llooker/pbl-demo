@@ -271,14 +271,14 @@ class App extends React.Component {
     })
   }
 
-  toggleModal = () => {
-    console.log('toggleModal')
-    this.setState(prevState => ({
-      renderModal: prevState.renderModal ? false : true
-    }), () => {
-      // console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
-    })
-  }
+  // toggleModal = () => {
+  //   console.log('toggleModal')
+  //   this.setState(prevState => ({
+  //     renderModal: prevState.renderModal ? false : true
+  //   }), () => {
+  //     // console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
+  //   })
+  // }
 
   render() {
     console.log('App render');
@@ -287,10 +287,10 @@ class App extends React.Component {
     const { customizations } = this.state
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
-    const { renderModal } = this.state
+    // const { renderModal } = this.state
     const { lookerContent } = this.state
     // console.log('activeCustomization', activeCustomization)
-    console.log('renderModal', renderModal)
+    // console.log('renderModal', renderModal)
     console.log('lookerContent', lookerContent)
     return (
       <Router>
@@ -313,8 +313,6 @@ class App extends React.Component {
 
 
           <PrivateRoute path='/home' component={Content}
-            toggleModal={this.toggleModal}
-            renderModal={renderModal}
             lookerContent={lookerContent}
           />
 
