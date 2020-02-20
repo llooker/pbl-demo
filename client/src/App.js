@@ -133,22 +133,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log('App componentDidMount')
-    console.log('this.props', this.props)
-    console.log('DefaultLookerContent', DefaultLookerContent)
+    // console.log('App componentDidMount')
+    // console.log('this.props', this.props)
+    // console.log('DefaultLookerContent', DefaultLookerContent)
     this.checkSession()
   }
 
-  componentDidUpdate() {
-    // console.log("componentDidUpdate")
-    // console.log('this.props', this.props)
-  }
-
   checkSession = async () => {
-    console.log('checkSession')
-    console.log('this.state.userProfile', this.state.userProfile)
-    console.log('this.state.customizations', this.state.customizations)
-    console.log('this.state.activeCustomization', this.state.activeCustomization)
+    // console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -167,23 +159,15 @@ class App extends React.Component {
           customizations,
           activeCustomization: customizations[0],
           lookerContent: DefaultLookerContent
-        }, () => {
-          console.log('checkSession callback')
-          console.log('this.state.userProfile', this.state.userProfile)
-          console.log('this.state.customizations', this.state.customizations)
-          console.log('this.state.activeCustomization', this.state.activeCustomization)
-          console.log('this.state.lookerContent', this.state.lookerContent)
         })
       })
-    } else { console.log('elllse') }
-    // why here???
-    // this.createLookerContent(DefaultLookerContent)
+    }
   }
 
 
   applySession = async (userProfile) => {
-    console.log('applySession')
-    console.log('userProfile', userProfile)
+    // console.log('applySession')
+    // console.log('userProfile', userProfile)
     let sessionData = await fetch('/writesession', {
       method: 'POST',
       headers: {
@@ -201,23 +185,14 @@ class App extends React.Component {
       customizations: sessionResponseData.session.customizations,
       activeCustomization: sessionResponseData.session.customizations[0],
       lookerContent: DefaultLookerContent
-    }, () => {
-      console.log('applySession callback')
-      console.log('this.state.userProfile', this.state.userProfile)
-      console.log('this.state.customizations', this.state.customizations)
-      console.log('this.state.activeCustomization', this.state.activeCustomization)
-      console.log('this.state.lookerContent', this.state.lookerContent)
     });
   }
 
   applyCustomization = (customizationIndex) => {
-    console.log('applyCustomization')
-    console.log('customizationIndex', customizationIndex)
+    // console.log('applyCustomization')
+    // console.log('customizationIndex', customizationIndex)
     this.setState({
       activeCustomization: this.state.customizations[customizationIndex],
-    }, () => {
-      // console.log('applyCustomization callback')
-      // console.log('this.state.activeCustomization', this.state.activeCustomization)
     });
   }
 
@@ -225,14 +200,8 @@ class App extends React.Component {
     // console.log('editCustomization')
     // console.log('customizationIndex', customizationIndex)
     const validCustomizationIndex = typeof this.state.customizations[customizationIndex] === 'undefined' ? null : customizationIndex
-    // console.log('validCustomizationIndex', validCustomizationIndex)
     this.setState({
       indexOfCustomizationToEdit: validCustomizationIndex,
-    }, () => {
-      // console.log('editCustomization callback')
-      // console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
-      // set back to null immediately after rendering to prevent edge case
-      // this.setState({ indexOfCustomizationToEdit: null }) //creates error?
     });
   }
 
@@ -254,12 +223,6 @@ class App extends React.Component {
       activeCustomization: indexOfCustomizationToEdit ? customizationResponseData.customizations[indexOfCustomizationToEdit]
         : customizationResponseData.customizations[customizationResponseData.customizations.length - 1],
       indexOfCustomizationToEdit: null
-    }, () => {
-      // console.log('saveCustomization callback')
-      // console.log('this.state.userProfile', this.state.userProfile)
-      // console.log('this.state.customizations', this.state.customizations)
-      // console.log('this.state.activeCustomization', this.state.activeCustomization)
-      // console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit) //needs work
     });
   }
 
@@ -267,56 +230,33 @@ class App extends React.Component {
     // console.log("cancelIndexOfCustomizationToEdit")
     this.setState({
       indexOfCustomizationToEdit: null
-    }, () => {
-      // console.log('cancelIndexOfCustomizationToEdit callback')
-      // console.log('this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
     })
   }
 
-  // toggleModal = () => {
-  //   console.log('toggleModal')
-  //   this.setState(prevState => ({
-  //     renderModal: prevState.renderModal ? false : true
-  //   }), () => {
-  //     // console.log('toggleCodeBar callback this.state.codeBarIsVisible', this.state.codeBarIsVisible)
-  //   })
-  // }
-
-
-
   updateLookerContent = (newLookerContent) => {
-    console.log('updateLookerContent')
-    console.log('newLookerContent', newLookerContent)
+    // console.log('updateLookerContent')
+    // console.log('newLookerContent', newLookerContent)
     let objToUse = {
       type: newLookerContent.type.value,
       id: newLookerContent.id.value,
       name: newLookerContent.name.value
     }
-    console.log('objToUse', objToUse)
 
     this.setState(prevState => ({
       lookerContent: [...prevState.lookerContent, objToUse],
       // renderModal: false
-    }), () => {
-      console.log('updateLookerContent setState callback')
-      console.log('this.state.lookerContent', this.state.lookerContent)
-      // console.log('this.state.renderModal', this.state.renderModal)
-    })
+    }))
 
   }
 
   render() {
-    console.log('App render');
+    // console.log('App render');
     // console.log('this.props', this.props);
     const { userProfile } = this.state
     const { customizations } = this.state
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
-    // const { renderModal } = this.state
     const { lookerContent } = this.state
-    // console.log('activeCustomization', activeCustomization)
-    // console.log('renderModal', renderModal)
-    console.log('lookerContent', lookerContent)
     return (
       <Router>
         <div>
@@ -327,17 +267,6 @@ class App extends React.Component {
             activeCustomization={activeCustomization}
           />}
           />
-
-          {/* <PrivateRoute path='/home' component={Home}
-            toggleModal={this.toggleModal}
-            renderModal={renderModal}
-            performApiCall={this.performApiCall} />
-          <PrivateRoute path='/lookup' component={Lookup} />
-          <PrivateRoute path='/report' component={Report} />
-          <PrivateRoute path='/explore' component={Explore} /> */}
-
-
-
           <PrivateRoute path='/home' component={Content}
             activeCustomization={activeCustomization}
             lookerContent={lookerContent}

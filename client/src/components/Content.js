@@ -1,5 +1,4 @@
 import React from 'react';
-import Navigation from './Navigation'
 import './Home.css';
 import Modal from './Modal'
 
@@ -17,14 +16,9 @@ class Content extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // attributionDropdownValue: '',
-            // genderDropdownValue: '',
-            // attributionDropdownOptions: [],
-            // genderDropdownOptions: [],
-            // dashboard: '',
             renderSampleCode: false,
             sampleCode: {},
-            activeTabType: 'dashboard', //forhome,
+            activeTabType: 'dashboard',
             renderModal: false,
             //set to desired empty object onload
             newLookerContent: {
@@ -47,11 +41,10 @@ class Content extends React.Component {
 
 
     componentDidMount() {
-        console.log('LookerContent componentDidMount')
-        console.log('this.props.lookerContent', this.props.lookerContent)
+        // console.log('LookerContent componentDidMount')
+        // console.log('this.props.lookerContent', this.props.lookerContent)
         const { lookerContent } = this.props
         this.setupLookerContent(lookerContent)
-
 
         const sampleCodeFilePath = require("../sample-code/dashboard.sample.txt");
         fetch(sampleCodeFilePath)
@@ -65,17 +58,9 @@ class Content extends React.Component {
             })
     }
 
-    // componentDidUpdate() {
-    //     console.log('LookerContent componentDidUpdate')
-    //     console.log('this.props.lookerContent', this.props.lookerContent)
-    //     const { lookerContent } = this.props
-    // }
-
     componentDidUpdate(prevProps) {
-        // Typical usage (don't forget to compare props):
-        console.log('LookerContent componentDidUpdate')
+        // console.log('LookerContent componentDidUpdate')
         if (this.props.lookerContent != undefined && this.props.lookerContent !== prevProps.lookerContent) {
-            console.log('inside iffff')
             this.setupLookerContent(this.props.lookerContent)
         }
     }
@@ -84,9 +69,7 @@ class Content extends React.Component {
         console.log('setupLookerContent')
         console.log('lookerContent', lookerContent)
         for (let i = 0; i < lookerContent.length; i++) {
-            console.log('lookerContent[i]', lookerContent[i])
             if (lookerContent[i].type === 'dashboard') {
-                console.log('if dashboard')
                 LookerEmbedSDK.createDashboardWithId(lookerContent[i].id)
                     .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
                     .withClassName('iframe')
@@ -96,23 +79,14 @@ class Content extends React.Component {
                     .build()
                     .connect()
                     .then((dashboard) => {
-                        // this.setState(prevState => ({
-                        //     lookerContent: [...prevState.lookerContent, dashboard]
-                        // }))
                         this.setState({
                             [lookerContent[i].id]: dashboard //5277
-                        },
-                            () => {
-                                console.log('createDashboardWithId callback')
-                                console.log(this.state[lookerContent[i].id])
-                            })
+                        })
                     })
                     .catch((error) => {
                         console.error('Connection error', error)
                     })
             } else if (lookerContent[i].type === 'explore') {
-                console.log('else if explore')
-                console.log((validIdHelper(`#embedContainer${lookerContent[i].id}`)))
                 LookerEmbedSDK.createExploreWithId(lookerContent[i].id)
                     .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
                     .withClassName('iframe')
@@ -124,8 +98,6 @@ class Content extends React.Component {
                     })
 
             } else if (lookerContent[i].type === 'folder') {
-                console.log('else if folder')
-
                 let lookerResposnse = await fetch('/fetchfolder/' + lookerContent[i].id, {
                     method: 'GET',
                     headers: {
@@ -135,9 +107,7 @@ class Content extends React.Component {
                 })
 
                 let lookerResposnseData = await lookerResposnse.json();
-                // console.log('lookerResposnseData', lookerResposnseData)
                 lookerResposnseData.folder.looks.map((item, index) => {
-                    console.log('item', item)
                     let lookId = item.id
                     LookerEmbedSDK.createLookWithId(lookId)
                         .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
@@ -197,25 +167,19 @@ class Content extends React.Component {
     }
 
     toggleModal = () => {
-        console.log('toggleModal')
         this.setState(prevState => ({
             renderModal: prevState.renderModal ? false : true
-        }), () => {
-            console.log('toggleModal callback this.state.renderModal', this.state.renderModal)
-        })
+        }))
     }
 
     handleModalFormChange = (e) => {
-        console.log('handleModalFormChange')
-        console.log('e.target.dataset.key', e.target.dataset.key)
+        // console.log('handleModalFormChange')
+        // console.log('e.target.dataset.key', e.target.dataset.key)
         let objCopy = { ...this.state.newLookerContent }
-        console.log('000 objCopy', objCopy)
         objCopy[e.target.dataset.key] = {
             value: e.target.value,
             type: e.target.type
         }
-
-        console.log('111 objCopy', objCopy)
         this.setState({
             renderModal: true,
             newLookerContent: objCopy
@@ -223,14 +187,11 @@ class Content extends React.Component {
     }
 
     render() {
-        console.log('LookerContent render')
         const { lookerContent } = this.props
         const { renderSampleCode } = this.state
         const { sampleCode } = this.state
         const { renderModal } = this.state
         const { newLookerContent } = this.state
-        console.log('lookerContent', lookerContent)
-        console.log('renderModal', renderModal)
         return (
 
             <div className="home container p-5 position-relative">
