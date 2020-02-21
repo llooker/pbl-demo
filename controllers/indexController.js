@@ -133,7 +133,6 @@ async function checkForCustomizations(session) {
                                     customizations: [defaultCustomizationObj]
                                 },
                                 (err, initializedCustomization) => {
-                                    // console.log('initializedCustomization', initializedCustomization)
                                     if (err) {
                                         // console.log('err: ' + err);
                                         reject(err)

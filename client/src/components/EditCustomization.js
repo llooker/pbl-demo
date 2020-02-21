@@ -20,7 +20,7 @@ class NewCustomization extends React.Component {
     }
 
     componentWillUnmount() {
-        console.log('NewCustomization componentWillUnmount')
+        // console.log('NewCustomization componentWillUnmount')
         this.props.cancelIndexOfCustomizationToEdit()
     }
 
@@ -36,9 +36,9 @@ class NewCustomization extends React.Component {
     }
 
     updateInput(e) {
-        console.log('updateInput');
-        console.log('e.target.id', e.target.id)
-        console.log('e.target.value', e.target.value)
+        // console.log('updateInput');
+        // console.log('e.target.id', e.target.id)
+        // console.log('e.target.value', e.target.value)
         this.setState({
             [e.target.id]: e.target.value
         }, () => {

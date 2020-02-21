@@ -26,6 +26,7 @@ module.exports.saveCustomization = (req, res, next) => {
                     console.log('error: ' + err);
                     res.status(400);
                 } else {
+                    req.session.customizations = documents.customizations
                     res.status(200).send(documents);
                 }
             }
@@ -41,6 +42,7 @@ module.exports.saveCustomization = (req, res, next) => {
                     console.log('error: ' + err);
                     res.status(400);
                 } else {
+                    req.session.customizations = documents.customizations
                     res.status(200).send(documents);
                 }
             }
@@ -60,24 +62,20 @@ function makeid(length) {
 }
 
 module.exports.saveLookerContent = (req, res, next) => {
-    console.log('customizeController saveLookerContent')
+    // console.log('customizeController saveLookerContent')
     const { email } = req.session.userProfile
     const { customizations } = req.session
     const { activeCustomization } = req.body
     const { newLookerContent } = req.body
-    // console.log('email', email)
-    // console.log('activeCustomization', activeCustomization)
-    // console.log('customizations', customizations)
-    // console.log('newLookerContent', newLookerContent)
 
+    //indexOfCustomizationToEdit
     var customizationIndex;
     customizations.some((item, index) => {
-        if (item.id == activeCustomization.id) {
+        if (item.id === activeCustomization.id) {
             customizationIndex = index;
             return true;
         }
     });
-    // console.log('customizationIndex', customizationIndex) //working
 
     let customizationToSave = customizations[customizationIndex]
     if (customizationToSave.lookerContent) {
@@ -85,7 +83,6 @@ module.exports.saveLookerContent = (req, res, next) => {
     } else {
         customizationToSave.lookerContent = [newLookerContent]
     }
-    console.log('customizationToSave', customizationToSave)
 
     if (activeCustomization.id) { //not sure about this iff for now
         //update index of desired customization

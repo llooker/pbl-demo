@@ -3,7 +3,7 @@ import React from 'react';
 function Modal({ title, toggleModal, objForModal, handleModalFormChange, updateAction }) {
     return (
         <>
-            <div class="modal-backdrop fade show" onClick={() => toggleModal()}>
+            <div className="modal-backdrop fade show" onClick={() => toggleModal()}>
             </div>
             <div className="modal block" tabIndex="-1" role="dialog" data-backdrop="true">
                 <div className="modal-dialog modal-lg" role="document">
@@ -59,19 +59,12 @@ class ModalForm extends React.Component {
     componentDidMount() {
         // console.log('ModalForm componentDidMount')
         this.setState({
-            contentTypeValue: this.props.objForModal.contentType ? this.props.objForModal.contentType : '',
-            // contentIdValue: this.props.objForModal.contentId ? this.props.objForModal.contentId : '',
-            // tabTitleValue: this.props.objForModal.tabTitle ? this.props.objForModal.tabTitle : '',
-        }, () => {
-            // console.log('componentDidMount callback this.state.contentTypeValue', this.state.contentTypeValue)
-            // console.log('componentDidMount callback this.state.contentIdValue', this.state.contentIdValue)
-            // console.log('tabTitleValue callback this.state.tabTitleValue', this.state.tabTitleValue)
+            contentTypeValue: this.props.objForModal.contentType ? this.props.objForModal.contentType : ''
         })
     }
 
     render() {
         console.log('ModalForm render')
-        console.log('this.props.objForModal', this.props.objForModal)
         return (
             <form id="contentForm" className="text-left">
                 <div className="form-group">

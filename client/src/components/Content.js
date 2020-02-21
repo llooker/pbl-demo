@@ -66,15 +66,17 @@ class Content extends React.Component {
     }
 
     async setupLookerContent(lookerContent) {
-        console.log('setupLookerContent')
-        console.log('lookerContent', lookerContent)
+        // console.log('setupLookerContent')
+        // console.log('lookerContent', lookerContent)
         for (let i = 0; i < lookerContent.length; i++) {
             if (lookerContent[i].type === 'dashboard') {
                 LookerEmbedSDK.createDashboardWithId(lookerContent[i].id)
                     .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
                     .withClassName('iframe')
                     .withNext()
-                    .on('dashboard:run:start', (e) => { console.log(e) })
+                    .on('dashboard:run:start', (e) => {
+                        // console.log(e) 
+                    })
                     // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
                     .build()
                     .connect()
@@ -187,11 +189,14 @@ class Content extends React.Component {
     }
 
     render() {
+        // console.log('Content render')
+        // console.log('this.props.activeCustomization', this.props.activeCustomization)
         const { lookerContent } = this.props
         const { renderSampleCode } = this.state
         const { sampleCode } = this.state
         const { renderModal } = this.state
         const { newLookerContent } = this.state
+        const { activeCustomization } = this.props
         return (
 
             <div className="home container p-5 position-relative">
@@ -218,7 +223,8 @@ class Content extends React.Component {
 
                             )
                         })}
-                        <li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
+                        {activeCustomization.id !== 'defaultCustomization' ? < li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
+                            : ''}
                         <li className="nav-item ml-auto"><i className="fas fa-code cursor text-secondary" onClick={this.toggleCodeBar} /></li>
                     </ul>
                 </div>
@@ -283,11 +289,13 @@ class Content extends React.Component {
                 </div>
 
 
-                {renderModal ?
-                    <Modal title="Select Looker Content to Add" toggleModal={this.toggleModal} objForModal={newLookerContent} handleModalFormChange={this.handleModalFormChange} updateAction={this.props.updateLookerContent} />
-                    : ''}
+                {
+                    renderModal ?
+                        <Modal title="Select Looker Content to Add" toggleModal={this.toggleModal} objForModal={newLookerContent} handleModalFormChange={this.handleModalFormChange} updateAction={this.props.saveLookerContent} />
+                        : ''
+                }
 
-            </div>
+            </div >
         )
     }
 }
