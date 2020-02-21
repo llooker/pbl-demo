@@ -151,23 +151,34 @@ class App extends React.Component {
     const sessionResponseData = await sessionResponse.json();
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
+    console.log('customizations', customizations)
+
+
+
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
+      console.log('inside ifff')
+
+      let lookerContentToUse = customizations[0].lookerContent ?
+        [...DefaultLookerContent, ...customizations[0].lookerContent] :
+        [...DefaultLookerContent]
+
+      console.log('lookerContentToUse', lookerContentToUse)
       auth.authenticated(() => {
         this.setState({
           userProfile,
           customizations,
           activeCustomization: customizations[0],
-          lookerContent: DefaultLookerContent
+          lookerContent: lookerContentToUse
         })
       })
-    }
+    } else console.log('elllse')
   }
 
 
   applySession = async (userProfile) => {
-    // console.log('applySession')
-    // console.log('userProfile', userProfile)
+    console.log('applySession')
+    console.log('userProfile', userProfile)
     let sessionData = await fetch('/writesession', {
       method: 'POST',
       headers: {
@@ -180,19 +191,37 @@ class App extends React.Component {
     if (Object.keys(userProfile).length === 0) {
       auth.signout()
     }
+
+
+    let lookerContentToUse = sessionResponseData.session.customizations[0].lookerContent ?
+      [...DefaultLookerContent, ...sessionResponseData.session.customizations[0].lookerContent] :
+      [...DefaultLookerContent]
+
+    console.log('lookerContentToUse', lookerContentToUse)
+
+
     this.setState({
       userProfile,
       customizations: sessionResponseData.session.customizations,
       activeCustomization: sessionResponseData.session.customizations[0],
-      lookerContent: DefaultLookerContent
+      lookerContent: lookerContentToUse
+    }, () => {
+      console.log('applySession callback this.state.lookerContent', this.state.lookerContent)
     });
   }
 
   applyCustomization = (customizationIndex) => {
-    // console.log('applyCustomization')
-    // console.log('customizationIndex', customizationIndex)
+    console.log('applyCustomization')
+    console.log('customizationIndex', customizationIndex)
+    let lookerContentToUse = this.state.customizations[customizationIndex].lookerContent ?
+      [...DefaultLookerContent, ...this.state.customizations[customizationIndex].lookerContent] :
+      [...DefaultLookerContent]
+
+    console.log('lookerContentToUse', lookerContentToUse)
+
     this.setState({
       activeCustomization: this.state.customizations[customizationIndex],
+      lookerContent: lookerContentToUse
     });
   }
 
@@ -218,13 +247,20 @@ class App extends React.Component {
     })
     let customizationResponseData = await customizationResponse.json();
     const { indexOfCustomizationToEdit } = this.state
+
+    let lookerContentToUse = this.state.customizations[indexOfCustomizationToEdit].lookerContent ?
+      [...DefaultLookerContent, ...this.state.customizations[indexOfCustomizationToEdit].lookerContent] :
+      [...DefaultLookerContent]
+
     this.setState({
       customizations: customizationResponseData.customizations,
       activeCustomization: indexOfCustomizationToEdit ? customizationResponseData.customizations[indexOfCustomizationToEdit]
         : customizationResponseData.customizations[customizationResponseData.customizations.length - 1],
-      indexOfCustomizationToEdit: null
+      indexOfCustomizationToEdit: null,
+      lookerContent: lookerContentToUse
     });
   }
+
 
   cancelIndexOfCustomizationToEdit = () => {
     // console.log("cancelIndexOfCustomizationToEdit")
@@ -233,14 +269,27 @@ class App extends React.Component {
     })
   }
 
-  updateLookerContent = (newLookerContent) => {
-    // console.log('updateLookerContent')
-    // console.log('newLookerContent', newLookerContent)
+  updateLookerContent = async (newLookerContent) => {
+    console.log('updateLookerContent')
+    console.log('newLookerContent', newLookerContent)
+    console.log('this.state.activeCustomization', this.state.activeCustomization)
+
     let objToUse = {
       type: newLookerContent.type.value,
       id: newLookerContent.id.value,
       name: newLookerContent.name.value
     }
+
+    let customizationResponse = await fetch('/savelookercontent', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ activeCustomization: this.state.activeCustomization, newLookerContent: objToUse })
+    })
+    let customizationResponseData = await customizationResponse.json();
+    console.log('customizationResponseData', customizationResponseData)
 
     this.setState(prevState => ({
       lookerContent: [...prevState.lookerContent, objToUse],
@@ -249,14 +298,16 @@ class App extends React.Component {
 
   }
 
+
   render() {
-    // console.log('App render');
+    console.log('App render');
     // console.log('this.props', this.props);
     const { userProfile } = this.state
     const { customizations } = this.state
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
     const { lookerContent } = this.state
+    console.log('lookerContent', lookerContent)
     return (
       <Router>
         <div>

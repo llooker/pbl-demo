@@ -13,6 +13,7 @@ router.get('/retievedashboardfilters/:content_id', indexCtrl.retrieveDashboardFi
 
 router.get('/customize', customizeCtrl.main)
 router.post('/savecustomization', customizeCtrl.saveCustomization)
+router.post('/savelookercontent', customizeCtrl.saveLookerContent)
 
 //for embed sdk
 router.get('/auth', indexCtrl.auth)

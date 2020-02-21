@@ -37,7 +37,7 @@
   }
 }
 
-.fade {
+/*.fade {
 	opacity: 1;
 	animation-name: fadeInOpacity;
 	animation-iteration-count: 1;
@@ -52,7 +52,7 @@
 	100% {
 		opacity: 1;
 	}
-}
+}*/
 
 /* col d-flex align-items-center justify-content-center h-100 */
 .v-center {

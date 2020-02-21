@@ -23,7 +23,7 @@ class Content extends React.Component {
             //set to desired empty object onload
             newLookerContent: {
                 type: {
-                    value: '',
+                    value: 'dashboard',
                     type: 'select-one',
                     options: ['dashboard', 'explore', 'folder']
                 },

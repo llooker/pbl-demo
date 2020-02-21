@@ -45,6 +45,7 @@ ul li {
 #logoUrlNav{
   height: 75%;
   width: auto;
+  max-height: 50px;
 }
 
 .navbar li  a{

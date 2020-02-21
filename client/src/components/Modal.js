@@ -2,46 +2,49 @@ import React from 'react';
 
 function Modal({ title, toggleModal, objForModal, handleModalFormChange, updateAction }) {
     return (
+        <>
+            <div class="modal-backdrop fade show" onClick={() => toggleModal()}>
+            </div>
+            <div className="modal block" tabIndex="-1" role="dialog" data-backdrop="true">
+                <div className="modal-dialog modal-lg" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <div className="text-center" />
+                            <h5 className="modal-title">{title}</h5>
 
-        <div className="modal block" tabIndex="-1" role="dialog">
-            <div className="modal-dialog modal-lg" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <div className="text-center" />
-                        <h5 className="modal-title">{title}</h5>
+                            <button
+                                type="button"
+                                className="close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                                onClick={() => toggleModal()}
+                            >
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
 
-                        <button
-                            type="button"
-                            className="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                            onClick={() => toggleModal()}
-                        >
-                            <span aria-hidden="true">&times;</span>
+                        <div className="modal-body">
+
+                            <ModalForm objForModal={objForModal} handleModalFormChange={handleModalFormChange} />
+
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-primary ml-auto"
+                                onClick={() => {
+                                    toggleModal()
+                                    updateAction(objForModal)
+                                }}
+                            >
+                                Save changes
                         </button>
-                    </div>
-
-                    <div className="modal-body">
-
-                        <ModalForm objForModal={objForModal} handleModalFormChange={handleModalFormChange} />
+                        </div>
 
                     </div>
-                    <div className="modal-footer">
-                        <button
-                            type="button"
-                            className="btn btn-primary ml-auto"
-                            onClick={() => {
-                                toggleModal()
-                                updateAction(objForModal)
-                            }}
-                        >
-                            Save changes
-                        </button>
-                    </div>
-
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 
@@ -50,19 +53,17 @@ class ModalForm extends React.Component {
         super();
         this.state = {
             contentTypeValue: '',
-            // contentIdValue: '',
-            // tabTitleValue: ''
         }
     }
 
     componentDidMount() {
-        console.log('ModalForm componentDidMount')
+        // console.log('ModalForm componentDidMount')
         this.setState({
             contentTypeValue: this.props.objForModal.contentType ? this.props.objForModal.contentType : '',
             // contentIdValue: this.props.objForModal.contentId ? this.props.objForModal.contentId : '',
             // tabTitleValue: this.props.objForModal.tabTitle ? this.props.objForModal.tabTitle : '',
         }, () => {
-            console.log('componentDidMount callback this.state.contentTypeValue', this.state.contentTypeValue)
+            // console.log('componentDidMount callback this.state.contentTypeValue', this.state.contentTypeValue)
             // console.log('componentDidMount callback this.state.contentIdValue', this.state.contentIdValue)
             // console.log('tabTitleValue callback this.state.tabTitleValue', this.state.tabTitleValue)
         })
