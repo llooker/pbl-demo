@@ -13,6 +13,11 @@ module.exports.saveCustomization = (req, res, next) => {
     customizationToSave.date = new Date() //add date to customization
     const { customizationIndex } = req.body
     delete customizationToSave.customizationIndex // we don't want to save index here
+
+    if (customizations[customizationIndex].lookerContent) {
+        customizationToSave.lookerContent = customizations[customizationIndex].lookerContent
+    }
+
     //existing customization
     if (customizationToSave.id) {
         //update index of desired customization
