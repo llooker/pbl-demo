@@ -64,7 +64,7 @@ class ModalForm extends React.Component {
     }
 
     render() {
-        console.log('ModalForm render')
+        // console.log('ModalForm render')
         return (
             <form id="contentForm" className="text-left">
                 <div className="form-group">

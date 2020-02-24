@@ -41,8 +41,8 @@ class Content extends React.Component {
 
 
     componentDidMount() {
-        // console.log('LookerContent componentDidMount')
-        // console.log('this.props.lookerContent', this.props.lookerContent)
+        console.log('LookerContent componentDidMount')
+        console.log('this.props.lookerContent', this.props.lookerContent)
         const { lookerContent } = this.props
         this.setupLookerContent(lookerContent)
 
@@ -68,6 +68,14 @@ class Content extends React.Component {
     async setupLookerContent(lookerContent) {
         // console.log('setupLookerContent')
         // console.log('lookerContent', lookerContent)
+
+        //delete old content..?
+        let embedContainerArray = document.getElementsByClassName("embedContainer");
+        for (let h = 0; h < embedContainerArray.length; h++) {
+            let thisEmbedContainerId = embedContainerArray[h].id
+            document.getElementById(thisEmbedContainerId).innerHTML = ''
+        }
+
         for (let i = 0; i < lookerContent.length; i++) {
             if (lookerContent[i].type === 'dashboard') {
                 LookerEmbedSDK.createDashboardWithId(lookerContent[i].id)
@@ -246,7 +254,6 @@ class Content extends React.Component {
                                                     className="form-control"
                                                     onChange={(e) => this.dropdownSelect(e)}
                                                     type="select-one"
-                                                    // value={this.state['genderDropdownValue']}
                                                     dropdownFilterName={item.customDropdown.filterName}
                                                     dashboardStateName={item.id}
                                                 >
@@ -261,7 +268,7 @@ class Content extends React.Component {
                                         </div> :
                                         ''}
                                     <div className="row pt-3">
-                                        <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12">
+                                        <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer">
 
                                         </div>
 

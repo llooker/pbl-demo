@@ -67,3 +67,11 @@ ul li {
   height: 300px;
   overflow-y: auto;
 }
+
+iframe{
+  display: none;
+}
+
+.embedContainer iframe {
+  display: block
+}

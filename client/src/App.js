@@ -11,8 +11,8 @@ import EditCustomization from './components/EditCustomization'
 import DefaultLookerContent from './defaultLookerContent.json';
 
 
-import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
-LookerEmbedSDK.init('demo.looker.com', '/auth')
+// import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
+// LookerEmbedSDK.init('demo.looker.com', '/auth')
 
 //to discuss with wes -- how can I eliminate this?
 //is this something I wanna replace with passport?
@@ -135,7 +135,7 @@ class App extends React.Component {
   }
 
   checkSession = async () => {
-    console.log('checkSession')
+    // console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -257,8 +257,8 @@ class App extends React.Component {
   }
 
   saveLookerContent = async (newLookerContent) => {
-    console.log('saveLookerContent')
-    console.log('newLookerContent', newLookerContent)
+    // console.log('saveLookerContent')
+    // console.log('newLookerContent', newLookerContent)
 
     let objToUse = {
       type: newLookerContent.type.value,
@@ -275,10 +275,9 @@ class App extends React.Component {
       body: JSON.stringify({ activeCustomization: this.state.activeCustomization, newLookerContent: objToUse })
     })
     let customizationResponseData = await customizationResponse.json();
-    console.log('customizationResponseData', customizationResponseData)
 
     this.setState(prevState => ({
-      lookerContent: [...prevState.lookerContent, objToUse]
+      lookerContent: [...prevState.lookerContent, objToUse] //should I be using DB as source here?
     }))
 
   }

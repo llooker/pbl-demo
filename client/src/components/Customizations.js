@@ -29,25 +29,20 @@ class Customizations extends React.Component {
     }
 
     sortByCreatedDate() {
-        console.log('sortByCreatedDate')
         let { isOrdered } = this.state
-        console.log('isOrdered', isOrdered)
         let sortedCustomizations;
         if (isOrdered === null || isOrdered === "DESC") {
-            console.log('inside iff')
             sortedCustomizations = this.state.customizations.sort((a, b) => (a.date > b.date) ? 1 : -1)
             this.setState({
                 isOrdered: "ASC"
             })
         } else if (isOrdered === "ASC") {
-            console.log('else iff')
             sortedCustomizations = this.state.customizations.sort((a, b) => (a.date > b.date) ? -1 : 1)
             this.setState({
                 isOrdered: "DESC"
             })
 
         }
-        console.log('sortedCustomizations', sortedCustomizations)
         this.setState({
             customizations: sortedCustomizations
         })
@@ -62,7 +57,7 @@ class Customizations extends React.Component {
                 <div className="row pt-5">
                     <div className="col-sm-12">
                         <h1>Customizations</h1>
-                        <table className="table">
+                        <table className="table pt-3 mt-3">
                             <thead>
                                 <tr>
                                     <th scope="col">Name</th>
@@ -78,7 +73,7 @@ class Customizations extends React.Component {
                                             <td >{Moment(customization.date).format('LLL')}</td>
                                             {
                                                 customization.companyName === activeCustomization.companyName ?
-                                                    <td><span className="badge badge-info">Active</span></td>
+                                                    <td><span className="badge badge-info p-3">Active</span></td>
                                                     : customization.id === "defaultCustomization" ?
                                                         <td>
                                                             <button type="button" className="btn btn-secondary mr-2" data-index={index} onClick={() => this.applyCustomization(index)}>Apply</button>
