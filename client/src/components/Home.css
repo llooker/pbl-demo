@@ -75,3 +75,7 @@ iframe{
 .embedContainer iframe {
   display: block
 }
+
+.modal-footer {
+  display: block;
+}

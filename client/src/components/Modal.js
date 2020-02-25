@@ -1,51 +1,79 @@
 import React from 'react';
 
-function Modal({ title, toggleModal, objForModal, handleModalFormChange, updateAction }) {
-    return (
-        <>
-            <div className="modal-backdrop fade show" onClick={() => toggleModal()}>
-            </div>
-            <div className="modal block" tabIndex="-1" role="dialog" data-backdrop="true">
-                <div className="modal-dialog modal-lg" role="document">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <div className="text-center" />
-                            <h5 className="modal-title">{title}</h5>
+class Modal extends React.Component {
+    constructor(props) {
+        super(props)
+    }
 
-                            <button
-                                type="button"
-                                className="close"
-                                data-dismiss="modal"
-                                aria-label="Close"
-                                onClick={() => toggleModal()}
-                            >
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+    componentDidMount() {
+        console.log('Modal componentDidMount')
+    }
+
+
+    render() {
+        const { title,
+            toggleModal,
+            objForModal,
+            handleModalFormChange,
+            validateAction,
+            newLookerContentErrorMessage } = this.props
+        return (
+            <>
+                <div className="modal-backdrop fade show" onClick={() => toggleModal()}>
+                </div>
+                <div className="modal block" tabIndex="-1" role="dialog" data-backdrop="true">
+                    <div className="modal-dialog modal-lg" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <div className="text-center" />
+                                <h5 className="modal-title">{title}</h5>
+
+                                <button
+                                    type="button"
+                                    className="close"
+                                    data-dismiss="modal"
+                                    aria-label="Close"
+                                    onClick={() => toggleModal()}
+                                >
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div className="modal-body">
+
+                                <ModalForm objForModal={objForModal} handleModalFormChange={handleModalFormChange} />
+
+                            </div>
+                            <div className="modal-footer">
+                                <>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary mr-auto"
+                                        onClick={() => {
+                                            validateAction(objForModal)
+                                        }}
+                                    >
+                                        Validate Content
+                                    </button>
+
+                                    {
+                                        newLookerContentErrorMessage.length ?
+
+                                            <>
+                                                <br />
+                                                <small id="newLookerContentIdHelper" className="form-text text-danger">{newLookerContentErrorMessage}</small>
+                                            </>
+                                            : ''
+                                    }
+                                </>
+                            </div>
+
                         </div>
-
-                        <div className="modal-body">
-
-                            <ModalForm objForModal={objForModal} handleModalFormChange={handleModalFormChange} />
-
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-primary ml-auto"
-                                onClick={() => {
-                                    toggleModal()
-                                    updateAction(objForModal)
-                                }}
-                            >
-                                Save changes
-                        </button>
-                        </div>
-
                     </div>
                 </div>
-            </div>
-        </>
-    )
+            </>
+        )
+    }
 }
 
 class ModalForm extends React.Component {
@@ -115,6 +143,8 @@ class ModalForm extends React.Component {
                             onChange={this.props.handleModalFormChange}
                             data-key="id"
                         />
+                        {/* <small id="newLookerContentIdHelper" className="form-text text-muted">This field is required</small> */}
+
                     </div>
                     <div className="pt-3">
                         <label htmlFor="modalForm">Tab Name</label>

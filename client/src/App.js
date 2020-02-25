@@ -260,11 +260,11 @@ class App extends React.Component {
     // console.log('saveLookerContent')
     // console.log('newLookerContent', newLookerContent)
 
-    let objToUse = {
-      type: newLookerContent.type.value,
-      id: newLookerContent.id.value,
-      name: newLookerContent.name.value
-    }
+    // let objToUse = {
+    //   type: newLookerContent.type.value,
+    //   id: newLookerContent.id.value,
+    //   name: newLookerContent.name.value
+    // }
 
     let customizationResponse = await fetch('/savelookercontent', {
       method: 'POST',
@@ -272,12 +272,12 @@ class App extends React.Component {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ activeCustomization: this.state.activeCustomization, newLookerContent: objToUse })
+      body: JSON.stringify({ activeCustomization: this.state.activeCustomization, newLookerContent: newLookerContent })
     })
     let customizationResponseData = await customizationResponse.json();
 
     this.setState(prevState => ({
-      lookerContent: [...prevState.lookerContent, objToUse] //should I be using DB as source here?
+      lookerContent: [...prevState.lookerContent, newLookerContent] //should I be using DB as source here?
     }))
 
   }

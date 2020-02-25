@@ -10,7 +10,21 @@ import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 
 LookerEmbedSDK.init('demo.looker.com', '/auth')
-
+let defaultNewLookerContentObj = {
+    type: {
+        value: 'dashboard',
+        type: 'select-one',
+        options: ['dashboard', 'explore', 'folder']
+    },
+    id: {
+        value: '',
+        type: 'text'
+    },
+    name: {
+        value: '',
+        type: 'text'
+    }
+}
 
 class Content extends React.Component {
     constructor(props) {
@@ -21,28 +35,14 @@ class Content extends React.Component {
             activeTabType: 'dashboard',
             renderModal: false,
             //set to desired empty object onload
-            newLookerContent: {
-                type: {
-                    value: 'dashboard',
-                    type: 'select-one',
-                    options: ['dashboard', 'explore', 'folder']
-                },
-                id: {
-                    value: '',
-                    type: 'text'
-                },
-                name: {
-                    value: '',
-                    type: 'text'
-                }
-            }
+            newLookerContent: defaultNewLookerContentObj,
+            newLookerContentErrorMessage: ''
         }
     }
 
 
     componentDidMount() {
-        console.log('LookerContent componentDidMount')
-        console.log('this.props.lookerContent', this.props.lookerContent)
+        // console.log('LookerContent componentDidMount')
         const { lookerContent } = this.props
         this.setupLookerContent(lookerContent)
 
@@ -177,6 +177,13 @@ class Content extends React.Component {
     }
 
     toggleModal = () => {
+        if (this.state.renderModal) {
+            this.setState({
+                newLookerContent: defaultNewLookerContentObj,
+                newLookerContentErrorMessage: ''
+            })
+        }
+
         this.setState(prevState => ({
             renderModal: prevState.renderModal ? false : true
         }))
@@ -196,15 +203,55 @@ class Content extends React.Component {
         })
     }
 
+
+
+    validateLookerContent = async (newLookerContent) => {
+        // console.log('validateLookerContent')
+        // console.log('newLookerContent', newLookerContent)
+
+        let objToUse = {
+            type: newLookerContent.type.value,
+            id: newLookerContent.id.value,
+            name: newLookerContent.name.value
+        }
+
+        if (objToUse.type && objToUse.id && objToUse.name) {
+            let lookerResposnse = await fetch('/validatelookercontent/' + objToUse.id + '/' + objToUse.type, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            let lookerResposnseData = await lookerResposnse.json();
+
+            if (lookerResposnseData.content_metadata_id) {
+                this.props.saveLookerContent(objToUse)
+                this.toggleModal()
+            } else {
+                this.setState(prevState => ({
+                    newLookerContentErrorMessage: lookerResposnseData.errorMessage || 'Invalid id!'
+                }))
+            }
+
+        } else {
+            this.setState(prevState => ({
+                newLookerContentErrorMessage: 'All fields are required!'
+            }))
+        }
+
+    }
+
     render() {
         // console.log('Content render')
-        // console.log('this.props.activeCustomization', this.props.activeCustomization)
         const { lookerContent } = this.props
         const { renderSampleCode } = this.state
         const { sampleCode } = this.state
         const { renderModal } = this.state
         const { newLookerContent } = this.state
         const { activeCustomization } = this.props
+        const { newLookerContentErrorMessage } = this.state
         return (
 
             <div className="home container p-5 position-relative">
@@ -298,7 +345,12 @@ class Content extends React.Component {
 
                 {
                     renderModal ?
-                        <Modal title="Select Looker Content to Add" toggleModal={this.toggleModal} objForModal={newLookerContent} handleModalFormChange={this.handleModalFormChange} updateAction={this.props.saveLookerContent} />
+                        <Modal title="Select Looker Content to Add"
+                            toggleModal={this.toggleModal}
+                            objForModal={newLookerContent}
+                            handleModalFormChange={this.handleModalFormChange}
+                            validateAction={this.validateLookerContent}
+                            newLookerContentErrorMessage={newLookerContentErrorMessage} />
                         : ''
                 }
 

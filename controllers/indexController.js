@@ -187,3 +187,24 @@ module.exports.performApiCall = async (req, res, next) => {
 
     res.send({ resObj })
 }
+
+module.exports.validateLookerContent = async (req, res, next) => {
+    console.log('indexController validateLookerContent');
+
+    const contentId = req.params.content_id;
+    const contentType = req.params.content_type;
+
+    let returnVal;
+    const sdk = LookerNodeSDK.createClient()
+
+    try {
+        returnVal = await sdk.ok(sdk[contentType](contentId))
+        res.status(200).send(returnVal)
+    } catch (err) {
+        // returnVal = err
+        let errorObj = {
+            errorMessage: 'Invalid id!'
+        }
+        res.status(404).send(errorObj)
+    }
+}
