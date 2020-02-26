@@ -1,17 +1,20 @@
-# Looker Demo Eng Initial Web App Skeleton
+# Looker DemoEng WYSIWYG App
 
-This is a basic node/react app that will be used to showcase demos for Looker PBL.
+This is a react/node app featuring Looker's all new embed SDK to showcase PBL demos.
 
-You'll need to have a local looker instance running. For more info on this process, see this [link](https://app.getguru.com/card/eckbn9Kc/How-to-install-a-local-Looker-instance?q=installing%20looker%20locally).
-
-Steps for installing locally and running:
-
+Steps for configuring this application locally on your machine: 
 <ol>
-<li>Open terminal and run 'git clone git@github.com:ewarrenG/looker-embed.git'</li>
-<li>add a looker.ini file at the root level of the directory. Fill in the credentials for api_version, base_url, client_id and client_secret as documented in this  repo 
-https://github.com/looker-open-source/sdk-codegen/tree/master/typescript/looker#configure-the-sdk-for-your-looker-server. You'll also need to add 'verify_ssl=false' to the ini, since you're connecting against a local server. 
-<li>cd into the looker-embed directory and run 'npm install'</li>
-<li>cd into the client directory and 'run npm install' as well</li>
+    <li>Open terminal and run 'git clone git@github.com:ewarrenG/looker-embed.git'</li>
+    <li>There are three files with sensitive credentials, you'll need to add manually:
+        <ol>
+        <li>looker.ini at the root level</li>
+        <li>config.js at the root level</li>
+        <li>clientConfig.json inside of the src folder inside of the client folder</li>
+        </ol>
+    </li>
+    <li>Reach out to Elliot Glasenk for the contents of these files</li>
+    <li>Next, back in your terminal window, cd into the looker-embed directory and run 'npm install'</li>
+    <li>cd into the client directory and run 'npm install'</li>
 <li>cd back to looker-embed parent directory, i.e. 'cd ../'</li>
 <li>run npm start, localhost:3000 should open and you should see a list of looks associated with this demo (for now) :P</li>
 </ol>
