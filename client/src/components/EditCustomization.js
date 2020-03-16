@@ -35,7 +35,8 @@ class NewCustomization extends React.Component {
             companyName: indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].companyName : '',
             logoUrl: indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].logoUrl : '',
             salesforceUrl: indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].salesforceUrl : '',
-            validSalesforceUrl: indexOfCustomizationToEdit ? this.validateSalesforceUrl(customizations[indexOfCustomizationToEdit].salesforceUrl) : false
+            validSalesforceUrl: indexOfCustomizationToEdit ? this.validateSalesforceUrl(customizations[indexOfCustomizationToEdit].salesforceUrl) : false,
+            industry: indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].industry : '',
         }
     }
 
@@ -49,6 +50,7 @@ class NewCustomization extends React.Component {
     }
 
     handleSubmit(event) {
+        // console.log('handleSubmit')
         event.preventDefault();
         const data = new FormData(event.target);
         let objForBody = {}
@@ -77,6 +79,14 @@ class NewCustomization extends React.Component {
             returnVal = true;
         }
         return returnVal
+    }
+
+
+    dropdownSelect = (e) => {
+        const targetId = e.target.id
+        this.setState({
+            [targetId]: e.target.value
+        })
     }
 
     render() {
@@ -163,10 +173,32 @@ class NewCustomization extends React.Component {
                             </div>
                             <div id="subForm">
                                 <div className="form-group">
+                                    <label htmlFor="industry">Choose industry</label>
+                                    <select
+                                        id="industry"
+                                        className="form-control"
+                                        onChange={(e) => this.dropdownSelect(e)}
+                                        name="industry"
+                                        type="select-one"
+                                        value={this.state.industry}
+                                        disabled={validSalesforceUrl ? false : true}
+                                    >
+                                        <option
+                                            key="marketing"
+                                            value="marketing"
+                                        > Marketing</option>
+                                        <option
+                                            key="retail"
+                                            value="retail"
+                                        > Retail</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
                                     <label htmlFor="companyName">Company name</label>
                                     <input id="companyName"
                                         className="form-control"
-                                        name="companyName" type="text"
+                                        name="companyName"
+                                        type="text"
                                         value={this.state.companyName}
                                         onChange={e => this.updateInput(e)}
                                         disabled={validSalesforceUrl ? false : true}

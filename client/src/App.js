@@ -8,7 +8,8 @@ import Footer from './components/Footer'
 import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
-import DefaultLookerContent from './defaultLookerContent.json';
+// import DefaultLookerContent from './defaultLookerContent.json';
+import DefaultLookerContent from './defaultLookerContentIndustry.json';
 
 
 // import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
@@ -151,8 +152,8 @@ class App extends React.Component {
     if (userProfile && Object.keys(userProfile).length) {
 
       let lookerContentToUse = customizations[0].lookerContent ?
-        [...DefaultLookerContent, ...customizations[0].lookerContent] :
-        [...DefaultLookerContent]
+        [...DefaultLookerContent[customizations[0].industry], ...customizations[0].lookerContent] :
+        [...DefaultLookerContent[customizations[0].industry]]
       auth.authenticated(() => {
         this.setState({
           userProfile,
@@ -161,6 +162,7 @@ class App extends React.Component {
           lookerContent: lookerContentToUse
         }, () => {
           // console.log('checkSession callback this.state.customizations', this.state.customizations)
+          // console.log('checkSession callback this.state.lookerContent', this.state.lookerContent)
         })
       })
     }
@@ -178,21 +180,24 @@ class App extends React.Component {
       },
       body: JSON.stringify(userProfile)
     })
-    let sessionResponseData = await sessionData.json();
+    const sessionResponseData = await sessionData.json();
     if (Object.keys(userProfile).length === 0) {
       auth.signout()
     }
+    const { customizations } = sessionResponseData.session
 
 
-    let lookerContentToUse = sessionResponseData.session.customizations[0].lookerContent ?
-      [...DefaultLookerContent, ...sessionResponseData.session.customizations[0].lookerContent] :
-      [...DefaultLookerContent]
+    let lookerContentToUse = customizations[0].lookerContent ?
+      [...DefaultLookerContent[customizations[0].industry], ...customizations[0].lookerContent] :
+      [...DefaultLookerContent[customizations[0].industry]]
 
     this.setState({
       userProfile,
       customizations: sessionResponseData.session.customizations,
       activeCustomization: sessionResponseData.session.customizations[0],
       lookerContent: lookerContentToUse
+    }, () => {
+      // console.log('applySession callback this.state.lookerContent', this.state.lookerContent)
     });
   }
 
@@ -200,12 +205,15 @@ class App extends React.Component {
     // console.log('applyCustomization')
     // console.log('customizationIndex', customizationIndex)
     let lookerContentToUse = this.state.customizations[customizationIndex].lookerContent ?
-      [...DefaultLookerContent, ...this.state.customizations[customizationIndex].lookerContent] :
-      [...DefaultLookerContent]
+      [...DefaultLookerContent[this.state.customizations[customizationIndex].industry], ...this.state.customizations[customizationIndex].lookerContent] :
+      [...DefaultLookerContent[this.state.customizations[customizationIndex].industry]]
+    console.log('lookerContentToUse', lookerContentToUse)
 
     this.setState({
       activeCustomization: this.state.customizations[customizationIndex],
       lookerContent: lookerContentToUse
+    }, () => {
+      // console.log('applyCustomization callback this.state.lookerContent', this.state.lookerContent)
     });
   }
 
@@ -232,9 +240,15 @@ class App extends React.Component {
     let customizationResponseData = await customizationResponse.json();
     const { indexOfCustomizationToEdit } = this.state
 
-    let lookerContentToUse = customizationResponseData.customizations[indexOfCustomizationToEdit || customizationResponseData.customizations.length - 1].lookerContent ?
-      [...DefaultLookerContent, ...customizationResponseData.customizations[indexOfCustomizationToEdit || customizationResponseData.customizations.length - 1].lookerContent] :
-      [...DefaultLookerContent]
+    let lookerContentToUse = customizationResponseData.customizations[
+      indexOfCustomizationToEdit || customizationResponseData.customizations.length - 1
+    ].lookerContent ?
+      [...DefaultLookerContent[
+        customizationResponseData.customizations[indexOfCustomizationToEdit || customizationResponseData.customizations.length - 1].industry
+      ], ...customizationResponseData.customizations[indexOfCustomizationToEdit || customizationResponseData.customizations.length - 1].lookerContent] :
+      [...DefaultLookerContent[
+        customizationResponseData.customizations[indexOfCustomizationToEdit || customizationResponseData.customizations.length - 1].industry]
+      ]
 
     this.setState({
       customizations: customizationResponseData.customizations,
@@ -244,7 +258,7 @@ class App extends React.Component {
       lookerContent: lookerContentToUse
     }, () => {
       //necessary???
-      console.log('saveCustomization callback this.state.customizations', this.state.customizations)
+      // console.log('saveCustomization callback this.state.lookerContent', this.state.lookerContent)
     });
   }
 
@@ -259,12 +273,6 @@ class App extends React.Component {
   saveLookerContent = async (newLookerContent) => {
     // console.log('saveLookerContent')
     // console.log('newLookerContent', newLookerContent)
-
-    // let objToUse = {
-    //   type: newLookerContent.type.value,
-    //   id: newLookerContent.id.value,
-    //   name: newLookerContent.name.value
-    // }
 
     let customizationResponse = await fetch('/savelookercontent', {
       method: 'POST',

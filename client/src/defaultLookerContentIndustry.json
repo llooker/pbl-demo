@@ -1,0 +1,65 @@
+{
+    "marketing": [
+        {
+            "type": "dashboard",
+            "id": "5277",
+            "customDropdown": {
+                "title": "Select User Gender",
+                "options": [
+                    "Female",
+                    "Male",
+                    "Any"
+                ],
+                "filterName": "User Gender"
+            },
+            "name": "Home"
+        },
+        {
+            "type": "dashboard",
+            "id": "3106",
+            "name": "Lookup"
+        },
+        {
+            "type": "folder",
+            "id": "1827",
+            "name": "Report"
+        },
+        {
+            "type": "explore",
+            "id": "thelook_adwords::events",
+            "name": "Explore"
+        }
+    ],
+    "retail": [
+        {
+            "type": "dashboard",
+            "id": "5449",
+            "name": "Group Overview"
+        },
+        {
+            "type": "look",
+            "id": "19972",
+            "name": "Fraud Detection"
+        },
+        {
+            "type": "dashboard",
+            "id": "5535",
+            "name": "Store Deep-dive"
+        },
+        {
+            "type": "dashboard",
+            "id": "5539",
+            "name": "Item Affinity Analysis"
+        },
+        {
+            "type": "dashboard",
+            "id": "5540",
+            "name": "Customer Segment Deep-dive"
+        },
+        {
+            "type": "dashboard",
+            "id": "5541",
+            "name": "Address Deep-dive"
+        }
+    ]
+}

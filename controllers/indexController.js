@@ -110,7 +110,8 @@ async function checkForCustomizations(session) {
         id: 'defaultCustomization',
         companyName: 'WYSIWYG',
         logoUrl: 'https://looker.com/assets/img/images/logos/looker_black.svg',
-        date: new Date() //save date with default customization
+        date: new Date(),
+        industry: "marketing"
     }
 
     var myPromise = () => {

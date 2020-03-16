@@ -6,12 +6,14 @@ module.exports.main = (req, res, next) => {
 }
 
 module.exports.saveCustomization = (req, res, next) => {
+    console.log('saveCustomization')
     const { email } = req.session.userProfile
     const { customizations } = req.session
     const customizationToSave = req.body
     customizationToSave.date = new Date() //add date to customization, server side all that matters
     const { customizationIndex } = req.body
     delete customizationToSave.customizationIndex // we don't want to save index here
+    console.log('customizationToSave', customizationToSave)
 
 
 
@@ -68,7 +70,7 @@ function makeid(length) {
 }
 
 module.exports.saveLookerContent = async (req, res, next) => {
-    console.log('customizeController saveLookerContent')
+    // console.log('customizeController saveLookerContent')
     // propsed solution:
     // fetch customizations from db before saving to ensure up to date
     let { session } = req
@@ -125,7 +127,8 @@ async function checkForCustomizations(session) {
         id: 'defaultCustomization',
         companyName: 'WYSIWYG',
         logoUrl: 'https://looker.com/assets/img/images/logos/looker_black.svg',
-        date: new Date() //save date with default customization
+        date: new Date(),
+        industry: "marketing"
     }
 
     var myPromise = () => {
