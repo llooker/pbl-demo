@@ -6,14 +6,14 @@ module.exports.main = (req, res, next) => {
 }
 
 module.exports.saveCustomization = (req, res, next) => {
-    console.log('saveCustomization')
+    // console.log('saveCustomization')
     const { email } = req.session.userProfile
     const { customizations } = req.session
     const customizationToSave = req.body
     customizationToSave.date = new Date() //add date to customization, server side all that matters
     const { customizationIndex } = req.body
     delete customizationToSave.customizationIndex // we don't want to save index here
-    console.log('customizationToSave', customizationToSave)
+    // console.log('customizationToSave', customizationToSave)
 
 
 
