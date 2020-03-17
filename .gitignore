@@ -1,3 +1,4 @@
 node_modules/
 config.*
 looker.ini
+.DS_Store
