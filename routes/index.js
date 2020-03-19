@@ -12,6 +12,7 @@ router.post('/writesession', indexCtrl.writeSession)
 router.get('/retievedashboardfilters/:content_id', indexCtrl.retrieveDashboardFilters)
 // router.get('/performapicall/:type', indexCtrl.performApiCall)
 router.get('/validatelookercontent/:content_id/:content_type', indexCtrl.validateLookerContent)
+router.post('/endsession', indexCtrl.endSession)
 
 router.get('/customize', customizeCtrl.main)
 router.post('/savecustomization', customizeCtrl.saveCustomization)

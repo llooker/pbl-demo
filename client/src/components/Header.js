@@ -3,6 +3,7 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import './Home.css';
 
 function Header(props) {
+  console.log('props', props)
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -15,9 +16,13 @@ function Header(props) {
           </li>
           <li className="nav-item dropdown ml-auto ">
             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Settings
+              {/* Settings */}
+              {props.lookerUser}
             </a>
             <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              {/* new */}
+              {props.pathname === "/home" ? <UserOptions lookerUser={props.lookerUser} switchLookerUser={props.switchLookerUser} /> : ''}
+              {/* end lookerUser functionality */}
               <a className="dropdown-item">
                 <GoogleLogout
                   clientId={props.clientId}
@@ -32,6 +37,18 @@ function Header(props) {
       </nav>
     </>
   );
+}
+
+function UserOptions(props) {
+  return (
+    <>
+      <h6 class="dropdown-header">Change Looker User</h6>
+      {props.lookerUser === "good" ? ' ' : <a className="dropdown-item" onClick={() => { props.switchLookerUser("good") }}>Good</a>}
+      {props.lookerUser === "better" ? ' ' : <a className="dropdown-item" onClick={() => { props.switchLookerUser("better") }}>Better</a>}
+      {props.lookerUser === "best" ? ' ' : <a className="dropdown-item" onClick={() => { props.switchLookerUser("best") }}>Best</a>}
+      <div class="dropdown-divider"></div>
+    </>
+  )
 }
 
 export default Header;

@@ -110,6 +110,15 @@ module.exports.writeSession = async (req, res, next) => {
     res.status(200).send({ session });
 }
 
+
+
+module.exports.endSession = async (req, res, next) => {
+    // console.log('endSession')
+
+    req.session.destroy();
+    res.status(200).send('session destroyed :)');
+}
+
 async function checkForCustomizations(session) {
     // console.log('checkForCustomizations')
     const { email } = session.userProfile

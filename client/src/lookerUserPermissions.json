@@ -1,0 +1,68 @@
+{
+    "good": {
+        "permissions": [
+            "access_data",
+            "see_looks",
+            "see_user_dashboards",
+            "see_lookml_dashboards",
+            "create_table_calculations",
+            "download_with_limit",
+            "download_without_limit",
+            "save_content",
+            "embed_browse_spaces",
+            "schedule_look_emails",
+            "schedule_external_look_emails",
+            "send_to_sftp",
+            "send_to_s3",
+            "send_outgoing_webhook",
+            "see_sql",
+            "send_to_integration",
+            "create_alerts"
+        ]
+    },
+    "better": {
+        "permissions": [
+            "access_data",
+            "see_looks",
+            "see_user_dashboards",
+            "see_lookml_dashboards",
+            "create_table_calculations",
+            "download_with_limit",
+            "download_without_limit",
+            "save_content",
+            "embed_browse_spaces",
+            "schedule_look_emails",
+            "schedule_external_look_emails",
+            "send_to_sftp",
+            "send_to_s3",
+            "send_outgoing_webhook",
+            "see_sql",
+            "send_to_integration",
+            "create_alerts",
+            "explore"
+        ]
+    },
+    "best": {
+        "permissions": [
+            "access_data",
+            "see_looks",
+            "see_user_dashboards",
+            "see_lookml_dashboards",
+            "create_table_calculations",
+            "download_with_limit",
+            "download_without_limit",
+            "save_content",
+            "embed_browse_spaces",
+            "schedule_look_emails",
+            "schedule_external_look_emails",
+            "send_to_sftp",
+            "send_to_s3",
+            "send_outgoing_webhook",
+            "see_sql",
+            "send_to_integration",
+            "create_alerts",
+            "explore",
+            "see_drill_overlay"
+        ]
+    }
+}

@@ -9,7 +9,8 @@ import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
 import DefaultLookerContent from './defaultLookerContentIndustry.json';
-
+import DefaultLookerUser from './lookerUserPermissions.json';
+// console.log('DefaultLookerUser', DefaultLookerUser);
 
 class Login extends React.Component {
   constructor(props) {
@@ -43,6 +44,9 @@ class Login extends React.Component {
             onLogoutSuccess={this.props.applySession}
             companyName={activeCustomization.companyName || "WYSIWYG"} //default
             logoUrl={activeCustomization.logoUrl || "https://looker.com/assets/img/images/logos/looker_black.svg"} //default
+            lookerUser={this.props.lookerUser}
+            switchLookerUser={this.props.switchLookerUser}
+            pathname={pathname}
           />
           <Redirect to={from} />
           <Footer pathname={pathname} />
@@ -118,7 +122,8 @@ class App extends React.Component {
       customizations: [],
       activeCustomization: {},
       indexOfCustomizationToEdit: null,
-      lookerContent: []
+      lookerContent: [],
+      lookerUser: 'good' //initialize to good
     }
   }
 
@@ -149,8 +154,6 @@ class App extends React.Component {
         userProfile, //think we want this here?
         customizations,
       }, () => {
-        // console.log('checkSession callback this.state.customizations', this.state.customizations)
-        // console.log('checkSession callback this.state.lookerContent', this.state.lookerContent)
         this.applyCustomization(activeCustomization)
       })
     }
@@ -161,29 +164,37 @@ class App extends React.Component {
   applySession = async (userProfile) => {
     // console.log('applySession')
     // console.log('userProfile', userProfile)
-    let sessionData = await fetch('/writesession', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(userProfile)
-    })
-    const sessionResponseData = await sessionData.json();
+
     if (Object.keys(userProfile).length === 0) {
+      let sessionData = await fetch('/endsession', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
       this.setState({
         userProfile: {} //for now
       })
-    }
-    const { customizations } = sessionResponseData.session
+    } else {
+      let sessionData = await fetch('/writesession', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userProfile)
+      })
+      const sessionResponseData = await sessionData.json();
+      const { customizations } = sessionResponseData.session
 
-    this.setState({
-      userProfile,
-      customizations
-    }, () => {
-      // console.log('applySession callback this.state.lookerContent', this.state.lookerContent)
-      this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
-    });
+      this.setState({
+        userProfile,
+        customizations
+      }, () => {
+        this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
+      });
+    }
   }
 
   //called by: checkSession, applySession, applyButton, saveCustomization
@@ -199,9 +210,8 @@ class App extends React.Component {
       },
       body: JSON.stringify({ customizationIndex })
     })
-    let customizationResponseData = await customizationResponse.json();
 
-    // console.log('customizationResponseData', customizationResponseData)
+    let customizationResponseData = await customizationResponse.json();
 
     let lookerContentToUse = this.state.customizations[customizationIndex].lookerContent ?
       [...DefaultLookerContent[this.state.customizations[customizationIndex].industry], ...this.state.customizations[customizationIndex].lookerContent] :
@@ -240,8 +250,6 @@ class App extends React.Component {
     })
 
     let customizationResponseData = await customizationResponse.json();
-    // console.log('customizationResponseData', customizationResponseData)
-    // const { sessionActiveCustomization } = customizationResponseData
 
     this.setState({
       customizations: customizationResponseData.customizations,
@@ -279,17 +287,24 @@ class App extends React.Component {
 
   }
 
+  switchLookerUser = (newUser) => {
+    console.log('switchLookerUser')
+    console.log('newUser', newUser)
+    this.setState({
+      lookerUser: newUser
+    })
+  }
+
 
   render() {
-    console.log('App render');
+    // console.log('App render');
     // console.log('this.props', this.props);
     const { userProfile } = this.state
     const { customizations } = this.state
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
     const { lookerContent } = this.state
-    // console.log('userProfile', userProfile)
-    // console.log('activeCustomization', activeCustomization)
+    const { lookerUser } = this.state
     return (
       <Router>
         <div>
@@ -298,6 +313,8 @@ class App extends React.Component {
             applySession={this.applySession}
             userProfile={userProfile}
             activeCustomization={activeCustomization}
+            lookerUser={lookerUser}
+            switchLookerUser={this.switchLookerUser}
           />}
           />
           <PrivateRoute path='/home' component={Content}
