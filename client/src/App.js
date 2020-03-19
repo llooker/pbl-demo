@@ -8,7 +8,6 @@ import Footer from './components/Footer'
 import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
-// import DefaultLookerContent from './defaultLookerContent.json';
 import DefaultLookerContent from './defaultLookerContentIndustry.json';
 
 
@@ -18,7 +17,7 @@ class Login extends React.Component {
   }
 
   responseGoogle = (response) => {
-    // debugger
+    // debugger //from Jim
     if (response.error) {
       console.log('response.error', response.error)
     } else {
@@ -28,12 +27,12 @@ class Login extends React.Component {
 
   render() {
     // console.log("Login render")
-    // console.log('this.props.userProfile', this.props.userProfile)
     const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
     const { pathname } = this.props.location
-    const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
     const { activeCustomization } = this.props
     const { userProfile } = this.props
+
+    const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
 
     if (Object.keys(userProfile).length) {
       return (
@@ -131,7 +130,7 @@ class App extends React.Component {
   //called on componentDidMount
   //get request so should only check info, never update
   checkSession = async () => {
-    console.log('checkSession')
+    // console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -140,10 +139,10 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
-    console.log('sessionResponseData', sessionResponseData)
+    // console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
-    const { activeCustomization } = sessionResponseData.session || 0
+    const { activeCustomization } = sessionResponseData.session || 0;
 
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
@@ -152,7 +151,6 @@ class App extends React.Component {
       let lookerContentToUse = customizations[activeCustomization].lookerContent ?
         [...DefaultLookerContent[customizations[activeCustomization].industry], ...customizations[activeCustomization].lookerContent] :
         [...DefaultLookerContent[customizations[activeCustomization].industry]]
-      //auth.authenticated(() => {
       this.setState({
         userProfile,
         customizations,
@@ -162,15 +160,14 @@ class App extends React.Component {
         // console.log('checkSession callback this.state.customizations', this.state.customizations)
         // console.log('checkSession callback this.state.lookerContent', this.state.lookerContent)
       })
-      //})
     }
   }
 
   //called responseGoogle gets response
   //post request, so should update for activeCustomization
   applySession = async (userProfile) => {
-    console.log('applySession')
-    console.log('userProfile', userProfile)
+    // console.log('applySession')
+    // console.log('userProfile', userProfile)
     let sessionData = await fetch('/writesession', {
       method: 'POST',
       headers: {
@@ -185,9 +182,8 @@ class App extends React.Component {
         userProfile: {} //for now
       })
     }
-    console.log('sessionResponseData', sessionResponseData)
+    // console.log('sessionResponseData', sessionResponseData)
     const { customizations } = sessionResponseData.session
-
 
     let lookerContentToUse = customizations[0].lookerContent ?
       [...DefaultLookerContent[customizations[0].industry], ...customizations[0].lookerContent] :
@@ -204,11 +200,10 @@ class App extends React.Component {
   }
 
   applyCustomization = async (customizationIndex) => {
-    console.log('applyCustomization')
-    console.log('customizationIndex', customizationIndex)
+    // console.log('applyCustomization')
+    // console.log('customizationIndex', customizationIndex)
 
-
-    let customizationResponse = await fetch('/updateactivecustomization', {
+    let customizationResponse = await fetch('/applyactivecustomziation', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -217,18 +212,19 @@ class App extends React.Component {
       body: JSON.stringify({ customizationIndex })
     })
     let customizationResponseData = await customizationResponse.json();
-    console.log('customizationResponseData', customizationResponseData)
+
+    // console.log('customizationResponseData', customizationResponseData)
 
     let lookerContentToUse = this.state.customizations[customizationIndex].lookerContent ?
       [...DefaultLookerContent[this.state.customizations[customizationIndex].industry], ...this.state.customizations[customizationIndex].lookerContent] :
       [...DefaultLookerContent[this.state.customizations[customizationIndex].industry]]
-    console.log('lookerContentToUse', lookerContentToUse)
 
     this.setState({
       activeCustomization: this.state.customizations[customizationIndex],
       lookerContent: lookerContentToUse
     }, () => {
       // console.log('applyCustomization callback this.state.lookerContent', this.state.lookerContent)
+      // this.props.history.push('/home') //not going to work here :P
     });
   }
 
@@ -254,14 +250,16 @@ class App extends React.Component {
       },
       body: JSON.stringify(formData)
     })
+
     let customizationResponseData = await customizationResponse.json();
-    console.log('customizationResponseData', customizationResponseData)
-    const { sessionActiveCustomization } = customizationResponseData
+    // console.log('customizationResponseData', customizationResponseData)
+    // const { sessionActiveCustomization } = customizationResponseData
+
     this.setState({
       customizations: customizationResponseData.customizations,
-      indexOfCustomizationToEdit: null
+      // indexOfCustomizationToEdit: null
     }, () => {
-      this.applyCustomization(sessionActiveCustomization)
+      this.applyCustomization(formData.customizationIndex) //sessionActiveCustomization
     })
   }
 
@@ -342,3 +340,4 @@ class App extends React.Component {
   }
 }
 export default App
+

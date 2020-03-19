@@ -6,22 +6,12 @@ module.exports.main = (req, res, next) => {
 }
 
 module.exports.saveCustomization = (req, res, next) => {
-    console.log('saveCustomization')
-
-
-    let { session } = req;
-
+    // console.log('saveCustomization')
     const { email } = req.session.userProfile
     const { customizations } = req.session
     const customizationToSave = req.body
     customizationToSave.date = new Date() //add date to customization, server side all that matters
     const { customizationIndex } = req.body
-
-    // session.sessionActiveCustomization = customizationIndex;
-
-    // console.log('000 req.session', req.session)
-    // console.log('000 req.session.id', req.session.id)
-
     delete customizationToSave.customizationIndex // we don't want to save index here
 
     //existing customization
@@ -63,28 +53,6 @@ module.exports.saveCustomization = (req, res, next) => {
             }
         );
     }
-}
-
-
-module.exports.updateActiveCustomization = (req, res, next) => {
-    console.log('updateActiveCustomization')
-    console.log('req.body', req.body)
-    const { customizationIndex } = req.body
-    let { session } = req
-    session.activeCustomization = customizationIndex;
-    console.log('session', session)
-    res.status(200).send({ session });
-}
-
-//helper function
-function makeid(length) {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
 }
 
 module.exports.saveLookerContent = async (req, res, next) => {
@@ -132,8 +100,6 @@ module.exports.saveLookerContent = async (req, res, next) => {
             }
         );
     }
-
-
 }
 
 
@@ -189,4 +155,26 @@ async function checkForCustomizations(session) {
     var result = await myPromise();
     session.customizations = result
     return session;
+}
+
+module.exports.applyActiveCustomizationToSession = (req, res, next) => {
+    // console.log('applyActiveCustomizationToSession')
+    // console.log('req.body', req.body)
+    const { customizationIndex } = req.body
+    let { session } = req
+    session.activeCustomization = customizationIndex;
+    // console.log('session', session)
+    res.status(200).send({ session });
+}
+
+
+//helper function
+function makeid(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }

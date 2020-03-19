@@ -16,7 +16,7 @@ router.get('/validatelookercontent/:content_id/:content_type', indexCtrl.validat
 router.get('/customize', customizeCtrl.main)
 router.post('/savecustomization', customizeCtrl.saveCustomization)
 router.post('/savelookercontent', customizeCtrl.saveLookerContent)
-router.post('/updateactivecustomization', customizeCtrl.updateActiveCustomization)
+router.post('/applyactivecustomziation', customizeCtrl.applyActiveCustomizationToSession)
 
 //for embed sdk
 router.get('/auth', indexCtrl.auth)

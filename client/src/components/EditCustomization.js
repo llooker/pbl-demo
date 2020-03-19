@@ -58,7 +58,9 @@ class NewCustomization extends React.Component {
             objForBody[key] = value
         }
         this.props.saveCustomization(objForBody)
-        this.props.history.push('/home')
+        setTimeout(() => {
+            this.props.history.push('/home') //causes error w/ out time out
+        }, 100)
     }
 
     updateInput(e) {

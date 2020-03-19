@@ -25,7 +25,7 @@ class Customizations extends React.Component {
 
     applyCustomization(customizationIndex) {
         this.props.applyCustomization(customizationIndex)
-        this.props.history.push('/customize')
+        this.props.history.push('/home') //customize
     }
 
     sortByCreatedDate() {
