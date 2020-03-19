@@ -87,17 +87,23 @@ function nonce(len) {
 
 
 module.exports.readSession = async (req, res, next) => {
-    let session = req.session //get session
+    // console.log('readSession')
+    let { session } = req //get session
+    // console.log('000 session', session)
+    // console.log('000 session.id', session.id)
 
     if (session.userProfile) session = await checkForCustomizations(session)
+    // console.log('111 session', session)
 
     res.status(200).send({ session }) //send whole session back
 }
 
 
 module.exports.writeSession = async (req, res, next) => {
-    let session = req.session
-    session.userProfile = req.body
+    console.log('writeSession')
+    let { session } = req;
+    session.userProfile = req.body;
+    session.activeCustomization = 0; //initialize to first customization
     session = await checkForCustomizations(session)
     res.status(200).send({ session });
 }

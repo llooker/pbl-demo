@@ -12,48 +12,32 @@ import EditCustomization from './components/EditCustomization'
 import DefaultLookerContent from './defaultLookerContentIndustry.json';
 
 
-// import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
-// LookerEmbedSDK.init('demo.looker.com', '/auth')
-
-//to discuss with wes -- how can I eliminate this?
-//is this something I wanna replace with passport?
-const auth = {
-  isAuthenticated: false,
-  authenticated(cb) {
-    this.isAuthenticated = true
-    setTimeout(cb, 100) //fake async
-  },
-  signout(cb) {
-    this.isAuthenticated = false;
-    setTimeout(cb, 100)
-  }
-}
-
-
 class Login extends React.Component {
   constructor(props) {
     super(props);
   }
 
   responseGoogle = (response) => {
+    // debugger
     if (response.error) {
       console.log('response.error', response.error)
     } else {
-      auth.authenticated()
       this.props.applySession(response.profileObj)
     }
   }
 
   render() {
     // console.log("Login render")
+    // console.log('this.props.userProfile', this.props.userProfile)
     const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
     const { pathname } = this.props.location
     const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
     const { activeCustomization } = this.props
+    const { userProfile } = this.props
 
-    if (auth.isAuthenticated === true) {
+    if (Object.keys(userProfile).length) {
       return (
-        <div className="App  ">
+        <div className="App">
           <Header
             clientId={googleClientId}
             buttonText="Logout"
@@ -96,10 +80,19 @@ class Login extends React.Component {
 }
 
 const PrivateRoute = ({ component: Component,
-  // toggleModal, renderModal,
-  customizations, activeCustomization, applyCustomization, editCustomization, indexOfCustomizationToEdit, saveCustomization, cancelIndexOfCustomizationToEdit, lookerContent, saveLookerContent, ...rest }) => (
+  customizations,
+  activeCustomization,
+  applyCustomization,
+  editCustomization,
+  indexOfCustomizationToEdit,
+  saveCustomization,
+  cancelIndexOfCustomizationToEdit,
+  lookerContent,
+  saveLookerContent,
+  userProfile,
+  ...rest }) => (
     < Route {...rest} render={(props) => (
-      auth.isAuthenticated === true ?
+      Object.keys(userProfile).length ?
         <Component {...props}
           customizations={customizations}
           activeCustomization={activeCustomization}
@@ -131,12 +124,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // console.log('App componentDidMount')
+    console.log('App componentDidMount')
     this.checkSession()
   }
 
   checkSession = async () => {
-    // console.log('checkSession')
+    console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -145,33 +138,35 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
+    console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
 
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
 
+      //here's my problem, always assume first customization...
       let lookerContentToUse = customizations[0].lookerContent ?
         [...DefaultLookerContent[customizations[0].industry], ...customizations[0].lookerContent] :
         [...DefaultLookerContent[customizations[0].industry]]
-      auth.authenticated(() => {
-        this.setState({
-          userProfile,
-          customizations,
-          activeCustomization: customizations[0],
-          lookerContent: lookerContentToUse
-        }, () => {
-          // console.log('checkSession callback this.state.customizations', this.state.customizations)
-          // console.log('checkSession callback this.state.lookerContent', this.state.lookerContent)
-        })
+      //auth.authenticated(() => {
+      this.setState({
+        userProfile,
+        customizations,
+        activeCustomization: customizations[0],
+        lookerContent: lookerContentToUse
+      }, () => {
+        // console.log('checkSession callback this.state.customizations', this.state.customizations)
+        // console.log('checkSession callback this.state.lookerContent', this.state.lookerContent)
       })
+      //})
     }
   }
 
 
   applySession = async (userProfile) => {
-    // console.log('applySession')
-    // console.log('userProfile', userProfile)
+    console.log('applySession')
+    console.log('userProfile', userProfile)
     let sessionData = await fetch('/writesession', {
       method: 'POST',
       headers: {
@@ -182,8 +177,11 @@ class App extends React.Component {
     })
     const sessionResponseData = await sessionData.json();
     if (Object.keys(userProfile).length === 0) {
-      auth.signout()
+      this.setState({
+        userProfile: {} //for now
+      })
     }
+    console.log('sessionResponseData', sessionResponseData)
     const { customizations } = sessionResponseData.session
 
 
@@ -201,9 +199,10 @@ class App extends React.Component {
     });
   }
 
-  applyCustomization = (customizationIndex) => {
-    // console.log('applyCustomization')
-    // console.log('customizationIndex', customizationIndex)
+  applyCustomization = async (customizationIndex) => {
+    console.log('applyCustomization')
+    console.log('customizationIndex', customizationIndex)
+
     let lookerContentToUse = this.state.customizations[customizationIndex].lookerContent ?
       [...DefaultLookerContent[this.state.customizations[customizationIndex].industry], ...this.state.customizations[customizationIndex].lookerContent] :
       [...DefaultLookerContent[this.state.customizations[customizationIndex].industry]]
@@ -223,6 +222,8 @@ class App extends React.Component {
     const validCustomizationIndex = typeof this.state.customizations[customizationIndex] === 'undefined' ? null : customizationIndex
     this.setState({
       indexOfCustomizationToEdit: validCustomizationIndex,
+    }, () => {
+      // console.log('editCustomization callback this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
     });
   }
 
@@ -238,28 +239,13 @@ class App extends React.Component {
       body: JSON.stringify(formData)
     })
     let customizationResponseData = await customizationResponse.json();
-    const { indexOfCustomizationToEdit } = this.state
-
-    let lookerContentToUse = customizationResponseData.customizations[
-      indexOfCustomizationToEdit || customizationResponseData.customizations.length - 1
-    ].lookerContent ?
-      [...DefaultLookerContent[
-        customizationResponseData.customizations[indexOfCustomizationToEdit || customizationResponseData.customizations.length - 1].industry
-      ], ...customizationResponseData.customizations[indexOfCustomizationToEdit || customizationResponseData.customizations.length - 1].lookerContent] :
-      [...DefaultLookerContent[
-        customizationResponseData.customizations[indexOfCustomizationToEdit || customizationResponseData.customizations.length - 1].industry]
-      ]
-
+    const { activeCustomization } = customizationResponseData
     this.setState({
       customizations: customizationResponseData.customizations,
-      activeCustomization: indexOfCustomizationToEdit ? customizationResponseData.customizations[indexOfCustomizationToEdit]
-        : customizationResponseData.customizations[customizationResponseData.customizations.length - 1],
-      indexOfCustomizationToEdit: null,
-      lookerContent: lookerContentToUse
+      indexOfCustomizationToEdit: null
     }, () => {
-      //necessary???
-      // console.log('saveCustomization callback this.state.lookerContent', this.state.lookerContent)
-    });
+      this.applyCustomization(activeCustomization)
+    })
   }
 
 
@@ -292,13 +278,15 @@ class App extends React.Component {
 
 
   render() {
-    // console.log('App render');
+    console.log('App render');
     // console.log('this.props', this.props);
     const { userProfile } = this.state
     const { customizations } = this.state
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
     const { lookerContent } = this.state
+    // console.log('userProfile', userProfile)
+    console.log('activeCustomization', activeCustomization)
     return (
       <Router>
         <div>
@@ -313,14 +301,15 @@ class App extends React.Component {
             activeCustomization={activeCustomization}
             lookerContent={lookerContent}
             saveLookerContent={this.saveLookerContent}
+            userProfile={userProfile}
           />
-
           <PrivateRoute exact path='/customize'
             component={Customizations}
             customizations={customizations}
             activeCustomization={activeCustomization}
             applyCustomization={this.applyCustomization}
             editCustomization={this.editCustomization}
+            userProfile={userProfile}
           />
           <PrivateRoute path='/customize/edit' //index
             component={EditCustomization}
@@ -328,6 +317,7 @@ class App extends React.Component {
             indexOfCustomizationToEdit={indexOfCustomizationToEdit}
             saveCustomization={this.saveCustomization}
             cancelIndexOfCustomizationToEdit={this.cancelIndexOfCustomizationToEdit}
+            userProfile={userProfile}
           />
         </div>
       </Router>

@@ -12,8 +12,8 @@ module.exports.saveCustomization = (req, res, next) => {
     const customizationToSave = req.body
     customizationToSave.date = new Date() //add date to customization, server side all that matters
     const { customizationIndex } = req.body
+    req.session.activeCustomization = customizationIndex;
     delete customizationToSave.customizationIndex // we don't want to save index here
-    // console.log('customizationToSave', customizationToSave)
 
 
 
@@ -35,7 +35,8 @@ module.exports.saveCustomization = (req, res, next) => {
                     res.status(400);
                 } else {
                     req.session.customizations = documents.customizations
-                    res.status(200).send(documents);
+                    // res.status(200).send(documents);
+                    res.status(200).send(req.session);
                 }
             }
         );
@@ -51,11 +52,22 @@ module.exports.saveCustomization = (req, res, next) => {
                     res.status(400);
                 } else {
                     req.session.customizations = documents.customizations
-                    res.status(200).send(documents);
+                    // res.status(200).send(documents);
+                    res.status(200).send(req.session);
                 }
             }
         );
     }
+}
+
+
+module.exports.updateActiveCustomization = (req, res, next) => {
+    console.log('updateActiveCustomization')
+    console.log('req.body', req.body)
+    const { customizationIndex } = req.body
+    req.session.activeCustomization = customizationIndex;
+    let { session } = req
+    res.status(200).send({ session });
 }
 
 //helper function
