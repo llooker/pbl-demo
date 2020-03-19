@@ -124,10 +124,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log('App componentDidMount')
+    // console.log('App componentDidMount')
     this.checkSession()
   }
 
+  //called on componentDidMount
+  //get request so should only check info, never update
   checkSession = async () => {
     console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
@@ -141,19 +143,20 @@ class App extends React.Component {
     console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
+    const { activeCustomization } = sessionResponseData.session || 0
 
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
 
       //here's my problem, always assume first customization...
-      let lookerContentToUse = customizations[0].lookerContent ?
-        [...DefaultLookerContent[customizations[0].industry], ...customizations[0].lookerContent] :
-        [...DefaultLookerContent[customizations[0].industry]]
+      let lookerContentToUse = customizations[activeCustomization].lookerContent ?
+        [...DefaultLookerContent[customizations[activeCustomization].industry], ...customizations[activeCustomization].lookerContent] :
+        [...DefaultLookerContent[customizations[activeCustomization].industry]]
       //auth.authenticated(() => {
       this.setState({
         userProfile,
         customizations,
-        activeCustomization: customizations[0],
+        activeCustomization: customizations[activeCustomization],
         lookerContent: lookerContentToUse
       }, () => {
         // console.log('checkSession callback this.state.customizations', this.state.customizations)
@@ -163,7 +166,8 @@ class App extends React.Component {
     }
   }
 
-
+  //called responseGoogle gets response
+  //post request, so should update for activeCustomization
   applySession = async (userProfile) => {
     console.log('applySession')
     console.log('userProfile', userProfile)
@@ -203,6 +207,18 @@ class App extends React.Component {
     console.log('applyCustomization')
     console.log('customizationIndex', customizationIndex)
 
+
+    let customizationResponse = await fetch('/updateactivecustomization', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ customizationIndex })
+    })
+    let customizationResponseData = await customizationResponse.json();
+    console.log('customizationResponseData', customizationResponseData)
+
     let lookerContentToUse = this.state.customizations[customizationIndex].lookerContent ?
       [...DefaultLookerContent[this.state.customizations[customizationIndex].industry], ...this.state.customizations[customizationIndex].lookerContent] :
       [...DefaultLookerContent[this.state.customizations[customizationIndex].industry]]
@@ -239,12 +255,13 @@ class App extends React.Component {
       body: JSON.stringify(formData)
     })
     let customizationResponseData = await customizationResponse.json();
-    const { activeCustomization } = customizationResponseData
+    console.log('customizationResponseData', customizationResponseData)
+    const { sessionActiveCustomization } = customizationResponseData
     this.setState({
       customizations: customizationResponseData.customizations,
       indexOfCustomizationToEdit: null
     }, () => {
-      this.applyCustomization(activeCustomization)
+      this.applyCustomization(sessionActiveCustomization)
     })
   }
 
@@ -286,7 +303,7 @@ class App extends React.Component {
     const { indexOfCustomizationToEdit } = this.state
     const { lookerContent } = this.state
     // console.log('userProfile', userProfile)
-    console.log('activeCustomization', activeCustomization)
+    // console.log('activeCustomization', activeCustomization)
     return (
       <Router>
         <div>

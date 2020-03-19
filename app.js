@@ -8,8 +8,8 @@ var session = require('express-session');
 var sess = {
     secret: 'keyboard cat',
     cookie: {
-        expires: new Date(Date.now() + 3600000), //hour
-        // maxAge: 14 * 24 * 3600000 //two weeks
+        // expires: new Date(Date.now() + 3600000), //hour
+        maxAge: 14 * 24 * 3600000 //two weeks
     },
     // userProfile: {} //not working
 }

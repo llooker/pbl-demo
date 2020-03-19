@@ -6,16 +6,23 @@ module.exports.main = (req, res, next) => {
 }
 
 module.exports.saveCustomization = (req, res, next) => {
-    // console.log('saveCustomization')
+    console.log('saveCustomization')
+
+
+    let { session } = req;
+
     const { email } = req.session.userProfile
     const { customizations } = req.session
     const customizationToSave = req.body
     customizationToSave.date = new Date() //add date to customization, server side all that matters
     const { customizationIndex } = req.body
-    req.session.activeCustomization = customizationIndex;
+
+    // session.sessionActiveCustomization = customizationIndex;
+
+    // console.log('000 req.session', req.session)
+    // console.log('000 req.session.id', req.session.id)
+
     delete customizationToSave.customizationIndex // we don't want to save index here
-
-
 
     //existing customization
     if (customizationToSave.id) {
@@ -35,7 +42,6 @@ module.exports.saveCustomization = (req, res, next) => {
                     res.status(400);
                 } else {
                     req.session.customizations = documents.customizations
-                    // res.status(200).send(documents);
                     res.status(200).send(req.session);
                 }
             }
@@ -52,7 +58,6 @@ module.exports.saveCustomization = (req, res, next) => {
                     res.status(400);
                 } else {
                     req.session.customizations = documents.customizations
-                    // res.status(200).send(documents);
                     res.status(200).send(req.session);
                 }
             }
@@ -65,8 +70,9 @@ module.exports.updateActiveCustomization = (req, res, next) => {
     console.log('updateActiveCustomization')
     console.log('req.body', req.body)
     const { customizationIndex } = req.body
-    req.session.activeCustomization = customizationIndex;
     let { session } = req
+    session.activeCustomization = customizationIndex;
+    console.log('session', session)
     res.status(200).send({ session });
 }
 
