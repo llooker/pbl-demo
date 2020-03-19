@@ -139,32 +139,25 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
-    // console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
     const { activeCustomization } = sessionResponseData.session || 0;
 
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
-
-      //here's my problem, always assume first customization...
-      let lookerContentToUse = customizations[activeCustomization].lookerContent ?
-        [...DefaultLookerContent[customizations[activeCustomization].industry], ...customizations[activeCustomization].lookerContent] :
-        [...DefaultLookerContent[customizations[activeCustomization].industry]]
       this.setState({
-        userProfile,
+        userProfile, //think we want this here?
         customizations,
-        activeCustomization: customizations[activeCustomization],
-        lookerContent: lookerContentToUse
       }, () => {
         // console.log('checkSession callback this.state.customizations', this.state.customizations)
         // console.log('checkSession callback this.state.lookerContent', this.state.lookerContent)
+        this.applyCustomization(activeCustomization)
       })
     }
   }
 
-  //called responseGoogle gets response
-  //post request, so should update for activeCustomization
+  // called by responseGoogle once it gets response
+  // since login can assume activeCustomization will be default..
   applySession = async (userProfile) => {
     // console.log('applySession')
     // console.log('userProfile', userProfile)
@@ -182,23 +175,18 @@ class App extends React.Component {
         userProfile: {} //for now
       })
     }
-    // console.log('sessionResponseData', sessionResponseData)
     const { customizations } = sessionResponseData.session
-
-    let lookerContentToUse = customizations[0].lookerContent ?
-      [...DefaultLookerContent[customizations[0].industry], ...customizations[0].lookerContent] :
-      [...DefaultLookerContent[customizations[0].industry]]
 
     this.setState({
       userProfile,
-      customizations: sessionResponseData.session.customizations,
-      activeCustomization: sessionResponseData.session.customizations[0],
-      lookerContent: lookerContentToUse
+      customizations
     }, () => {
       // console.log('applySession callback this.state.lookerContent', this.state.lookerContent)
+      this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
     });
   }
 
+  //called by: checkSession, applySession, applyButton, saveCustomization
   applyCustomization = async (customizationIndex) => {
     // console.log('applyCustomization')
     // console.log('customizationIndex', customizationIndex)
