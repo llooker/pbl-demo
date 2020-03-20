@@ -320,20 +320,20 @@ class App extends React.Component {
         permissionLevel: newUser
       }
     }), () => {
-      this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
       // console.log('this.state.lookerUser', this.state.lookerUser)
     });
   }
 
   render() {
-    // console.log('App render');
-    // console.log('this.props', this.props);
+    console.log('App render');
+    console.log('this.props', this.props);
     const { userProfile } = this.state
     const { customizations } = this.state
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
     const { lookerContent } = this.state
     const { lookerUser } = this.state;
+    // console.log('activeCustomization', activeCustomization);
     // console.log('lookerUser', lookerUser);
     return (
       <Router>
