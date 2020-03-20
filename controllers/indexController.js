@@ -90,7 +90,6 @@ module.exports.readSession = async (req, res, next) => {
     // console.log('readSession')
     let { session } = req //get session
     // console.log('000 session', session)
-    // console.log('000 req.session.id', req.session.id)
     // console.log('000 session.id', session.id)
 
     if (session.userProfile) session = await checkForCustomizations(session)
@@ -186,10 +185,10 @@ module.exports.auth = (req, res, next) => {
 
 
 module.exports.performApiCall = async (req, res, next) => {
-    console.log('indexController performApiCall');
+    // console.log('indexController performApiCall');
 
     const { params } = req
-    console.log('params', params)
+    // console.log('params', params)
     // console.log('params.type', params.type)
     // console.log('params.type === "dashboard"', params.type === "dashboard")
     // console.log('params.type === "look"', params.type === "look")
@@ -200,14 +199,14 @@ module.exports.performApiCall = async (req, res, next) => {
     } else if (params.type === 'look') {
         returnVal = await sdk.ok(sdk.all_looks())
     }
-    console.log('returnVal', returnVal)
+    // console.log('returnVal', returnVal)
     let resObj = { returnVal }
 
     res.send({ resObj })
 }
 
 module.exports.validateLookerContent = async (req, res, next) => {
-    console.log('indexController validateLookerContent');
+    // console.log('indexController validateLookerContent');
 
     const contentId = req.params.content_id;
     const contentType = req.params.content_type;

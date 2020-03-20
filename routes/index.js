@@ -6,6 +6,7 @@ const router = express.Router();
 const indexCtrl = require('../controllers/indexController')
 const customizeCtrl = require('../controllers/customizeController')
 
+// router.get('/', indexCtrl.readSession)
 router.get('/fetchfolder/:folder_id', indexCtrl.fetchFolder)
 router.get('/readsession', indexCtrl.readSession)
 router.post('/writesession', indexCtrl.writeSession)

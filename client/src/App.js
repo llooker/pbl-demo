@@ -147,9 +147,11 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
+    // console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
     const { activeCustomization } = sessionResponseData.session || 0;
+    // console.log('activeCustomization', activeCustomization)
 
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
@@ -177,6 +179,7 @@ class App extends React.Component {
     // console.log('userProfile', userProfile)
 
     if (Object.keys(userProfile).length === 0) {
+      // console.log('inside ifff')
       let sessionData = await fetch('/endsession', {
         method: 'POST',
         headers: {
@@ -188,6 +191,7 @@ class App extends React.Component {
         userProfile: {} //for now
       })
     } else {
+      // console.log('inside else')
       let sessionData = await fetch('/writesession', {
         method: 'POST',
         headers: {
@@ -197,7 +201,7 @@ class App extends React.Component {
         body: JSON.stringify(userProfile)
       })
       const sessionResponseData = await sessionData.json();
-      console.log('sessionResponseData', sessionResponseData)
+      // console.log('sessionResponseData', sessionResponseData)
       const { customizations } = sessionResponseData.session
 
       this.setState(prevState => ({
@@ -213,7 +217,7 @@ class App extends React.Component {
         }
       }), () => {
         this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
-        console.log('this.state.lookerUser', this.state.lookerUser)
+        // console.log('this.state.lookerUser', this.state.lookerUser)
       });
     }
   }
@@ -233,6 +237,8 @@ class App extends React.Component {
     })
 
     let customizationResponseData = await customizationResponse.json();
+
+    // console.log('customizationResponseData', customizationResponseData)
 
     let lookerContentToUse = this.state.customizations[customizationIndex].lookerContent ?
       [...DefaultLookerContent[this.state.customizations[customizationIndex].industry], ...this.state.customizations[customizationIndex].lookerContent] :
@@ -325,8 +331,8 @@ class App extends React.Component {
   }
 
   render() {
-    console.log('App render');
-    console.log('this.props', this.props);
+    // console.log('App render');
+    // console.log('this.props', this.props);
     const { userProfile } = this.state
     const { customizations } = this.state
     const { activeCustomization } = this.state

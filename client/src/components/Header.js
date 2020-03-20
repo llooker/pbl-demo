@@ -3,7 +3,7 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import './Home.css';
 
 function Header(props) {
-  console.log('props', props)
+  // console.log('props', props)
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
