@@ -153,10 +153,18 @@ class App extends React.Component {
 
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
-      this.setState({
-        userProfile, //think we want this here?
+      this.setState(prevState => ({
+        userProfile,
         customizations,
-      }, () => {
+        lookerUser: {
+          ...prevState.lookerUser,
+          external_user_id: userProfile.googleId,
+          first_name: userProfile.givenName,
+          last_name: userProfile.familyName,
+          permissions: LookerUserPermissions['good'], //assume good initially,
+          permissionLevel: 'good'
+        }
+      }), () => {
         this.applyCustomization(activeCustomization)
       })
     }
@@ -318,7 +326,7 @@ class App extends React.Component {
   }
 
   render() {
-    console.log('App render');
+    // console.log('App render');
     // console.log('this.props', this.props);
     const { userProfile } = this.state
     const { customizations } = this.state
@@ -326,7 +334,7 @@ class App extends React.Component {
     const { indexOfCustomizationToEdit } = this.state
     const { lookerContent } = this.state
     const { lookerUser } = this.state;
-    console.log('lookerUser', lookerUser);
+    // console.log('lookerUser', lookerUser);
     return (
       <Router>
         <div>
