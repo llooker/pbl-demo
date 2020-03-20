@@ -9,8 +9,9 @@ import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
 import DefaultLookerContent from './defaultLookerContentIndustry.json';
-import DefaultLookerUser from './lookerUserPermissions.json';
-// console.log('DefaultLookerUser', DefaultLookerUser);
+//make looker user
+import LookerUserPermissions from './lookerUserPermissions.json';
+import InitialLookerUser from './initialLookerUser.json';
 
 class Login extends React.Component {
   constructor(props) {
@@ -123,7 +124,9 @@ class App extends React.Component {
       activeCustomization: {},
       indexOfCustomizationToEdit: null,
       lookerContent: [],
-      lookerUser: 'good' //initialize to good
+      lookerUser: {
+        ...InitialLookerUser
+      }
     }
   }
 
@@ -186,13 +189,23 @@ class App extends React.Component {
         body: JSON.stringify(userProfile)
       })
       const sessionResponseData = await sessionData.json();
+      console.log('sessionResponseData', sessionResponseData)
       const { customizations } = sessionResponseData.session
 
-      this.setState({
+      this.setState(prevState => ({
         userProfile,
-        customizations
-      }, () => {
+        customizations,
+        lookerUser: {
+          ...prevState.lookerUser,
+          external_user_id: userProfile.googleId,
+          first_name: userProfile.givenName,
+          last_name: userProfile.familyName,
+          permissions: LookerUserPermissions['good'], //assume good initially,
+          permissionLevel: 'good'
+        }
+      }), () => {
         this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
+        console.log('this.state.lookerUser', this.state.lookerUser)
       });
     }
   }
@@ -288,23 +301,32 @@ class App extends React.Component {
   }
 
   switchLookerUser = (newUser) => {
-    console.log('switchLookerUser')
-    console.log('newUser', newUser)
-    this.setState({
-      lookerUser: newUser
-    })
+    // console.log('switchLookerUser')
+    // console.log('newUser', newUser)
+    // console.log('LookerUserPermissions[newUser]', LookerUserPermissions[newUser])
+
+    this.setState(prevState => ({
+      lookerUser: {
+        ...prevState.lookerUser,
+        permissions: LookerUserPermissions[newUser],
+        permissionLevel: newUser
+      }
+    }), () => {
+      this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
+      // console.log('this.state.lookerUser', this.state.lookerUser)
+    });
   }
 
-
   render() {
-    // console.log('App render');
+    console.log('App render');
     // console.log('this.props', this.props);
     const { userProfile } = this.state
     const { customizations } = this.state
     const { activeCustomization } = this.state
     const { indexOfCustomizationToEdit } = this.state
     const { lookerContent } = this.state
-    const { lookerUser } = this.state
+    const { lookerUser } = this.state;
+    console.log('lookerUser', lookerUser);
     return (
       <Router>
         <div>
