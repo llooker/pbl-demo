@@ -6,7 +6,23 @@
     "force_logout_login": true,
     "external_group_id": "customerABC",
     "group_ids": [],
-    "permissions": [],
+    "permissions": [
+        "access_data",
+        "see_looks",
+        "see_user_dashboards",
+        "see_lookml_dashboards",
+        "create_table_calculations",
+        "save_content",
+        "embed_browse_spaces",
+        "schedule_look_emails",
+        "schedule_external_look_emails",
+        "send_to_sftp",
+        "send_to_s3",
+        "send_outgoing_webhook",
+        "see_sql",
+        "send_to_integration",
+        "create_alerts"
+    ],
     "models": [
         "thelook",
         "thelook_adwords"

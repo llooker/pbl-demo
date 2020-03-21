@@ -175,10 +175,12 @@ async function checkForCustomizations(session) {
 
 //function createSignedUrl(src, user, host, secret, nonce) {
 module.exports.auth = (req, res, next) => {
-    // console.log('indexController authh');
+    console.log('indexController authh');
+    console.log('user', user)
+    console.log('req.session.lookerUser', req.session.lookerUser);
     // Authenticate the request is from a valid user here
     const src = req.query.src;
-    const url = createSignedUrl(src, user, config.looker.host, config.looker.embed_secret);
+    const url = createSignedUrl(src, req.session.lookerUser, config.looker.host, config.looker.embed_secret); //user
     res.json({ url });
 }
 
@@ -224,4 +226,17 @@ module.exports.validateLookerContent = async (req, res, next) => {
         }
         res.status(404).send(errorObj)
     }
+}
+
+
+module.exports.updateLookerUser = (req, res, next) => {
+    // console.log('updateLookerUser')
+    // console.log('req.body', req.body)
+    const lookerUser = req.body
+    // console.log('lookerUser', lookerUser)
+    let { session } = req
+    // console.log('session', session)
+    session.lookerUser = lookerUser;
+    // console.log('111 session', session)
+    res.status(200).send({ session });
 }

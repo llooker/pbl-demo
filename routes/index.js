@@ -14,6 +14,7 @@ router.get('/retievedashboardfilters/:content_id', indexCtrl.retrieveDashboardFi
 // router.get('/performapicall/:type', indexCtrl.performApiCall)
 router.get('/validatelookercontent/:content_id/:content_type', indexCtrl.validateLookerContent)
 router.post('/endsession', indexCtrl.endSession)
+router.post('/updatelookeruser', indexCtrl.updateLookerUser)
 
 router.get('/customize', customizeCtrl.main)
 router.post('/savecustomization', customizeCtrl.saveCustomization)

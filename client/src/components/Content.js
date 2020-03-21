@@ -9,7 +9,7 @@ import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 
 
-LookerEmbedSDK.init('demo.looker.com', '/auth')
+// LookerEmbedSDK.init('demo.looker.com', '/auth')
 let defaultNewLookerContentObj = {
     type: {
         value: 'dashboard',
@@ -42,7 +42,7 @@ class Content extends React.Component {
 
 
     componentDidMount() {
-        // console.log('LookerContent componentDidMount')
+        console.log('LookerContent componentDidMount')
         const { lookerContent } = this.props
         this.setupLookerContent(lookerContent)
 
@@ -59,10 +59,15 @@ class Content extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        // console.log('LookerContent componentDidUpdate')
+        console.log('LookerContent componentDidUpdate')
         if (this.props.lookerContent != undefined && this.props.lookerContent !== prevProps.lookerContent) {
+            console.log('inside ifff')
             this.setupLookerContent(this.props.lookerContent)
+        } else {
+            console.log('inside elllse')
         }
+        LookerEmbedSDK.init('demo.looker.com', '/auth')
+
     }
 
     async setupLookerContent(lookerContent) {
@@ -244,7 +249,7 @@ class Content extends React.Component {
     }
 
     render() {
-        // console.log('Content render')
+        console.log('Content render')
         const { lookerContent } = this.props
         const { renderSampleCode } = this.state
         const { sampleCode } = this.state
