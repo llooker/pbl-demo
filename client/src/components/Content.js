@@ -59,16 +59,17 @@ class Content extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log('LookerContent componentDidUpdate')
+        // console.log('LookerContent componentDidUpdate')
         if (this.props.lookerContent != undefined && this.props.lookerContent !== prevProps.lookerContent) {
-            console.log('inside ifff')
             this.setupLookerContent(this.props.lookerContent)
-        } else {
-            console.log('inside elllse')
         }
-        LookerEmbedSDK.init('demo.looker.com', '/auth')
 
+        // if (this.props.lookerUser != undefined && this.props.lookerUser !== prevProps.lookerUser) {
+        LookerEmbedSDK.init('demo.looker.com', '/auth')
+        // }
     }
+
+
 
     async setupLookerContent(lookerContent) {
         // console.log('setupLookerContent')
@@ -88,7 +89,7 @@ class Content extends React.Component {
                     .withClassName('iframe')
                     .withNext()
                     .on('dashboard:run:start', (e) => {
-                        // console.log(e) 
+                        // console.log('e', e)
                     })
                     // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
                     .build()
@@ -249,7 +250,8 @@ class Content extends React.Component {
     }
 
     render() {
-        console.log('Content render')
+        // console.log('Content render')
+        // console.log('this.props.lookerUser', this.props.lookerUser)
         const { lookerContent } = this.props
         const { renderSampleCode } = this.state
         const { sampleCode } = this.state

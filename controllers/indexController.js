@@ -3,6 +3,7 @@
 const { LookerNodeSDK } = require('@looker/sdk')
 const config = require('../config');
 const user = require('../demoUser.json');
+// console.log('user', user)
 
 var crypto = require('crypto');
 var querystring = require('querystring');
@@ -104,7 +105,8 @@ module.exports.writeSession = async (req, res, next) => {
     let { session } = req;
     // console.log('000 session', session)
     // console.log('000 session.id', session.id)
-    session.userProfile = req.body;
+    session.userProfile = req.body.userProfile;
+    session.lookerUser = req.body.lookerUser;
     session = await checkForCustomizations(session)
     res.status(200).send({ session });
 }
@@ -175,12 +177,13 @@ async function checkForCustomizations(session) {
 
 //function createSignedUrl(src, user, host, secret, nonce) {
 module.exports.auth = (req, res, next) => {
-    console.log('indexController authh');
-    console.log('user', user)
-    console.log('req.session.lookerUser', req.session.lookerUser);
+    // console.log('indexController authh');
+    // console.log('user', user)
+    // console.log('req.session.lookerUser', req.session.lookerUser);
     // Authenticate the request is from a valid user here
     const src = req.query.src;
-    const url = createSignedUrl(src, req.session.lookerUser, config.looker.host, config.looker.embed_secret); //user
+    const url = createSignedUrl(src, req.session.lookerUser, config.looker.host, config.looker.embed_secret); //  user
+    // console.log('url', url)
     res.json({ url });
 }
 

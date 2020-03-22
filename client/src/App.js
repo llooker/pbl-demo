@@ -94,6 +94,7 @@ const PrivateRoute = ({ component: Component,
   lookerContent,
   saveLookerContent,
   userProfile,
+  lookerUser,
   ...rest }) => (
     < Route {...rest} render={(props) => (
       Object.keys(userProfile).length ?
@@ -107,6 +108,8 @@ const PrivateRoute = ({ component: Component,
           cancelIndexOfCustomizationToEdit={cancelIndexOfCustomizationToEdit}
           lookerContent={lookerContent}
           saveLookerContent={saveLookerContent}
+          userProfile={userProfile}
+          lookerUser={lookerUser}
         />
         : <Redirect to={{
           pathname: '/',
@@ -138,7 +141,7 @@ class App extends React.Component {
   //called on componentDidMount
   //get request so should only check info, never update
   checkSession = async () => {
-    console.log('checkSession')
+    // console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -147,12 +150,11 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
-    console.log('sessionResponseData', sessionResponseData)
+    // console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
-    const { activeCustomization } = sessionResponseData.session || 0;
-    const { lookerUser } = sessionResponseData.session;
-    console.log('lookerUser', lookerUser)
+    const activeCustomization = sessionResponseData.session.activeCustomization ? sessionResponseData.session.activeCustomization : 0;
+    const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
 
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
@@ -168,7 +170,7 @@ class App extends React.Component {
           permissionLevel: lookerUser.permissionLevel || 'good'
         }
       }), () => {
-        console.log('this.state.lookerUser', this.state.lookerUser)
+        // console.log('checkSession callback 1111 this.state.lookerUser', this.state.lookerUser)
         this.applyCustomization(activeCustomization)
       })
     }
@@ -200,12 +202,11 @@ class App extends React.Component {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(userProfile)
+        body: JSON.stringify({ userProfile, lookerUser: this.state.lookerUser })
       })
       const sessionResponseData = await sessionData.json();
-      // console.log('sessionResponseData', sessionResponseData)
       const { customizations } = sessionResponseData.session
-      const { lookerUser } = sessionResponseData.session
+      const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
 
       this.setState(prevState => ({
         userProfile,
@@ -219,7 +220,7 @@ class App extends React.Component {
           permissionLevel: lookerUser.permissionLevel || 'good'
         }
       }), () => {
-        console.log('this.state.lookerUser', this.state.lookerUser)
+        // console.log('applySession callback this.state.lookerUser', this.state.lookerUser)
         this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
       });
     }
@@ -330,7 +331,6 @@ class App extends React.Component {
         permissionLevel: newUser
       }
     }), async () => {
-      console.log('this.state.lookerUser', this.state.lookerUser)
 
       let lookerUserResponse = await fetch('/updatelookeruser', {
         method: 'POST',
@@ -342,7 +342,7 @@ class App extends React.Component {
       })
 
       let lookerUserResponseData = await lookerUserResponse.json();
-      console.log('lookerUserResponseData', lookerUserResponseData)
+      // console.log('lookerUserResponseData', lookerUserResponseData)
 
     });
   }
@@ -357,7 +357,7 @@ class App extends React.Component {
     const { lookerContent } = this.state
     const { lookerUser } = this.state;
     // console.log('activeCustomization', activeCustomization);
-    console.log('lookerUser', lookerUser);
+    // console.log('lookerUser', lookerUser);
     return (
       <Router>
         <div>
@@ -375,7 +375,7 @@ class App extends React.Component {
             lookerContent={lookerContent}
             saveLookerContent={this.saveLookerContent}
             userProfile={userProfile}
-            lookerUser={lookerUser}
+          // lookerUser={lookerUser}
           />
           <PrivateRoute exact path='/customize'
             component={Customizations}

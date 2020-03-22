@@ -161,6 +161,7 @@ module.exports.applyActiveCustomizationToSession = (req, res, next) => {
     // console.log('applyActiveCustomizationToSession')
     // console.log('req.body', req.body)
     const { customizationIndex } = req.body
+    // console.log('customizationIndex', customizationIndex)
     let { session } = req
     session.activeCustomization = customizationIndex;
     // console.log('session', session)
