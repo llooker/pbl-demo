@@ -2,8 +2,6 @@
 
 const { LookerNodeSDK } = require('@looker/sdk')
 const config = require('../config');
-const user = require('../demoUser.json');
-// console.log('user', user)
 
 var crypto = require('crypto');
 var querystring = require('querystring');

@@ -162,6 +162,7 @@ class Content extends React.Component {
     }
 
     setActiveTab = (e) => {
+        // console.log('setActiveTab')
 
         if (this.state.renderSampleCode) this.toggleCodeBar()
 
@@ -259,6 +260,13 @@ class Content extends React.Component {
         const { newLookerContent } = this.state
         const { activeCustomization } = this.props
         const { newLookerContentErrorMessage } = this.state
+        let { lookerUser } = this.props
+        // console.log('lookerUser', lookerUser)
+        // let lookerUserFormatted = JSON.stringify(lookerUser).replace(/,/g, ',\n');
+
+
+        let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
+        // console.log('lookerUserCanExplore', lookerUserCanExplore)
         return (
 
             <div className="home container p-5 position-relative">
@@ -267,10 +275,11 @@ class Content extends React.Component {
                 <div className="row pt-5">
                     <ul className="nav nav-tabs w-100" id="myTab" role="tablist">
                         {lookerContent.map((item, index) => {
+                            // console.log('item', item)
                             return (
                                 <li className="nav-item">
                                     <a key={validIdHelper(item.id)}
-                                        className={index === 0 ? "nav-link active show" : "nav-link"}
+                                        className={index === 0 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
                                         id={validIdHelper(`${item.id}-tab`)}
                                         data-toggle="tab"
                                         href={validIdHelper(`#${item.id}`)}
@@ -334,10 +343,30 @@ class Content extends React.Component {
                                             transitionLeaveTimeout={500}>
                                             {renderSampleCode ?
                                                 <div className="col-sm-8 position-absolute right-abs top-abs p-3 bg-light rounded">
-                                                    <h4>Sample code:</h4>
-                                                    <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
-                                                        {sampleCode}
-                                                    </SyntaxHighlighter>
+
+
+                                                    <ul className="nav nav-tabs" id="myTab" role="tablist">
+                                                        <li className="nav-item">
+                                                            <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Sample Code</a>
+                                                        </li>
+                                                        <li className="nav-item">
+                                                            <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">User Properties</a>
+                                                        </li>
+                                                    </ul>
+                                                    <div className="tab-content" id="myTabContent">
+                                                        <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                                                            <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
+                                                                {sampleCode}
+                                                            </SyntaxHighlighter>
+                                                        </div>
+                                                        <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                                                            <SyntaxHighlighter language="json" style={docco} showLineNumbers={true} >
+                                                                {JSON.stringify(lookerUser, true, 4)}
+                                                            </SyntaxHighlighter>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 : ''}
                                         </ReactCSSTransitionGroup>

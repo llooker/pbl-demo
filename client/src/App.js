@@ -166,8 +166,8 @@ class App extends React.Component {
           external_user_id: userProfile.googleId,
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
-          permissions: LookerUserPermissions[lookerUser.permissionLevel] || LookerUserPermissions['good'], //assume good initially,
-          permissionLevel: lookerUser.permissionLevel || 'good'
+          permissions: LookerUserPermissions[lookerUser.permission_level] || LookerUserPermissions['good'], //assume good initially,
+          permission_level: lookerUser.permission_level || 'good'
         }
       }), () => {
         // console.log('checkSession callback 1111 this.state.lookerUser', this.state.lookerUser)
@@ -216,8 +216,8 @@ class App extends React.Component {
           external_user_id: userProfile.googleId,
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
-          permissions: LookerUserPermissions[lookerUser.permissionLevel] || LookerUserPermissions['good'], //assume good initially,
-          permissionLevel: lookerUser.permissionLevel || 'good'
+          permissions: LookerUserPermissions[lookerUser.permission_level] || LookerUserPermissions['good'], //assume good initially,
+          permission_level: lookerUser.permission_level || 'good'
         }
       }), () => {
         // console.log('applySession callback this.state.lookerUser', this.state.lookerUser)
@@ -328,7 +328,7 @@ class App extends React.Component {
       lookerUser: {
         ...prevState.lookerUser,
         permissions: LookerUserPermissions[newUser],
-        permissionLevel: newUser
+        permission_level: newUser
       }
     }), async () => {
 
@@ -342,7 +342,7 @@ class App extends React.Component {
       })
 
       let lookerUserResponseData = await lookerUserResponse.json();
-      // console.log('lookerUserResponseData', lookerUserResponseData)
+      window.location.reload(); //reload to effect permissions
 
     });
   }
@@ -375,7 +375,7 @@ class App extends React.Component {
             lookerContent={lookerContent}
             saveLookerContent={this.saveLookerContent}
             userProfile={userProfile}
-          // lookerUser={lookerUser}
+            lookerUser={lookerUser}
           />
           <PrivateRoute exact path='/customize'
             component={Customizations}

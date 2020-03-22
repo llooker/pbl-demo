@@ -51,6 +51,14 @@ ul li {
 /* .navbar li  a{
   line-height: 50px;
  } */
+.nav li a.sudo-disabled{
+  color:red;
+  opacity: 50%;
+ }
+
+ .dropdown-toggle::after{
+   margin-left: .5rem;
+ }
 
  .dialog {
   display: inline-block;
