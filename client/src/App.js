@@ -158,8 +158,8 @@ class App extends React.Component {
 
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
-      this.setState(prevState => ({
-        userProfile,
+      this.setState((prevState) => ({
+        userProfile, //think we want this here?
         customizations,
         lookerUser: {
           ...prevState.lookerUser,

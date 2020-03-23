@@ -347,10 +347,10 @@ class Content extends React.Component {
 
                                                     <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                         <li className="nav-item">
-                                                            <a className="nav-link active" id="sample-code-tab" data-toggle="tab" href="#samplecode" role="tab" aria-controls="home" aria-selected="true">Sample Code</a>
+                                                            <a className="nav-link active" id="sample-code-tab" data-toggle="tab" href="#samplecode" role="tab" aria-controls="sample-code" aria-selected="true">Sample Code</a>
                                                         </li>
                                                         <li className="nav-item">
-                                                            <a className="nav-link" id="user-properties-tab" data-toggle="tab" href="#userproperties" role="tab" aria-controls="profile" aria-selected="false">User Properties</a>
+                                                            <a className="nav-link" id="user-properties-tab" data-toggle="tab" href="#userproperties" role="tab" aria-controls="user-properties" aria-selected="false">User Properties</a>
                                                         </li>
 
                                                         <button
