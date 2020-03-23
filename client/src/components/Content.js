@@ -347,20 +347,30 @@ class Content extends React.Component {
 
                                                     <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                         <li className="nav-item">
-                                                            <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Sample Code</a>
+                                                            <a className="nav-link active" id="sample-code-tab" data-toggle="tab" href="#samplecode" role="tab" aria-controls="home" aria-selected="true">Sample Code</a>
                                                         </li>
                                                         <li className="nav-item">
-                                                            <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">User Properties</a>
+                                                            <a className="nav-link" id="user-properties-tab" data-toggle="tab" href="#userproperties" role="tab" aria-controls="profile" aria-selected="false">User Properties</a>
                                                         </li>
+
+                                                        <button
+                                                            type="button"
+                                                            className="close ml-auto mr-2"
+                                                            data-dismiss="modal"
+                                                            aria-label="Close"
+                                                            onClick={this.toggleCodeBar}
+                                                        >
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                     </ul>
                                                     <div className="tab-content" id="myTabContent">
-                                                        <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                                        <div className="tab-pane fade show active" id="sample-code" role="tabpanel" aria-labelledby="sample-code-tab">
 
                                                             <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
                                                                 {sampleCode}
                                                             </SyntaxHighlighter>
                                                         </div>
-                                                        <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                                        <div className="tab-pane fade" id="user-properties" role="tabpanel" aria-labelledby="user-properties-tab">
 
                                                             <SyntaxHighlighter language="json" style={docco} showLineNumbers={true} >
                                                                 {JSON.stringify(lookerUser, true, 4)}
