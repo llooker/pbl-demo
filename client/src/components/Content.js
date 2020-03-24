@@ -92,12 +92,16 @@ class Content extends React.Component {
                         // console.log('e', e)
                     })
                     // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
+                    // .on('page:properties:changed', (e) => {
+                    //     this.changeHeight(e, `embedContainer${lookerContent[i].id}`)
+                    // })
                     .build()
                     .connect()
                     .then((dashboard) => {
                         this.setState({
                             [lookerContent[i].id]: dashboard //5277
                         })
+                        // this.changeHeight(dashboard, `embedContainer${lookerContent[i].id}`)
                     })
                     .catch((error) => {
                         console.error('Connection error', error)
@@ -251,6 +255,20 @@ class Content extends React.Component {
 
     }
 
+    // need to think this through more, seems to be significant performance issues :/
+    // also not well suited for tabular structure :/
+    // leave for now but comment out invocation
+    changeHeight(event, containerId) {
+        console.log('changeHeight')
+        // console.log('event', event)
+        // console.log('containerId', containerId)
+        const div = document.getElementById(containerId)
+        if (event && event.height && div) {
+            div.style.height = `${event.height + 20}px`
+        }
+    }
+
+
     render() {
         // console.log('Content render')
         // console.log('this.props.lookerUser', this.props.lookerUser)
@@ -264,8 +282,6 @@ class Content extends React.Component {
         let { lookerUser } = this.props
         let { location } = window;
         // console.log('location', location)
-
-
 
         let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
         // console.log('lookerUserCanExplore', lookerUserCanExplore)
@@ -281,7 +297,7 @@ class Content extends React.Component {
                             return (
                                 <li className="nav-item">
                                     <a key={validIdHelper(item.id)}
-                                        className={index === 0 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
+                                        className={index === 1 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
                                         // className={index === 0 ? "nav-link active show" : "nav-link"}
                                         id={validIdHelper(`${item.id}-tab`)}
                                         data-toggle="tab"
@@ -309,7 +325,7 @@ class Content extends React.Component {
 
                         {lookerContent.map((item, index) => {
                             return (
-                                <div key={validIdHelper(item.id)} className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
+                                <div key={validIdHelper(item.id)} className={index === 1 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
                                     {item.customDropdown ?
                                         <div className="row pt-3">
 
