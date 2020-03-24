@@ -160,9 +160,10 @@ class Content extends React.Component {
             renderSampleCode: prevState.renderSampleCode ? false : true
         }))
     }
-
+    // think about this
     setActiveTab = (e) => {
         // console.log('setActiveTab')
+        // console.log('e', e)
 
         if (this.state.renderSampleCode) this.toggleCodeBar()
 
@@ -261,8 +262,9 @@ class Content extends React.Component {
         const { activeCustomization } = this.props
         const { newLookerContentErrorMessage } = this.state
         let { lookerUser } = this.props
-        // console.log('lookerUser', lookerUser)
-        // let lookerUserFormatted = JSON.stringify(lookerUser).replace(/,/g, ',\n');
+        let { location } = window;
+        // console.log('location', location)
+
 
 
         let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
@@ -280,6 +282,7 @@ class Content extends React.Component {
                                 <li className="nav-item">
                                     <a key={validIdHelper(item.id)}
                                         className={index === 0 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
+                                        // className={index === 0 ? "nav-link active show" : "nav-link"}
                                         id={validIdHelper(`${item.id}-tab`)}
                                         data-toggle="tab"
                                         href={validIdHelper(`#${item.id}`)}
@@ -345,13 +348,27 @@ class Content extends React.Component {
                                                 <div className="col-sm-8 position-absolute right-abs top-abs p-3 bg-light rounded">
 
 
-                                                    <ul className="nav nav-tabs" id="myTab" role="tablist">
+                                                    <ul className="nav nav-tabs" id={`nestedTab${index}`} role="tablist">
 
                                                         <li className="nav-item">
-                                                            <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Sample Code</a>
+                                                            <a className="nav-link active show"
+                                                                id={`sample-code-tab-${index}`}
+                                                                data-toggle="tab"
+                                                                href={`#sample-code-${index}`}
+                                                                role="tab"
+                                                                aria-controls={`sample-code-${index}`}
+                                                                aria-selected="true"
+                                                            >Sample Code</a>
                                                         </li>
                                                         <li className="nav-item">
-                                                            <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">User Properties</a>
+                                                            <a className="nav-link"
+                                                                id={`user-properties-tab-${index}`}
+                                                                data-toggle="tab"
+                                                                href={`#user-properties-${index}`}
+                                                                role="tab"
+                                                                aria-controls={`user-properties-${index}`}
+                                                                aria-selected="true"
+                                                            >User Properties</a>
                                                         </li>
 
                                                         <button
@@ -364,14 +381,15 @@ class Content extends React.Component {
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </ul>
-                                                    <div className="tab-content" id="myTabContent">
-                                                        <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                                    <div className="tab-content" id={`nestedContent${index}`}>
+                                                        <div className="tab-pane fade show active" id={`sample-code-${index}`} role="tabpanel" aria-labelledby={`sample-code-tab-${index}`}>
 
                                                             <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
                                                                 {sampleCode}
                                                             </SyntaxHighlighter>
                                                         </div>
-                                                        <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                                                        <div className="tab-pane fade" id={`user-properties-${index}`} role="tabpanel" aria-labelledby={`user-properties-tab-${index}`}>
 
                                                             <SyntaxHighlighter language="json" style={docco} showLineNumbers={true} >
                                                                 {JSON.stringify(lookerUser, true, 4)}
