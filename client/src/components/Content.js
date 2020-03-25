@@ -287,7 +287,7 @@ class Content extends React.Component {
         // console.log('lookerUserCanExplore', lookerUserCanExplore)
         return (
 
-            <div className="home container p-5 position-relative">
+            <div className="home container-fluid p-5 position-relative">
 
 
                 <div className="row pt-5">
@@ -297,8 +297,7 @@ class Content extends React.Component {
                             return (
                                 <li className="nav-item">
                                     <a key={validIdHelper(item.id)}
-                                        className={index === 1 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
-                                        // className={index === 0 ? "nav-link active show" : "nav-link"}
+                                        className={index === 0 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
                                         id={validIdHelper(`${item.id}-tab`)}
                                         data-toggle="tab"
                                         href={validIdHelper(`#${item.id}`)}
@@ -325,7 +324,7 @@ class Content extends React.Component {
 
                         {lookerContent.map((item, index) => {
                             return (
-                                <div key={validIdHelper(item.id)} className={index === 1 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
+                                <div key={validIdHelper(item.id)} className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
                                     {item.customDropdown ?
                                         <div className="row pt-3">
 
