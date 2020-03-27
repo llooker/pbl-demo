@@ -85,6 +85,8 @@ class Content extends React.Component {
         }
 
         for (let i = 0; i < lookerContent.length; i++) {
+
+            LookerEmbedSDK.createDashboardWithId
             if (lookerContent[i].type === 'dashboard') {
                 LookerEmbedSDK.createDashboardWithId(lookerContent[i].id)
                     .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
@@ -319,8 +321,9 @@ class Content extends React.Component {
 
                             )
                         })}
-                        {activeCustomization.id !== 'defaultCustomization' ? < li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
-                            : ''}
+                        {/* {activeCustomization.id !== 'defaultCustomization' ? < li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
+                            : ''} */}
+                        <li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
                         <li className="nav-item ml-auto"><i className="fas fa-code cursor text-secondary" onClick={this.toggleCodeBar} /></li>
                     </ul>
                 </div>

@@ -92,8 +92,7 @@ class NewCustomization extends React.Component {
     }
 
     render() {
-        const { indexOfCustomizationToEdit } = this.props
-        const { customizations } = this.props
+        const { indexOfCustomizationToEdit, customizations, lookerHost } = this.props
         const { validSalesforceUrl } = this.state
         return (
             <div className="home container p-5" >
@@ -174,27 +173,28 @@ class NewCustomization extends React.Component {
                                         : <small id="salesforceUrlHelp" className="form-text text-muted">This field is required</small>}
                             </div>
                             <div id="subForm">
-                                <div className="form-group">
-                                    <label htmlFor="industry">Choose industry</label>
-                                    <select
-                                        id="industry"
-                                        className="form-control"
-                                        onChange={(e) => this.dropdownSelect(e)}
-                                        name="industry"
-                                        type="select-one"
-                                        value={this.state.industry}
-                                        disabled={validSalesforceUrl ? false : true}
-                                    >
-                                        <option
-                                            key="marketing"
-                                            value="marketing"
-                                        > Marketing</option>
-                                        <option
-                                            key="retail"
-                                            value="retail"
-                                        > Retail</option>
-                                    </select>
-                                </div>
+                                {lookerHost === "exclude for now" ?
+                                    <div className="form-group">
+                                        <label htmlFor="industry">Choose industry</label>
+                                        <select
+                                            id="industry"
+                                            className="form-control"
+                                            onChange={(e) => this.dropdownSelect(e)}
+                                            name="industry"
+                                            type="select-one"
+                                            value={this.state.industry}
+                                            disabled={validSalesforceUrl ? false : true}
+                                        >
+                                            <option
+                                                key="marketing"
+                                                value="marketing"
+                                            > Marketing</option>
+                                            <option
+                                                key="retail"
+                                                value="retail"
+                                            > Retail</option>
+                                        </select>
+                                    </div> : ''}
                                 <div className="form-group">
                                     <label htmlFor="companyName">Company name</label>
                                     <input id="companyName"

@@ -1,5 +1,6 @@
 'use strict';
 const Customization = require('../models/Customization');
+const config = require('../config');
 
 module.exports.main = (req, res, next) => {
     // console.log('customizeController main')
@@ -11,6 +12,7 @@ module.exports.saveCustomization = (req, res, next) => {
     const { customizations } = req.session
     const customizationToSave = req.body
     customizationToSave.date = new Date() //add date to customization, server side all that matters
+    customizationToSave.lookerHost = config.looker.host;
     const { customizationIndex } = req.body
     delete customizationToSave.customizationIndex // we don't want to save index here
 
@@ -55,12 +57,14 @@ module.exports.saveCustomization = (req, res, next) => {
     }
 }
 
+
+//right now this only works when the customization is defined...
 module.exports.saveLookerContent = async (req, res, next) => {
-    // console.log('customizeController saveLookerContent')
+    console.log('customizeController saveLookerContent')
     // propsed solution:
     // fetch customizations from db before saving to ensure up to date
     let { session } = req
-    session = await checkForCustomizations(session)
+    // session = await checkForCustomizations(session)
 
     const { email } = req.session.userProfile
     const { customizations } = req.session
@@ -75,6 +79,8 @@ module.exports.saveLookerContent = async (req, res, next) => {
             return true;
         }
     });
+
+    console.log('customizationIndex', customizationIndex)
 
     let customizationToSave = customizations[customizationIndex]
     if (customizationToSave.lookerContent) {
@@ -99,11 +105,13 @@ module.exports.saveLookerContent = async (req, res, next) => {
                 }
             }
         );
+    } else {
+        console.log('inside ellse')
     }
 }
 
 
-async function checkForCustomizations(session) {
+/*async function checkForCustomizations(session) {
     // console.log('checkForCustomizations')
     const { email } = session.userProfile
 
@@ -112,8 +120,10 @@ async function checkForCustomizations(session) {
         companyName: 'WYSIWYG',
         logoUrl: 'https://looker.com/assets/img/images/logos/looker_black.svg',
         date: new Date(),
-        industry: "marketing"
+        // industry: "marketing",
+        lookerHost: config.looker.host
     }
+    // console.log('defaultCustomizationObj', defaultCustomizationObj)
 
     var myPromise = () => {
         return new Promise((resolve, reject) => {
@@ -145,7 +155,10 @@ async function checkForCustomizations(session) {
                                 }
                             );
                         } else {
-                            resolve(data[0].customizations)
+
+                            let filteredCustomizations = data[0].customizations.filter(element => { return element.lookerHost === config.looker.host })
+                            // console.log('filteredCustomizations', filteredCustomizations);
+                            resolve(filteredCustomizations) //new
                         }
                     }
                 });
@@ -155,7 +168,7 @@ async function checkForCustomizations(session) {
     var result = await myPromise();
     session.customizations = result
     return session;
-}
+}*/
 
 module.exports.applyActiveCustomizationToSession = (req, res, next) => {
     // console.log('applyActiveCustomizationToSession')

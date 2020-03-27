@@ -86,10 +86,11 @@ function nonce(len) {
 
 
 module.exports.readSession = async (req, res, next) => {
-    // console.log('readSession')
+    console.log('readSession')
     let { session } = req //get session
     // console.log('000 session', session)
     // console.log('000 session.id', session.id)
+    session.lookerHost = config.looker.host
 
     if (session.userProfile) session = await checkForCustomizations(session)
     // console.log('111 session', session)
@@ -105,6 +106,7 @@ module.exports.writeSession = async (req, res, next) => {
     // console.log('000 session.id', session.id)
     session.userProfile = req.body.userProfile;
     session.lookerUser = req.body.lookerUser;
+    session.lookerHost = config.looker.host;
     session = await checkForCustomizations(session)
     res.status(200).send({ session });
 }
@@ -123,12 +125,16 @@ async function checkForCustomizations(session) {
     const { email } = session.userProfile
 
     let defaultCustomizationObj = {
-        id: 'defaultCustomization',
+        // id: 'defaultCustomization',
+        id: makeid(16),
         companyName: 'WYSIWYG',
         logoUrl: 'https://looker.com/assets/img/images/logos/looker_black.svg',
         date: new Date(),
-        industry: "marketing"
+        // industry: "marketing", 
+        lookerHost: config.looker.host
     }
+
+    console.log('defaultCustomizationObj', defaultCustomizationObj)
 
     var myPromise = () => {
         return new Promise((resolve, reject) => {
@@ -160,7 +166,9 @@ async function checkForCustomizations(session) {
                                 }
                             );
                         } else {
-                            resolve(data[0].customizations)
+                            let filteredCustomizations = data[0].customizations.filter(element => { return element.lookerHost === config.looker.host })
+                            // console.log('filteredCustomizations', filteredCustomizations);
+                            resolve(filteredCustomizations) //new
                         }
                     }
                 });
@@ -240,4 +248,15 @@ module.exports.updateLookerUser = (req, res, next) => {
     session.lookerUser = lookerUser;
     // console.log('111 session', session)
     res.status(200).send({ session });
+}
+
+//helper function
+function makeid(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }
