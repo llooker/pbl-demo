@@ -84,15 +84,19 @@ class Customizations extends React.Component {
                                                         </td>
                                             } */}
 
-                                            {
-                                                customization.companyName === activeCustomization.companyName ?
-                                                    <td><span className="badge badge-info p-3">Active</span></td>
-                                                    :
-                                                    <td>
-                                                        <button type="button" className="btn btn-primary mr-2" data-index={index} onClick={() => this.applyCustomization(index)}>Apply</button>
-                                                        <button type="button" className="btn btn-secondary mr-2" data-index={index} onClick={() => this.editCustomization(index)}>Edit</button>
-                                                    </td>
-                                            }
+                                            {/* {
+                                                customization.companyName === activeCustomization.companyName ? */}
+                                            <td>
+                                                <span className="badge badge-info p-3 mr-2">Active</span>
+                                                <button type="button" className="btn btn-primary mr-2" data-index={index} onClick={() => this.applyCustomization(index)}>Apply</button>
+                                                <button type="button" className="btn btn-secondary mr-2" data-index={index} onClick={() => this.editCustomization(index)}>Edit</button>
+                                            </td>
+                                            {/* : */}
+                                            {/* <td>
+                                            </td>
+                                            <td>
+                                            </td> */}
+                                            {/* } */}
                                         </tr>
                                     )
                                 })}

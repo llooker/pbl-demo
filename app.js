@@ -3,13 +3,29 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const config = require('./config.js');
 
-console.log('config', config);
+// console.log('000 process.env.NODE_ENV', process.env.NODE_ENV)
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+console.log('111 process.env.NODE_ENV', process.env.NODE_ENV)
+
+require('dotenv-flow').config({
+    path: './config'
+});
+
+console.log('LOOKER_HOST from env: ', process.env.LOOKER_HOST)
 
 
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
-let mongoDB = `mongodb+srv://${config.mongo.username}:${config.mongo.password}@cluster0-97hzq.mongodb.net/wysiwyg`
+let mongoDB;
+//not working for now :(
+// if (process.env.NODE_ENV === 'development') {
+//     mongoDB = `mongodb://127.0.0.1/wysiwyg`
+// } else {
+mongoDB = `mongodb+srv://${config.mongo.username}:${config.mongo.password}@cluster0-97hzq.mongodb.net/wysiwyg`
+//}
+console.log('mongoDB', mongoDB)
+
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
@@ -39,8 +55,11 @@ app.use(session(sess))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 
-
-const port = 5000
+// var port = process.env.PORT;
+// console.log('process', process)
+// console.log('process.env.PORT', process.env.PORT)
+const port = 5000; // || process.env.PORT;
+console.log('port', port)
 let routes = require('./routes/index')
 app.use('/', routes)
 

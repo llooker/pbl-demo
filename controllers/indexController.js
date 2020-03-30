@@ -8,6 +8,7 @@ var querystring = require('querystring');
 
 const Customization = require('../models/Customization');
 var { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
+const lookerHostNameToUse = config.looker.host.substr(0, config.looker.host.indexOf('.'));
 
 
 
@@ -86,11 +87,11 @@ function nonce(len) {
 
 
 module.exports.readSession = async (req, res, next) => {
-    console.log('readSession')
+    // console.log('readSession')
     let { session } = req //get session
     // console.log('000 session', session)
     // console.log('000 session.id', session.id)
-    session.lookerHost = config.looker.host
+    // session.lookerHost = config.looker.host
 
     if (session.userProfile) session = await checkForCustomizations(session)
     // console.log('111 session', session)
@@ -121,7 +122,7 @@ module.exports.endSession = async (req, res, next) => {
 }
 
 async function checkForCustomizations(session) {
-    // console.log('checkForCustomizations')
+    console.log('checkForCustomizations')
     const { email } = session.userProfile
 
     let defaultCustomizationObj = {
@@ -129,12 +130,10 @@ async function checkForCustomizations(session) {
         id: makeid(16),
         companyName: 'WYSIWYG',
         logoUrl: 'https://looker.com/assets/img/images/logos/looker_black.svg',
-        date: new Date(),
+        date: new Date()
         // industry: "marketing", 
-        lookerHost: config.looker.host
+        // lookerHost: config.looker.host
     }
-
-    console.log('defaultCustomizationObj', defaultCustomizationObj)
 
     var myPromise = () => {
         return new Promise((resolve, reject) => {
@@ -143,17 +142,29 @@ async function checkForCustomizations(session) {
                 .find({ username: email })
                 .limit(1)
                 .exec(function (err, data) {
+                    // console.log('inside exec');
                     if (err) {
                         // console.log('err: ' + err);
                         reject(err)
                     } else {
+                        // console.log('data: ' + data);
+                        // console.log('data[0]: ' + data[0]);
+
+                        //three options
+                        //user doesn't exist
+                        //user exists but no customization for looker host
+                        //user exists && customization exists
+
+
                         if (data[0] === undefined || data.length === 0) {
                             // array empty or does not exist
                             // create customization for user if first time
+                            // console.log('inside ifff')
                             Customization.create(
                                 {
                                     username: email,
-                                    customizations: [defaultCustomizationObj]
+                                    // customizations: { [lookerHostNameToUse]: [defaultCustomizationObj] }
+                                    ['customizations.' + `${lookerHostNameToUse}`]: [defaultCustomizationObj]
                                 },
                                 (err, initializedCustomization) => {
                                     if (err) {
@@ -161,13 +172,32 @@ async function checkForCustomizations(session) {
                                         reject(err)
                                     } else {
                                         // console.log('customization initialized');
-                                        resolve(initializedCustomization.customizations)
+                                        resolve(initializedCustomization.customizations[lookerHostNameToUse])
                                     }
                                 }
                             );
-                        } else {
-                            let filteredCustomizations = data[0].customizations.filter(element => { return element.lookerHost === config.looker.host })
-                            // console.log('filteredCustomizations', filteredCustomizations);
+                        } else if (!data[0].customizations[lookerHostNameToUse]) {
+                            // console.log('inside else ifff')
+                            Customization.findOneAndUpdate(
+                                { username: email },
+                                // { $push: { customizations: customizationToSave } }, //push to end of array
+                                { $push: { ['customizations.' + `${lookerHostNameToUse}`]: defaultCustomizationObj } }, //push to end of array
+                                { new: true },
+                                (err, documents) => {
+                                    if (err) {
+                                        // console.log('err: ' + err);
+                                        // res.status(400);
+                                    } else {
+                                        resolve(documents.customizations[lookerHostNameToUse]);
+
+                                    }
+                                }
+                            );
+
+                        }
+                        else {
+                            // console.log('inside elllse')
+                            let filteredCustomizations = data[0].customizations[lookerHostNameToUse]
                             resolve(filteredCustomizations) //new
                         }
                     }

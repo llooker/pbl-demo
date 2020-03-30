@@ -6,9 +6,12 @@ const Customization = new Schema({
         type: String,
         required: true
     },
+    // customizations: {
+    //     type: Array,
+    //     default: null
+    // }
     customizations: {
-        type: Array,
-        default: null
+        type: Object
     }
 });
 
