@@ -1,7 +1,8 @@
 'use strict';
 const Customization = require('../models/Customization');
 const config = require('../config');
-const lookerHostNameToUse = config.looker.host.substr(0, config.looker.host.indexOf('.')); //is this right
+let tools = require('../tools');
+const lookerHostNameToUse = config.looker.host.substr(0, config.looker.host.indexOf('.')); //is this right??
 
 module.exports.main = (req, res, next) => {
     // console.log('customizeController main')
@@ -12,19 +13,17 @@ module.exports.saveCustomization = (req, res, next) => {
     const { email } = req.session.userProfile
     const { customizations } = req.session
     const customizationToSave = req.body
-    customizationToSave.date = new Date() //add date to customization, server side all that matters
+    customizationToSave.date = new Date()
     // customizationToSave.lookerHost = config.looker.host;
     const { customizationIndex } = req.body
-    delete customizationToSave.customizationIndex // we don't want to save index here
-
-    // console.log('000 customizationToSave', customizationToSave)
-
+    delete customizationToSave.customizationIndex
 
 
     //existing customization
     if (customizationToSave.id) {
         // console.log('inside ifff')
-        //need to account for looker content
+        // editing at customization level, 
+        // need to account for looker content
         if (customizations[customizationIndex].lookerContent) {
             customizationToSave.lookerContent = customizations[customizationIndex].lookerContent
         }
@@ -33,7 +32,6 @@ module.exports.saveCustomization = (req, res, next) => {
         customizations.splice(customizationIndex, 1, customizationToSave) //customizationToSave
         Customization.findOneAndUpdate(
             { username: email },
-            // { $set: { customizations: customizations } },
             { $set: { ['customizations.' + `${lookerHostNameToUse}`]: customizations } },
             { new: true },
             (err, documents) => {
@@ -49,12 +47,11 @@ module.exports.saveCustomization = (req, res, next) => {
         );
     } else { //brand new customization
         // console.log('inside elsse')
-        customizationToSave.id = makeid(16)
+        customizationToSave.id = tools.makeid(16); //makeid(16)
         // console.log('1111 customizationToSave', customizationToSave)
         Customization.findOneAndUpdate(
             { username: email },
-            // { $push: { customizations: customizationToSave } }, //push to end of array
-            { $push: { ['customizations.' + `${lookerHostNameToUse}`]: customizationToSave } }, //push to end of array
+            { $push: { ['customizations.' + `${lookerHostNameToUse}`]: customizationToSave } },
             { new: true },
             (err, documents) => {
                 if (err) {
@@ -104,14 +101,12 @@ module.exports.saveLookerContent = async (req, res, next) => {
         customizationToSave.lookerContent = [newLookerContent]
     }
 
-    if (activeCustomization.id) { //not sure about this iff for now
+    if (activeCustomization.id) {
         //update index of desired customization
         // console.log('inside ifff')
         customizations.splice(customizationIndex, 1, customizationToSave)
-        console.log('customizations', customizations)
         Customization.findOneAndUpdate(
             { username: email },
-            // { $set: { customizations: customizations } },
             { $set: { ['customizations.' + `${lookerHostNameToUse}`]: customizations } },
             { new: true },
             (err, documents) => {
@@ -123,8 +118,6 @@ module.exports.saveLookerContent = async (req, res, next) => {
                 }
             }
         );
-    } else {
-        console.log('inside ellse')
     }
 }
 
@@ -138,16 +131,4 @@ module.exports.applyActiveCustomizationToSession = (req, res, next) => {
     session.activeCustomization = customizationIndex;
     // console.log('session', session)
     res.status(200).send({ session });
-}
-
-
-//helper function
-function makeid(length) {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
 }

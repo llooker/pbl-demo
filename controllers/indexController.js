@@ -8,7 +8,10 @@ var querystring = require('querystring');
 
 const Customization = require('../models/Customization');
 var { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
+let tools = require('../tools');
 const lookerHostNameToUse = config.looker.host.substr(0, config.looker.host.indexOf('.'));
+
+console.log('top of indexController')
 
 
 
@@ -127,7 +130,7 @@ async function checkForCustomizations(session) {
 
     let defaultCustomizationObj = {
         // id: 'defaultCustomization',
-        id: makeid(16),
+        id: tools.makeid(16), //makeid(16),
         companyName: 'WYSIWYG',
         logoUrl: 'https://looker.com/assets/img/images/logos/looker_black.svg',
         date: new Date()
@@ -163,7 +166,6 @@ async function checkForCustomizations(session) {
                             Customization.create(
                                 {
                                     username: email,
-                                    // customizations: { [lookerHostNameToUse]: [defaultCustomizationObj] }
                                     ['customizations.' + `${lookerHostNameToUse}`]: [defaultCustomizationObj]
                                 },
                                 (err, initializedCustomization) => {
@@ -180,7 +182,6 @@ async function checkForCustomizations(session) {
                             // console.log('inside else ifff')
                             Customization.findOneAndUpdate(
                                 { username: email },
-                                // { $push: { customizations: customizationToSave } }, //push to end of array
                                 { $push: { ['customizations.' + `${lookerHostNameToUse}`]: defaultCustomizationObj } }, //push to end of array
                                 { new: true },
                                 (err, documents) => {
@@ -197,8 +198,7 @@ async function checkForCustomizations(session) {
                         }
                         else {
                             // console.log('inside elllse')
-                            let filteredCustomizations = data[0].customizations[lookerHostNameToUse]
-                            resolve(filteredCustomizations) //new
+                            resolve(data[0].customizations[lookerHostNameToUse])
                         }
                     }
                 });
@@ -278,15 +278,4 @@ module.exports.updateLookerUser = (req, res, next) => {
     session.lookerUser = lookerUser;
     // console.log('111 session', session)
     res.status(200).send({ session });
-}
-
-//helper function
-function makeid(length) {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
 }
