@@ -9,9 +9,10 @@ var querystring = require('querystring');
 const Customization = require('../models/Customization');
 var { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
 let tools = require('../tools');
-const lookerHostNameToUse = config.looker.host.substr(0, config.looker.host.indexOf('.'));
+const lookerHost = config.looker.host;
+const lookerHostNameToUse = lookerHost.substr(0, lookerHost.indexOf('.'));
 
-console.log('top of indexController')
+// console.log('top of indexController')
 
 
 
@@ -94,7 +95,7 @@ module.exports.readSession = async (req, res, next) => {
     let { session } = req //get session
     // console.log('000 session', session)
     // console.log('000 session.id', session.id)
-    // session.lookerHost = config.looker.host
+    session.lookerHost = lookerHostNameToUse
 
     if (session.userProfile) session = await checkForCustomizations(session)
     // console.log('111 session', session)
@@ -110,7 +111,7 @@ module.exports.writeSession = async (req, res, next) => {
     // console.log('000 session.id', session.id)
     session.userProfile = req.body.userProfile;
     session.lookerUser = req.body.lookerUser;
-    session.lookerHost = config.looker.host;
+    session.lookerHost = lookerHostNameToUse;
     session = await checkForCustomizations(session)
     res.status(200).send({ session });
 }
@@ -135,7 +136,6 @@ async function checkForCustomizations(session) {
         logoUrl: 'https://looker.com/assets/img/images/logos/looker_black.svg',
         date: new Date()
         // industry: "marketing", 
-        // lookerHost: config.looker.host
     }
 
     var myPromise = () => {

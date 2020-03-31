@@ -16,7 +16,12 @@ module.exports.saveCustomization = (req, res, next) => {
     customizationToSave.date = new Date()
     // customizationToSave.lookerHost = config.looker.host;
     const { customizationIndex } = req.body
-    delete customizationToSave.customizationIndex
+
+    if (customizationToSave.industry && customizationToSave.industry === 'none') {
+        delete customizationToSave.industry
+    }
+
+    // console.log('customizationToSave', customizationToSave)
 
 
     //existing customization

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
+import DefaultLookerContent from '../lookerIndustriesByInstance.json';
 
 let emptyCustomizationObj = {
     id: '',
@@ -92,66 +93,18 @@ class NewCustomization extends React.Component {
     }
 
     render() {
+        console.log('EditCustomization render');
         const { indexOfCustomizationToEdit, customizations, lookerHost } = this.props
-        const { validSalesforceUrl } = this.state
+        const { validSalesforceUrl, industry } = this.state
+        // let lookerHostNameToUse = lookerHost.substr(0, lookerHost.indexOf('.'));
+        console.log('lookerHost', lookerHost)
+
+
         return (
             <div className="home container p-5" >
                 <div className="row pt-5">
                     <div className="col-sm-9">
                         <h1>Edit Customization</h1>
-                        {/* attempt at dynamic */}
-                        {/* <form className="border-top mt-3 pt-3" onSubmit={this.handleSubmit}>
-                            <div className="form-group">
-                                <input type="hidden" id="customizationIndex" name="customizationIndex" value={indexOfCustomizationToEdit ? indexOfCustomizationToEdit : ''} />
-                            </div>
-
-                            {Object.keys(customizations[indexOfCustomizationToEdit] || emptyCustomizationObj).map(key => {
-                                return (
-                                    <div className="form-group" key={key}>
-                                        {key === 'id' || key === 'date' ?
-                                            <input type="hidden"
-                                                id={key}
-                                                name={key}
-                                                value={indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit][key] : ''} />
-                                            :
-                                            <>
-                                                <label htmlFor={key}>{prettifyKey(key)}</label>
-                                                <input id={key}
-                                                    className="form-control"
-                                                    name={key}
-                                                    type='text'
-                                                    value={this.state[key]}
-                                                    onChange={e => this.updateInput(e)}
-                                                    disabled={key === 'salesforceUrl' ?
-                                                        false :
-                                                        validSalesforceUrl ?
-                                                            false :
-                                                            true}
-                                                    ref={input => {
-                                                        this[key] = input;
-                                                    }}
-                                                />
-                                            </>}
-                                        {key === 'salesforceUrl' ?
-                                            validSalesforceUrl ?
-                                                <small id="salesforceUrlHelp" className="form-text text-success">Valid Salesforce Url!</small>
-                                                : this.state.salesforceUrl.length ?
-                                                    <small id="salesforceUrlHelp" className="form-text text-danger">Must be valid Looker Salesforce Opportunity Url</small>
-                                                    : <small id="salesforceUrlHelp" className="form-text text-muted">This field is required</small> : ''
-                                        }
-                                    </div>)
-                            })}
-
-                            <div className="form-group mt-3 pt-3">
-                                <button className="btn btn-primary mr-2"
-                                    disabled={validSalesforceUrl ? false : true}>Save Customization</button>
-                                <Link to='/customize'>
-                                    <button type="button" className="btn btn-secondary ">Cancel</button>
-                                </Link>
-                            </div>
-                        </form> */}
-
-
                         <form className="border-top mt-3 pt-3" onSubmit={this.handleSubmit}>
                             <input type="hidden" id="id" name="id" value={indexOfCustomizationToEdit ? customizations[indexOfCustomizationToEdit].id : ''} />
                             <input type="hidden" id="customizationIndex" name="customizationIndex" value={indexOfCustomizationToEdit ? indexOfCustomizationToEdit : ''} />
@@ -173,7 +126,7 @@ class NewCustomization extends React.Component {
                                         : <small id="salesforceUrlHelp" className="form-text text-muted">This field is required</small>}
                             </div>
                             <div id="subForm">
-                                {lookerHost === "exclude for now" ?
+                                {DefaultLookerContent[lookerHost] ?
                                     <div className="form-group">
                                         <label htmlFor="industry">Choose industry</label>
                                         <select
@@ -183,18 +136,22 @@ class NewCustomization extends React.Component {
                                             name="industry"
                                             type="select-one"
                                             value={this.state.industry}
-                                            disabled={validSalesforceUrl ? false : true}
-                                        >
+                                            disabled={validSalesforceUrl ? false : true}>
+
                                             <option
-                                                key="marketing"
-                                                value="marketing"
-                                            > Marketing</option>
-                                            <option
-                                                key="retail"
-                                                value="retail"
-                                            > Retail</option>
-                                        </select>
-                                    </div> : ''}
+                                                key="none"
+                                                value="none"
+                                            > None</option>
+                                            {Object.keys(DefaultLookerContent[lookerHost]).map(key => {
+                                                return (
+                                                    <option
+                                                        key={key}
+                                                        value={key}
+                                                    > {(key.charAt(0).toUpperCase() + key.substring(1)).replace('_', ' ')}</option>
+                                                )
+                                            })}</select>
+                                    </div>
+                                    : ''}
                                 <div className="form-group">
                                     <label htmlFor="companyName">Company name</label>
                                     <input id="companyName"

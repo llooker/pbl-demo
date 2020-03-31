@@ -8,7 +8,7 @@ import Footer from './components/Footer'
 import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
-import DefaultLookerContent from './defaultLookerContentIndustry.json';
+import DefaultLookerContent from './lookerIndustriesByInstance.json';
 //make looker user dynamic
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
@@ -40,8 +40,6 @@ class Login extends React.Component {
       return (
         <div className="App">
           <Header
-            clientId={googleClientId}
-            buttonText="Logout"
             onLogoutSuccess={this.props.applySession}
             companyName={activeCustomization.companyName || "WYSIWYG"} //default
             logoUrl={activeCustomization.logoUrl || "https://looker.com/assets/img/images/logos/looker_black.svg"} //default
@@ -50,7 +48,8 @@ class Login extends React.Component {
             pathname={pathname}
           />
           <Redirect to={from} />
-          <Footer pathname={pathname} />
+          <Footer pathname={pathname}
+            lookerHost={this.props.lookerHost} />
         </div>
       )
     } else {
@@ -144,7 +143,7 @@ class App extends React.Component {
   //called on componentDidMount
   //get request so should only check info, never update
   checkSession = async () => {
-    console.log('checkSession')
+    // console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -153,7 +152,7 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
-    console.log('sessionResponseData', sessionResponseData)
+    // console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
     const activeCustomization = sessionResponseData.session.activeCustomization ? sessionResponseData.session.activeCustomization : 0;
@@ -184,8 +183,8 @@ class App extends React.Component {
   // called by responseGoogle once it gets response
   // since login can assume activeCustomization will be default..
   applySession = async (userProfile) => {
-    console.log('applySession')
-    console.log('userProfile', userProfile)
+    // console.log('applySession')
+    // console.log('userProfile', userProfile)
 
     if (Object.keys(userProfile).length === 0) {
       // console.log('inside ifff')
@@ -249,28 +248,22 @@ class App extends React.Component {
 
     let customizationResponseData = await customizationResponse.json();
 
-    // console.log('customizationResponseData', customizationResponseData)
-
-    // let lookerContentToUse = this.state.customizations[customizationIndex].lookerContent ?
-    //   [...DefaultLookerContent[this.state.customizations[customizationIndex].industry], ...this.state.customizations[customizationIndex].lookerContent] :
-    //   [...DefaultLookerContent[this.state.customizations[customizationIndex].industry]]
-
-    let lookerContentToUse = []
+    let lookerContentToUse = [];
+    //check industry first, insert to array
     if (this.state.customizations[customizationIndex].industry) {
-      lookerContentToUse = [...DefaultLookerContent[this.state.customizations[customizationIndex].industry]]
+      lookerContentToUse = [...DefaultLookerContent[this.state.lookerHost][this.state.customizations[customizationIndex].industry]]
     }
+    //then check custom content, insert to array
     if (this.state.customizations[customizationIndex].lookerContent) {
       lookerContentToUse = [...lookerContentToUse, ...this.state.customizations[customizationIndex].lookerContent]
     }
-
-    console.log('lookerContentToUse', lookerContentToUse) //improvement???
 
     this.setState({
       activeCustomization: this.state.customizations[customizationIndex],
       lookerContent: lookerContentToUse
     }, () => {
-      console.log('applyCustomization callback this.state.lookerContent', this.state.lookerContent)
-      console.log('applyCustomization callback this.state.activeCustomization', this.state.activeCustomization)
+      // console.log('applyCustomization callback this.state.lookerContent', this.state.lookerContent)
+      // console.log('applyCustomization callback this.state.activeCustomization', this.state.activeCustomization)
       // this.props.history.push('/home') //not going to work here :P
     });
   }
@@ -299,6 +292,8 @@ class App extends React.Component {
     })
 
     let customizationResponseData = await customizationResponse.json();
+
+    // console.log('customizationResponseData', customizationResponseData)
 
     this.setState({
       customizations: customizationResponseData.customizations,
@@ -337,8 +332,8 @@ class App extends React.Component {
   }
 
   switchLookerUser = (newUser) => {
-    console.log('switchLookerUser')
-    console.log('newUser', newUser)
+    // console.log('switchLookerUser')
+    // console.log('newUser', newUser)
     // console.log('LookerUserPermissions[newUser]', LookerUserPermissions[newUser])
 
 
@@ -377,7 +372,7 @@ class App extends React.Component {
     const { lookerHost } = this.state;
     // console.log('activeCustomization', activeCustomization);
     // console.log('lookerUser', lookerUser);
-    console.log('lookerHost', lookerHost);
+    // console.log('lookerHost', lookerHost);
     return (
       <Router>
         <div>
@@ -388,6 +383,7 @@ class App extends React.Component {
             activeCustomization={activeCustomization}
             lookerUser={lookerUser}
             switchLookerUser={this.switchLookerUser}
+            lookerHost={lookerHost}
           />}
           />
           <PrivateRoute path='/home' component={Content}
@@ -397,6 +393,7 @@ class App extends React.Component {
             userProfile={userProfile}
             lookerUser={lookerUser}
             applySession={this.applySession}
+            lookerHost={lookerHost}
           />
           <PrivateRoute exact path='/customize'
             component={Customizations}
@@ -405,6 +402,7 @@ class App extends React.Component {
             applyCustomization={this.applyCustomization}
             editCustomization={this.editCustomization}
             userProfile={userProfile}
+            lookerHost={lookerHost}
           />
           <PrivateRoute path='/customize/edit' //index
             component={EditCustomization}

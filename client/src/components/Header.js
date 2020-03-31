@@ -3,7 +3,7 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import './Home.css';
 
 function Header(props) {
-  console.log('props', props)
+  // console.log('props', props)
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -21,17 +21,12 @@ function Header(props) {
             </a>
             <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
               {/* new */}
-              {props.pathname === "/home" ? <UserOptions lookerUser={props.lookerUser} switchLookerUser={props.switchLookerUser} /> : ''}
+              {props.pathname === "/home" ?
+                <UserOptions lookerUser={props.lookerUser} switchLookerUser={props.switchLookerUser} /> :
+                ''}
               {/* end lookerUser functionality */}
               <a className="dropdown-item"
                 onClick={() => { props.onLogoutSuccess({}) }}>
-                {/* <GoogleLogout
-                  clientId={props.clientId}
-                  buttonText={props.buttonText}
-                  onLogoutSuccess={() => { props.onLogoutSuccess({}) }} //send blank object
-                >
-                </GoogleLogout> */}
-                {/* seems to be working for now */}
                 Logout
               </a>
             </div>
@@ -45,7 +40,7 @@ function Header(props) {
 function UserOptions(props) {
   return (
     <>
-      <h6 className="dropdown-header">Change Looker User</h6>
+      <h6 className="dropdown-header">Sudo as Looker User</h6>
       {props.lookerUser.permission_level === "good" ? ' ' : <a className="dropdown-item" onClick={() => { props.switchLookerUser("good") }}>Good</a>}
       {props.lookerUser.permission_level === "better" ? ' ' : <a className="dropdown-item" onClick={() => { props.switchLookerUser("better") }}>Better</a>}
       {props.lookerUser.permission_level === "best" ? ' ' : <a className="dropdown-item" onClick={() => { props.switchLookerUser("best") }}>Best</a>}
