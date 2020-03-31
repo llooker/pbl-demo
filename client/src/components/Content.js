@@ -91,7 +91,7 @@ class Content extends React.Component {
                 LookerEmbedSDK.createDashboardWithId(lookerContent[i].id)
                     .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
                     .withClassName('iframe')
-                    .withNext()
+                    // .withNext()
                     .on('dashboard:run:start', (e) => {
                         // console.log('e', e)
                     })

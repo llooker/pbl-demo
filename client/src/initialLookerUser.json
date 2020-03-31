@@ -29,7 +29,11 @@
     "models": [
         "thelook",
         "thelook_adwords",
-        "retail_block_model"
+        "retail_block_model",
+        "gaming",
+        "healthcare",
+        "healthcare_claims",
+        "healthcare_cohort_discovery"
     ],
     "user_attributes": {
         "locale": "en_US",
