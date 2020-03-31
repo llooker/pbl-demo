@@ -125,7 +125,7 @@ module.exports.endSession = async (req, res, next) => {
 }
 
 async function checkForCustomizations(session) {
-    console.log('checkForCustomizations')
+    // console.log('checkForCustomizations')
     const { email } = session.userProfile
 
     let defaultCustomizationObj = {

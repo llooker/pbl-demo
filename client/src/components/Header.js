@@ -3,7 +3,7 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import './Home.css';
 
 function Header(props) {
-  // console.log('props', props)
+  console.log('props', props)
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -23,13 +23,16 @@ function Header(props) {
               {/* new */}
               {props.pathname === "/home" ? <UserOptions lookerUser={props.lookerUser} switchLookerUser={props.switchLookerUser} /> : ''}
               {/* end lookerUser functionality */}
-              <a className="dropdown-item">
-                <GoogleLogout
+              <a className="dropdown-item"
+                onClick={() => { props.onLogoutSuccess({}) }}>
+                {/* <GoogleLogout
                   clientId={props.clientId}
                   buttonText={props.buttonText}
                   onLogoutSuccess={() => { props.onLogoutSuccess({}) }} //send blank object
                 >
-                </GoogleLogout>
+                </GoogleLogout> */}
+                {/* seems to be working for now */}
+                Logout
               </a>
             </div>
           </li>

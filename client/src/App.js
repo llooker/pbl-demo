@@ -184,8 +184,8 @@ class App extends React.Component {
   // called by responseGoogle once it gets response
   // since login can assume activeCustomization will be default..
   applySession = async (userProfile) => {
-    // console.log('applySession')
-    // console.log('userProfile', userProfile)
+    console.log('applySession')
+    console.log('userProfile', userProfile)
 
     if (Object.keys(userProfile).length === 0) {
       // console.log('inside ifff')
@@ -337,8 +337,8 @@ class App extends React.Component {
   }
 
   switchLookerUser = (newUser) => {
-    // console.log('switchLookerUser')
-    // console.log('newUser', newUser)
+    console.log('switchLookerUser')
+    console.log('newUser', newUser)
     // console.log('LookerUserPermissions[newUser]', LookerUserPermissions[newUser])
 
 
@@ -396,6 +396,7 @@ class App extends React.Component {
             saveLookerContent={this.saveLookerContent}
             userProfile={userProfile}
             lookerUser={lookerUser}
+            applySession={this.applySession}
           />
           <PrivateRoute exact path='/customize'
             component={Customizations}
