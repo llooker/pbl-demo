@@ -67,7 +67,7 @@ class Content extends React.Component {
         }
 
         // if (this.props.lookerUser != undefined && this.props.lookerUser !== prevProps.lookerUser) {
-        LookerEmbedSDK.init('demo.looker.com', '/auth')
+        LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth')
         // }
     }
 
@@ -91,10 +91,12 @@ class Content extends React.Component {
                 LookerEmbedSDK.createDashboardWithId(lookerContent[i].id)
                     .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
                     .withClassName('iframe')
-                    // .withNext()
+                    .withNext()
                     .on('dashboard:run:start', (e) => {
                         // console.log('e', e)
                     })
+                    // .on('drillmenu:click', this.drillClick)
+                    // .on('dashboard:filters:changed', this.filtersUpdates)
                     // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
                     // .on('page:properties:changed', (e) => {
                     //     this.changeHeight(e, `embedContainer${lookerContent[i].id}`)
@@ -170,8 +172,8 @@ class Content extends React.Component {
     }
     // think about this
     setActiveTab = (e) => {
-        // console.log('setActiveTab')
-        // console.log('e', e)
+        console.log('setActiveTab')
+        console.log('e', e)
 
         if (this.state.renderSampleCode) this.toggleCodeBar()
 
@@ -270,6 +272,79 @@ class Content extends React.Component {
         if (event && event.height && div) {
             div.style.height = `${event.height + 20}px`
         }
+    }
+
+    //async 
+    filtersUpdates(event) {
+        // loadingIcon(true);
+        console.log('filtersUpdates')
+        console.log('event', event)
+        // instantiate elements, filters, and query objects
+        // const dashboard_filters: any = (event && event.dashboard && event.dashboard.dashboard_filters) ? event.dashboard && event.dashboard.dashboard_filters : undefined
+        // let dropdown = document.getElementById('select-dropdown')
+        // let new_filters = query_object.filters
+
+        // // update query object and run query
+        // if (dashboard_filters && (dashboard_date_filter in dashboard_filters)) { // check to make sure our filter is in the changed
+        //     if (dropdown) { // check to make sure we found our elements to update/keep
+        //         new_filters = Object.assign(new_filters, { [query_date_filter]: dashboard_filters[dashboard_date_filter] })
+        //         const states = await sdk.ok(sdk.run_inline_query(
+        //             {
+        //                 body: Object.assign(query_object, { filters: new_filters }),
+        //                 result_format: 'json'
+        //             }
+        //         ))
+        //         addStateOptions(states)
+        //     }
+        // }
+        // loadingIcon(false)
+        // if (dashboard_filters && dashboard_filters[dashbord_layout_filter] && dashboard_filters[dashbord_layout_filter]) {
+        //     layoutFilter(dashboard_filters[dashbord_layout_filter])
+        // }
+    }
+
+    drillClick(event) {
+        console.log('drillClick')
+        console.log('event', event)
+
+        // og
+        // if (event && event.modal) {
+        //     const dashboard_div = document.getElementById('dashboard')
+        //     if (dashboard_div && dashboard_div.children.length > 1 && dashboard_div.lastChild) {
+        //         dashboard_div.lastChild.remove()
+        //     }
+        //     LookerEmbedSDK
+        //         .createExploreWithUrl(`https://${looker_host}${event.url}`)
+        //         .appendTo('#dashboard')
+        //         .withClassName('looker-embed')
+        //         .build()
+        //         .connect()
+        //         .then()
+        //         .catch((error: Error) => {
+        //             console.error('Connection error', error)
+        //         })
+        //     return { cancel: true }
+        // } else {
+        //     return { cancel: false }
+        // }
+
+        //from slack w/ Bryan
+        // const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
+        // if (isCampaignPerformanceDrill) {
+
+        //     // const new_url = new URL(event.url)
+        //     // console.log('new_url', new_url)
+        //     // let new_filters = JSON.parse(JSON.stringify(db_filters))
+        //     // new_filters[334]['Contract IDs'] = new_url.searchParams.get('Contract IDs')
+        //     // new_filters[334]['Months'] = new_url.searchParams.get('Months')
+        //     // console.log(new_url.searchParams.get('Months'))
+        //     // setDbFilters(new_filters)
+        //     // setTab(2);
+
+        //     // this.setActiveTab()
+
+        // }
+        // return { cancel: (isCampaignPerformanceDrill) ? true : false }
     }
 
 

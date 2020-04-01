@@ -44,7 +44,7 @@ module.exports.saveCustomization = (req, res, next) => {
                     console.log('err: ' + err);
                     res.status(400);
                 } else {
-                    console.log('documents: ' + documents);
+                    // console.log('documents: ' + documents);
                     req.session.customizations = documents.customizations[lookerHostNameToUse]
                     res.status(200).send(req.session);
                 }
