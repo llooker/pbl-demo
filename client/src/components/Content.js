@@ -6,6 +6,7 @@ import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import $ from 'jquery';
 // import Button from '@material-ui/core/Button';
 
 
@@ -95,8 +96,8 @@ class Content extends React.Component {
                     .on('dashboard:run:start', (e) => {
                         // console.log('e', e)
                     })
-                    // .on('drillmenu:click', this.drillClick)
-                    // .on('dashboard:filters:changed', this.filtersUpdates)
+                    .on('drillmenu:click', (e) => this.drillClick(e))
+                    .on('dashboard:filters:changed', this.filtersUpdates)
                     // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
                     // .on('page:properties:changed', (e) => {
                     //     this.changeHeight(e, `embedContainer${lookerContent[i].id}`)
@@ -149,16 +150,20 @@ class Content extends React.Component {
         }
     }
 
+    //need to revisit if this is working...?
     dropdownSelect = (e) => {
         // console.log('dropdownSelect')
         // console.log('e.target', e.target)
         const targetId = e.target.id
-        const dashboardStateName = e.target.getAttribute("dashboardStateName")
-        const dropdownFilterName = e.target.getAttribute("dropdownFilterName")
+        const dashboardStateName = e.target.getAttribute("dashboardstatename")
+        const dropdownFilterName = e.target.getAttribute("dropdownfiltername")
+        // console.log('dashboardStateName', dashboardStateName)
+        // console.log('dropdownFilterName', dropdownFilterName)
         this.setState({
             [targetId]: e.target.value
         }, () => {
             // console.log('dropdownSelect callback')
+            // console.log('this.state[dashboardStateName]', this.state[dashboardStateName])
             this.state[dashboardStateName].updateFilters({ [dropdownFilterName]: this.state[targetId] })
             this.state[dashboardStateName].run()
         })
@@ -171,17 +176,33 @@ class Content extends React.Component {
         }))
     }
     // think about this
-    setActiveTab = (e) => {
-        console.log('setActiveTab')
-        console.log('e', e)
+    setActiveTab = (tabIndex) => {
+        // console.log('setActiveTab')
+        // console.log('tabIndex', tabIndex)
 
-        if (this.state.renderSampleCode) this.toggleCodeBar()
+        if (this.state.renderSampleCode) this.toggleCodeBar();
 
-        const tabContentType = e.target.getAttribute("contentType");
+        let tabsArray = $("#parentTabList a");
+        let contentArray = $("#parentTabContent > div");
+
+        //simulate tab change, for looker action taken...
+        if (!$(tabsArray[tabIndex]).hasClass('active')) {
+            for (let i = 0; i < tabsArray.length; i++) {
+                if (i === tabIndex) {
+                    tabsArray[i].className = "nav-link active show"
+                    contentArray[i].className = "tab-pane fade show active"
+                } else {
+                    tabsArray[i].className = "nav-link"
+                    contentArray[i].className = "tab-pane fade"
+                }
+            }
+        }
+
+        let newTabContentType = $(tabsArray[tabIndex]).attr('contenttype');
         this.setState({
-            activeTabType: tabContentType
+            activeTabType: newTabContentType
         }, () => {
-            const sampleCodeFilePath = require(`../sample-code/${tabContentType}.sample.txt`);
+            const sampleCodeFilePath = require(`../sample-code/${newTabContentType}.sample.txt`);
             fetch(sampleCodeFilePath)
                 .then(response => {
                     return response.text()
@@ -306,6 +327,7 @@ class Content extends React.Component {
     drillClick(event) {
         console.log('drillClick')
         console.log('event', event)
+        console.log('this', this)
 
         // og
         // if (event && event.modal) {
@@ -329,22 +351,22 @@ class Content extends React.Component {
         // }
 
         //from slack w/ Bryan
-        // const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
-        // if (isCampaignPerformanceDrill) {
+        const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
+        if (isCampaignPerformanceDrill) {
 
-        //     // const new_url = new URL(event.url)
-        //     // console.log('new_url', new_url)
-        //     // let new_filters = JSON.parse(JSON.stringify(db_filters))
-        //     // new_filters[334]['Contract IDs'] = new_url.searchParams.get('Contract IDs')
-        //     // new_filters[334]['Months'] = new_url.searchParams.get('Months')
-        //     // console.log(new_url.searchParams.get('Months'))
-        //     // setDbFilters(new_filters)
-        //     // setTab(2);
+            console.log("inside ifff");
+            // const new_url = new URL(event.url)
+            // console.log('new_url', new_url)
+            // let new_filters = JSON.parse(JSON.stringify(db_filters))
+            // new_filters[334]['Contract IDs'] = new_url.searchParams.get('Contract IDs')
+            // new_filters[334]['Months'] = new_url.searchParams.get('Months')
+            // console.log(new_url.searchParams.get('Months'))
+            // setDbFilters(new_filters)
+            // setTab(2);
 
-        //     // this.setActiveTab()
-
-        // }
-        // return { cancel: (isCampaignPerformanceDrill) ? true : false }
+            this.setActiveTab(1) //working
+        }
+        return { cancel: (isCampaignPerformanceDrill) ? true : false }
     }
 
 
@@ -375,7 +397,7 @@ class Content extends React.Component {
 
 
                 <div className="row pt-5">
-                    <ul className="nav nav-tabs w-100" id="myTab" role="tablist">
+                    <ul id="parentTabList" className="nav nav-tabs w-100" role="tablist">
                         {lookerContent.map((item, index) => {
                             // console.log('item', item)
                             return (
@@ -388,8 +410,8 @@ class Content extends React.Component {
                                         role="tab"
                                         aria-controls={validIdHelper(`${item.id}`)}
                                         aria-selected="true"
-                                        contentType={item.type}
-                                        onClick={(e) => this.setActiveTab(e)}>
+                                        contenttype={item.type}
+                                        onClick={() => this.setActiveTab(index)}>
                                         {item.name}
                                     </a>
                                 </li>
@@ -405,7 +427,7 @@ class Content extends React.Component {
 
                 <div className="row">
 
-                    <div className="tab-content w-100" id="myTabContent">
+                    <div className="tab-content w-100" id="parentTabContent">
 
                         {lookerContent.map((item, index) => {
                             return (
@@ -420,8 +442,8 @@ class Content extends React.Component {
                                                     className="form-control"
                                                     onChange={(e) => this.dropdownSelect(e)}
                                                     type="select-one"
-                                                    dropdownFilterName={item.customDropdown.filterName}
-                                                    dashboardStateName={item.id}
+                                                    dropdownfiltername={item.customDropdown.filterName}
+                                                    dashboardstatename={item.id}
                                                 >
                                                     {item.customDropdown.options.map(item => {
                                                         return <option
@@ -533,3 +555,13 @@ function validIdHelper(str) {
     //need to replace special characters that may be associated with id...
     return str.replace(/[^a-zA-Z0-9-.# ]/g, "")
 }
+
+// function jump(h) {
+//     console.log('jump')
+//     console.log('h', h)
+//     var url = location.href;               //Save down the URL without hash.
+//     console.log('url', url)
+//     location.href = "#" + h;                 //Go to the target element.
+//     // history.replaceState(null, null, url);   //Don't like hashes. Changing it back.
+//     // console.log('url', url)
+// }
