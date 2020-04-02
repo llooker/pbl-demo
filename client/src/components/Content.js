@@ -119,6 +119,10 @@ class Content extends React.Component {
                 LookerEmbedSDK.createExploreWithId(lookerContent[i].id)
                     .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
                     .withClassName('iframe')
+                    .withParams({
+                        qid: 'DA0G4JnmvuxE2N1UEs3WHR',
+                        toggle: 'dat,pik,vis'
+                    })
                     .build()
                     .connect()
                     .then(this.setupExplore)
