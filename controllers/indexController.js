@@ -14,6 +14,8 @@ const lookerHostNameToUse = lookerHost.substr(0, lookerHost.indexOf('.'));
 
 // console.log('top of indexController')
 
+const sdk = LookerNodeSDK.createClient() //valid client :D
+
 
 
 // keep for sdk example for now
@@ -42,12 +44,23 @@ const lookerHostNameToUse = lookerHost.substr(0, lookerHost.indexOf('.'));
 
 
 module.exports.fetchFolder = async (req, res, next) => {
-    // console.log('indexController fetchFolder');
+    console.log('indexController fetchFolder');
 
     const { params } = req
-    const sdk = LookerNodeSDK.createClient() //valid client :D
-    const folder = await sdk.ok(sdk.folder(params.folder_id))
-    let resObj = { folder }
+
+    console.log('req.session.lookerUser.external_user_id', req.session.lookerUser.external_user_id)
+    const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id))
+    // console.log('userCred', userCred)
+    const embedUser = await sdk.ok(sdk.user(userCred.id));
+    // console.log('embedUser.personal_folder_id:', embedUser.personal_folder_id)
+    // const folder = await sdk.ok(sdk.folder(params.folder_id))
+    const folderListAsString = `${params.folder_id},${embedUser.personal_folder_id}`;
+    // console.log('folderListAsString', folderListAsString)
+
+    const looks = await sdk.ok(sdk.search_looks({ space_id: folderListAsString }))
+    console.log('looks', looks)
+    // console.log('looks.length', looks.length)
+    let resObj = { looks }
 
     res.send(resObj)
 }
@@ -56,7 +69,6 @@ module.exports.retrieveDashboardFilters = async (req, res, next) => {
     // console.log('indexController retrieveDashboardFilters');
 
     const { params } = req
-    const sdk = LookerNodeSDK.createClient() //valid client :D
 
     const queryObject = {
         "model": "thelook_adwords",
@@ -234,7 +246,6 @@ module.exports.performApiCall = async (req, res, next) => {
     // console.log('params.type === "dashboard"', params.type === "dashboard")
     // console.log('params.type === "look"', params.type === "look")
     let returnVal;
-    const sdk = LookerNodeSDK.createClient() //valid client :D
     if (params.type === 'dashboard') {
         returnVal = await sdk.ok(sdk.all_dashboards())
     } else if (params.type === 'look') {
@@ -253,7 +264,6 @@ module.exports.validateLookerContent = async (req, res, next) => {
     const contentType = req.params.content_type;
 
     let returnVal;
-    const sdk = LookerNodeSDK.createClient()
 
     try {
         returnVal = await sdk.ok(sdk[contentType](contentId))

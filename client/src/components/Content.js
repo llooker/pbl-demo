@@ -7,6 +7,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import $ from 'jquery';
+import { parse } from 'querystring';
 // import Button from '@material-ui/core/Button';
 
 
@@ -45,7 +46,7 @@ class Content extends React.Component {
 
 
     componentDidMount() {
-        console.log('LookerContent componentDidMount')
+        // console.log('LookerContent componentDidMount')
         const { lookerContent } = this.props
         this.setupLookerContent(lookerContent)
 
@@ -93,12 +94,13 @@ class Content extends React.Component {
                     .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
                     .withClassName('iframe')
                     .withNext()
+                    .withFilters() //new
+                    .withTheme('Looker') //new
                     .on('dashboard:run:start', (e) => {
                         // console.log('e', e)
                     })
                     .on('drillmenu:click', (e) => this.drillClick(e))
-                    .on('dashboard:filters:changed', this.filtersUpdates)
-                    // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
+                    .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
                     // .on('page:properties:changed', (e) => {
                     //     this.changeHeight(e, `embedContainer${lookerContent[i].id}`)
                     // })
@@ -133,8 +135,12 @@ class Content extends React.Component {
                     }
                 })
 
+                // console.log('lookerResposnse', lookerResposnse)
+
                 let lookerResposnseData = await lookerResposnse.json();
-                lookerResposnseData.folder.looks.map((item, index) => {
+                console.log('lookerResposnseData', lookerResposnseData)
+
+                lookerResposnseData.looks.map((item, index) => {
                     let lookId = item.id
                     LookerEmbedSDK.createLookWithId(lookId)
                         .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
@@ -157,13 +163,9 @@ class Content extends React.Component {
         const targetId = e.target.id
         const dashboardStateName = e.target.getAttribute("dashboardstatename")
         const dropdownFilterName = e.target.getAttribute("dropdownfiltername")
-        // console.log('dashboardStateName', dashboardStateName)
-        // console.log('dropdownFilterName', dropdownFilterName)
         this.setState({
             [targetId]: e.target.value
         }, () => {
-            // console.log('dropdownSelect callback')
-            // console.log('this.state[dashboardStateName]', this.state[dashboardStateName])
             this.state[dashboardStateName].updateFilters({ [dropdownFilterName]: this.state[targetId] })
             this.state[dashboardStateName].run()
         })
@@ -185,7 +187,7 @@ class Content extends React.Component {
         let tabsArray = $("#parentTabList a");
         let contentArray = $("#parentTabContent > div");
 
-        //simulate tab change, for looker action taken...
+        //simulate tab change, when looker action taken...
         if (!$(tabsArray[tabIndex]).hasClass('active')) {
             for (let i = 0; i < tabsArray.length; i++) {
                 if (i === tabIndex) {
@@ -327,46 +329,29 @@ class Content extends React.Component {
     drillClick(event) {
         console.log('drillClick')
         console.log('event', event)
-        console.log('this', this)
+        console.log('event.url', event.url)
 
-        // og
-        // if (event && event.modal) {
-        //     const dashboard_div = document.getElementById('dashboard')
-        //     if (dashboard_div && dashboard_div.children.length > 1 && dashboard_div.lastChild) {
-        //         dashboard_div.lastChild.remove()
-        //     }
-        //     LookerEmbedSDK
-        //         .createExploreWithUrl(`https://${looker_host}${event.url}`)
-        //         .appendTo('#dashboard')
-        //         .withClassName('looker-embed')
-        //         .build()
-        //         .connect()
-        //         .then()
-        //         .catch((error: Error) => {
-        //             console.error('Connection error', error)
-        //         })
-        //     return { cancel: true }
-        // } else {
-        //     return { cancel: false }
-        // }
-
-        //from slack w/ Bryan
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
 
             console.log("inside ifff");
-            // const new_url = new URL(event.url)
-            // console.log('new_url', new_url)
-            // let new_filters = JSON.parse(JSON.stringify(db_filters))
-            // new_filters[334]['Contract IDs'] = new_url.searchParams.get('Contract IDs')
-            // new_filters[334]['Months'] = new_url.searchParams.get('Months')
-            // console.log(new_url.searchParams.get('Months'))
-            // setDbFilters(new_filters)
-            // setTab(2);
 
-            this.setActiveTab(1) //working
+            const parsedUrl = new URL(event.url)
+            const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
+            const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
+            const filterValue = decodeURIComponent(parsedUrl.search.substring(parsedUrl.search.indexOf('=') + 1, parsedUrl.search.length))
+
+            console.log('stateName', stateName)
+            console.log('filterName', filterName)
+            console.log('filterValue', filterValue)
+
+            this.state[stateName].updateFilters({ [filterName]: filterValue })
+            this.state[stateName].run()
+
+            this.setActiveTab(1)
+
+            return { cancel: (isCampaignPerformanceDrill) ? true : false }
         }
-        return { cancel: (isCampaignPerformanceDrill) ? true : false }
     }
 
 

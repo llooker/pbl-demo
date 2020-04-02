@@ -13,22 +13,22 @@
                     ],
                     "filterName": "User Gender"
                 },
-                "name": "Home"
+                "name": "Advertising Overview"
             },
             {
                 "type": "dashboard",
                 "id": "3106",
-                "name": "Lookup"
+                "name": "Campaign Search"
             },
             {
                 "type": "folder",
                 "id": "1827",
-                "name": "Report"
+                "name": "Saved Reports"
             },
             {
                 "type": "explore",
-                "id": "thelook_adwords::events",
-                "name": "Explore"
+                "id": "1",
+                "name": "Create New Report"
             }
         ],
         "retail": [
