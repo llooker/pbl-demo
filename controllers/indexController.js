@@ -54,6 +54,14 @@ module.exports.fetchFolder = async (req, res, next) => {
     const looks = await sdk.ok(sdk.search_looks({ space_id: folderListAsString }))
     let resObj = { looks }
 
+
+    // const sharedFolder = await sdk.ok(sdk.folder(params.folder_id))
+    // const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id))
+    // let resObj = {
+    //     sharedFolder,
+    //     embeddedUserFolder
+    // }
+
     res.send(resObj)
 }
 

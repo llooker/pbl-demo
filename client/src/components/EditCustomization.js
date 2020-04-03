@@ -93,11 +93,11 @@ class NewCustomization extends React.Component {
     }
 
     render() {
-        console.log('EditCustomization render');
+        // console.log('EditCustomization render');
         const { indexOfCustomizationToEdit, customizations, lookerHost } = this.props
         const { validSalesforceUrl, industry } = this.state
         // let lookerHostNameToUse = lookerHost.substr(0, lookerHost.indexOf('.'));
-        console.log('lookerHost', lookerHost)
+        // console.log('lookerHost', lookerHost)
 
 
         return (

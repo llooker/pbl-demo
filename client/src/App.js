@@ -174,7 +174,7 @@ class App extends React.Component {
         },
         lookerHost
       }), () => {
-        console.log('checkSession callback 1111 this.state.lookerUser', this.state.lookerUser)
+        // console.log('checkSession callback 1111 this.state.lookerUser', this.state.lookerUser)
         this.applyCustomization(activeCustomization)
       })
     }

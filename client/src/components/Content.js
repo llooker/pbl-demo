@@ -12,7 +12,6 @@ import { parse } from 'querystring';
 
 
 
-
 // LookerEmbedSDK.init('demo.looker.com', '/auth')
 let defaultNewLookerContentObj = {
     type: {
@@ -60,6 +59,9 @@ class Content extends React.Component {
                     sampleCode: text
                 })
             })
+
+
+        LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth')
     }
 
     componentDidUpdate(prevProps) {
@@ -69,7 +71,7 @@ class Content extends React.Component {
         }
 
         // if (this.props.lookerUser != undefined && this.props.lookerUser !== prevProps.lookerUser) {
-        LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth')
+        // LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth')
         // }
     }
 
@@ -119,10 +121,10 @@ class Content extends React.Component {
                 LookerEmbedSDK.createExploreWithId(lookerContent[i].id)
                     .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
                     .withClassName('iframe')
-                    .withParams({
-                        qid: 'DA0G4JnmvuxE2N1UEs3WHR',
-                        toggle: 'dat,pik,vis'
-                    })
+                    // .withParams({
+                    //     qid: 'DA0G4JnmvuxE2N1UEs3WHR',
+                    //     toggle: 'dat,pik,vis'
+                    // })
                     .build()
                     .connect()
                     .then(this.setupExplore)
@@ -142,13 +144,20 @@ class Content extends React.Component {
                 // console.log('lookerResposnse', lookerResposnse)
 
                 let lookerResposnseData = await lookerResposnse.json();
-                console.log('lookerResposnseData', lookerResposnseData)
+                // console.log('lookerResposnseData', lookerResposnseData);
+
+                // let combinedLooks = [...lookerResposnseData.sharedFolder.looks, ...lookerResposnseData.embeddedUserFolder.looks]
+                // console.log('combinedLooks', combinedLooks)
 
                 lookerResposnseData.looks.map((item, index) => {
+                    // console.log('item', item)
                     let lookId = item.id
+                    // let classNameToUse = index > lookerResposnseData.sharedFolder.looks.length ? 'iframe embedUserLook' : 'iframe sharedFolderLook';
+                    // console.log('classNameToUse', classNameToUse)
                     LookerEmbedSDK.createLookWithId(lookId)
                         .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
                         .withClassName('iframe')
+                        .on('drillmenu:click', (e) => this.drillClick(e))
                         .build()
                         .connect()
                         .then(this.setupLook)
@@ -301,11 +310,31 @@ class Content extends React.Component {
         }
     }
 
+    drillClick(event) {
+
+        const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
+        if (isCampaignPerformanceDrill) {
+
+            const parsedUrl = new URL(event.url)
+            const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
+            const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
+            const filterValue = decodeURIComponent(parsedUrl.search.substring(parsedUrl.search.indexOf('=') + 1, parsedUrl.search.length))
+
+            this.state[stateName].updateFilters({ [filterName]: filterValue })
+            this.state[stateName].run()
+
+            this.setActiveTab(1)
+
+            return { cancel: (isCampaignPerformanceDrill) ? true : false }
+        }
+    }
+
     //async 
     filtersUpdates(event) {
         // loadingIcon(true);
-        console.log('filtersUpdates')
-        console.log('event', event)
+        // console.log('filtersUpdates')
+        // console.log('event', event)
+
         // instantiate elements, filters, and query objects
         // const dashboard_filters: any = (event && event.dashboard && event.dashboard.dashboard_filters) ? event.dashboard && event.dashboard.dashboard_filters : undefined
         // let dropdown = document.getElementById('select-dropdown')
@@ -328,34 +357,6 @@ class Content extends React.Component {
         // if (dashboard_filters && dashboard_filters[dashbord_layout_filter] && dashboard_filters[dashbord_layout_filter]) {
         //     layoutFilter(dashboard_filters[dashbord_layout_filter])
         // }
-    }
-
-    drillClick(event) {
-        console.log('drillClick')
-        console.log('event', event)
-        console.log('event.url', event.url)
-
-        const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
-        if (isCampaignPerformanceDrill) {
-
-            console.log("inside ifff");
-
-            const parsedUrl = new URL(event.url)
-            const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
-            const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
-            const filterValue = decodeURIComponent(parsedUrl.search.substring(parsedUrl.search.indexOf('=') + 1, parsedUrl.search.length))
-
-            console.log('stateName', stateName)
-            console.log('filterName', filterName)
-            console.log('filterValue', filterValue)
-
-            this.state[stateName].updateFilters({ [filterName]: filterValue })
-            this.state[stateName].run()
-
-            this.setActiveTab(1)
-
-            return { cancel: (isCampaignPerformanceDrill) ? true : false }
-        }
     }
 
 
