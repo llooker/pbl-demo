@@ -311,14 +311,30 @@ class Content extends React.Component {
     }
 
     drillClick(event) {
-
+        // console.log('drillClick')
+        // console.log('event', event)
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
 
-            const parsedUrl = new URL(event.url)
-            const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
-            const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
-            const filterValue = decodeURIComponent(parsedUrl.search.substring(parsedUrl.search.indexOf('=') + 1, parsedUrl.search.length))
+            // const parsedUrl = new URL(event.url)
+            // const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
+            // const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
+            // const filterValue = decodeURIComponent(parsedUrl.search.substring(parsedUrl.search.indexOf('=') + 1, parsedUrl.search.length))
+
+            const url = event.url;
+            let stateName = encodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
+            const filterName = encodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
+            const filterValue = encodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
+
+
+            // console.log('parsedUrl', parsedUrl)
+            // console.log('url', url)
+            // console.log('000 stateName', stateName)
+            // console.log('filterName', filterName)
+            // console.log('filterValue', filterValue)
+            if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
+            //urls changed to relative, need slugs to work across instances?
+            // console.log('111 stateName', stateName)
 
             this.state[stateName].updateFilters({ [filterName]: filterValue })
             this.state[stateName].run()
