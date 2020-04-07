@@ -8,7 +8,13 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import $ from 'jquery';
 import { parse } from 'querystring';
-// import Button from '@material-ui/core/Button';
+
+// start of material
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
 
 
 
@@ -377,8 +383,9 @@ class Content extends React.Component {
 
 
     render() {
-        // console.log('Content render')
-        // console.log('this.props.lookerUser', this.props.lookerUser)
+        console.log('Content render')
+        console.log('this.props.lookerUser', this.props.lookerUser)
+        /*
         const { lookerContent } = this.props
         const { renderSampleCode } = this.state
         const { sampleCode } = this.state
@@ -397,9 +404,6 @@ class Content extends React.Component {
             <div className="home container-fluid p-5 position-relative">
 
 
-                {/* <Button variant="contained" color="primary">
-                    Hello World
-                </Button> */}
 
 
                 <div className="row pt-5">
@@ -424,8 +428,6 @@ class Content extends React.Component {
 
                             )
                         })}
-                        {/* {activeCustomization.id !== 'defaultCustomization' ? < li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
-                            : ''} */}
                         <li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
                         <li className="nav-item ml-auto"><i className="fas fa-code cursor text-secondary" onClick={this.toggleCodeBar} /></li>
                     </ul>
@@ -548,6 +550,18 @@ class Content extends React.Component {
                 }
 
             </div >
+        )*/
+        return (
+            <div className="home container-fluid p-5 position-relative">
+                <Container>
+                    <Button variant="contained" color="primary">
+                        Hello World
+                    </Button>
+                    <Box pt={4}>
+                        <Copyright />
+                    </Box>
+                </Container>
+            </div >
         )
     }
 }
@@ -571,3 +585,16 @@ function validIdHelper(str) {
 //     // history.replaceState(null, null, url);   //Don't like hashes. Changing it back.
 //     // console.log('url', url)
 // }
+
+function Copyright() {
+    return (
+        <Typography variant="body2" color="textSecondary" align="center">
+            {'Copyright © '}
+            <Link color="inherit" href="https://material-ui.com/">
+                Your Website
+        </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
