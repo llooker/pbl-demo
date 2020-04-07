@@ -412,8 +412,8 @@ class App extends React.Component {
             lookerHost={lookerHost}
           />}
           />
-          {/* Content */}
-          <PrivateRoute path='/home' component={Dashboard}
+          {/* Dashboard */}
+          <PrivateRoute path='/home' component={Content}
             activeCustomization={activeCustomization}
             lookerContent={lookerContent}
             saveLookerContent={this.saveLookerContent}

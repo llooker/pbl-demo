@@ -71,32 +71,11 @@ class Customizations extends React.Component {
                                         <tr key={customization.id} id={customization.id} index={index} >
                                             <td >{customization.companyName}</td>
                                             <td >{Moment(customization.date).format('LLL')}</td>
-                                            {/* {
-                                                customization.companyName === activeCustomization.companyName ?
-                                                    <td><span className="badge badge-info p-3">Active</span></td>
-                                                    : customization.id === "defaultCustomization" ?
-                                                        <td>
-                                                            <button type="button" className="btn btn-secondary mr-2" data-index={index} onClick={() => this.applyCustomization(index)}>Apply</button>
-                                                        </td> :
-                                                        <td>
-                                                            <button type="button" className="btn btn-primary mr-2" data-index={index} onClick={() => this.applyCustomization(index)}>Apply</button>
-                                                            <button type="button" className="btn btn-secondary mr-2" data-index={index} onClick={() => this.editCustomization(index)}>Edit</button>
-                                                        </td>
-                                            } */}
-
-                                            {/* {
-                                                customization.companyName === activeCustomization.companyName ? */}
                                             <td>
                                                 <span className="badge badge-info p-3 mr-2">Active</span>
                                                 <button type="button" className="btn btn-primary mr-2" data-index={index} onClick={() => this.applyCustomization(index)}>Apply</button>
                                                 <button type="button" className="btn btn-secondary mr-2" data-index={index} onClick={() => this.editCustomization(index)}>Edit</button>
                                             </td>
-                                            {/* : */}
-                                            {/* <td>
-                                            </td>
-                                            <td>
-                                            </td> */}
-                                            {/* } */}
                                         </tr>
                                     )
                                 })}

@@ -126,7 +126,7 @@ class NewCustomization extends React.Component {
                                         : <small id="salesforceUrlHelp" className="form-text text-muted">This field is required</small>}
                             </div>
                             <div id="subForm">
-                                {DefaultLookerContent[lookerHost] ?
+                                {/* {DefaultLookerContent[lookerHost] ?
                                     <div className="form-group">
                                         <label htmlFor="industry">Choose industry</label>
                                         <select
@@ -151,7 +151,7 @@ class NewCustomization extends React.Component {
                                                 )
                                             })}</select>
                                     </div>
-                                    : ''}
+                                    : ''} */}
                                 <div className="form-group">
                                     <label htmlFor="companyName">Company name</label>
                                     <input id="companyName"
