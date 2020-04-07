@@ -322,9 +322,9 @@ class Content extends React.Component {
             // const filterValue = decodeURIComponent(parsedUrl.search.substring(parsedUrl.search.indexOf('=') + 1, parsedUrl.search.length))
 
             const url = event.url;
-            let stateName = encodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
-            const filterName = encodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
-            const filterValue = encodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
+            let stateName = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
+            const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
+            const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
 
 
             // console.log('parsedUrl', parsedUrl)
