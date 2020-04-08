@@ -21,6 +21,8 @@ import SideBar from './SideBar'
 import DemoComponents from '../demoComponents.json';
 import { render } from '@testing-library/react';
 
+console.log('DemoComponents', DemoComponents)
+
 
 // LookerEmbedSDK.init('demo.looker.com', '/auth')
 let defaultNewLookerContentObj = {
@@ -51,14 +53,16 @@ class Content extends React.Component {
             newLookerContent: defaultNewLookerContentObj,
             newLookerContentErrorMessage: '',
             renderSideBar: true,
+            activeDemoComponent: 'overview'
         }
     }
 
 
     componentDidMount() {
-        // console.log('LookerContent componentDidMount')
-        const { lookerContent } = this.props
-        this.setupLookerContent(lookerContent)
+        console.log('LookerContent componentDidMount')
+        // const { lookerContent } = this.props
+        // this.setupLookerContent(lookerContent)
+        this.setupLookerContent(DemoComponents)
 
         const sampleCodeFilePath = require("../sample-code/dashboard.sample.txt");
         fetch(sampleCodeFilePath)
@@ -76,9 +80,10 @@ class Content extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        // console.log('LookerContent componentDidUpdate')
+        console.log('LookerContent componentDidUpdate')
         if (this.props.lookerContent != undefined && this.props.lookerContent !== prevProps.lookerContent) {
-            this.setupLookerContent(this.props.lookerContent)
+            // this.setupLookerContent(this.props.lookerContent)
+            this.setupLookerContent(DemoComponents)
         }
 
         // if (this.props.lookerUser != undefined && this.props.lookerUser !== prevProps.lookerUser) {
@@ -89,94 +94,101 @@ class Content extends React.Component {
 
 
     async setupLookerContent(lookerContent) {
-        // console.log('setupLookerContent')
-        // console.log('lookerContent', lookerContent)
+        console.log('setupLookerContent')
+        console.log('lookerContent', lookerContent)
 
         //delete old content..?
         let embedContainerArray = document.getElementsByClassName("embedContainer");
+        console.log('embedContainerArray', embedContainerArray)
         for (let h = 0; h < embedContainerArray.length; h++) {
             let thisEmbedContainerId = embedContainerArray[h].id
             document.getElementById(thisEmbedContainerId).innerHTML = ''
         }
 
-        for (let i = 0; i < lookerContent.length; i++) {
+        for (let j = 0; j < lookerContent.length; j++) {
+            console.log('lookerContent[j]', lookerContent[j])
+            for (let i = 0; i < lookerContent[j].lookerContent.length; i++) {
 
-            LookerEmbedSDK.createDashboardWithId
-            if (lookerContent[i].type === 'dashboard') {
-                LookerEmbedSDK.createDashboardWithId(lookerContent[i].id)
-                    .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
-                    .withClassName('iframe')
-                    .withNext()
-                    .withFilters() //new
-                    .withTheme('Looker') //new
-                    .on('dashboard:run:start', (e) => {
-                        // console.log('e', e)
-                    })
-                    .on('drillmenu:click', (e) => this.drillClick(e))
-                    .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
-                    // .on('page:properties:changed', (e) => {
-                    //     this.changeHeight(e, `embedContainer${lookerContent[i].id}`)
-                    // })
-                    .build()
-                    .connect()
-                    .then((dashboard) => {
-                        this.setState({
-                            [lookerContent[i].id]: dashboard //5277
-                        })
-                        // this.changeHeight(dashboard, `embedContainer${lookerContent[i].id}`)
-                    })
-                    .catch((error) => {
-                        console.error('Connection error', error)
-                    })
-            } else if (lookerContent[i].type === 'explore') {
-                LookerEmbedSDK.createExploreWithId(lookerContent[i].id)
-                    .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
-                    .withClassName('iframe')
-                    // .withParams({
-                    //     qid: 'DA0G4JnmvuxE2N1UEs3WHR',
-                    //     toggle: 'dat,pik,vis'
-                    // })
-                    .build()
-                    .connect()
-                    .then(this.setupExplore)
-                    .catch((error) => {
-                        console.error('Connection error', error)
-                    })
+                console.log('lookerContent[j].lookerContent[i]', lookerContent[j].lookerContent[i])
 
-            } else if (lookerContent[i].type === 'folder') {
-                let lookerResposnse = await fetch('/fetchfolder/' + lookerContent[i].id, {
-                    method: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                })
-
-                // console.log('lookerResposnse', lookerResposnse)
-
-                let lookerResposnseData = await lookerResposnse.json();
-                // console.log('lookerResposnseData', lookerResposnseData);
-
-                // let combinedLooks = [...lookerResposnseData.sharedFolder.looks, ...lookerResposnseData.embeddedUserFolder.looks]
-                // console.log('combinedLooks', combinedLooks)
-
-                lookerResposnseData.looks.map((item, index) => {
-                    // console.log('item', item)
-                    let lookId = item.id
-                    // let classNameToUse = index > lookerResposnseData.sharedFolder.looks.length ? 'iframe embedUserLook' : 'iframe sharedFolderLook';
-                    // console.log('classNameToUse', classNameToUse)
-                    LookerEmbedSDK.createLookWithId(lookId)
-                        .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
+                LookerEmbedSDK.createDashboardWithId
+                if (lookerContent[j].lookerContent[i].type === 'dashboard') {
+                    LookerEmbedSDK.createDashboardWithId(lookerContent[j].lookerContent[i].id)
+                        .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
+                        .withNext()
+                        .withFilters() //new
+                        .withTheme('Looker') //new
+                        .on('dashboard:run:start', (e) => {
+                            // console.log('e', e)
+                        })
                         .on('drillmenu:click', (e) => this.drillClick(e))
+                        .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
+                        // .on('page:properties:changed', (e) => {
+                        //     this.changeHeight(e, `embedContainer${lookerContent[i].id}`)
+                        // })
                         .build()
                         .connect()
-                        .then(this.setupLook)
+                        .then((dashboard) => {
+                            this.setState({
+                                [lookerContent[j].lookerContent[i].id]: dashboard //5277
+                            })
+                            // this.changeHeight(dashboard, `embedContainer${lookerContent[i].id}`)
+                        })
                         .catch((error) => {
                             console.error('Connection error', error)
                         })
-                })
+                } else if (lookerContent[j].lookerContent[i].type === 'explore') {
+                    LookerEmbedSDK.createExploreWithId(lookerContent[j].lookerContent[i].id)
+                        .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
+                        .withClassName('iframe')
+                        // .withParams({
+                        //     qid: 'DA0G4JnmvuxE2N1UEs3WHR',
+                        //     toggle: 'dat,pik,vis'
+                        // })
+                        .build()
+                        .connect()
+                        .then(this.setupExplore)
+                        .catch((error) => {
+                            console.error('Connection error', error)
+                        })
+
+                } else if (lookerContent[j].lookerContent[i].type === 'folder') {
+                    let lookerResposnse = await fetch('/fetchfolder/' + lookerContent[j].lookerContent[i].id, {
+                        method: 'GET',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+
+                    // console.log('lookerResposnse', lookerResposnse)
+
+                    let lookerResposnseData = await lookerResposnse.json();
+                    // console.log('lookerResposnseData', lookerResposnseData);
+
+                    // let combinedLooks = [...lookerResposnseData.sharedFolder.looks, ...lookerResposnseData.embeddedUserFolder.looks]
+                    // console.log('combinedLooks', combinedLooks)
+
+                    lookerResposnseData.looks.map((item, index) => {
+                        // console.log('item', item)
+                        let lookId = item.id
+                        // let classNameToUse = index > lookerResposnseData.sharedFolder.looks.length ? 'iframe embedUserLook' : 'iframe sharedFolderLook';
+                        // console.log('classNameToUse', classNameToUse)
+                        LookerEmbedSDK.createLookWithId(lookId)
+                            .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
+                            .withClassName('iframe')
+                            .on('drillmenu:click', (e) => this.drillClick(e))
+                            .build()
+                            .connect()
+                            .then(this.setupLook)
+                            .catch((error) => {
+                                console.error('Connection error', error)
+                            })
+                    })
+                }
             }
+
         }
     }
 
@@ -203,8 +215,8 @@ class Content extends React.Component {
     }
     // think about this
     setActiveTab = (tabIndex) => {
-        // console.log('setActiveTab')
-        // console.log('tabIndex', tabIndex)
+        console.log('setActiveTab')
+        console.log('tabIndex', tabIndex)
 
         if (this.state.renderSampleCode) this.toggleCodeBar();
 
@@ -271,16 +283,19 @@ class Content extends React.Component {
 
 
     validateLookerContent = async (newLookerContent) => {
-        // console.log('validateLookerContent')
-        // console.log('newLookerContent', newLookerContent)
+        console.log('validateLookerContent')
+        console.log('newLookerContent', newLookerContent)
+        console.log('this.state.activeDemoComponent', this.state.activeDemoComponent)
 
         let objToUse = {
             type: newLookerContent.type.value,
             id: newLookerContent.id.value,
             name: newLookerContent.name.value
         }
+        console.log('objToUse', objToUse)
 
         if (objToUse.type && objToUse.id && objToUse.name) {
+            console.log('inside iffff')
             let lookerResposnse = await fetch('/validatelookercontent/' + objToUse.id + '/' + objToUse.type, {
                 method: 'GET',
                 headers: {
@@ -292,7 +307,7 @@ class Content extends React.Component {
             let lookerResposnseData = await lookerResposnse.json();
 
             if (lookerResposnseData.content_metadata_id) {
-                this.props.saveLookerContent(objToUse)
+                this.props.saveLookerContent(objToUse) //here we make call to save...
                 this.toggleModal()
             } else {
                 this.setState(prevState => ({
@@ -400,6 +415,7 @@ class Content extends React.Component {
     render() {
         console.log('Content render')
         console.log('this.props', this.props)
+        console.log('this.state', this.state)
 
         const { lookerContent } = this.props
         const { renderSampleCode } = this.state
@@ -409,193 +425,85 @@ class Content extends React.Component {
         const { activeCustomization } = this.props
         const { newLookerContentErrorMessage } = this.state
         let { lookerUser } = this.props
-        let { location } = window;
-        // console.log('location', location)
+
         const { renderSideBar } = this.state
 
-        let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
+        // let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
         // console.log('lookerUserCanExplore', lookerUserCanExplore)
         return (
 
             <div className="home container-fluid p-5 position-relative">
 
                 <div className="row pt-5">
+                    <div className="col-sm-2">
 
 
-                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        {
-                            DemoComponents.map((item, index) => {
-                                return (
-                                    <a className={index == 0 ? "nav-link active" : "nav-link "}
-                                        id={validIdHelper(`v-pills-${item.type}-tab`)}
-                                        data-toggle="pill"
-                                        href={validIdHelper(`#v-pills-${item.type}`)}
-                                        role="tab"
-                                        aria-controls={validIdHelper(`#v-pills-${item.type}`)}
-                                        aria-selected="true">
-                                        {item.type.charAt(0).toUpperCase() + item.type.substring(1)}
-                                    </a>
-                                )
-                            })
-                        }
+                        <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            {
+                                DemoComponents.map((item, index) => {
+                                    return (
+                                        <a className={index == 0 ? "nav-link active" : "nav-link "}
+                                            id={validIdHelper(`v-pills-${item.type}-tab`)}
+                                            data-toggle="pill"
+                                            href={validIdHelper(`#v-pills-${item.type}`)}
+                                            role="tab"
+                                            aria-controls={validIdHelper(`#v-pills-${item.type}`)}
+                                            aria-selected="true"
+                                            onClick={() => {
+                                                this.setState({
+                                                    activeDemoComponent: validIdHelper(item.type)
+                                                }, () => {
+                                                    console.log('onClick callback activeDemoComponent', this.state.activeDemoComponent)
+                                                })
+                                            }}>
+                                            {item.type.charAt(0).toUpperCase() + item.type.substring(1)}
+                                        </a>
+                                    )
+                                })
+                            }
+                        </div>
                     </div>
 
-                    <div class="tab-content" id="v-pills-tabContent">
-                        {
-                            DemoComponents.map((item, index) => {
-                                return (
-                                    <div className={index == 0 ? "tab-pane fade show active" : "tab-pane fade"}
-                                        id={validIdHelper(`v-pills-${item.type}`)}
-                                        role="tabpanel"
-                                        aria-labelledby={validIdHelper(`v-pills-${item.type}-tab`)}>
-                                        {/* {item.type} */}
-                                        {/* this is going to need to become a component */}
-                                        <div className="row">
-                                            <ul id="parentTabList" className="nav nav-tabs w-100" role="tablist">
-                                                {lookerContent.map((item, index) => {
-                                                    // console.log('item', item)
-                                                    return (
-                                                        <li className="nav-item">
-                                                            <a key={validIdHelper(item.id)}
-                                                                className={index === 0 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
-                                                                id={validIdHelper(`${item.id}-tab`)}
-                                                                data-toggle="tab"
-                                                                href={validIdHelper(`#${item.id}`)}
-                                                                role="tab"
-                                                                aria-controls={validIdHelper(`${item.id}`)}
-                                                                aria-selected="true"
-                                                                contenttype={item.type}
-                                                                onClick={() => this.setActiveTab(index)}>
-                                                                {item.name}
-                                                            </a>
-                                                        </li>
+                    <div className="col-sm-10">
+                        <div className="tab-content" id="v-pills-tabContent">
+                            {
+                                DemoComponents.map((item, index) => {
+                                    // hack for dynamic component name
+                                    const Map = {
+                                        "overview": Overview,
+                                        "report selector": ReportSelector,
+                                    }
+                                    const DemoComponent = Map[item.type];
+                                    return (
+                                        <div className={index == 0 ? "tab-pane fade show active" : "tab-pane fade"}
+                                            id={validIdHelper(`v-pills-${item.type}`)}
+                                            role="tabpanel"
+                                            aria-labelledby={validIdHelper(`v-pills-${item.type}-tab`)}>
+                                            {/* this is going to need to become a component */}
+                                            <DemoComponent
+                                                lookerContent={item.lookerContent}
+                                                setActiveTab={this.setActiveTab}
+                                                renderSampleCode={renderSampleCode}
+                                                sampleCode={sampleCode}
+                                                lookerUser={lookerUser}
+                                                toggleModal={this.toggleModal}
+                                                toggleCodeBar={this.toggleCodeBar} />
 
-                                                    )
-                                                })}
-                                                <li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
-                                                <li className="nav-item ml-auto"><i className="fas fa-code cursor text-secondary" onClick={this.toggleCodeBar} /></li>
-                                            </ul>
+                                            {
+                                                renderModal ?
+                                                    <Modal title="Select Looker Content to Add"
+                                                        toggleModal={this.toggleModal}
+                                                        objForModal={newLookerContent}
+                                                        handleModalFormChange={this.handleModalFormChange}
+                                                        validateAction={this.validateLookerContent}
+                                                        newLookerContentErrorMessage={newLookerContentErrorMessage} />
+                                                    : ''
+                                            }
+
                                         </div>
-
-                                        <div className="row">
-
-                                            <div className="tab-content w-100" id="parentTabContent">
-
-                                                {lookerContent.map((item, index) => {
-                                                    return (
-                                                        <div key={validIdHelper(item.id)} className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
-                                                            {item.customDropdown ?
-                                                                <div className="row pt-3">
-
-                                                                    <div className="col-sm-3">
-                                                                        <label htmlFor="modalForm">{item.customDropdown.title}</label>
-                                                                        <select
-                                                                            id={`dropdownSelect${item.id}`}
-                                                                            className="form-control"
-                                                                            onChange={(e) => this.dropdownSelect(e)}
-                                                                            type="select-one"
-                                                                            dropdownfiltername={item.customDropdown.filterName}
-                                                                            dashboardstatename={item.id}
-                                                                        >
-                                                                            {item.customDropdown.options.map(item => {
-                                                                                return <option
-                                                                                    key={item == null ? 'Any' : item}
-                                                                                    value={item == null ? 'Any' : item}
-                                                                                > {item == null ? 'Any' : item}</option>
-                                                                            })}
-                                                                        </select>
-                                                                    </div>
-                                                                </div> :
-                                                                ''}
-                                                            <div className="row pt-3">
-                                                                <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer">
-
-                                                                </div>
-
-                                                                <ReactCSSTransitionGroup
-                                                                    transitionName="slide"
-                                                                    transitionAppear={true}
-                                                                    transitionAppearTimeout={500}
-                                                                    transitionEnterTimeout={500}
-                                                                    transitionLeaveTimeout={500}>
-                                                                    {renderSampleCode ?
-                                                                        <div className="col-sm-8 position-absolute right-abs top-abs p-3 bg-light rounded">
-
-
-                                                                            <ul className="nav nav-tabs" id={`nestedTab${index}`} role="tablist">
-
-                                                                                <li className="nav-item">
-                                                                                    <a className="nav-link active show"
-                                                                                        id={`sample-code-tab-${index}`}
-                                                                                        data-toggle="tab"
-                                                                                        href={`#sample-code-${index}`}
-                                                                                        role="tab"
-                                                                                        aria-controls={`sample-code-${index}`}
-                                                                                        aria-selected="true"
-                                                                                    >Sample Code</a>
-                                                                                </li>
-                                                                                <li className="nav-item">
-                                                                                    <a className="nav-link"
-                                                                                        id={`user-properties-tab-${index}`}
-                                                                                        data-toggle="tab"
-                                                                                        href={`#user-properties-${index}`}
-                                                                                        role="tab"
-                                                                                        aria-controls={`user-properties-${index}`}
-                                                                                        aria-selected="true"
-                                                                                    >User Properties</a>
-                                                                                </li>
-
-                                                                                <button
-                                                                                    type="button"
-                                                                                    className="close ml-auto mr-2"
-                                                                                    data-dismiss="modal"
-                                                                                    aria-label="Close"
-                                                                                    onClick={this.toggleCodeBar}
-                                                                                >
-                                                                                    <span aria-hidden="true">&times;</span>
-                                                                                </button>
-                                                                            </ul>
-                                                                            <div className="tab-content" id={`nestedContent${index}`}>
-                                                                                <div className="tab-pane fade show active" id={`sample-code-${index}`} role="tabpanel" aria-labelledby={`sample-code-tab-${index}`}>
-
-                                                                                    <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
-                                                                                        {sampleCode}
-                                                                                    </SyntaxHighlighter>
-                                                                                </div>
-
-                                                                                <div className="tab-pane fade" id={`user-properties-${index}`} role="tabpanel" aria-labelledby={`user-properties-tab-${index}`}>
-
-                                                                                    <SyntaxHighlighter language="json" style={docco} showLineNumbers={true} >
-                                                                                        {JSON.stringify(lookerUser, true, 4)}
-                                                                                    </SyntaxHighlighter>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        : ''}
-                                                                </ReactCSSTransitionGroup>
-                                                            </div>
-                                                        </div>
-
-                                                    )
-                                                })}
-                                            </div>
-                                        </div>
-
-
-                                        {
-                                            renderModal ?
-                                                <Modal title="Select Looker Content to Add"
-                                                    toggleModal={this.toggleModal}
-                                                    objForModal={newLookerContent}
-                                                    handleModalFormChange={this.handleModalFormChange}
-                                                    validateAction={this.validateLookerContent}
-                                                    newLookerContentErrorMessage={newLookerContentErrorMessage} />
-                                                : ''
-                                        }
-
-                                    </div>
-                                )
-                            })}
+                                    )
+                                })}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -613,25 +521,164 @@ function validIdHelper(str) {
     return str.replace(/[^a-zA-Z0-9-.#]/g, "")
 }
 
-// function jump(h) {
-//     console.log('jump')
-//     console.log('h', h)
-//     var url = location.href;               //Save down the URL without hash.
-//     console.log('url', url)
-//     location.href = "#" + h;                 //Go to the target element.
-//     // history.replaceState(null, null, url);   //Don't like hashes. Changing it back.
-//     // console.log('url', url)
-// }
-
-function Copyright() {
+function Overview(props) {
+    // console.log('Overview')
+    // console.log('props', props)
+    // console.log('props.lookerContent', props.lookerContent)
+    const { lookerContent, setActiveTab, renderSampleCode, sampleCode, lookerUser, toggleModal, toggleCodeBar } = props
     return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-        </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
+        <>
+            <div className="row">
+                <ul id="parentTabList" className="nav nav-tabs w-100" role="tablist">
+                    {lookerContent.map((item, index) => {
+                        // console.log('item', item)
+                        return (
+                            <li className="nav-item">
+                                <a key={validIdHelper(item.id)}
+                                    // className={index === 0 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
+                                    className={index === 0 ? "nav-link active show" : "nav-link"}
+                                    id={validIdHelper(`${item.id}-tab`)}
+                                    data-toggle="tab"
+                                    href={validIdHelper(`#${item.id}`)}
+                                    role="tab"
+                                    aria-controls={validIdHelper(`${item.id}`)}
+                                    aria-selected="true"
+                                    contenttype={item.type}
+                                    onClick={() => setActiveTab(index)}>
+                                    {item.name}
+                                </a>
+                            </li>
+
+                        )
+                    })}
+                    <li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={toggleModal} /></li>
+                    <li className="nav-item ml-auto"><i className="fas fa-code cursor text-secondary" onClick={toggleCodeBar} /></li>
+                </ul>
+            </div>
+
+            <div className="row">
+
+                <div className="tab-content w-100" id="parentTabContent">
+
+                    {lookerContent.map((item, index) => {
+                        return (
+                            <div key={validIdHelper(item.id)} className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
+                                {item.customDropdown ?
+                                    <div className="row pt-3">
+
+                                        <div className="col-sm-3">
+                                            <label htmlFor="modalForm">{item.customDropdown.title}</label>
+                                            <select
+                                                id={`dropdownSelect${item.id}`}
+                                                className="form-control"
+                                                onChange={(e) => this.dropdownSelect(e)}
+                                                type="select-one"
+                                                dropdownfiltername={item.customDropdown.filterName}
+                                                dashboardstatename={item.id}
+                                            >
+                                                {item.customDropdown.options.map(item => {
+                                                    return <option
+                                                        key={item == null ? 'Any' : item}
+                                                        value={item == null ? 'Any' : item}
+                                                    > {item == null ? 'Any' : item}</option>
+                                                })}
+                                            </select>
+                                        </div>
+                                    </div> :
+                                    ''}
+                                <div className="row pt-3">
+                                    <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer">
+
+                                    </div>
+
+                                    <ReactCSSTransitionGroup
+                                        transitionName="slide"
+                                        transitionAppear={true}
+                                        transitionAppearTimeout={500}
+                                        transitionEnterTimeout={500}
+                                        transitionLeaveTimeout={500}>
+                                        {renderSampleCode ?
+                                            <div className="col-sm-8 position-absolute right-abs top-abs p-3 bg-light rounded">
+
+
+                                                <ul className="nav nav-tabs" id={`nestedTab${index}`} role="tablist">
+
+                                                    <li className="nav-item">
+                                                        <a className="nav-link active show"
+                                                            id={`sample-code-tab-${index}`}
+                                                            data-toggle="tab"
+                                                            href={`#sample-code-${index}`}
+                                                            role="tab"
+                                                            aria-controls={`sample-code-${index}`}
+                                                            aria-selected="true"
+                                                        >Sample Code</a>
+                                                    </li>
+                                                    <li className="nav-item">
+                                                        <a className="nav-link"
+                                                            id={`user-properties-tab-${index}`}
+                                                            data-toggle="tab"
+                                                            href={`#user-properties-${index}`}
+                                                            role="tab"
+                                                            aria-controls={`user-properties-${index}`}
+                                                            aria-selected="true"
+                                                        >User Properties</a>
+                                                    </li>
+
+                                                    <button
+                                                        type="button"
+                                                        className="close ml-auto mr-2"
+                                                        data-dismiss="modal"
+                                                        aria-label="Close"
+                                                        onClick={toggleCodeBar}
+                                                    >
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </ul>
+                                                <div className="tab-content" id={`nestedContent${index}`}>
+                                                    <div className="tab-pane fade show active" id={`sample-code-${index}`} role="tabpanel" aria-labelledby={`sample-code-tab-${index}`}>
+
+                                                        <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
+                                                            {sampleCode}
+                                                        </SyntaxHighlighter>
+                                                    </div>
+
+                                                    <div className="tab-pane fade" id={`user-properties-${index}`} role="tabpanel" aria-labelledby={`user-properties-tab-${index}`}>
+
+                                                        <SyntaxHighlighter language="json" style={docco} showLineNumbers={true} >
+                                                            {JSON.stringify(lookerUser, true, 4)}
+                                                        </SyntaxHighlighter>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            : ''}
+                                    </ReactCSSTransitionGroup>
+                                </div>
+                            </div>
+
+                        )
+                    })}
+                </div>
+            </div>
+        </>
+    )
 }
+function ReportSelector(props) {
+    console.log('ReportSelector')
+    console.log('props.lookerContent', props.lookerContent)
+    return (
+        <div>
+            <h1>ReportSelector</h1>
+            {/* <p>{props.lookerContent[0].id}</p> */}
+        </div>
+    )
+}
+// function Any(props) {
+//     console.log('Any')
+//     console.log('props.lookerContent', props.lookerContent)
+//     return (
+//         <div>
+//             <h1>Any</h1>
+//             {/* <p>{props.lookerContent[0].id}</p> */}
+//         </div>
+//     )
+// }

@@ -1,11 +1,46 @@
 [
     {
-        "type": "overview"
+        "type": "overview",
+        "lookerContent": [
+            {
+                "type": "dashboard",
+                "id": "5277",
+                "customDropdown": {
+                    "title": "Select User Gender",
+                    "options": [
+                        "Female",
+                        "Male",
+                        "Any"
+                    ],
+                    "filterName": "User Gender"
+                },
+                "name": "Advertising Overview"
+            },
+            {
+                "type": "dashboard",
+                "id": "3106",
+                "name": "Campaign Search"
+            },
+            {
+                "type": "folder",
+                "id": "1827",
+                "name": "Saved Reports"
+            },
+            {
+                "type": "explore",
+                "id": "thelook_adwords::events",
+                "name": "Create New Report"
+            }
+        ]
     },
     {
-        "type": "report selector"
-    },
-    {
-        "type": "any"
+        "type": "report selector",
+        "lookerContent": [
+            {
+                "type": "folder",
+                "id": "1149",
+                "name": "Admin"
+            }
+        ]
     }
 ]

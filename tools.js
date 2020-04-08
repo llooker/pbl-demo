@@ -7,5 +7,13 @@ module.exports = {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
+    },
+
+
+    validIdHelper: (str) => {
+        // console.log('validIdHelper')
+        // console.log('str', str)
+        //need to replace special characters that may be associated with id...
+        return str.replace(/[^a-zA-Z0-9-.#]/g, "")
     }
 }

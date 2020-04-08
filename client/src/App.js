@@ -338,10 +338,10 @@ class App extends React.Component {
   }
 
   saveLookerContent = async (newLookerContent) => {
-    // console.log('saveLookerContent')
-    // console.log('newLookerContent', newLookerContent)
+    console.log('saveLookerContent')
+    console.log('newLookerContent', newLookerContent)
 
-    let customizationResponse = await fetch('/savelookercontent', {
+    /*let customizationResponse = await fetch('/savelookercontent', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -353,7 +353,7 @@ class App extends React.Component {
 
     this.setState(prevState => ({
       lookerContent: [...prevState.lookerContent, newLookerContent] //should I be using DB as source here?
-    }))
+    }))*/
 
   }
 
