@@ -47,20 +47,23 @@ module.exports.fetchFolder = async (req, res, next) => {
     // console.log('indexController fetchFolder');
 
     const { params } = req
+
     const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id))
     const embedUser = await sdk.ok(sdk.user(userCred.id));
-    const folderListAsString = `${params.folder_id},${embedUser.personal_folder_id}`;
 
-    const looks = await sdk.ok(sdk.search_looks({ space_id: folderListAsString }))
-    let resObj = { looks }
+    // const folderListAsString = `${params.folder_id},${embedUser.personal_folder_id}`;
+    // console.log('folderListAsString', folderListAsString)
+    // const looks = await sdk.ok(sdk.search_looks({ space_id: folderListAsString }))
+    // console.log('looks', looks)
+    // let resObj = { looks }
 
 
-    // const sharedFolder = await sdk.ok(sdk.folder(params.folder_id))
-    // const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id))
-    // let resObj = {
-    //     sharedFolder,
-    //     embeddedUserFolder
-    // }
+    const sharedFolder = await sdk.ok(sdk.folder(params.folder_id))
+    const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id))
+    let resObj = {
+        sharedFolder,
+        embeddedUserFolder
+    }
 
     res.send(resObj)
 }

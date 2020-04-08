@@ -21,7 +21,7 @@ import SideBar from './SideBar'
 import DemoComponents from '../demoComponents.json';
 import { render } from '@testing-library/react';
 
-console.log('DemoComponents', DemoComponents)
+// console.log('DemoComponents', DemoComponents)
 
 
 // LookerEmbedSDK.init('demo.looker.com', '/auth')
@@ -62,7 +62,7 @@ class Content extends React.Component {
         console.log('LookerContent componentDidMount')
         // const { lookerContent } = this.props
         // this.setupLookerContent(lookerContent)
-        this.setupLookerContent(DemoComponents)
+        // this.setupLookerContent(DemoComponents)
 
         const sampleCodeFilePath = require("../sample-code/dashboard.sample.txt");
         fetch(sampleCodeFilePath)
@@ -83,6 +83,7 @@ class Content extends React.Component {
         console.log('LookerContent componentDidUpdate')
         if (this.props.lookerContent != undefined && this.props.lookerContent !== prevProps.lookerContent) {
             // this.setupLookerContent(this.props.lookerContent)
+            console.log('inside this ifff')
             this.setupLookerContent(DemoComponents)
         }
 
@@ -94,22 +95,24 @@ class Content extends React.Component {
 
 
     async setupLookerContent(lookerContent) {
-        console.log('setupLookerContent')
-        console.log('lookerContent', lookerContent)
+        // console.log('setupLookerContent')
+        // console.log('lookerContent', lookerContent)
 
         //delete old content..?
         let embedContainerArray = document.getElementsByClassName("embedContainer");
-        console.log('embedContainerArray', embedContainerArray)
+        // console.log('embedContainerArray', embedContainerArray)
         for (let h = 0; h < embedContainerArray.length; h++) {
             let thisEmbedContainerId = embedContainerArray[h].id
             document.getElementById(thisEmbedContainerId).innerHTML = ''
         }
 
         for (let j = 0; j < lookerContent.length; j++) {
-            console.log('lookerContent[j]', lookerContent[j])
+
+            // console.log('lookerContent[j]', lookerContent[j])
+
             for (let i = 0; i < lookerContent[j].lookerContent.length; i++) {
 
-                console.log('lookerContent[j].lookerContent[i]', lookerContent[j].lookerContent[i])
+                // console.log('lookerContent[j].lookerContent[i]', lookerContent[j].lookerContent[i])
 
                 LookerEmbedSDK.createDashboardWithId
                 if (lookerContent[j].lookerContent[i].type === 'dashboard') {
@@ -154,7 +157,7 @@ class Content extends React.Component {
                         })
 
                 } else if (lookerContent[j].lookerContent[i].type === 'folder') {
-                    let lookerResposnse = await fetch('/fetchfolder/' + lookerContent[j].lookerContent[i].id, {
+                    let lookerResposnse = await fetch('/fetchfolder/' + lookerContent[j].lookerContent[i].id, { //+ lookerContent[j].type + '/'
                         method: 'GET',
                         headers: {
                             Accept: 'application/json',
@@ -164,28 +167,65 @@ class Content extends React.Component {
 
                     // console.log('lookerResposnse', lookerResposnse)
 
-                    let lookerResposnseData = await lookerResposnse.json();
-                    // console.log('lookerResposnseData', lookerResposnseData);
+                    let lookerResponseData = await lookerResposnse.json();
+                    // console.log('lookerResponseData', lookerResponseData);
 
-                    // let combinedLooks = [...lookerResposnseData.sharedFolder.looks, ...lookerResposnseData.embeddedUserFolder.looks]
-                    // console.log('combinedLooks', combinedLooks)
+                    let looksToUse = lookerContent[j].type === 'overview' ?
+                        [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks] :
+                        [...lookerResponseData.sharedFolder.looks]
+                    // console.log('looksToUse', looksToUse)
+                    let dashboardsToUse = lookerContent[j].type === 'overview' ?
+                        [] :
+                        [...lookerResponseData.sharedFolder.dashboards]
+                    // console.log('dashboardsToUse', dashboardsToUse)
 
-                    lookerResposnseData.looks.map((item, index) => {
-                        // console.log('item', item)
-                        let lookId = item.id
-                        // let classNameToUse = index > lookerResposnseData.sharedFolder.looks.length ? 'iframe embedUserLook' : 'iframe sharedFolderLook';
-                        // console.log('classNameToUse', classNameToUse)
-                        LookerEmbedSDK.createLookWithId(lookId)
-                            .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
-                            .withClassName('iframe')
-                            .on('drillmenu:click', (e) => this.drillClick(e))
-                            .build()
-                            .connect()
-                            .then(this.setupLook)
-                            .catch((error) => {
-                                console.error('Connection error', error)
-                            })
-                    })
+                    let objToUse = {
+                        looks: looksToUse,
+                        dashboards: dashboardsToUse
+                    }
+
+                    // console.log('objToUse', objToUse)
+
+                    {
+                        objToUse.looks.length ?
+                            objToUse.looks.map((item, index) => {
+                                // console.log('item', item)
+                                let lookId = item.id
+                                LookerEmbedSDK.createLookWithId(lookId)
+                                    .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
+                                    .withClassName('iframe')
+                                    .withClassName('look')
+                                    .on('drillmenu:click', (e) => this.drillClick(e))
+                                    .build()
+                                    .connect()
+                                    .then(this.setupLook)
+                                    .catch((error) => {
+                                        console.error('Connection error', error)
+                                    })
+                            }) : ''
+                    }
+
+
+                    {
+                        objToUse.dashboards.length ? objToUse.dashboards.map((item, index) => {
+                            // console.log('item', item)
+                            let dashboardId = item.id
+                            LookerEmbedSDK.createDashboardWithId(dashboardId)
+                                .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
+                                .withClassName('iframe')
+                                .withClassName('dashboard')
+                                .on('drillmenu:click', (e) => this.drillClick(e))
+                                .build()
+                                .connect()
+                                .then(this.setupLook)
+                                .catch((error) => {
+                                    console.error('Connection error', error)
+                                })
+                        }) : ''
+                    }
+
+
+
                 }
             }
 
@@ -215,8 +255,8 @@ class Content extends React.Component {
     }
     // think about this
     setActiveTab = (tabIndex) => {
-        console.log('setActiveTab')
-        console.log('tabIndex', tabIndex)
+        // console.log('setActiveTab')
+        // console.log('tabIndex', tabIndex)
 
         if (this.state.renderSampleCode) this.toggleCodeBar();
 
@@ -283,19 +323,19 @@ class Content extends React.Component {
 
 
     validateLookerContent = async (newLookerContent) => {
-        console.log('validateLookerContent')
-        console.log('newLookerContent', newLookerContent)
-        console.log('this.state.activeDemoComponent', this.state.activeDemoComponent)
+        // console.log('validateLookerContent')
+        // console.log('newLookerContent', newLookerContent)
+        // console.log('this.state.activeDemoComponent', this.state.activeDemoComponent)
 
         let objToUse = {
             type: newLookerContent.type.value,
             id: newLookerContent.id.value,
             name: newLookerContent.name.value
         }
-        console.log('objToUse', objToUse)
+        // console.log('objToUse', objToUse)
 
         if (objToUse.type && objToUse.id && objToUse.name) {
-            console.log('inside iffff')
+            // console.log('inside iffff')
             let lookerResposnse = await fetch('/validatelookercontent/' + objToUse.id + '/' + objToUse.type, {
                 method: 'GET',
                 headers: {
@@ -327,7 +367,7 @@ class Content extends React.Component {
     // also not well suited for tabular structure :/
     // leave for now but comment out invocation
     changeHeight(event, containerId) {
-        console.log('changeHeight')
+        // console.log('changeHeight')
         // console.log('event', event)
         // console.log('containerId', containerId)
         const div = document.getElementById(containerId)
@@ -403,19 +443,18 @@ class Content extends React.Component {
 
 
     toggleSideBar = () => {
-        console.log('toggleSideBar')
+        // console.log('toggleSideBar')
 
         this.setState(prevState => ({
             renderSideBar: prevState.renderSideBar ? false : true
         }), () => {
-            console.log('toggleSideBar callback', this.state.renderSideBar)
+            // console.log('toggleSideBar callback', this.state.renderSideBar)
         })
     }
 
     render() {
         console.log('Content render')
         console.log('this.props', this.props)
-        console.log('this.state', this.state)
 
         const { lookerContent } = this.props
         const { renderSampleCode } = this.state
@@ -479,7 +518,7 @@ class Content extends React.Component {
                                             id={validIdHelper(`v-pills-${item.type}`)}
                                             role="tabpanel"
                                             aria-labelledby={validIdHelper(`v-pills-${item.type}-tab`)}>
-                                            {/* this is going to need to become a component */}
+
                                             <DemoComponent
                                                 lookerContent={item.lookerContent}
                                                 setActiveTab={this.setActiveTab}
@@ -663,12 +702,14 @@ function Overview(props) {
     )
 }
 function ReportSelector(props) {
-    console.log('ReportSelector')
-    console.log('props.lookerContent', props.lookerContent)
+    // console.log('ReportSelector')
+    const { lookerContent } = props
+    // console.log('lookerContent', lookerContent)
     return (
         <div>
-            <h1>ReportSelector</h1>
-            {/* <p>{props.lookerContent[0].id}</p> */}
+            {/* <h1>ReportSelector</h1> */}
+            <div id={validIdHelper(`embedContainer${lookerContent[0].id}`)} className="col-sm-12 embedContainer">
+            </div>
         </div>
     )
 }
