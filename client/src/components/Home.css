@@ -37,11 +37,18 @@ ul li {
   transition: 0.5s;
 }
 
-.right-abs{
-    right: -0px;
+.abs {
+  position: absolute;
 }
-.top-abs{
-    top: 80px;
+
+.right-abs{
+    right: 0px;
+}
+.top-abs-0{
+  top: 0px
+}
+.top-abs--20{
+    top: -20px;
 }
 
 #logoUrlNav{
