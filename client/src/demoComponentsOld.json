@@ -1,14 +1,12 @@
-{
-    "marketing": {
-        "label": "Marketing",
+[
+    {
+        "industry": "marketing",
         "splashPage": {
-            "title": "Your next great marketing application"
+            "title": "You're next great marketing application"
         },
-        "demoComponents": {
-            "customFilter": {
-                "label": "Custom Filters",
-                "description": "See how you can easily add custom dropdowns that interact with a Looker dashboard",
-                "iconClass": "fa-filter",
+        "demoComponents": [
+            {
+                "type": "custom filters",
                 "lookerContent": [
                     {
                         "type": "dashboard",
@@ -27,10 +25,8 @@
                     }
                 ]
             },
-            "dashboardOverviewDetail": {
-                "label": "Dashboard Overview Detail",
-                "description": "See how you can easily add modify link actions to have embedded dashboards interact with one another",
-                "iconClass": "fa-link",
+            {
+                "type": "dashboard overview detail",
                 "lookerContent": [
                     {
                         "type": "dashboard",
@@ -44,10 +40,8 @@
                     }
                 ]
             },
-            "reportBuilder": {
-                "label": "Report Builder",
-                "description": "See how you can easily embed reports and give users the power to create new ones",
-                "iconClass": "fa-hammer",
+            {
+                "type": "report builder",
                 "lookerContent": [
                     {
                         "type": "folder",
@@ -61,12 +55,9 @@
                     }
                 ]
             }
-        }
+        ]
     },
-    "retail": {
-        "splashPage": {
-            "title": "Your next great retail application"
-        },
-        "demoComponents": {}
+    {
+        "industry": "retail"
     }
-}
+]

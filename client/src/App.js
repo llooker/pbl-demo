@@ -5,13 +5,20 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './clientConfig.json';
 import Header from './components/Header'
 import Footer from './components/Footer'
-import Content from './components/Content'
+// import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
 import DefaultLookerContent from './lookerIndustriesByInstance.json';
 //make looker user dynamic
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
+import SplashPage from './components/SplashPage'
+
+import CustomFilter from './components/CustomFilter';
+import DashboardOverviewDetail from './components/DashboardOverviewDetail';
+import ReportBuilder from './components/ReportBuilder';
+
+// console.log('SplashPage', SplashPage)
 
 
 
@@ -24,7 +31,7 @@ import InitialLookerUser from './initialLookerUser.json';
 // import Button from '@material-ui/core/Button';
 // import IconButton from '@material-ui/core/IconButton';
 // import MenuIcon from '@material-ui/icons/Menu';
-import Dashboard from './components/Dashboard'
+// import Dashboard from './components/Dashboard'
 
 // const useStyles = makeStyles((theme) => ({
 //   root: {
@@ -58,6 +65,9 @@ class Login extends React.Component {
     const { pathname } = this.props.location
     const { activeCustomization } = this.props
     const { userProfile } = this.props
+
+
+    // console.log('from', from)
 
     const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
 
@@ -108,7 +118,8 @@ class Login extends React.Component {
   }
 }
 
-const PrivateRoute = ({ component: Component,
+const PrivateRoute = ({
+  component: Component,
   customizations,
   activeCustomization,
   applyCustomization,
@@ -157,7 +168,8 @@ class App extends React.Component {
       lookerUser: {
         ...InitialLookerUser
       },
-      lookerHost: '', //'demo.looker.com'
+      lookerHost: '', //'demo.looker.com',
+      // activeIndustry: 'marketing'
     }
   }
 
@@ -288,7 +300,7 @@ class App extends React.Component {
       activeCustomization: this.state.customizations[customizationIndex],
       lookerContent: lookerContentToUse
     }, () => {
-      // console.log('applyCustomization callback this.state.lookerContent', this.state.lookerContent)
+      console.log('applyCustomization callback this.state.lookerContent', this.state.lookerContent)
       // console.log('applyCustomization callback this.state.activeCustomization', this.state.activeCustomization)
       // this.props.history.push('/home') //not going to work here :P
     });
@@ -386,6 +398,10 @@ class App extends React.Component {
     });
   }
 
+
+
+
+
   render() {
     // console.log('App render');
     // console.log('this.props', this.props);
@@ -396,6 +412,8 @@ class App extends React.Component {
     const { lookerContent } = this.state
     const { lookerUser } = this.state;
     const { lookerHost } = this.state;
+    const { activeUsecase } = this.state;
+    // const { activeIndustry } = this.state;
     // console.log('activeCustomization', activeCustomization);
     // console.log('lookerUser', lookerUser);
     // console.log('lookerHost', lookerHost);
@@ -413,7 +431,7 @@ class App extends React.Component {
           />}
           />
           {/* Dashboard */}
-          <PrivateRoute path='/home' component={Content}
+          {/* <PrivateRoute path='/home' component={Content}
             activeCustomization={activeCustomization}
             lookerContent={lookerContent}
             saveLookerContent={this.saveLookerContent}
@@ -421,7 +439,7 @@ class App extends React.Component {
             lookerUser={lookerUser}
             applySession={this.applySession}
             lookerHost={lookerHost}
-          />
+          /> */}
           <PrivateRoute exact path='/customize'
             component={Customizations}
             customizations={customizations}
@@ -439,6 +457,22 @@ class App extends React.Component {
             cancelIndexOfCustomizationToEdit={this.cancelIndexOfCustomizationToEdit}
             userProfile={userProfile}
             lookerHost={lookerHost}
+          />
+          <PrivateRoute path='/home'
+            component={SplashPage}
+            userProfile={userProfile}
+          />
+          <PrivateRoute path='/*/customFilter'
+            component={CustomFilter}
+            userProfile={userProfile}
+          />
+          <PrivateRoute path='/*/dashboardOverviewDetail'
+            component={DashboardOverviewDetail}
+            userProfile={userProfile}
+          />
+          <PrivateRoute path='/*/reportBuilder'
+            component={ReportBuilder}
+            userProfile={userProfile}
           />
         </div>
       </Router>

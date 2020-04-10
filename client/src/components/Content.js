@@ -18,10 +18,11 @@ import SideBar from './SideBar'
 // import Typography from '@material-ui/core/Typography';
 // import Link from '@material-ui/core/Link';
 
-import DemoComponents from '../demoComponents.json';
+import DemoComponents from '../demoComponentsOld.json';
 import { render } from '@testing-library/react';
 
-// console.log('DemoComponents', DemoComponents)
+console.log('DemoComponents', DemoComponents)
+console.log('DemoComponents[0].demoComponents', DemoComponents[0].demoComponents)
 
 
 // LookerEmbedSDK.init('demo.looker.com', '/auth')
@@ -84,7 +85,7 @@ class Content extends React.Component {
         if (this.props.lookerContent != undefined && this.props.lookerContent !== prevProps.lookerContent) {
             // this.setupLookerContent(this.props.lookerContent)
             console.log('inside this ifff')
-            this.setupLookerContent(DemoComponents)
+            this.setupLookerContent(DemoComponents[0].demoComponents)
         }
 
         // if (this.props.lookerUser != undefined && this.props.lookerUser !== prevProps.lookerUser) {
@@ -96,7 +97,7 @@ class Content extends React.Component {
 
     async setupLookerContent(lookerContent) {
         console.log('setupLookerContent')
-        // console.log('lookerContent', lookerContent)
+        console.log('lookerContent', lookerContent)
 
         //delete old content..?
         let embedContainerArray = document.getElementsByClassName("embedContainer");
@@ -122,7 +123,7 @@ class Content extends React.Component {
                     // console.log('paramsObj', paramsObj)
                     // console.log('paramsObj._theme.show_title', paramsObj._theme.show_title)
 
-                    let desiredTheme = lookerContent[j].type === 'custom filters' ? "no_filters" : "Looker"
+                    let desiredTheme = lookerContent[j].type === 'custom filters' ? "no_filter" : "Looker"
                     console.log('lookerContent[j].type', lookerContent[j].type)
                     console.log('desiredTheme', desiredTheme)
 
@@ -130,10 +131,9 @@ class Content extends React.Component {
                         .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
                         .withNext()
-                        .withFilters() //new
-                        .withTheme(desiredTheme) //new
-                        // .withParams({ _theme: JSON.stringify({ "primary_button_color": "#000000" }) }) //POST https://demo.looker.com/api/internal/core/3.1/themes/validate 404 (Not Found)
-                        // .withParams({ "_theme": "{show_filters_bar:false}" }) //SyntaxError: Unexpected token s in JSON at position 1
+                        // .withFilters() //new
+                        .withTheme('Looker') //new
+                        // .withParams({ _theme: JSON.stringify({ "show_filters_bar": true }) })
                         .on('dashboard:run:start', (e) => {
                             // console.log('e', e)
                         })
@@ -494,7 +494,7 @@ class Content extends React.Component {
                     <div className="col-sm-2">
                         <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                             {
-                                DemoComponents.map((item, index) => {
+                                DemoComponents[0].demoComponents.map((item, index) => {
                                     return (
                                         <a className={index == 0 ? "nav-link active" : "nav-link "}
                                             id={validIdHelper(`v-pills-${item.type}-tab`)}
@@ -522,7 +522,7 @@ class Content extends React.Component {
                     <div className="col-sm-10">
                         <div className="tab-content" id="v-pills-tabContent">
                             {
-                                DemoComponents.map((item, index) => {
+                                DemoComponents[0].demoComponents.map((item, index) => {
                                     // hack for dynamic component name
                                     const Map = {
                                         "dashboard overview detail": DashboardOverviewDetail,
