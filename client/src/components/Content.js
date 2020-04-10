@@ -635,54 +635,47 @@ function DashboardOverviewDetail(props) {
 }
 
 function ReportBuilder(props) {
-    console.log('ReportBuilder')
+    // console.log('ReportBuilder')
 
     const { lookerContent, setActiveTab } = props
-
-    const checkboxes = [
-        {
-            name: 'sharedCheckBox',
-            key: 'sharedCheckBox',
-            label: 'Shared',
-        },
-        {
-            name: 'personalCheckBox',
-            key: 'personalCheckBox',
-            label: 'Personal',
-        }
-    ]
-    let checkBoxObj = {}
-    checkboxes.map(item => checkBoxObj[item.name] = true)
-
-    const [checkedItems, setCheckedItems] = useState(checkBoxObj)
+    const [activeFolder, setActiveFolder] = useState("all")
 
     const handleChange = (event) => {
         // console.log('handleChange');
         // console.log('event.target', event.target);
-        setCheckedItems({ ...checkedItems, [event.target.name]: event.target.checked });
+        // console.log('0000 activeFolder', activeFolder)
+        setActiveFolder(event.target.name)
     }
 
     // Similar to componentDidMount and componentDidUpdate:
     useEffect(() => {
+        // console.log('useEffect')
+
         let iFrameArray = $(".embedContainer:visible iframe");
 
         for (let i = 0; i < iFrameArray.length; i++) {
-            if ($(iFrameArray[i]).hasClass('shared')) {
-                if (checkedItems.sharedCheckBox) {
-                    iFrameArray[i].className = "iframe look shared"
-                } else {
-                    iFrameArray[i].className = "iframe look shared d-none"
 
+            if (iFrameArray[i].classList.contains('shared')) {
+                if (activeFolder === 'all' || activeFolder === 'shared') {
+                    iFrameArray[i].className = 'iframe look shared'
+                } else if (activeFolder === 'personal') {
+                    iFrameArray[i].className = 'iframe look shared d-none'
                 }
-            } else if ($(iFrameArray[i]).hasClass('personal')) {
-                if (checkedItems.personalCheckBox) {
-                    iFrameArray[i].className = "iframe look personal"
-                } else {
-                    iFrameArray[i].className = "iframe look personal d-none"
+            } else if (iFrameArray[i].classList.contains('personal')) {
+                if (activeFolder === 'all' || activeFolder === 'personal') {
+                    iFrameArray[i].className = 'iframe look personal'
+                } else if (activeFolder === 'personal') {
+                    iFrameArray[i].className = 'iframe look personal d-none'
                 }
             }
         }
     });
+
+    let reportFilters = [
+        { "label": "All", "name": "all" },
+        { "label": "Personal", "name": "personal" },
+        { "label": "Shared", "name": "shared" }
+    ]
 
     return (
         < div className="container" >
@@ -740,25 +733,31 @@ function ReportBuilder(props) {
                                     {
                                         index === 0 ?
                                             <>
-                                                <div className="col-sm-4">
-                                                    <h6>View content from specific folders:</h6>
-                                                    {checkboxes.map((item, index) => {
-                                                        return (
-                                                            <div className="form-check">
-                                                                <input name={item.name}
-                                                                    className="form-check-input"
-                                                                    type="checkbox"
-                                                                    value={checkedItems[item.name]}
-                                                                    checked={checkedItems[item.name]}
-                                                                    onChange={handleChange} />
-                                                                <label key={item.key}
-                                                                    className="form-check-label"
-                                                                    htmlFor={item.name} > {item.label}</label>
-                                                            </div>
-                                                        )
-                                                    })}
+                                                <div className="col-sm-2">
+                                                    <h6>Filter content from folders:</h6>
+
+                                                    <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                                        {
+                                                            reportFilters.map((item, index) => {
+                                                                return (
+                                                                    <a className={index == 0 ? "nav-link active" : "nav-link "}
+                                                                        id={validIdHelper(`v-pills-${item.name}-tab`)}
+                                                                        data-toggle="pill"
+                                                                        href={validIdHelper(`#v-pills-${item.name}`)}
+                                                                        role="tab"
+                                                                        aria-controls={validIdHelper(`#v-pills-${item.name}`)}
+                                                                        aria-selected="true"
+                                                                        onClick={handleChange}
+                                                                        name={item.name}>
+                                                                        {item.label}
+                                                                        {/* {index === 0 ? <i class="fas fa-folder-open ml-2"></i> : ''} */}
+                                                                    </a>
+                                                                )
+                                                            })
+                                                        }
+                                                    </div>
                                                 </div>
-                                                <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-8 embedContainer"></div>
+                                                <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-10 embedContainer"></div>
                                             </> :
                                             <>
                                                 <h6>Explore data and create new reports</h6>
