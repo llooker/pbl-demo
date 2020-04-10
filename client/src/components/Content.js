@@ -113,15 +113,27 @@ class Content extends React.Component {
             for (let i = 0; i < lookerContent[j].lookerContent.length; i++) {
 
                 // console.log('lookerContent[j].lookerContent[i]', lookerContent[j].lookerContent[i])
-
                 LookerEmbedSDK.createDashboardWithId
                 if (lookerContent[j].lookerContent[i].type === 'dashboard') {
+                    // let paramsObj = lookerContent[j].type === 'custom filters' ?
+                    //     { "_theme": JSON.stringify({ "show_title": false, "show_filters_bar": false }) } :
+                    //     { "_theme": JSON.stringify({ "show_title": true, "show_filters_bar": true }) };
+                    // console.log('lookerContent[j].type', lookerContent[j].type)
+                    // console.log('paramsObj', paramsObj)
+                    // console.log('paramsObj._theme.show_title', paramsObj._theme.show_title)
+
+                    let desiredTheme = lookerContent[j].type === 'custom filters' ? "no_filters" : "Looker"
+                    console.log('lookerContent[j].type', lookerContent[j].type)
+                    console.log('desiredTheme', desiredTheme)
+
                     LookerEmbedSDK.createDashboardWithId(lookerContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
                         .withNext()
                         .withFilters() //new
-                        .withTheme('Looker') //new
+                        .withTheme(desiredTheme) //new
+                        // .withParams({ _theme: JSON.stringify({ "primary_button_color": "#000000" }) }) //POST https://demo.looker.com/api/internal/core/3.1/themes/validate 404 (Not Found)
+                        // .withParams({ "_theme": "{show_filters_bar:false}" }) //SyntaxError: Unexpected token s in JSON at position 1
                         .on('dashboard:run:start', (e) => {
                             // console.log('e', e)
                         })
@@ -236,8 +248,10 @@ class Content extends React.Component {
         // console.log('dropdownSelect')
         // console.log('e.target', e.target)
         const targetId = e.target.id
-        const dashboardStateName = e.target.getAttribute("dashboardstatename")
-        const dropdownFilterName = e.target.getAttribute("dropdownfiltername")
+        const dashboardStateName = e.target.getAttribute("dashboardstatename");
+        const dropdownFilterName = e.target.getAttribute("dropdownfiltername");
+        // console.log('dashboardStateName', dashboardStateName);
+        // console.log('dropdownFilterName', dropdownFilterName);
         this.setState({
             [targetId]: e.target.value
         }, () => {
@@ -513,6 +527,7 @@ class Content extends React.Component {
                                     const Map = {
                                         "dashboard overview detail": DashboardOverviewDetail,
                                         "report builder": ReportBuilder,
+                                        "custom filters": CustomFilters,
                                     }
                                     const DemoComponent = Map[item.type];
                                     return (
@@ -524,6 +539,7 @@ class Content extends React.Component {
                                             <DemoComponent key={validIdHelper(`v-pills-${item.type}`)}
                                                 lookerContent={item.lookerContent}
                                                 setActiveTab={this.setActiveTab}
+                                                dropdownSelect={this.dropdownSelect}
                                             />
 
                                             {/* {
@@ -843,4 +859,73 @@ function CodeSideBar(props) {
             </ReactCSSTransitionGroup >
             : <li className="nav-item ml-auto list-unstyled right-abs top-abs-0 abs"><i className="fas fa-code cursor text-secondary" onClick={toggleCodeBar} /></li>
     )
+}
+
+function CustomFilters(props) {
+    console.log('CustomFilters')
+    const { lookerContent, setActiveTab, dropdownSelect } = props
+
+    return (
+        <div className="container" >
+            <div className="row">
+                <ul id="parentTabList" className="nav nav-tabs w-100" role="tablist">
+                    {lookerContent.map((item, index) => {
+                        return (
+                            <li className="nav-item">
+                                <a key={validIdHelper(item.id)}
+                                    className={index === 0 ? "nav-link active show" : "nav-link"}
+                                    id={validIdHelper(`${item.id}-tab`)}
+                                    data-toggle="tab"
+                                    href={validIdHelper(`#${item.id}`)}
+                                    role="tab"
+                                    aria-controls={validIdHelper(`${item.id}`)}
+                                    aria-selected="true"
+                                    contenttype={item.type}
+                                    onClick={() => setActiveTab(index)}>
+                                    {item.name}
+                                </a>
+                            </li>
+                        )
+                    })}
+                </ul>
+            </div>
+            <div className="row">
+                <div className="tab-content w-100" id="parentTabContent">
+                    {lookerContent.map((item, index) => {
+                        return (
+                            <div key={validIdHelper(item.id)} className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
+                                {item.customDropdown ?
+                                    <div className="row pt-3">
+                                        <div className="col-sm-3">
+                                            <label htmlFor="modalForm">{item.customDropdown.title}</label>
+                                            <select
+                                                id={`dropdownSelect${item.id}`}
+                                                className="form-control"
+                                                // onChange={(e) => this.dropdownSelect(e)}
+                                                onChange={dropdownSelect}
+                                                type="select-one"
+                                                dropdownfiltername={item.customDropdown.filterName}
+                                                dashboardstatename={item.id}
+                                            >
+                                                {item.customDropdown.options.map(item => {
+                                                    return <option
+                                                        key={item == null ? 'Any' : item}
+                                                        value={item == null ? 'Any' : item}
+                                                    > {item == null ? 'Any' : item}</option>
+                                                })}
+                                            </select>
+                                        </div>
+                                    </div> :
+                                    ''}
+                                <div className="row pt-3">
+                                    <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer"></div>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+        </div >
+    )
+
 }

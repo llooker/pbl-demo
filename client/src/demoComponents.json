@@ -5,15 +5,6 @@
             {
                 "type": "dashboard",
                 "id": "5277",
-                "customDropdown": {
-                    "title": "Select User Gender",
-                    "options": [
-                        "Female",
-                        "Male",
-                        "Any"
-                    ],
-                    "filterName": "User Gender"
-                },
                 "name": "Advertising Overview"
             },
             {
@@ -35,6 +26,26 @@
                 "type": "explore",
                 "id": "thelook_adwords::events",
                 "name": "Create New Report"
+            }
+        ]
+    },
+    {
+        "type": "custom filters",
+        "lookerContent": [
+            {
+                "type": "dashboard",
+                "id": "5280",
+                "name": "Advertising Pulse",
+                "customDropdown": {
+                    "title": "Select Brand",
+                    "options": [
+                        "10 deep",
+                        "106 Shades",
+                        "12XLShop Inc.",
+                        "180s"
+                    ],
+                    "filterName": "Brand"
+                }
             }
         ]
     }
