@@ -5,18 +5,13 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './clientConfig.json';
 import Header from './components/Header'
 import Footer from './components/Footer'
-// import Content from './components/Content'
+import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
 import DefaultLookerContent from './lookerIndustriesByInstance.json';
 //make looker user dynamic
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
-import SplashPage from './components/SplashPage'
-
-import CustomFilter from './components/CustomFilter';
-import DashboardOverviewDetail from './components/DashboardOverviewDetail';
-import ReportBuilder from './components/ReportBuilder';
 
 // console.log('SplashPage', SplashPage)
 
@@ -431,7 +426,7 @@ class App extends React.Component {
           />}
           />
           {/* Dashboard */}
-          {/* <PrivateRoute path='/home' component={Content}
+          <PrivateRoute path='/home' component={Content}
             activeCustomization={activeCustomization}
             lookerContent={lookerContent}
             saveLookerContent={this.saveLookerContent}
@@ -439,7 +434,7 @@ class App extends React.Component {
             lookerUser={lookerUser}
             applySession={this.applySession}
             lookerHost={lookerHost}
-          /> */}
+          />
           <PrivateRoute exact path='/customize'
             component={Customizations}
             customizations={customizations}
@@ -457,22 +452,6 @@ class App extends React.Component {
             cancelIndexOfCustomizationToEdit={this.cancelIndexOfCustomizationToEdit}
             userProfile={userProfile}
             lookerHost={lookerHost}
-          />
-          <PrivateRoute path='/home'
-            component={SplashPage}
-            userProfile={userProfile}
-          />
-          <PrivateRoute path='/*/customFilter'
-            component={CustomFilter}
-            userProfile={userProfile}
-          />
-          <PrivateRoute path='/*/dashboardOverviewDetail'
-            component={DashboardOverviewDetail}
-            userProfile={userProfile}
-          />
-          <PrivateRoute path='/*/reportBuilder'
-            component={ReportBuilder}
-            userProfile={userProfile}
           />
         </div>
       </Router>

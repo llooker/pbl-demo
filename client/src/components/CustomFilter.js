@@ -1,43 +1,77 @@
-import React, { useState, useEffect } from 'react';
-import DemoComponents from '../demoComponents.json';
+import React from 'react'
+let { validIdHelper } = require('../tools');
 
-function CustomFilters(props) {
-
-    console.log('CustomFilters')
-    console.log('props', props)
-    console.log('DemoComponents', DemoComponents)
-
-    const { pathname } = props.location
-
-    let usecase = pathname.substring(pathname.indexOf('/') + 1, pathname.lastIndexOf('/'))
-    let demoComponent = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length)
-
-    console.log('usecase', usecase)
-    console.log('demoComponent', demoComponent)
-    console.log('DemoComponents[usecase]["demoComponents"][demoComponent]', DemoComponents[usecase]['demoComponents'][demoComponent])
-
-    // let industry = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length)
-    // console.log('industry', industry)
-
-    // // console.log('DemoComponents[industry]', DemoComponents[industry])
-    // let demoComponents = DemoComponents[industry].demoComponents;
-    // console.log('demoComponents', demoComponents)
-
-
-    // // const { lookerContent, setActiveTab, dropdownSelect } = props
-    // const { userProfile } = props;
-    // console.log('userProfile', userProfile)
-
-    // alert(userProfile)
+function CustomFilter(props) {
+    // console.log('CustomFilter')
+    const { lookerContent, setActiveTab, dropdownSelect } = props
 
     return (
-        <div className="home container-fluid p-5 position-relative">
-            <div className="row pt-5">
-                <h1>This is my CustomFilter component</h1>
+        <div className="container" >
+            <div className="row">
+                <ul id="customFilterTabList" className="nav nav-tabs w-100 parentTabList" role="tablist">
+                    {lookerContent.map((item, index) => {
+                        return (
+                            <li className="nav-item">
+                                <a key={validIdHelper(item.id)}
+                                    className={index === 0 ? "nav-link active show" : "nav-link"}
+                                    id={validIdHelper(`${item.id}-tab`)}
+                                    data-toggle="tab"
+                                    href={validIdHelper(`#${item.id}`)}
+                                    role="tab"
+                                    aria-controls={validIdHelper(`${item.id}`)}
+                                    aria-selected="true"
+                                    contenttype={item.type}
+                                    onClick={() => setActiveTab(index)}>
+                                    {item.name}
+                                </a>
+                            </li>
+                        )
+                    })}
+                </ul>
             </div>
-        </div>
+            <div className="row">
+                <div className="tab-content w-100 parentTabContent" id="customFilterTabContent">
+                    {lookerContent.map((item, index) => {
+                        return (
+                            <div key={validIdHelper(item.id)}
+                                className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"}
+                                id={validIdHelper(`${item.id}`)} role="tabpanel"
+                                aria-labelledby={validIdHelper(`${item.id}-tab`)}>
+                                {item.customDropdown ?
+                                    <div className="row pt-3">
+                                        <div className="col-sm-3">
+                                            <label htmlFor="modalForm">{item.customDropdown.title}</label>
+                                            <select
+                                                id={`dropdownSelect${item.id}`}
+                                                className="form-control"
+                                                // onChange={(e) => this.dropdownSelect(e)}
+                                                onChange={dropdownSelect}
+                                                type="select-one"
+                                                dropdownfiltername={item.customDropdown.filterName}
+                                                dashboardstatename={item.id}
+                                            >
+                                                {item.customDropdown.options.map(item => {
+                                                    return <option
+                                                        key={item == null ? 'Any' : item}
+                                                        value={item == null ? 'Any' : item}
+                                                    > {item == null ? 'Any' : item}</option>
+                                                })}
+                                            </select>
+                                        </div>
+                                    </div> :
+                                    ''}
+                                <div className="row pt-3">
+                                    <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer"></div>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+        </div >
     )
-
 }
 
-export default CustomFilters
+
+
+export default CustomFilter

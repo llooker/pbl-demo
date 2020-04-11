@@ -6,7 +6,7 @@
         },
         "demoComponents": [
             {
-                "type": "custom filters",
+                "type": "custom filter",
                 "lookerContent": [
                     {
                         "type": "dashboard",

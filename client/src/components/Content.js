@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import './Home.css';
-import Modal from './Modal'
+// import Modal from './Modal'
 
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+// import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import $ from 'jquery';
-import { parse } from 'querystring';
+// import { parse } from 'querystring';
 
-import SideBar from './SideBar'
+// import SideBar from './SideBar'
+
+import CustomFilter from './CustomFilter';
+import DashboardOverviewDetail from './DashboardOverviewDetail';
+import ReportBuilder from './ReportBuilder';
+import CodeSideBar from './CodeSideBar';
+import DemoComponents from '../demoComponents.json';
+
+const { validIdHelper } = require('../tools');
 
 // start of material
 // import Button from '@material-ui/core/Button';
@@ -18,11 +24,8 @@ import SideBar from './SideBar'
 // import Typography from '@material-ui/core/Typography';
 // import Link from '@material-ui/core/Link';
 
-import DemoComponents from '../demoComponentsOld.json';
-import { render } from '@testing-library/react';
+// import { render } from '@testing-library/react';
 
-console.log('DemoComponents', DemoComponents)
-console.log('DemoComponents[0].demoComponents', DemoComponents[0].demoComponents)
 
 
 // LookerEmbedSDK.init('demo.looker.com', '/auth')
@@ -60,10 +63,8 @@ class Content extends React.Component {
 
 
     componentDidMount() {
-        console.log('LookerContent componentDidMount')
+        // console.log('LookerContent componentDidMount')
         // const { lookerContent } = this.props
-        // this.setupLookerContent(lookerContent)
-        // this.setupLookerContent(DemoComponents)
 
         const sampleCodeFilePath = require("../sample-code/dashboard.sample.txt");
         fetch(sampleCodeFilePath)
@@ -81,11 +82,9 @@ class Content extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log('LookerContent componentDidUpdate')
+        // console.log('LookerContent componentDidUpdate')
         if (this.props.lookerContent != undefined && this.props.lookerContent !== prevProps.lookerContent) {
-            // this.setupLookerContent(this.props.lookerContent)
-            console.log('inside this ifff')
-            this.setupLookerContent(DemoComponents[0].demoComponents)
+            this.setupLookerContent(DemoComponents.marketing.demoComponents)
         }
 
         // if (this.props.lookerUser != undefined && this.props.lookerUser !== prevProps.lookerUser) {
@@ -95,40 +94,35 @@ class Content extends React.Component {
 
 
 
-    async setupLookerContent(lookerContent) {
-        console.log('setupLookerContent')
-        console.log('lookerContent', lookerContent)
+    async setupLookerContent(demoComponents) {
+        // console.log('setupLookerContent')
+        // console.log('demoComponents', demoComponents)
 
         //delete old content..?
         let embedContainerArray = document.getElementsByClassName("embedContainer");
-        // console.log('embedContainerArray', embedContainerArray)
         for (let h = 0; h < embedContainerArray.length; h++) {
             let thisEmbedContainerId = embedContainerArray[h].id
             document.getElementById(thisEmbedContainerId).innerHTML = ''
         }
 
-        for (let j = 0; j < lookerContent.length; j++) {
+        for (let j = 0; j < demoComponents.length; j++) {
 
-            // console.log('lookerContent[j]', lookerContent[j])
 
-            for (let i = 0; i < lookerContent[j].lookerContent.length; i++) {
+            for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
 
-                // console.log('lookerContent[j].lookerContent[i]', lookerContent[j].lookerContent[i])
+                // console.log('demoComponents[j].lookerContent[i]', demoComponents[j].lookerContent[i])
                 LookerEmbedSDK.createDashboardWithId
-                if (lookerContent[j].lookerContent[i].type === 'dashboard') {
-                    // let paramsObj = lookerContent[j].type === 'custom filters' ?
+                if (demoComponents[j].lookerContent[i].type === 'dashboard') {
+                    // let paramsObj = demoComponents[j].type === 'custom filter' ?
                     //     { "_theme": JSON.stringify({ "show_title": false, "show_filters_bar": false }) } :
                     //     { "_theme": JSON.stringify({ "show_title": true, "show_filters_bar": true }) };
-                    // console.log('lookerContent[j].type', lookerContent[j].type)
-                    // console.log('paramsObj', paramsObj)
-                    // console.log('paramsObj._theme.show_title', paramsObj._theme.show_title)
 
-                    let desiredTheme = lookerContent[j].type === 'custom filters' ? "no_filter" : "Looker"
-                    console.log('lookerContent[j].type', lookerContent[j].type)
-                    console.log('desiredTheme', desiredTheme)
+                    let desiredTheme = demoComponents[j].type === 'custom filter' ? "no_filter" : "Looker"
+                    // console.log('demoComponents[j].type', demoComponents[j].type)
+                    // console.log('desiredTheme', desiredTheme)
 
-                    LookerEmbedSDK.createDashboardWithId(lookerContent[j].lookerContent[i].id)
-                        .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
+                    LookerEmbedSDK.createDashboardWithId(demoComponents[j].lookerContent[i].id)
+                        .appendTo(validIdHelper(`#embedContainer${demoComponents[j].lookerContent[i].id}`))
                         .withClassName('iframe')
                         .withNext()
                         // .withFilters() //new
@@ -146,16 +140,16 @@ class Content extends React.Component {
                         .connect()
                         .then((dashboard) => {
                             this.setState({
-                                [lookerContent[j].lookerContent[i].id]: dashboard //5277
+                                [demoComponents[j].lookerContent[i].id]: dashboard //5277
                             })
                             // this.changeHeight(dashboard, `embedContainer${lookerContent[i].id}`)
                         })
                         .catch((error) => {
                             console.error('Connection error', error)
                         })
-                } else if (lookerContent[j].lookerContent[i].type === 'explore') {
-                    LookerEmbedSDK.createExploreWithId(lookerContent[j].lookerContent[i].id)
-                        .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
+                } else if (demoComponents[j].lookerContent[i].type === 'explore') {
+                    LookerEmbedSDK.createExploreWithId(demoComponents[j].lookerContent[i].id)
+                        .appendTo(validIdHelper(`#embedContainer${demoComponents[j].lookerContent[i].id}`))
                         .withClassName('iframe')
                         // .withParams({
                         //     qid: 'DA0G4JnmvuxE2N1UEs3WHR',
@@ -168,8 +162,8 @@ class Content extends React.Component {
                             console.error('Connection error', error)
                         })
 
-                } else if (lookerContent[j].lookerContent[i].type === 'folder') {
-                    let lookerResposnse = await fetch('/fetchfolder/' + lookerContent[j].lookerContent[i].id, { //+ lookerContent[j].type + '/'
+                } else if (demoComponents[j].lookerContent[i].type === 'folder') {
+                    let lookerResposnse = await fetch('/fetchfolder/' + demoComponents[j].lookerContent[i].id, { //+ demoComponents[j].type + '/'
                         method: 'GET',
                         headers: {
                             Accept: 'application/json',
@@ -177,21 +171,15 @@ class Content extends React.Component {
                         }
                     })
 
-                    // console.log('lookerResposnse', lookerResposnse)
 
                     let lookerResponseData = await lookerResposnse.json();
-                    // console.log('lookerResponseData', lookerResponseData);
 
                     let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
-                    // console.log('looksToUse', looksToUse)
                     let dashboardsToUse = [...lookerResponseData.sharedFolder.dashboards]
-                    // console.log('dashboardsToUse', dashboardsToUse)
-
                     let objToUse = {
                         looks: looksToUse,
                         dashboards: dashboardsToUse
                     }
-
                     // console.log('objToUse', objToUse)
 
                     {
@@ -199,10 +187,9 @@ class Content extends React.Component {
                             objToUse.looks.map((item, index) => {
                                 let lookId = item.id
                                 LookerEmbedSDK.createLookWithId(lookId)
-                                    .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
+                                    .appendTo(validIdHelper(`#embedContainer${demoComponents[j].lookerContent[i].id}`))
                                     .withClassName('iframe')
                                     .withClassName('look')
-                                    // .withClassName('d-none')
                                     .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
                                     .on('drillmenu:click', (e) => this.drillClick(e))
                                     .build()
@@ -217,13 +204,11 @@ class Content extends React.Component {
 
                     {
                         objToUse.dashboards.length ? objToUse.dashboards.map((item, index) => {
-                            // console.log('item', item)
                             let dashboardId = item.id
                             LookerEmbedSDK.createDashboardWithId(dashboardId)
-                                .appendTo(validIdHelper(`#embedContainer${lookerContent[j].lookerContent[i].id}`))
+                                .appendTo(validIdHelper(`#embedContainer${demoComponents[j].lookerContent[i].id}`))
                                 .withClassName('iframe')
                                 .withClassName('dashboard')
-                                // .withClassName('d-none')
                                 .withClassName(lookerResponseData.sharedFolder.dashboard.indexOf(item) > -1 ? "shared" : "personal")
                                 .on('drillmenu:click', (e) => this.drillClick(e))
                                 .build()
@@ -234,9 +219,6 @@ class Content extends React.Component {
                                 })
                         }) : ''
                     }
-
-
-
                 }
             }
 
@@ -245,13 +227,9 @@ class Content extends React.Component {
 
     //need to revisit if this is working...?
     dropdownSelect = (e) => {
-        // console.log('dropdownSelect')
-        // console.log('e.target', e.target)
         const targetId = e.target.id
         const dashboardStateName = e.target.getAttribute("dashboardstatename");
         const dropdownFilterName = e.target.getAttribute("dropdownfiltername");
-        // console.log('dashboardStateName', dashboardStateName);
-        // console.log('dropdownFilterName', dropdownFilterName);
         this.setState({
             [targetId]: e.target.value
         }, () => {
@@ -267,18 +245,14 @@ class Content extends React.Component {
         }))
     }
 
-    // think about this
     setActiveTab = (tabIndex) => {
-        // console.log('setActiveTab')
-        // console.log('tabIndex', tabIndex)
+        console.log('setActiveTab')
+        console.log('tabIndex', tabIndex)
 
         if (this.state.renderSampleCode) this.toggleCodeBar();
 
-        let tabsArray = $("#parentTabList:visible a");
-        let contentArray = $("#parentTabContent:visible > div");
-
-        console.log('tabsArray', tabsArray)
-        console.log('contentArray', contentArray)
+        let tabsArray = $(".parentTabList:visible a");
+        let contentArray = $(".parentTabContent:visible > div");
 
         //simulate tab change, when looker action taken...
         if (!$(tabsArray[tabIndex]).hasClass('active')) {
@@ -295,20 +269,22 @@ class Content extends React.Component {
 
         let newTabContentType = $(tabsArray[tabIndex]).attr('contenttype');
         console.log('newTabContentType', newTabContentType)
-        this.setState({
-            activeTabType: newTabContentType
-        }, () => {
-            const sampleCodeFilePath = require(`../sample-code/${newTabContentType}.sample.txt`);
-            fetch(sampleCodeFilePath)
-                .then(response => {
-                    return response.text()
-                })
-                .then(text => {
-                    this.setState({
-                        sampleCode: text
+        if (newTabContentType) {
+            this.setState({
+                activeTabType: newTabContentType
+            }, () => {
+                const sampleCodeFilePath = require(`../sample-code/${newTabContentType}.sample.txt`);
+                fetch(sampleCodeFilePath)
+                    .then(response => {
+                        return response.text()
                     })
-                })
-        })
+                    .then(text => {
+                        this.setState({
+                            sampleCode: text
+                        })
+                    })
+            })
+        }
     }
 
     toggleModal = () => {
@@ -343,17 +319,14 @@ class Content extends React.Component {
     validateLookerContent = async (newLookerContent) => {
         // console.log('validateLookerContent')
         // console.log('newLookerContent', newLookerContent)
-        // console.log('this.state.activeDemoComponent', this.state.activeDemoComponent)
 
         let objToUse = {
             type: newLookerContent.type.value,
             id: newLookerContent.id.value,
             name: newLookerContent.name.value
         }
-        // console.log('objToUse', objToUse)
 
         if (objToUse.type && objToUse.id && objToUse.name) {
-            // console.log('inside iffff')
             let lookerResposnse = await fetch('/validatelookercontent/' + objToUse.id + '/' + objToUse.type, {
                 method: 'GET',
                 headers: {
@@ -395,8 +368,8 @@ class Content extends React.Component {
     }
 
     drillClick(event) {
-        console.log('drillClick')
-        console.log('event', event)
+        // console.log('drillClick')
+        // console.log('event', event)
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
 
@@ -410,15 +383,8 @@ class Content extends React.Component {
             const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
             const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
 
-
-            // console.log('parsedUrl', parsedUrl)
-            // console.log('url', url)
-            // console.log('000 stateName', stateName)
-            // console.log('filterName', filterName)
-            // console.log('filterValue', filterValue)
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
             //urls changed to relative, need slugs to work across instances?
-            // console.log('111 stateName', stateName)
 
             this.state[stateName].updateFilters({ [filterName]: filterValue })
             this.state[stateName].run()
@@ -430,7 +396,7 @@ class Content extends React.Component {
     }
 
     //async 
-    filtersUpdates(event) {
+    /*filtersUpdates(event) {
         // loadingIcon(true);
         // console.log('filtersUpdates')
         // console.log('event', event)
@@ -457,7 +423,7 @@ class Content extends React.Component {
         // if (dashboard_filters && dashboard_filters[dashbord_layout_filter] && dashboard_filters[dashbord_layout_filter]) {
         //     layoutFilter(dashboard_filters[dashbord_layout_filter])
         // }
-    }
+    }*/
 
 
     toggleSideBar = () => {
@@ -493,10 +459,21 @@ class Content extends React.Component {
                 <div className="row pt-5">
                     <div className="col-sm-2">
                         <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+                            <a className={"nav-link active"}
+                                id={validIdHelper(`v-pills-${DemoComponents.marketing.splashPage.type}-tab`)}
+                                data-toggle="pill"
+                                href={validIdHelper(`#v-pills-${DemoComponents.marketing.splashPage.type}`)}
+                                role="tab"
+                                aria-controls={validIdHelper(`#v-pills-${DemoComponents.marketing.splashPage.type}`)}
+                                aria-selected="true">
+                                Home
+                            </a>
+
                             {
-                                DemoComponents[0].demoComponents.map((item, index) => {
+                                DemoComponents.marketing.demoComponents.map((item, index) => {
                                     return (
-                                        <a className={index == 0 ? "nav-link active" : "nav-link "}
+                                        <a className="nav-link"
                                             id={validIdHelper(`v-pills-${item.type}-tab`)}
                                             data-toggle="pill"
                                             href={validIdHelper(`#v-pills-${item.type}`)}
@@ -507,11 +484,11 @@ class Content extends React.Component {
                                                 this.setState({
                                                     activeDemoComponent: validIdHelper(item.type)
                                                 }, () => {
-                                                    console.log('onClick callback activeDemoComponent', this.state.activeDemoComponent)
+                                                    // console.log('onClick callback activeDemoComponent', this.state.activeDemoComponent)
                                                     setTimeout(() => { this.setActiveTab(0) }, 1000)
                                                 })
                                             }}>
-                                            {item.type.charAt(0).toUpperCase() + item.type.substring(1)}
+                                            {item.label}
                                         </a>
                                     )
                                 })
@@ -521,17 +498,61 @@ class Content extends React.Component {
 
                     <div className="col-sm-10">
                         <div className="tab-content" id="v-pills-tabContent">
+
+
+                            <div className="tab-pane fade active show"
+                                id={validIdHelper(`v-pills-${DemoComponents.marketing.splashPage.type}`)}
+                                role="tabpanel"
+                                aria-labelledby={validIdHelper(`v-pills-${DemoComponents.marketing.splashPage.type}-tab`)}>
+                                <h2>{DemoComponents.marketing.splashPage.title}</h2>
+
+
+                                <div className="row pt-3">
+                                    {
+                                        DemoComponents.marketing.demoComponents.map((item, index) => {
+                                            // console.log('item', item)
+                                            return (
+                                                <div key={item.type} className="card ml-5 p-3" style={{ "width": 18 + 'rem' }}>
+                                                    <div className="card-body">
+                                                        <p className="card-text">stat {index + 1}</p>
+                                                    </div>
+                                                </div>)
+                                        })
+                                    }
+                                </div>
+
+                                <div className="row pt-5">
+                                    {
+                                        DemoComponents.marketing.demoComponents.map((item, index) => {
+                                            // console.log('item', item)
+                                            return (
+                                                <div key={item.type} className="card ml-5 p-3" style={{ "width": 18 + 'rem' }}>
+                                                    <div className="card-body">
+                                                        <h5 className="card-title">{item.label}<i className={`fas ${item.iconClass} ml-3`} /></h5>
+                                                        <p className="card-text">{item.description}</p>
+                                                        {/* <Link to={`/${activeUsecase}/${key}`}>
+                                                            <button type="button" className="btn btn-primary ">{thisDemoComponent.label}</button>
+                                                        </Link> */}
+                                                        <a class="btn btn-primary" href={`#v-pills-${validIdHelper(item.type)}`} role="button">{item.label}</a>
+
+                                                    </div>
+                                                </div>)
+                                        })
+                                    }
+                                </div>
+                            </div>
+
                             {
-                                DemoComponents[0].demoComponents.map((item, index) => {
+                                DemoComponents.marketing.demoComponents.map((item, index) => {
                                     // hack for dynamic component name
                                     const Map = {
+                                        "custom filter": CustomFilter,
                                         "dashboard overview detail": DashboardOverviewDetail,
-                                        "report builder": ReportBuilder,
-                                        "custom filters": CustomFilters,
+                                        "report builder": ReportBuilder
                                     }
                                     const DemoComponent = Map[item.type];
                                     return (
-                                        <div className={index == 0 ? "tab-pane fade show active" : "tab-pane fade"}
+                                        <div className="tab-pane fade"
                                             id={validIdHelper(`v-pills-${item.type}`)}
                                             role="tabpanel"
                                             aria-labelledby={validIdHelper(`v-pills-${item.type}-tab`)}>
@@ -553,16 +574,15 @@ class Content extends React.Component {
                                                     : ''
                                             } */}
 
+                                            <CodeSideBar
+                                                renderSampleCode={renderSampleCode}
+                                                sampleCode={sampleCode}
+                                                lookerUser={lookerUser}
+                                                toggleCodeBar={this.toggleCodeBar} />
 
                                         </div>
                                     )
                                 })}
-                            {/* move to here so only renders once.. */}
-                            <CodeSideBar
-                                renderSampleCode={renderSampleCode}
-                                sampleCode={sampleCode}
-                                lookerUser={lookerUser}
-                                toggleCodeBar={this.toggleCodeBar} />
                         </div>
                     </div>
                 </div>
@@ -572,360 +592,3 @@ class Content extends React.Component {
 }
 
 export default Content;
-
-function validIdHelper(str) {
-    // console.log('validIdHelper')
-    // console.log('str', str)
-    //need to replace special characters that may be associated with id...
-    return str.replace(/[^a-zA-Z0-9-.#]/g, "")
-}
-
-function DashboardOverviewDetail(props) {
-    // console.log('DashboardOverviewDetail')
-    // console.log('props', props)
-    // console.log('props.lookerContent', props.lookerContent)
-    const { lookerContent, setActiveTab } = props
-    return (
-        <div className="container">
-            <div className="row">
-                <ul id="parentTabList" className="nav nav-tabs w-100" role="tablist">
-                    {lookerContent.map((item, index) => {
-                        return (
-                            <li className="nav-item" key={validIdHelper(item.id)} >
-                                <a key={validIdHelper(item.id)}
-                                    // className={index === 0 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
-                                    className={index === 0 ? "nav-link active show" : "nav-link"}
-                                    id={validIdHelper(`${item.id}-tab`)}
-                                    data-toggle="tab"
-                                    href={validIdHelper(`#${item.id}`)}
-                                    role="tab"
-                                    aria-controls={validIdHelper(`${item.id}`)}
-                                    aria-selected="true"
-                                    contenttype={item.type}
-                                    onClick={() => setActiveTab(index)}>
-                                    {item.name}
-                                </a>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </div>
-
-            <div className="row">
-                <div className="tab-content w-100" id="parentTabContent">
-                    {lookerContent.map((item, index) => {
-                        return (
-                            <div key={validIdHelper(item.id)} className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
-                                {item.customDropdown ?
-                                    <div className="row pt-3">
-                                        <div className="col-sm-3">
-                                            <label htmlFor="modalForm">{item.customDropdown.title}</label>
-                                            <select
-                                                id={`dropdownSelect${item.id}`}
-                                                className="form-control"
-                                                onChange={(e) => this.dropdownSelect(e)}
-                                                type="select-one"
-                                                dropdownfiltername={item.customDropdown.filterName}
-                                                dashboardstatename={item.id}
-                                            >
-                                                {item.customDropdown.options.map(item => {
-                                                    return <option
-                                                        key={item == null ? 'Any' : item}
-                                                        value={item == null ? 'Any' : item}
-                                                    > {item == null ? 'Any' : item}</option>
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div> :
-                                    ''}
-                                <div className="row pt-3">
-                                    <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer"></div>
-                                </div>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
-        </div >
-    )
-}
-
-function ReportBuilder(props) {
-    // console.log('ReportBuilder')
-
-    const { lookerContent, setActiveTab } = props
-    const [activeFolder, setActiveFolder] = useState("all")
-
-    const handleChange = (event) => {
-        // console.log('handleChange');
-        // console.log('event.target', event.target);
-        // console.log('0000 activeFolder', activeFolder)
-        setActiveFolder(event.target.name)
-    }
-
-    // Similar to componentDidMount and componentDidUpdate:
-    useEffect(() => {
-        // console.log('useEffect')
-
-        let iFrameArray = $(".embedContainer:visible iframe");
-
-        for (let i = 0; i < iFrameArray.length; i++) {
-
-            if (iFrameArray[i].classList.contains('shared')) {
-                if (activeFolder === 'all' || activeFolder === 'shared') {
-                    iFrameArray[i].className = 'iframe look shared'
-                } else if (activeFolder === 'personal') {
-                    iFrameArray[i].className = 'iframe look shared d-none'
-                }
-            } else if (iFrameArray[i].classList.contains('personal')) {
-                if (activeFolder === 'all' || activeFolder === 'personal') {
-                    iFrameArray[i].className = 'iframe look personal'
-                } else if (activeFolder === 'personal') {
-                    iFrameArray[i].className = 'iframe look personal d-none'
-                }
-            }
-        }
-    });
-
-    let reportFilters = [
-        { "label": "All", "name": "all" },
-        { "label": "Personal", "name": "personal" },
-        { "label": "Shared", "name": "shared" }
-    ]
-
-    return (
-        < div className="container" >
-            <div className="row">
-                <ul id="parentTabList" className="nav nav-tabs w-100" role="tablist">
-                    {lookerContent.map((item, index) => {
-                        return (
-                            <li className="nav-item">
-                                <a key={validIdHelper(item.id)}
-                                    className={index === 0 ? "nav-link active show" : "nav-link"}
-                                    id={validIdHelper(`${item.id}-tab`)}
-                                    data-toggle="tab"
-                                    href={validIdHelper(`#${item.id}`)}
-                                    role="tab"
-                                    aria-controls={validIdHelper(`${item.id}`)}
-                                    aria-selected="true"
-                                    contenttype={item.type}
-                                    onClick={() => setActiveTab(index)}>
-                                    {item.name}
-                                </a>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </div>
-
-            <div className="row">
-                <div className="tab-content w-100" id="parentTabContent">
-                    {lookerContent.map((item, index) => {
-                        return (
-                            <div key={validIdHelper(item.id)} className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
-                                {item.customDropdown ?
-                                    <div className="row pt-3">
-                                        <div className="col-sm-3">
-                                            <label htmlFor="modalForm">{item.customDropdown.title}</label>
-                                            <select
-                                                id={`dropdownSelect${item.id}`}
-                                                className="form-control"
-                                                onChange={(e) => this.dropdownSelect(e)}
-                                                type="select-one"
-                                                dropdownfiltername={item.customDropdown.filterName}
-                                                dashboardstatename={item.id}
-                                            >
-                                                {item.customDropdown.options.map(item => {
-                                                    return <option
-                                                        key={item == null ? 'Any' : item}
-                                                        value={item == null ? 'Any' : item}
-                                                    > {item == null ? 'Any' : item}</option>
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div> :
-                                    ''}
-                                <div className="row pt-3">
-                                    {
-                                        index === 0 ?
-                                            <>
-                                                <div className="col-sm-2">
-                                                    <h6>Filter content from folders:</h6>
-
-                                                    <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                                        {
-                                                            reportFilters.map((item, index) => {
-                                                                return (
-                                                                    <a className={index == 0 ? "nav-link active" : "nav-link "}
-                                                                        id={validIdHelper(`v-pills-${item.name}-tab`)}
-                                                                        data-toggle="pill"
-                                                                        href={validIdHelper(`#v-pills-${item.name}`)}
-                                                                        role="tab"
-                                                                        aria-controls={validIdHelper(`#v-pills-${item.name}`)}
-                                                                        aria-selected="true"
-                                                                        onClick={handleChange}
-                                                                        name={item.name}>
-                                                                        {item.label}
-                                                                        {/* {index === 0 ? <i class="fas fa-folder-open ml-2"></i> : ''} */}
-                                                                    </a>
-                                                                )
-                                                            })
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-10 embedContainer"></div>
-                                            </> :
-                                            <>
-                                                <h6>Explore data and create new reports</h6>
-                                                <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer"></div>
-                                            </>
-                                    }
-
-                                </div>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
-        </div >
-    )
-}
-
-function CodeSideBar(props) {
-    // console.log('CodeSideBar');
-    // console.log('props', props);
-    const { renderSampleCode, sampleCode, lookerUser, toggleCodeBar } = props
-
-    return (
-        renderSampleCode ?
-            <ReactCSSTransitionGroup
-                transitionName="slide"
-                transitionAppear={true}
-                transitionAppearTimeout={500}
-                transitionEnterTimeout={500}
-                transitionLeaveTimeout={500}>
-                < div className="col-sm-8 position-absolute right-abs top-abs--20 p-3 bg-light rounded" >
-
-
-                    <ul className="nav nav-tabs" id={`nestedTab`} role="tablist">
-
-                        <li className="nav-item">
-                            <a className="nav-link active show"
-                                id={`sample-code-tab`}
-                                data-toggle="tab"
-                                href={`#sample-code`}
-                                role="tab"
-                                aria-controls={`sample-code`}
-                                aria-selected="true"
-                            >Sample Code</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link"
-                                id={`user-properties-tab`}
-                                data-toggle="tab"
-                                href={`#user-properties`}
-                                role="tab"
-                                aria-controls={`user-properties`}
-                                aria-selected="true"
-                            >User Properties</a>
-                        </li>
-
-                        <button
-                            type="button"
-                            className="close ml-auto mr-2"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                            onClick={toggleCodeBar}
-                        >
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </ul>
-                    <div className="tab-content" id={`nestedContent`}>
-                        <div className="tab-pane fade show active" id={`sample-code`} role="tabpanel" aria-labelledby={`sample-code-tab`}>
-
-                            <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
-                                {sampleCode}
-                            </SyntaxHighlighter>
-                        </div>
-
-                        <div className="tab-pane fade" id={`user-properties`} role="tabpanel" aria-labelledby={`user-properties-tab`}>
-
-                            <SyntaxHighlighter language="json" style={docco} showLineNumbers={true} >
-                                {JSON.stringify(lookerUser, true, 4)}
-                            </SyntaxHighlighter>
-                        </div>
-                    </div>
-                </div >
-            </ReactCSSTransitionGroup >
-            : <li className="nav-item ml-auto list-unstyled right-abs top-abs-0 abs"><i className="fas fa-code cursor text-secondary" onClick={toggleCodeBar} /></li>
-    )
-}
-
-function CustomFilters(props) {
-    console.log('CustomFilters')
-    const { lookerContent, setActiveTab, dropdownSelect } = props
-
-    return (
-        <div className="container" >
-            <div className="row">
-                <ul id="parentTabList" className="nav nav-tabs w-100" role="tablist">
-                    {lookerContent.map((item, index) => {
-                        return (
-                            <li className="nav-item">
-                                <a key={validIdHelper(item.id)}
-                                    className={index === 0 ? "nav-link active show" : "nav-link"}
-                                    id={validIdHelper(`${item.id}-tab`)}
-                                    data-toggle="tab"
-                                    href={validIdHelper(`#${item.id}`)}
-                                    role="tab"
-                                    aria-controls={validIdHelper(`${item.id}`)}
-                                    aria-selected="true"
-                                    contenttype={item.type}
-                                    onClick={() => setActiveTab(index)}>
-                                    {item.name}
-                                </a>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </div>
-            <div className="row">
-                <div className="tab-content w-100" id="parentTabContent">
-                    {lookerContent.map((item, index) => {
-                        return (
-                            <div key={validIdHelper(item.id)} className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
-                                {item.customDropdown ?
-                                    <div className="row pt-3">
-                                        <div className="col-sm-3">
-                                            <label htmlFor="modalForm">{item.customDropdown.title}</label>
-                                            <select
-                                                id={`dropdownSelect${item.id}`}
-                                                className="form-control"
-                                                // onChange={(e) => this.dropdownSelect(e)}
-                                                onChange={dropdownSelect}
-                                                type="select-one"
-                                                dropdownfiltername={item.customDropdown.filterName}
-                                                dashboardstatename={item.id}
-                                            >
-                                                {item.customDropdown.options.map(item => {
-                                                    return <option
-                                                        key={item == null ? 'Any' : item}
-                                                        value={item == null ? 'Any' : item}
-                                                    > {item == null ? 'Any' : item}</option>
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div> :
-                                    ''}
-                                <div className="row pt-3">
-                                    <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer"></div>
-                                </div>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
-        </div >
-    )
-
-}
