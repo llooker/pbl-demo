@@ -1,16 +1,38 @@
 {
     "marketing": {
         "label": "Marketing",
-        "splashPage": {
-            "type": "splash page",
-            "title": "Your marketing efforts at a glance"
-        },
         "demoComponents": [
+            {
+                "type": "splash page",
+                "label": "Home",
+                "title": "Your marketing efforts at a glance:",
+                "icon": "fa-home",
+                "lookerContent": [
+                    {
+                        "type": "api",
+                        "id": "585321",
+                        "result_format": "json",
+                        "label": "Total spend"
+                    },
+                    {
+                        "type": "api",
+                        "id": "607764",
+                        "result_format": "json",
+                        "label": "Number of Active Campaigns"
+                    },
+                    {
+                        "type": "api",
+                        "id": "984096",
+                        "result_format": "json",
+                        "label": "Total ROI"
+                    }
+                ]
+            },
             {
                 "type": "custom filter",
                 "label": "Custom Filter",
                 "description": "See how you can easily add custom dropdowns that interact with a Looker dashboard",
-                "iconClass": "fa-filter",
+                "icon": "fa-filter",
                 "lookerContent": [
                     {
                         "type": "dashboard",
@@ -33,7 +55,7 @@
                 "type": "dashboard overview detail",
                 "label": "Dashboard Overview Detail",
                 "description": "See how you can easily add modify link actions to have embedded dashboards interact with one another",
-                "iconClass": "fa-link",
+                "icon": "fa-link",
                 "lookerContent": [
                     {
                         "type": "dashboard",
@@ -51,7 +73,7 @@
                 "type": "report builder",
                 "label": "Report Builder",
                 "description": "See how you can easily embed reports and give users the power to create new ones",
-                "iconClass": "fa-hammer",
+                "icon": "fa-hammer",
                 "lookerContent": [
                     {
                         "type": "folder",

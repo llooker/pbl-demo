@@ -8,6 +8,8 @@ const customizeCtrl = require('../controllers/customizeController')
 
 // router.get('/', indexCtrl.readSession)
 router.get('/fetchfolder/:folder_id', indexCtrl.fetchFolder)
+router.get('/fetchdashboard/:dashboard_id', indexCtrl.fetchDashboard)
+router.get('/runquery/:query_id/:result_format', indexCtrl.runQuery)
 // router.get('/fetchfolder/:demo_component_type/:folder_id', indexCtrl.fetchFolder)
 router.get('/readsession', indexCtrl.readSession)
 router.post('/writesession', indexCtrl.writeSession)

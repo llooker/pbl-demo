@@ -3,7 +3,7 @@ import $ from 'jquery';
 let { validIdHelper } = require('../tools');
 
 function ReportBuilder(props) {
-    console.log('ReportBuilder')
+    // console.log('ReportBuilder')
 
     const { lookerContent, setActiveTab } = props
     const [activeFolder, setActiveFolder] = useState("all")

@@ -70,7 +70,7 @@ function CodeSideBar(props) {
                     </div>
                 </div >
             </ReactCSSTransitionGroup >
-            : <li className="nav-item ml-auto list-unstyled right-abs top-abs-0 abs"><i className="fas fa-code cursor text-secondary" onClick={toggleCodeBar} /></li>
+            : <li className="nav-item ml-auto mr-5 list-unstyled right-abs top-abs-0 abs"><i className="fas fa-code cursor text-secondary" onClick={toggleCodeBar} /></li>
     )
 }
 

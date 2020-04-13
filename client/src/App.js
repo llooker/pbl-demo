@@ -295,7 +295,7 @@ class App extends React.Component {
       activeCustomization: this.state.customizations[customizationIndex],
       lookerContent: lookerContentToUse
     }, () => {
-      console.log('applyCustomization callback this.state.lookerContent', this.state.lookerContent)
+      // console.log('applyCustomization callback this.state.lookerContent', this.state.lookerContent)
       // console.log('applyCustomization callback this.state.activeCustomization', this.state.activeCustomization)
       // this.props.history.push('/home') //not going to work here :P
     });
@@ -345,8 +345,8 @@ class App extends React.Component {
   }
 
   saveLookerContent = async (newLookerContent) => {
-    console.log('saveLookerContent')
-    console.log('newLookerContent', newLookerContent)
+    // console.log('saveLookerContent')
+    // console.log('newLookerContent', newLookerContent)
 
     /*let customizationResponse = await fetch('/savelookercontent', {
       method: 'POST',

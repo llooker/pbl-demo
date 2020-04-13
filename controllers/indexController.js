@@ -292,3 +292,46 @@ module.exports.updateLookerUser = (req, res, next) => {
     // console.log('111 session', session)
     res.status(200).send({ session });
 }
+
+module.exports.fetchDashboard = async (req, res, next) => {
+    console.log('indexController fetchDashboard');
+
+    const { params } = req
+    console.log('params', params)
+    const dashboard = await sdk.ok(sdk.dashboard(params.dashboard_id));
+    sdk.da
+
+    let resObj = {
+        dashboard
+    }
+
+    res.send(resObj)
+}
+
+module.exports.runQuery = async (req, res, next) => {
+    // console.log('indexController runQuery');
+
+    const { params } = req
+    // console.log('params', params)
+
+
+    try {
+        // console.log(sdk.run_query.toString())
+        let query = await sdk.ok(sdk.run_query({ query_id: params.query_id, result_format: params.result_format }))
+        // console.log('000 query', query)
+        // query.id = params.query_id
+        // console.log('111 query', query)
+        let resObj = {
+            query_id: params.query_id,
+            query_results: query
+        }
+        res.status(200).send(resObj)
+    } catch (err) {
+        console.log('catch')
+        console.log('err', err)
+        let errorObj = {
+            errorMessage: 'Not working!'
+        }
+        res.status(404).send(errorObj)
+    }
+}
