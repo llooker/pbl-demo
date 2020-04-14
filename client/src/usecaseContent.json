@@ -49,7 +49,15 @@
                                 "12XLShop Inc.",
                                 "180s"
                             ],
-                            "filterName": "Brand"
+                            "filterName": "Brand",
+                            "inlineQuery": {
+                                "model": "thelook",
+                                "view": "order_items",
+                                "fields": [
+                                    "products.brand"
+                                ],
+                                "query_timezone": "America/Los_Angeles"
+                            }
                         }
                     }
                 ]

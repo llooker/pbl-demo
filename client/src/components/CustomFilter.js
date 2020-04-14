@@ -3,10 +3,11 @@ let { validIdHelper } = require('../tools');
 
 function CustomFilter(props) {
     // console.log('CustomFilter')
-    const { lookerContent, setActiveTab, dropdownSelect } = props
+    const { lookerContent, setActiveTab, dropdownSelect, customDropdownOptions } = props
+    // console.log('customDropdownOptions', customDropdownOptions)
 
     return (
-        <div className="pt-5 pl-5 position-relative">
+        <div className="pt-3 pl-3 position-relative">
             <div className="row">
                 <ul id="customFilterTabList" className="nav nav-tabs w-100 parentTabList" role="tablist">
                     {lookerContent.map((item, index) => {
@@ -50,11 +51,17 @@ function CustomFilter(props) {
                                                 dropdownfiltername={item.customDropdown.filterName}
                                                 dashboardstatename={item.id}
                                             >
-                                                {item.customDropdown.options.map(item => {
+                                                {/* {item.customDropdown.options.map(item => {
                                                     return <option
                                                         key={item == null ? 'Any' : item}
                                                         value={item == null ? 'Any' : item}
                                                     > {item == null ? 'Any' : item}</option>
+                                                })} */}
+                                                {customDropdownOptions.map(item => {
+                                                    return <option
+                                                        key={item['products.brand']}
+                                                        value={item['products.brand']}
+                                                    > {item['products.brand'].length ? item['products.brand'] : "All"}</option>
                                                 })}
                                             </select>
                                         </div>

@@ -14,7 +14,7 @@ function DefaultComponent(props) {
     });
 
     return (
-        <div className="pt-5 pl-5 position-relative">
+        <div className="pt-3 pl-3 position-relative">
             <div className="row">
                 <h1>{props.demoComponentType} Component coming soon!</h1>
             </div>

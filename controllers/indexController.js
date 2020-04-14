@@ -335,3 +335,26 @@ module.exports.runQuery = async (req, res, next) => {
         res.status(404).send(errorObj)
     }
 }
+
+module.exports.runInlineQuery = async (req, res, next) => {
+    // console.log('indexController runInlineQuery');
+
+    const { params } = req
+    // console.log('params', params)
+
+    try {
+        let query_response = await sdk.ok(sdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
+
+        let resObj = {
+            queryResults: query_response
+        }
+        res.status(200).send(resObj)
+    } catch (err) {
+        console.log('catch')
+        console.log('err', err)
+        let errorObj = {
+            errorMessage: 'Not working!'
+        }
+        res.status(404).send(errorObj)
+    }
+}

@@ -61,7 +61,8 @@ class Content extends React.Component {
             newLookerContentErrorMessage: '',
             renderSideBar: true,
             activeDemoComponent: 'overview',
-            splashPageContent: []
+            splashPageContent: [],
+            customDropdownOptions: []
         }
     }
 
@@ -128,6 +129,7 @@ class Content extends React.Component {
                     // console.log('usecaseContent[j].type', usecaseContent[j].type)
                     // console.log('desiredTheme', desiredTheme)
 
+
                     LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
@@ -154,6 +156,26 @@ class Content extends React.Component {
                         .catch((error) => {
                             console.error('Connection error', error)
                         })
+
+
+                    if (usecaseContent[j].lookerContent[i].hasOwnProperty('customDropdown')) {
+
+                        let stringifiedQuery = encodeURIComponent(JSON.stringify(usecaseContent[j].lookerContent[i].customDropdown.inlineQuery))
+                        let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
+                            method: 'GET',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        let lookerResponseData = await lookerResponse.json();
+                        // console.log('lookerResponseData', lookerResponseData)
+                        // console.log('lookerResponseData.queryResults', lookerResponseData.queryResults)
+                        // console.log('lookerResponseData.queryResults.length', lookerResponseData.queryResults.length)
+                        this.setState({
+                            customDropdownOptions: lookerResponseData.queryResults
+                        })
+                    }
                 } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
                     LookerEmbedSDK.createExploreWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
@@ -170,7 +192,7 @@ class Content extends React.Component {
                         })
 
                 } else if (usecaseContent[j].lookerContent[i].type === 'folder') {
-                    let lookerResposnse = await fetch('/fetchfolder/' + usecaseContent[j].lookerContent[i].id, { //+ usecaseContent[j].type + '/'
+                    let lookerResponse = await fetch('/fetchfolder/' + usecaseContent[j].lookerContent[i].id, { //+ usecaseContent[j].type + '/'
                         method: 'GET',
                         headers: {
                             Accept: 'application/json',
@@ -179,7 +201,7 @@ class Content extends React.Component {
                     })
 
 
-                    let lookerResponseData = await lookerResposnse.json();
+                    let lookerResponseData = await lookerResponse.json();
 
                     let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
                     let dashboardsToUse = [...lookerResponseData.sharedFolder.dashboards]
@@ -508,10 +530,10 @@ class Content extends React.Component {
 
         const { lookerContent, activeCustomization, lookerUser } = this.props
         const { pathname } = this.props.location
-        const { renderSampleCode, sampleCode, renderModal, newLookerContent, newLookerContentErrorMessage, renderSideBar, splashPageContent } = this.state
+        const { renderSampleCode, sampleCode, renderModal, newLookerContent, newLookerContentErrorMessage, renderSideBar, splashPageContent, customDropdownOptions } = this.state
 
         // let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
-        // console.log('lookerUserCanExplore', lookerUserCanExplore)
+
         return (
             <div className="d-flex pt-5" id="wrapper">
                 <div className="bg-light border-right" id="sidebar-wrapper">
@@ -581,6 +603,7 @@ class Content extends React.Component {
                                                 dropdownSelect={this.dropdownSelect}
                                                 splashPageContent={splashPageContent}
                                                 demoComponentType={item.type}
+                                                customDropdownOptions={customDropdownOptions}
                                             />
 
                                             {
