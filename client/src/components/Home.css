@@ -47,6 +47,9 @@ ul li {
 .top-abs-0{
   top: 0px
 }
+.top-abs-20{
+    top: 20px;
+}
 .top-abs--20{
     top: -20px;
 }
@@ -109,3 +112,6 @@ iframe{
 .min-height-200{
   min-height: 200px;
 }
+/* .nav-pills .nav-link.active, .nav-pills .show>.nav-link  {
+  background-color:#6c757d;
+} */

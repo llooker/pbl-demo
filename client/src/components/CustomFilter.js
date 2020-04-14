@@ -6,14 +6,14 @@ function CustomFilter(props) {
     const { lookerContent, setActiveTab, dropdownSelect } = props
 
     return (
-        <div className="container" >
+        <div className="pt-3 pl-3">
             <div className="row">
                 <ul id="customFilterTabList" className="nav nav-tabs w-100 parentTabList" role="tablist">
                     {lookerContent.map((item, index) => {
                         return (
                             <li className="nav-item">
                                 <a key={validIdHelper(item.id)}
-                                    className={index === 0 ? "nav-link active show" : "nav-link"}
+                                    className={index === 0 ? "nav-link active" : "nav-link"}
                                     id={validIdHelper(`${item.id}-tab`)}
                                     data-toggle="tab"
                                     href={validIdHelper(`#${item.id}`)}

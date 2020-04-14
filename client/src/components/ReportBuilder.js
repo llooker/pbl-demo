@@ -23,18 +23,15 @@ function ReportBuilder(props) {
 
         for (let i = 0; i < iFrameArray.length; i++) {
 
-            if (iFrameArray[i].classList.contains('shared')) {
-                if (activeFolder === 'all' || activeFolder === 'shared') {
-                    iFrameArray[i].className = 'iframe look shared'
-                } else if (activeFolder === 'personal') {
-                    iFrameArray[i].className = 'iframe look shared d-none'
-                }
-            } else if (iFrameArray[i].classList.contains('personal')) {
-                if (activeFolder === 'all' || activeFolder === 'personal') {
-                    iFrameArray[i].className = 'iframe look personal'
-                } else if (activeFolder === 'personal') {
-                    iFrameArray[i].className = 'iframe look personal d-none'
-                }
+            //if activeFolder is all, show all
+            if (activeFolder === 'all') {
+                if (iFrameArray[i].classList.contains('d-none')) iFrameArray[i].classList.remove('d-none')
+            } else if (activeFolder === 'shared') {//if activeFolder is shared, hide personal, show shared
+                if (iFrameArray[i].classList.contains('personal')) iFrameArray[i].className = 'iframe look personal d-none'
+                else if (iFrameArray[i].classList.contains('shared')) iFrameArray[i].classList.remove('d-none')
+            } else if (activeFolder === 'personal') {//if activeFolder is shared, hide shared, show personal
+                if (iFrameArray[i].classList.contains('shared')) iFrameArray[i].className = 'iframe look shared d-none'
+                else if (iFrameArray[i].classList.contains('personal')) iFrameArray[i].classList.remove('d-none')
             }
         }
     });
@@ -46,14 +43,14 @@ function ReportBuilder(props) {
     ]
 
     return (
-        < div className="container" >
+        <div className="pt-3 pl-3">
             <div className="row">
                 <ul id="reportBuilderTabList" className="nav nav-tabs w-100 parentTabList" role="tablist">
                     {lookerContent.map((item, index) => {
                         return (
                             <li className="nav-item">
                                 <a key={validIdHelper(item.id)}
-                                    className={index === 0 ? "nav-link active show" : "nav-link"}
+                                    className={index === 0 ? "nav-link active" : "nav-link"}
                                     id={validIdHelper(`${item.id}-tab`)}
                                     data-toggle="tab"
                                     href={validIdHelper(`#${item.id}`)}
@@ -104,16 +101,19 @@ function ReportBuilder(props) {
                                                 <div className="col-sm-2">
                                                     <h6>Filter content from folders:</h6>
 
-                                                    <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                                    <div className="list-group list-group-flush" id="list-tab" role="tablist">
                                                         {
                                                             reportFilters.map((item, index) => {
                                                                 return (
-                                                                    <a className={index == 0 ? "nav-link active" : "nav-link "}
-                                                                        id={validIdHelper(`v-pills-${item.name}-tab`)}
+                                                                    <a key={validIdHelper(`list-${item.name}-list`)}
+                                                                        className={index == 0 ?
+                                                                            "list-group-item list-group-item-action list-group-item-light active" :
+                                                                            "list-group-item list-group-item-action list-group-item-light"}
+                                                                        id={validIdHelper(`list-${item.name}-list`)}
                                                                         data-toggle="pill"
-                                                                        href={validIdHelper(`#v-pills-${item.name}`)}
+                                                                        href={validIdHelper(`#list-${item.name}`)}
                                                                         role="tab"
-                                                                        aria-controls={validIdHelper(`#v-pills-${item.name}`)}
+                                                                        aria-controls={validIdHelper(`#list-${item.name}`)}
                                                                         aria-selected="true"
                                                                         onClick={handleChange}
                                                                         name={item.name}>

@@ -11,20 +11,23 @@
                     {
                         "type": "api",
                         "id": "585321",
-                        "result_format": "json",
-                        "label": "Total spend"
+                        "resultFormat": "json",
+                        "label": "Total Spend",
+                        "desiredProperty": "adevents.total_cost"
                     },
                     {
                         "type": "api",
                         "id": "607764",
-                        "result_format": "json",
-                        "label": "Number of Active Campaigns"
+                        "resultFormat": "json",
+                        "label": "Number of Active Campaigns",
+                        "desiredMethod": "length"
                     },
                     {
                         "type": "api",
                         "id": "984096",
-                        "result_format": "json",
-                        "label": "Total ROI"
+                        "resultFormat": "json",
+                        "label": "Total ROI",
+                        "desiredProperty": "session_attribution.total_attribution"
                     }
                 ]
             },

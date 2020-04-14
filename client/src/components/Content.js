@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Home.css';
+import './simple-sidebar.css';
 // import Modal from './Modal'
 
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
@@ -7,7 +8,8 @@ import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
 import $ from 'jquery';
 // import { parse } from 'querystring';
 
-
+import Header from './Header'
+import Footer from './Footer'
 import SplashPage from './SplashPage';
 import CustomFilter from './CustomFilter';
 import DashboardOverviewDetail from './DashboardOverviewDetail';
@@ -81,16 +83,18 @@ class Content extends React.Component {
 
 
         LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth')
+        this.setupLookerContent(UsecaseContent.marketing.demoComponents)
     }
 
     componentDidUpdate(prevProps) {
-        // console.log('LookerContent componentDidUpdate')
-        if (this.props.lookerContent != undefined && this.props.lookerContent !== prevProps.lookerContent) {
-            this.setupLookerContent(UsecaseContent.marketing.demoComponents)
+        console.log('LookerContent componentDidUpdate')
+        if (this.props.lookerContent != undefined) { //&& this.props.lookerContent !== prevProps.lookerContent) {
+            // console.log('inside ifff');
+            // this.setupLookerContent(UsecaseContent.marketing.demoComponents)
         }
 
         // if (this.props.lookerUser != undefined && this.props.lookerUser !== prevProps.lookerUser) {
-        // LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth')
+        //     LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth')
         // }
     }
 
@@ -226,7 +230,7 @@ class Content extends React.Component {
                     // console.log('inside api else ifff')
                     // let lookerResposnse = await fetch('/fetchdashboard/' + usecaseContent[j].lookerContent[i].id, { //+ usecaseContent[j].type + '/'
                     // console.log('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].result_format)
-                    let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].result_format, {
+                    let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
                         method: 'GET',
                         headers: {
                             Accept: 'application/json',
@@ -280,12 +284,14 @@ class Content extends React.Component {
 
         let tabsArray = $(".parentTabList:visible a");
         let contentArray = $(".parentTabContent:visible > div");
+        // console.log('tabsArray', tabsArray);
+        // console.log('contentArray', contentArray);
 
         //simulate tab change, when looker action taken...
         if (!$(tabsArray[tabIndex]).hasClass('active')) {
             for (let i = 0; i < tabsArray.length; i++) {
                 if (i === tabIndex) {
-                    tabsArray[i].className = "nav-link active show"
+                    tabsArray[i].className = "nav-link active "
                     contentArray[i].className = "tab-pane fade show active"
                 } else {
                     tabsArray[i].className = "nav-link"
@@ -314,20 +320,22 @@ class Content extends React.Component {
         }
     }
 
-    setActiveDemoComponent = (pillIndex) => {
+    setActiveDemoComponent = (listIndex) => {
         // console.log('setActiveDemoComponent')
-        // console.log('pillIndex', pillIndex)
-        let pillsArray = $("#v-pills-tab:visible a");
-        let contentArray = $("#v-pills-tabContent:visible > div");
+        // console.log('listIndex', listIndex)
+        let listArray = $("#list-tab:visible a");
+        let tabArray = $("#nav-tabContent:visible > div");
+        // console.log('listArray', listArray)
+        // console.log('tabArray', tabArray)
 
-        if (!$(pillsArray[pillIndex]).hasClass('active')) {
-            for (let i = 0; i < pillsArray.length; i++) {
-                if (i === pillIndex) {
-                    pillsArray[i].className = "nav-link active show"
-                    contentArray[i].className = "tab-pane fade show active"
+        if (!$(tabArray[listIndex]).hasClass('active')) {
+            for (let i = 0; i < listArray.length; i++) {
+                if (i === listIndex) {
+                    listArray[i].className = "list-group-item list-group-item-action active"
+                    tabArray[i].className = "tab-pane fade position-relative show active"
                 } else {
-                    pillsArray[i].className = "nav-link"
-                    contentArray[i].className = "tab-pane fade"
+                    listArray[i].className = "list-group-item list-group-item-action"
+                    tabArray[i].className = "tab-pane position-relative fade"
                 }
             }
         }
@@ -451,12 +459,12 @@ class Content extends React.Component {
         // loadingIcon(true);
         // console.log('filtersUpdates')
         // console.log('event', event)
-    
+     
         // instantiate elements, filters, and query objects
         // const dashboard_filters: any = (event && event.dashboard && event.dashboard.dashboard_filters) ? event.dashboard && event.dashboard.dashboard_filters : undefined
         // let dropdown = document.getElementById('select-dropdown')
         // let new_filters = query_object.filters
-    
+     
         // // update query object and run query
         // if (dashboard_filters && (dashboard_date_filter in dashboard_filters)) { // check to make sure our filter is in the changed
         //     if (dropdown) { // check to make sure we found our elements to update/keep
@@ -487,48 +495,72 @@ class Content extends React.Component {
         })
     }
 
+    toggleMenu = (e) => {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    }
+
     render() {
         // console.log('Content render')
         // console.log('this.props', this.props)
 
 
         const { lookerContent, activeCustomization, lookerUser } = this.props
+        const { pathname } = this.props.location
         const { renderSampleCode, sampleCode, renderModal, newLookerContent, newLookerContentErrorMessage, renderSideBar, splashPageContent } = this.state
 
         // let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
         // console.log('lookerUserCanExplore', lookerUserCanExplore)
         return (
 
-            <div className="home container-fluid p-5 position-relative">
-                <div className="row pt-5">
-                    <div className="col-sm-2">
-                        <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <div className="d-flex" id="wrapper">
 
-                            {
-                                UsecaseContent.marketing.demoComponents.map((item, index) => {
-                                    return (
-                                        <a
-                                            id={validIdHelper(`v-pills-${item.type}-tab`)}
-                                            className={index === 0 ? "nav-link active" : "nav-link"}
-                                            data-toggle="pill"
-                                            href={validIdHelper(`#v-pills-${item.type}`)}
-                                            role="tab"
-                                            aria-controls={validIdHelper(`#v-pills-${item.type}`)}
-                                            aria-selected="true"
-                                            onClick={() => {
-                                                this.setActiveDemoComponent(index);
-                                            }}>
-                                            {item.label}
-                                        </a>
-                                    )
-                                })
-                            }
-                        </div>
+                {/* <!-- Sidebar --> */}
+                <div className="bg-light border-right" id="sidebar-wrapper">
+                    <div className="sidebar-heading">Navigation </div>
+
+                    <div className="list-group list-group-flush" id="list-tab" role="tablist">
+                        {
+                            UsecaseContent.marketing.demoComponents.map((item, index) => {
+                                return (
+                                    <a
+                                        id={validIdHelper(`list-${item.type}-list`)}
+                                        className={index === 0 ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action"}
+                                        data-toggle="pill"
+                                        href={validIdHelper(`#list-${item.type}`)}
+                                        role="tab"
+                                        aria-controls={validIdHelper(`#list-${item.type}`)}
+                                        aria-selected="true"
+                                        onClick={() => {
+                                            this.setActiveDemoComponent(index);
+                                        }}>
+                                        {item.label}
+                                        <i className={`fas ${item.icon} ml-3`} />
+                                    </a>
+                                )
+                            })
+                        }
                     </div>
 
-                    <div className="col-sm-10">
-                        <div className="tab-content" id="v-pills-tabContent">
+                </div>
+                {/* <!-- /#sidebar-wrapper --> */}
 
+                {/* <!-- Page Content --> */}
+                <div id="page-content-wrapper">
+
+
+                    {/* < Header
+                        onLogoutSuccess={this.props.applySession}
+                        companyName={activeCustomization.companyName || "WYSIWYG"} //default
+                        logoUrl={activeCustomization.logoUrl || "https://looker.com/assets/img/images/logos/looker_black.svg"} //default
+                        lookerUser={this.props.lookerUser}
+                        switchLookerUser={this.props.switchLookerUser}
+                        pathname={pathname}
+                        toggleMenu={this.toggleMenu}
+                    /> */}
+
+                    <div className="container-fluid">
+                        <div className="tab-content" id="nav-tabContent">
                             {
                                 UsecaseContent.marketing.demoComponents.map((item, index) => {
                                     // hack for dynamic component name
@@ -540,13 +572,13 @@ class Content extends React.Component {
                                     }
                                     const DemoComponent = Map[item.type];
                                     return (
-                                        <div className="tab-pane fade"
-                                            id={validIdHelper(`v-pills-${item.type}`)}
-                                            className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"}
+                                        <div
+                                            id={validIdHelper(`list-${item.type}`)}
+                                            className={index === 0 ? "tab-pane fade position-relative show active" : "tab-pane fade position-relative"}
                                             role="tabpanel"
-                                            aria-labelledby={validIdHelper(`v-pills-${item.type}-tab`)}>
+                                            aria-labelledby={validIdHelper(`list-${item.type}-list`)}>
 
-                                            <DemoComponent key={validIdHelper(`v-pills-${item.type}`)}
+                                            <DemoComponent key={validIdHelper(`list-${item.type}`)}
                                                 lookerContent={item.lookerContent}
                                                 setActiveTab={this.setActiveTab}
                                                 setActiveDemoComponent={this.setActiveDemoComponent}
@@ -554,24 +586,14 @@ class Content extends React.Component {
                                                 splashPageContent={splashPageContent}
                                             />
 
-                                            {/* {
-                                                renderModal ?
-                                                    <Modal title="Select Looker Content to Add"
-                                                        toggleModal={this.toggleModal}
-                                                        objForModal={newLookerContent}
-                                                        handleModalFormChange={this.handleModalFormChange}
-                                                        validateAction={this.validateLookerContent}
-                                                        newLookerContentErrorMessage={newLookerContentErrorMessage} />
-                                                    : ''
-                                            } */}
-
                                             {
                                                 index > 0 ?
                                                     <CodeSideBar
                                                         renderSampleCode={renderSampleCode}
                                                         sampleCode={sampleCode}
                                                         lookerUser={lookerUser}
-                                                        toggleCodeBar={this.toggleCodeBar} /> : ''
+                                                        toggleCodeBar={this.toggleCodeBar}
+                                                        demoComponentType={item.type} /> : ''
                                             }
 
                                         </div>
@@ -579,8 +601,88 @@ class Content extends React.Component {
                                 })}
                         </div>
                     </div>
-                </div>
+                </div >
+                {/* <!-- /#page-content-wrapper --> */}
+
+                {/* <Footer
+                    pathname={pathname} /> */}
+
             </div >
+            // <!-- /#wrapper -->
+
+
+            // <div className="home container-fluid p-5 position-relative">
+            //     <div className="row pt-5">
+            //         <div className="col-sm-1 bg-light">
+            // <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+
+            //     {
+            //         UsecaseContent.marketing.demoComponents.map((item, index) => {
+            //             return (
+            //                 <a
+            //                     id={validIdHelper(`v-pills-${item.type}-tab`)}
+            //                     className={index === 0 ? "nav-link active" : "nav-link"}
+            //                     data-toggle="pill"
+            //                     href={validIdHelper(`#v-pills-${item.type}`)}
+            //                     role="tab"
+            //                     aria-controls={validIdHelper(`#v-pills-${item.type}`)}
+            //                     aria-selected="true"
+            //                     onClick={() => {
+            //                         this.setActiveDemoComponent(index);
+            //                     }}>
+            //                     {item.label}
+            //                     <i className={`fas ${item.icon} ml-3`} />
+            //                 </a>
+            //             )
+            //         })
+            //     }
+            // </div>
+            //         </div>
+
+            //         <div className="col-sm-11">
+            // <div className="tab-content" id="v-pills-tabContent">
+
+            //     {
+            //         UsecaseContent.marketing.demoComponents.map((item, index) => {
+            //             // hack for dynamic component name
+            //             const Map = {
+            //                 "splash page": SplashPage,
+            //                 "custom filter": CustomFilter,
+            //                 "dashboard overview detail": DashboardOverviewDetail,
+            //                 "report builder": ReportBuilder
+            //             }
+            //             const DemoComponent = Map[item.type];
+            //             return (
+            //                 <div className="tab-pane fade"
+            //                     id={validIdHelper(`v-pills-${item.type}`)}
+            //                     className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"}
+            //                     role="tabpanel"
+            //                     aria-labelledby={validIdHelper(`v-pills-${item.type}-tab`)}>
+
+            //                     <DemoComponent key={validIdHelper(`v-pills-${item.type}`)}
+            //                         lookerContent={item.lookerContent}
+            //                         setActiveTab={this.setActiveTab}
+            //                         setActiveDemoComponent={this.setActiveDemoComponent}
+            //                         dropdownSelect={this.dropdownSelect}
+            //                         splashPageContent={splashPageContent}
+            //                     />
+
+            //                     {
+            //                         index > 0 ?
+            //                             <CodeSideBar
+            //                                 renderSampleCode={renderSampleCode}
+            //                                 sampleCode={sampleCode}
+            //                                 lookerUser={lookerUser}
+            //                                 toggleCodeBar={this.toggleCodeBar} /> : ''
+            //                     }
+
+            //                 </div>
+            //             )
+            //         })}
+            // </div>
+            //     </div>
+            // </div>
+            // </div >
         )
     }
 }

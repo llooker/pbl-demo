@@ -3,9 +3,9 @@ import './App.css';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter, useHistory } from 'react-router-dom'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './clientConfig.json';
+import Content from './components/Content'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
 import DefaultLookerContent from './lookerIndustriesByInstance.json';
@@ -13,7 +13,6 @@ import DefaultLookerContent from './lookerIndustriesByInstance.json';
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
 
-// console.log('SplashPage', SplashPage)
 
 
 
@@ -56,6 +55,7 @@ class Login extends React.Component {
 
   render() {
     // console.log("Login render")
+    // console.log("this.props", this.props)
     const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
     const { pathname } = this.props.location
     const { activeCustomization } = this.props
@@ -77,10 +77,10 @@ class Login extends React.Component {
             switchLookerUser={this.props.switchLookerUser}
             pathname={pathname}
           />
-          {/* <ButtonAppBar /> */}
           <Redirect to={from} />
           <Footer pathname={pathname}
             lookerHost={this.props.lookerHost} />
+          {/* <Redirect to={from} /> */}
         </div>
       )
     } else {
@@ -127,6 +127,8 @@ const PrivateRoute = ({
   userProfile,
   lookerUser,
   lookerHost,
+  switchLookerUser, //added
+  applySession, //added
   ...rest }) => (
     < Route {...rest} render={(props) => (
       Object.keys(userProfile).length ?
@@ -143,6 +145,8 @@ const PrivateRoute = ({
           userProfile={userProfile}
           lookerUser={lookerUser}
           lookerHost={lookerHost}
+          switchLookerUser={switchLookerUser} //added
+          applySession={applySession} //added
         />
         : <Redirect to={{
           pathname: '/',
@@ -434,6 +438,7 @@ class App extends React.Component {
             lookerUser={lookerUser}
             applySession={this.applySession}
             lookerHost={lookerHost}
+            switchLookerUser={this.switchLookerUser}
           />
           <PrivateRoute exact path='/customize'
             component={Customizations}

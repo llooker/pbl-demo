@@ -322,8 +322,8 @@ module.exports.runQuery = async (req, res, next) => {
         // query.id = params.query_id
         // console.log('111 query', query)
         let resObj = {
-            query_id: params.query_id,
-            query_results: query
+            queryId: params.query_id,
+            queryResults: query
         }
         res.status(200).send(resObj)
     } catch (err) {

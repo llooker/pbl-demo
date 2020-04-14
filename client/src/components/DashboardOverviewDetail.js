@@ -7,16 +7,16 @@ function DashboardOverviewDetail(props) {
     // console.log('props.lookerContent', props.lookerContent)
     const { lookerContent, setActiveTab } = props
     return (
-        <div className="container">
+        <div className="pt-3 pl-3">
             <div className="row">
-                <ul id="dashobardOverviewDetailTabList" className="nav nav-tabs w-100 parentTabList" role="tablist">
+                <ul className="nav nav-tabs w-100 parentTabList" id="dashboardOverviewDetailTabList" role="tablist">
                     {lookerContent.map((item, index) => {
                         return (
-                            <li className="nav-item" key={validIdHelper(item.id)} >
-                                <a key={validIdHelper(item.id)}
-                                    // className={index === 0 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
-                                    className={index === 0 ? "nav-link active show" : "nav-link"}
+                            <li className="nav-item"
+                                key={validIdHelper(item.id) + 'li'} >
+                                <a key={validIdHelper(item.id) + 'a'}
                                     id={validIdHelper(`${item.id}-tab`)}
+                                    className={index === 0 ? "nav-link active" : "nav-link"}
                                     data-toggle="tab"
                                     href={validIdHelper(`#${item.id}`)}
                                     role="tab"
@@ -36,7 +36,11 @@ function DashboardOverviewDetail(props) {
                 <div className="tab-content w-100 parentTabContent" id="dashboardOverviewDetailTabContent">
                     {lookerContent.map((item, index) => {
                         return (
-                            <div key={validIdHelper(item.id)} className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
+                            <div key={validIdHelper(item.id)}
+                                className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"}
+                                id={validIdHelper(`${item.id}`)}
+                                role="tabpanel"
+                                aria-labelledby={validIdHelper(`${item.id}-tab`)}>
                                 {item.customDropdown ?
                                     <div className="row pt-3">
                                         <div className="col-sm-3">
@@ -67,6 +71,7 @@ function DashboardOverviewDetail(props) {
                     })}
                 </div>
             </div>
+
         </div >
     )
 }
