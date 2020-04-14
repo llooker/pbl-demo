@@ -7,7 +7,7 @@ function DashboardOverviewDetail(props) {
     // console.log('props.lookerContent', props.lookerContent)
     const { lookerContent, setActiveTab } = props
     return (
-        <div className="pt-3 pl-3">
+        <div className="pt-5 pl-5 position-relative">
             <div className="row">
                 <ul className="nav nav-tabs w-100 parentTabList" id="dashboardOverviewDetailTabList" role="tablist">
                     {lookerContent.map((item, index) => {

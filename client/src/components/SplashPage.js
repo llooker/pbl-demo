@@ -54,16 +54,16 @@ function SplashPage(props) {
     ]*/
 
     return (
-        <div className="pt-3 pl-3 position-relative">
+        <div className="pt-5 pl-5 position-relative">
             <div className="row">
                 <h4>{UsecaseContent.marketing.demoComponents[0].title}</h4>
             </div>
-            <div className="row pt-3">
+            <div className="row text-center">
                 {
                     splashPageContent.length ?
                         splashPageContent.map((item, index) => {
                             return (
-                                <div key={index} className="card ml-5 p-3 bg-grey" style={{ "width": 18 + 'rem' }}>
+                                <div key={index} className="card ml-5 p-3 mt-3 bg-light" style={{ "width": 18 + 'rem' }}>
                                     <div className="card-body">
                                         <h5 className="card-title">{UsecaseContent.marketing.demoComponents[0].lookerContent[index].label}:</h5>
                                         {/* <h6 className="card-subtitle mb-2 text-muted">Card subtitle</h6> */}
@@ -101,13 +101,13 @@ function SplashPage(props) {
             <div className="row">
                 <h4>Take actions on your data: </h4>
             </div>
-            <div className="row pt-3">
+            <div className="row text-center">
                 {
                     UsecaseContent.marketing.demoComponents.map((item, index) => {
                         // console.log('item', item)
                         return (
                             index > 0 ?
-                                <div key={item.type} className="card ml-5 p-3" style={{ "width": 18 + 'rem' }}>
+                                <div key={item.type} className="card ml-5 mt-5 p-3 bg-light" style={{ "width": 18 + 'rem' }}>
                                     <div className="card-body">
                                         <h5 className="card-title">{item.label}<i className={`fas ${item.icon} ml-3`} /></h5>
                                         <p className="card-text">{item.description}</p>

@@ -89,6 +89,20 @@
                         "name": "Create New Report"
                     }
                 ]
+            },
+            {
+                "type": "query builder",
+                "label": "Query Builder",
+                "description": "Build a query",
+                "icon": "fa-search",
+                "lookerContent": []
+            },
+            {
+                "type": "custom viz",
+                "label": "Custom Visualization",
+                "description": "Build a custom visualization",
+                "icon": "fa-wrench",
+                "lookerContent": []
             }
         ]
     },

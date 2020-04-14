@@ -43,7 +43,7 @@ function ReportBuilder(props) {
     ]
 
     return (
-        <div className="pt-3 pl-3">
+        <div className="pt-5 pl-5 position-relative">
             <div className="row">
                 <ul id="reportBuilderTabList" className="nav nav-tabs w-100 parentTabList" role="tablist">
                     {lookerContent.map((item, index) => {

@@ -14,6 +14,7 @@ import SplashPage from './SplashPage';
 import CustomFilter from './CustomFilter';
 import DashboardOverviewDetail from './DashboardOverviewDetail';
 import ReportBuilder from './ReportBuilder';
+import DefaultComponent from './DefaultComponent';
 import CodeSideBar from './CodeSideBar';
 import UsecaseContent from '../usecaseContent.json';
 
@@ -512,10 +513,7 @@ class Content extends React.Component {
         // let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
         // console.log('lookerUserCanExplore', lookerUserCanExplore)
         return (
-
-            <div className="d-flex" id="wrapper">
-
-                {/* <!-- Sidebar --> */}
+            <div className="d-flex pt-5" id="wrapper">
                 <div className="bg-light border-right" id="sidebar-wrapper">
                     <div className="sidebar-heading">Navigation </div>
 
@@ -541,11 +539,7 @@ class Content extends React.Component {
                             })
                         }
                     </div>
-
                 </div>
-                {/* <!-- /#sidebar-wrapper --> */}
-
-                {/* <!-- Page Content --> */}
                 <div id="page-content-wrapper">
 
 
@@ -568,7 +562,9 @@ class Content extends React.Component {
                                         "splash page": SplashPage,
                                         "custom filter": CustomFilter,
                                         "dashboard overview detail": DashboardOverviewDetail,
-                                        "report builder": ReportBuilder
+                                        "report builder": ReportBuilder,
+                                        "query builder": DefaultComponent,
+                                        "custom viz": DefaultComponent
                                     }
                                     const DemoComponent = Map[item.type];
                                     return (
@@ -584,6 +580,7 @@ class Content extends React.Component {
                                                 setActiveDemoComponent={this.setActiveDemoComponent}
                                                 dropdownSelect={this.dropdownSelect}
                                                 splashPageContent={splashPageContent}
+                                                demoComponentType={item.type}
                                             />
 
                                             {
@@ -602,87 +599,7 @@ class Content extends React.Component {
                         </div>
                     </div>
                 </div >
-                {/* <!-- /#page-content-wrapper --> */}
-
-                {/* <Footer
-                    pathname={pathname} /> */}
-
             </div >
-            // <!-- /#wrapper -->
-
-
-            // <div className="home container-fluid p-5 position-relative">
-            //     <div className="row pt-5">
-            //         <div className="col-sm-1 bg-light">
-            // <div className="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-
-            //     {
-            //         UsecaseContent.marketing.demoComponents.map((item, index) => {
-            //             return (
-            //                 <a
-            //                     id={validIdHelper(`v-pills-${item.type}-tab`)}
-            //                     className={index === 0 ? "nav-link active" : "nav-link"}
-            //                     data-toggle="pill"
-            //                     href={validIdHelper(`#v-pills-${item.type}`)}
-            //                     role="tab"
-            //                     aria-controls={validIdHelper(`#v-pills-${item.type}`)}
-            //                     aria-selected="true"
-            //                     onClick={() => {
-            //                         this.setActiveDemoComponent(index);
-            //                     }}>
-            //                     {item.label}
-            //                     <i className={`fas ${item.icon} ml-3`} />
-            //                 </a>
-            //             )
-            //         })
-            //     }
-            // </div>
-            //         </div>
-
-            //         <div className="col-sm-11">
-            // <div className="tab-content" id="v-pills-tabContent">
-
-            //     {
-            //         UsecaseContent.marketing.demoComponents.map((item, index) => {
-            //             // hack for dynamic component name
-            //             const Map = {
-            //                 "splash page": SplashPage,
-            //                 "custom filter": CustomFilter,
-            //                 "dashboard overview detail": DashboardOverviewDetail,
-            //                 "report builder": ReportBuilder
-            //             }
-            //             const DemoComponent = Map[item.type];
-            //             return (
-            //                 <div className="tab-pane fade"
-            //                     id={validIdHelper(`v-pills-${item.type}`)}
-            //                     className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"}
-            //                     role="tabpanel"
-            //                     aria-labelledby={validIdHelper(`v-pills-${item.type}-tab`)}>
-
-            //                     <DemoComponent key={validIdHelper(`v-pills-${item.type}`)}
-            //                         lookerContent={item.lookerContent}
-            //                         setActiveTab={this.setActiveTab}
-            //                         setActiveDemoComponent={this.setActiveDemoComponent}
-            //                         dropdownSelect={this.dropdownSelect}
-            //                         splashPageContent={splashPageContent}
-            //                     />
-
-            //                     {
-            //                         index > 0 ?
-            //                             <CodeSideBar
-            //                                 renderSampleCode={renderSampleCode}
-            //                                 sampleCode={sampleCode}
-            //                                 lookerUser={lookerUser}
-            //                                 toggleCodeBar={this.toggleCodeBar} /> : ''
-            //                     }
-
-            //                 </div>
-            //             )
-            //         })}
-            // </div>
-            //     </div>
-            // </div>
-            // </div >
         )
     }
 }
