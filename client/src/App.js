@@ -13,6 +13,20 @@ import DefaultLookerContent from './lookerIndustriesByInstance.json';
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
 
+//material
+
+// import { AppBar, BottomNavigation, Container } from '@material-ui/core';
+
+// import ThemeProvider from '@material-ui/styles/ThemeProvider'; //working
+// import { AppBar, TextField, RaisedButton } from '@material-ui/core';
+
+
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+
+import Button from '@material-ui/core/Button'
+
 
 
 
@@ -62,6 +76,8 @@ class Login extends React.Component {
     const { userProfile } = this.props
 
 
+
+
     // console.log('from', from)
 
     const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
@@ -69,7 +85,7 @@ class Login extends React.Component {
     if (Object.keys(userProfile).length) {
       return (
         <div className="App">
-          <Header
+          {/* <Header
             onLogoutSuccess={this.props.applySession}
             companyName={activeCustomization.companyName || "WYSIWYG"} //default
             logoUrl={activeCustomization.logoUrl || "https://looker.com/assets/img/images/logos/looker_black.svg"} //default
@@ -79,8 +95,19 @@ class Login extends React.Component {
           />
           <Redirect to={from} />
           <Footer pathname={pathname}
-            lookerHost={this.props.lookerHost} />
+            lookerHost={this.props.lookerHost} /> */}
           {/* <Redirect to={from} /> */}
+
+
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="title" color="inherit">
+                React & Material-UI Sample Application
+                </Typography>
+            </Toolbar>
+          </AppBar>
+
+
         </div>
       )
     } else {

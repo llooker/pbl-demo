@@ -19,6 +19,7 @@ import CodeSideBar from './CodeSideBar';
 import UsecaseContent from '../usecaseContent.json';
 
 //start of material????
+import { Container } from '@material-ui/core';
 
 const { validIdHelper } = require('../tools');
 
@@ -553,96 +554,99 @@ class Content extends React.Component {
         // let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
 
         return (
-            <div className="d-flex pt-5" id="wrapper">
-                <div className="bg-light border-right" id="sidebar-wrapper">
-                    <div className="sidebar-heading">Navigation </div>
+            <Container maxWidth="sm">
+            </Container>
 
-                    <div className="list-group list-group-flush" id="list-tab" role="tablist">
-                        {
-                            UsecaseContent.marketing.demoComponents.map((item, index) => {
-                                return (
-                                    <a
-                                        id={validIdHelper(`list-${item.type}-list`)}
-                                        className={index === 0 ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action"}
-                                        data-toggle="pill"
-                                        href={validIdHelper(`#list-${item.type}`)}
-                                        role="tab"
-                                        aria-controls={validIdHelper(`#list-${item.type}`)}
-                                        aria-selected="true"
-                                        onClick={() => {
-                                            this.setActiveDemoComponent(index);
-                                        }}>
-                                        {item.label}
-                                        <i className={`fas ${item.icon} ml-3`} />
-                                    </a>
-                                )
-                            })
-                        }
-                        {/* <SimpleList /> */}
-                    </div>
-                </div>
-                <div id="page-content-wrapper">
+            // <div className="d-flex pt-5" id="wrapper">
+            //     <div className="bg-light border-right" id="sidebar-wrapper">
+            //         <div className="sidebar-heading">Navigation </div>
+
+            //         <div className="list-group list-group-flush" id="list-tab" role="tablist">
+            //             {
+            //                 UsecaseContent.marketing.demoComponents.map((item, index) => {
+            //                     return (
+            //                         <a
+            //                             id={validIdHelper(`list-${item.type}-list`)}
+            //                             className={index === 0 ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action"}
+            //                             data-toggle="pill"
+            //                             href={validIdHelper(`#list-${item.type}`)}
+            //                             role="tab"
+            //                             aria-controls={validIdHelper(`#list-${item.type}`)}
+            //                             aria-selected="true"
+            //                             onClick={() => {
+            //                                 this.setActiveDemoComponent(index);
+            //                             }}>
+            //                             {item.label}
+            //                             <i className={`fas ${item.icon} ml-3`} />
+            //                         </a>
+            //                     )
+            //                 })
+            //             }
+            //             {/* <SimpleList /> */}
+            //         </div>
+            //     </div>
+            //     <div id="page-content-wrapper">
 
 
-                    {/* < Header
-                        onLogoutSuccess={this.props.applySession}
-                        companyName={activeCustomization.companyName || "WYSIWYG"} //default
-                        logoUrl={activeCustomization.logoUrl || "https://looker.com/assets/img/images/logos/looker_black.svg"} //default
-                        lookerUser={this.props.lookerUser}
-                        switchLookerUser={this.props.switchLookerUser}
-                        pathname={pathname}
-                        toggleMenu={this.toggleMenu}
-                    /> */}
+            //         {/* < Header
+            //             onLogoutSuccess={this.props.applySession}
+            //             companyName={activeCustomization.companyName || "WYSIWYG"} //default
+            //             logoUrl={activeCustomization.logoUrl || "https://looker.com/assets/img/images/logos/looker_black.svg"} //default
+            //             lookerUser={this.props.lookerUser}
+            //             switchLookerUser={this.props.switchLookerUser}
+            //             pathname={pathname}
+            //             toggleMenu={this.toggleMenu}
+            //         /> */}
 
-                    <div className="container-fluid">
-                        <div className="tab-content" id="nav-tabContent">
-                            {
-                                UsecaseContent.marketing.demoComponents.map((item, index) => {
-                                    // hack for dynamic component name
-                                    const Map = {
-                                        "splash page": SplashPage,
-                                        "custom filter": CustomFilter,
-                                        "dashboard overview detail": DashboardOverviewDetail,
-                                        "report builder": ReportBuilder,
-                                        "query builder": ComingSoon,
-                                        "custom viz": ComingSoon
-                                    }
-                                    const DemoComponent = Map[item.type];
-                                    return (
-                                        <div
-                                            id={validIdHelper(`list-${item.type}`)}
-                                            className={index === 0 ? "tab-pane fade position-relative show active" : "tab-pane fade position-relative"}
-                                            role="tabpanel"
-                                            aria-labelledby={validIdHelper(`list-${item.type}-list`)}>
+            //         <div className="container-fluid">
+            //             <div className="tab-content" id="nav-tabContent">
+            //                 {
+            //                     UsecaseContent.marketing.demoComponents.map((item, index) => {
+            //                         // hack for dynamic component name
+            //                         const Map = {
+            //                             "splash page": SplashPage,
+            //                             "custom filter": CustomFilter,
+            //                             "dashboard overview detail": DashboardOverviewDetail,
+            //                             "report builder": ReportBuilder,
+            //                             "query builder": ComingSoon,
+            //                             "custom viz": ComingSoon
+            //                         }
+            //                         const DemoComponent = Map[item.type];
+            //                         return (
+            //                             <div
+            //                                 id={validIdHelper(`list-${item.type}`)}
+            //                                 className={index === 0 ? "tab-pane fade position-relative show active" : "tab-pane fade position-relative"}
+            //                                 role="tabpanel"
+            //                                 aria-labelledby={validIdHelper(`list-${item.type}-list`)}>
 
-                                            <DemoComponent key={validIdHelper(`list-${item.type}`)}
-                                                lookerContent={item.lookerContent}
-                                                setActiveTab={this.setActiveTab}
-                                                setActiveDemoComponent={this.setActiveDemoComponent}
-                                                dropdownSelect={this.dropdownSelect}
-                                                splashPageContent={splashPageContent}
-                                                demoComponentType={item.type}
-                                                customDropdownOptions={customDropdownOptions}
-                                                reportBuilderContent={reportBuilderContent}
-                                            />
+            //                                 <DemoComponent key={validIdHelper(`list-${item.type}`)}
+            //                                     lookerContent={item.lookerContent}
+            //                                     setActiveTab={this.setActiveTab}
+            //                                     setActiveDemoComponent={this.setActiveDemoComponent}
+            //                                     dropdownSelect={this.dropdownSelect}
+            //                                     splashPageContent={splashPageContent}
+            //                                     demoComponentType={item.type}
+            //                                     customDropdownOptions={customDropdownOptions}
+            //                                     reportBuilderContent={reportBuilderContent}
+            //                                 />
 
-                                            {
-                                                index > 0 ?
-                                                    <CodeSideBar
-                                                        renderSampleCode={renderSampleCode}
-                                                        sampleCode={sampleCode}
-                                                        lookerUser={lookerUser}
-                                                        toggleCodeBar={this.toggleCodeBar}
-                                                        demoComponentType={item.type} /> : ''
-                                            }
+            //                                 {
+            //                                     index > 0 ?
+            //                                         <CodeSideBar
+            //                                             renderSampleCode={renderSampleCode}
+            //                                             sampleCode={sampleCode}
+            //                                             lookerUser={lookerUser}
+            //                                             toggleCodeBar={this.toggleCodeBar}
+            //                                             demoComponentType={item.type} /> : ''
+            //                                 }
 
-                                        </div>
-                                    )
-                                })}
-                        </div>
-                    </div>
-                </div >
-            </div >
+            //                             </div>
+            //                         )
+            //                     })}
+            //             </div>
+            //         </div>
+            //     </div >
+            // </div >
         )
     }
 }
