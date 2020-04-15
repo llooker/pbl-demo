@@ -474,10 +474,6 @@ class Content extends React.Component {
             let stateName = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
             const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
             const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
-<<<<<<< HEAD
-
-=======
->>>>>>> feature/demo-components
 
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
             //urls changed to relative, need slugs to work across instances?
