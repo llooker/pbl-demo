@@ -8,19 +8,22 @@ import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
 import $ from 'jquery';
 // import { parse } from 'querystring';
 
-import Header from './Header'
-import Footer from './Footer'
+// import Header from './Header'
+// import Footer from './Footer'
 import SplashPage from './SplashPage';
 import CustomFilter from './CustomFilter';
 import DashboardOverviewDetail from './DashboardOverviewDetail';
 import ReportBuilder from './ReportBuilder';
-import DefaultComponent from './DefaultComponent';
+import ComingSoon from './ComingSoon';
 import CodeSideBar from './CodeSideBar';
 import UsecaseContent from '../usecaseContent.json';
 
+//start of material????
+
 const { validIdHelper } = require('../tools');
 
-// start of material
+
+
 // import Button from '@material-ui/core/Button';
 // import Box from '@material-ui/core/Box';
 // import Container from '@material-ui/core/Container';
@@ -62,7 +65,8 @@ class Content extends React.Component {
             renderSideBar: true,
             activeDemoComponent: 'overview',
             splashPageContent: [],
-            customDropdownOptions: []
+            customDropdownOptions: [],
+            reportBuilderContent: {}
         }
     }
 
@@ -210,6 +214,12 @@ class Content extends React.Component {
                         dashboards: dashboardsToUse
                     }
                     // console.log('objToUse', objToUse)
+
+                    this.setState({
+                        reportBuilderContent: objToUse
+                    }, () => {
+                        console.log('setState callback ', this.state.reportBuilderContent)
+                    })
 
                     {
                         objToUse.looks.length ?
@@ -530,7 +540,15 @@ class Content extends React.Component {
 
         const { lookerContent, activeCustomization, lookerUser } = this.props
         const { pathname } = this.props.location
-        const { renderSampleCode, sampleCode, renderModal, newLookerContent, newLookerContentErrorMessage, renderSideBar, splashPageContent, customDropdownOptions } = this.state
+        const { renderSampleCode,
+            sampleCode,
+            renderModal,
+            newLookerContent,
+            newLookerContentErrorMessage,
+            renderSideBar,
+            splashPageContent,
+            customDropdownOptions,
+            reportBuilderContent } = this.state
 
         // let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
 
@@ -560,6 +578,7 @@ class Content extends React.Component {
                                 )
                             })
                         }
+                        {/* <SimpleList /> */}
                     </div>
                 </div>
                 <div id="page-content-wrapper">
@@ -585,8 +604,8 @@ class Content extends React.Component {
                                         "custom filter": CustomFilter,
                                         "dashboard overview detail": DashboardOverviewDetail,
                                         "report builder": ReportBuilder,
-                                        "query builder": DefaultComponent,
-                                        "custom viz": DefaultComponent
+                                        "query builder": ComingSoon,
+                                        "custom viz": ComingSoon
                                     }
                                     const DemoComponent = Map[item.type];
                                     return (
@@ -604,6 +623,7 @@ class Content extends React.Component {
                                                 splashPageContent={splashPageContent}
                                                 demoComponentType={item.type}
                                                 customDropdownOptions={customDropdownOptions}
+                                                reportBuilderContent={reportBuilderContent}
                                             />
 
                                             {

@@ -42,7 +42,7 @@
                         "id": "5280",
                         "name": "Advertising Pulse",
                         "customDropdown": {
-                            "title": "Select Brand",
+                            "label": "Select Brand",
                             "options": [
                                 "10 deep",
                                 "106 Shades",

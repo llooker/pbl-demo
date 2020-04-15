@@ -5,8 +5,10 @@ let { validIdHelper } = require('../tools');
 function ReportBuilder(props) {
     // console.log('ReportBuilder')
 
-    const { lookerContent, setActiveTab } = props
+    const { lookerContent, setActiveTab, reportBuilderContent } = props
     const [activeFolder, setActiveFolder] = useState("all")
+
+    console.log('reportBuilderContent', reportBuilderContent)
 
     const handleChange = (event) => {
         // console.log('handleChange');

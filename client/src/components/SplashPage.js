@@ -5,8 +5,8 @@ import './Home.css';
 let { validIdHelper } = require('../tools');
 
 function SplashPage(props) {
-    console.log('SplashPage')
-    console.log('props', props)
+    // console.log('SplashPage')
+    // console.log('props', props)
 
 
     const { lookerContent, setActiveDemoComponent, dropdownSelect, splashPageContent } = props

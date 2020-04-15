@@ -41,7 +41,7 @@ function CustomFilter(props) {
                                 {item.customDropdown ?
                                     <div className="row pt-3">
                                         <div className="col-sm-3">
-                                            <label htmlFor="modalForm">{item.customDropdown.title}</label>
+                                            <label htmlFor="modalForm">{item.customDropdown.label}</label>
                                             <select
                                                 id={`dropdownSelect${item.id}`}
                                                 className="form-control"
@@ -51,17 +51,11 @@ function CustomFilter(props) {
                                                 dropdownfiltername={item.customDropdown.filterName}
                                                 dashboardstatename={item.id}
                                             >
-                                                {/* {item.customDropdown.options.map(item => {
+                                                {customDropdownOptions.map(dropdownItem => {
                                                     return <option
-                                                        key={item == null ? 'Any' : item}
-                                                        value={item == null ? 'Any' : item}
-                                                    > {item == null ? 'Any' : item}</option>
-                                                })} */}
-                                                {customDropdownOptions.map(item => {
-                                                    return <option
-                                                        key={item['products.brand']}
-                                                        value={item['products.brand']}
-                                                    > {item['products.brand'].length ? item['products.brand'] : "All"}</option>
+                                                        key={dropdownItem[item.customDropdown.inlineQuery.fields[0]]}
+                                                        value={dropdownItem[item.customDropdown.inlineQuery.fields[0]]}
+                                                    > {dropdownItem[item.customDropdown.inlineQuery.fields[0]].length ? dropdownItem[item.customDropdown.inlineQuery.fields[0]] : "All"}</option>
                                                 })}
                                             </select>
                                         </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import $ from 'jquery';
 let { validIdHelper } = require('../tools');
 
-function DefaultComponent(props) {
+function ComingSoon(props) {
     // console.log('ReportBuilder')
 
     const handleChange = (event) => {
@@ -22,4 +22,4 @@ function DefaultComponent(props) {
     )
 }
 
-export default DefaultComponent
+export default ComingSoon
