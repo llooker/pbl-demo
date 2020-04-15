@@ -47,20 +47,23 @@ module.exports.fetchFolder = async (req, res, next) => {
     // console.log('indexController fetchFolder');
 
     const { params } = req
+
     const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id))
     const embedUser = await sdk.ok(sdk.user(userCred.id));
-    const folderListAsString = `${params.folder_id},${embedUser.personal_folder_id}`;
 
-    const looks = await sdk.ok(sdk.search_looks({ space_id: folderListAsString }))
-    let resObj = { looks }
+    // const folderListAsString = `${params.folder_id},${embedUser.personal_folder_id}`;
+    // console.log('folderListAsString', folderListAsString)
+    // const looks = await sdk.ok(sdk.search_looks({ space_id: folderListAsString }))
+    // console.log('looks', looks)
+    // let resObj = { looks }
 
 
-    // const sharedFolder = await sdk.ok(sdk.folder(params.folder_id))
-    // const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id))
-    // let resObj = {
-    //     sharedFolder,
-    //     embeddedUserFolder
-    // }
+    const sharedFolder = await sdk.ok(sdk.folder(params.folder_id))
+    const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id))
+    let resObj = {
+        sharedFolder,
+        embeddedUserFolder
+    }
 
     res.send(resObj)
 }
@@ -288,4 +291,70 @@ module.exports.updateLookerUser = (req, res, next) => {
     session.lookerUser = lookerUser;
     // console.log('111 session', session)
     res.status(200).send({ session });
+}
+
+module.exports.fetchDashboard = async (req, res, next) => {
+    console.log('indexController fetchDashboard');
+
+    const { params } = req
+    console.log('params', params)
+    const dashboard = await sdk.ok(sdk.dashboard(params.dashboard_id));
+    sdk.da
+
+    let resObj = {
+        dashboard
+    }
+
+    res.send(resObj)
+}
+
+module.exports.runQuery = async (req, res, next) => {
+    // console.log('indexController runQuery');
+
+    const { params } = req
+    // console.log('params', params)
+
+
+    try {
+        // console.log(sdk.run_query.toString())
+        let query = await sdk.ok(sdk.run_query({ query_id: params.query_id, result_format: params.result_format }))
+        // console.log('000 query', query)
+        // query.id = params.query_id
+        // console.log('111 query', query)
+        let resObj = {
+            queryId: params.query_id,
+            queryResults: query
+        }
+        res.status(200).send(resObj)
+    } catch (err) {
+        console.log('catch')
+        console.log('err', err)
+        let errorObj = {
+            errorMessage: 'Not working!'
+        }
+        res.status(404).send(errorObj)
+    }
+}
+
+module.exports.runInlineQuery = async (req, res, next) => {
+    // console.log('indexController runInlineQuery');
+
+    const { params } = req
+    // console.log('params', params)
+
+    try {
+        let query_response = await sdk.ok(sdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
+
+        let resObj = {
+            queryResults: query_response
+        }
+        res.status(200).send(resObj)
+    } catch (err) {
+        console.log('catch')
+        console.log('err', err)
+        let errorObj = {
+            errorMessage: 'Not working!'
+        }
+        res.status(404).send(errorObj)
+    }
 }

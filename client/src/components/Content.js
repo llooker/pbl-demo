@@ -1,14 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Home.css';
-import Modal from './Modal'
+import './simple-sidebar.css';
+// import Modal from './Modal'
 
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+// import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import $ from 'jquery';
-import { parse } from 'querystring';
+// import { parse } from 'querystring';
+
+// import Header from './Header'
+// import Footer from './Footer'
+import SplashPage from './SplashPage';
+import CustomFilter from './CustomFilter';
+import DashboardOverviewDetail from './DashboardOverviewDetail';
+import ReportBuilder from './ReportBuilder';
+import ComingSoon from './ComingSoon';
+import CodeSideBar from './CodeSideBar';
+import UsecaseContent from '../usecaseContent.json';
+
+//start of material????
+
+const { validIdHelper } = require('../tools');
+
+
+
 // import Button from '@material-ui/core/Button';
+// import Box from '@material-ui/core/Box';
+// import Container from '@material-ui/core/Container';
+// import Typography from '@material-ui/core/Typography';
+// import Link from '@material-ui/core/Link';
+
+// import { render } from '@testing-library/react';
 
 
 
@@ -39,15 +61,20 @@ class Content extends React.Component {
             renderModal: false,
             //set to desired empty object onload
             newLookerContent: defaultNewLookerContentObj,
-            newLookerContentErrorMessage: ''
+            newLookerContentErrorMessage: '',
+            renderSideBar: true,
+            activeDemoComponent: 'overview',
+            splashPageContent: [],
+            customDropdownOptions: [],
+            reportBuilderContent: {}
         }
     }
 
 
-    componentDidMount() {
-        // console.log('LookerContent componentDidMount')
-        const { lookerContent } = this.props
-        this.setupLookerContent(lookerContent)
+    componentDidMount(props) {
+        console.log('LookerContent componentDidMount')
+        // const { lookerContent } = this.props
+        // console.log('props', props)
 
         const sampleCodeFilePath = require("../sample-code/dashboard.sample.txt");
         fetch(sampleCodeFilePath)
@@ -62,24 +89,26 @@ class Content extends React.Component {
 
 
         LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth')
+        this.setupLookerContent(UsecaseContent.marketing.demoComponents)
     }
 
     componentDidUpdate(prevProps) {
-        // console.log('LookerContent componentDidUpdate')
-        if (this.props.lookerContent != undefined && this.props.lookerContent !== prevProps.lookerContent) {
-            this.setupLookerContent(this.props.lookerContent)
+        console.log('LookerContent componentDidUpdate')
+        if (this.props.lookerContent != undefined) { //&& this.props.lookerContent !== prevProps.lookerContent) {
+            // console.log('inside ifff');
+            // this.setupLookerContent(UsecaseContent.marketing.demoComponents)
         }
 
         // if (this.props.lookerUser != undefined && this.props.lookerUser !== prevProps.lookerUser) {
-        // LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth')
+        //     LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth')
         // }
     }
 
 
 
-    async setupLookerContent(lookerContent) {
+    async setupLookerContent(usecaseContent) {
         // console.log('setupLookerContent')
-        // console.log('lookerContent', lookerContent)
+        // console.log('usecaseContent', usecaseContent)
 
         //delete old content..?
         let embedContainerArray = document.getElementsByClassName("embedContainer");
@@ -88,94 +117,182 @@ class Content extends React.Component {
             document.getElementById(thisEmbedContainerId).innerHTML = ''
         }
 
-        for (let i = 0; i < lookerContent.length; i++) {
+        for (let j = 0; j < usecaseContent.length; j++) {
 
-            LookerEmbedSDK.createDashboardWithId
-            if (lookerContent[i].type === 'dashboard') {
-                LookerEmbedSDK.createDashboardWithId(lookerContent[i].id)
-                    .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
-                    .withClassName('iframe')
-                    .withNext()
-                    .withFilters() //new
-                    .withTheme('Looker') //new
-                    .on('dashboard:run:start', (e) => {
-                        // console.log('e', e)
-                    })
-                    .on('drillmenu:click', (e) => this.drillClick(e))
-                    .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
-                    // .on('page:properties:changed', (e) => {
-                    //     this.changeHeight(e, `embedContainer${lookerContent[i].id}`)
-                    // })
-                    .build()
-                    .connect()
-                    .then((dashboard) => {
-                        this.setState({
-                            [lookerContent[i].id]: dashboard //5277
-                        })
-                        // this.changeHeight(dashboard, `embedContainer${lookerContent[i].id}`)
-                    })
-                    .catch((error) => {
-                        console.error('Connection error', error)
-                    })
-            } else if (lookerContent[i].type === 'explore') {
-                LookerEmbedSDK.createExploreWithId(lookerContent[i].id)
-                    .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
-                    .withClassName('iframe')
-                    // .withParams({
-                    //     qid: 'DA0G4JnmvuxE2N1UEs3WHR',
-                    //     toggle: 'dat,pik,vis'
-                    // })
-                    .build()
-                    .connect()
-                    .then(this.setupExplore)
-                    .catch((error) => {
-                        console.error('Connection error', error)
-                    })
 
-            } else if (lookerContent[i].type === 'folder') {
-                let lookerResposnse = await fetch('/fetchfolder/' + lookerContent[i].id, {
-                    method: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                })
+            for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
 
-                // console.log('lookerResposnse', lookerResposnse)
+                // console.log('usecaseContent[j].lookerContent[i]', usecaseContent[j].lookerContent[i])
 
-                let lookerResposnseData = await lookerResposnse.json();
-                // console.log('lookerResposnseData', lookerResposnseData);
+                if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
+                    // let paramsObj = demoComponents[j].type === 'custom filter' ?
+                    //     { "_theme": JSON.stringify({ "show_title": false, "show_filters_bar": false }) } :
+                    //     { "_theme": JSON.stringify({ "show_title": true, "show_filters_bar": true }) };
 
-                // let combinedLooks = [...lookerResposnseData.sharedFolder.looks, ...lookerResposnseData.embeddedUserFolder.looks]
-                // console.log('combinedLooks', combinedLooks)
+                    let desiredTheme = usecaseContent[j].type === 'custom filter' ? "no_filter" : "Looker"
+                    // console.log('usecaseContent[j].type', usecaseContent[j].type)
+                    // console.log('desiredTheme', desiredTheme)
 
-                lookerResposnseData.looks.map((item, index) => {
-                    // console.log('item', item)
-                    let lookId = item.id
-                    // let classNameToUse = index > lookerResposnseData.sharedFolder.looks.length ? 'iframe embedUserLook' : 'iframe sharedFolderLook';
-                    // console.log('classNameToUse', classNameToUse)
-                    LookerEmbedSDK.createLookWithId(lookId)
-                        .appendTo(validIdHelper(`#embedContainer${lookerContent[i].id}`))
+
+                    LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
+                        .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
+                        .withNext()
+                        // .withFilters() //new
+                        .withTheme('Looker') //new
+                        // .withParams({ _theme: JSON.stringify({ "show_filters_bar": true }) })
+                        .on('dashboard:run:start', (e) => {
+                            // console.log('e', e)
+                        })
                         .on('drillmenu:click', (e) => this.drillClick(e))
+                        .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
+                        // .on('page:properties:changed', (e) => {
+                        //     this.changeHeight(e, `embedContainer${lookerContent[i].id}`)
+                        // })
                         .build()
                         .connect()
-                        .then(this.setupLook)
+                        .then((dashboard) => {
+                            this.setState({
+                                [usecaseContent[j].lookerContent[i].id]: dashboard //5277
+                            })
+                            // this.changeHeight(dashboard, `embedContainer${lookerContent[i].id}`)
+                        })
                         .catch((error) => {
                             console.error('Connection error', error)
                         })
-                })
+
+
+                    if (usecaseContent[j].lookerContent[i].hasOwnProperty('customDropdown')) {
+
+                        let stringifiedQuery = encodeURIComponent(JSON.stringify(usecaseContent[j].lookerContent[i].customDropdown.inlineQuery))
+                        let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
+                            method: 'GET',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        let lookerResponseData = await lookerResponse.json();
+                        // console.log('lookerResponseData', lookerResponseData)
+                        // console.log('lookerResponseData.queryResults', lookerResponseData.queryResults)
+                        // console.log('lookerResponseData.queryResults.length', lookerResponseData.queryResults.length)
+                        this.setState({
+                            customDropdownOptions: lookerResponseData.queryResults
+                        })
+                    }
+                } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
+                    LookerEmbedSDK.createExploreWithId(usecaseContent[j].lookerContent[i].id)
+                        .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
+                        .withClassName('iframe')
+                        // .withParams({
+                        //     qid: 'DA0G4JnmvuxE2N1UEs3WHR',
+                        //     toggle: 'dat,pik,vis'
+                        // })
+                        .build()
+                        .connect()
+                        .then(this.setupExplore)
+                        .catch((error) => {
+                            console.error('Connection error', error)
+                        })
+
+                } else if (usecaseContent[j].lookerContent[i].type === 'folder') {
+                    let lookerResponse = await fetch('/fetchfolder/' + usecaseContent[j].lookerContent[i].id, { //+ usecaseContent[j].type + '/'
+                        method: 'GET',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+
+
+                    let lookerResponseData = await lookerResponse.json();
+
+                    let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
+                    let dashboardsToUse = [...lookerResponseData.sharedFolder.dashboards]
+                    let objToUse = {
+                        looks: looksToUse,
+                        dashboards: dashboardsToUse
+                    }
+                    // console.log('objToUse', objToUse)
+
+                    this.setState({
+                        reportBuilderContent: objToUse
+                    }, () => {
+                        console.log('setState callback ', this.state.reportBuilderContent)
+                    })
+
+                    {
+                        objToUse.looks.length ?
+                            objToUse.looks.map((item, index) => {
+                                let lookId = item.id
+                                LookerEmbedSDK.createLookWithId(lookId)
+                                    .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
+                                    .withClassName('iframe')
+                                    .withClassName('look')
+                                    .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
+                                    .on('drillmenu:click', (e) => this.drillClick(e))
+                                    .build()
+                                    .connect()
+                                    .then(this.setupLook)
+                                    .catch((error) => {
+                                        console.error('Connection error', error)
+                                    })
+                            }) : ''
+                    }
+
+
+                    {
+                        objToUse.dashboards.length ? objToUse.dashboards.map((item, index) => {
+                            let dashboardId = item.id
+                            LookerEmbedSDK.createDashboardWithId(dashboardId)
+                                .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
+                                .withClassName('iframe')
+                                .withClassName('dashboard')
+                                .withClassName(lookerResponseData.sharedFolder.dashboard.indexOf(item) > -1 ? "shared" : "personal")
+                                .on('drillmenu:click', (e) => this.drillClick(e))
+                                .build()
+                                .connect()
+                                .then(this.setupLook)
+                                .catch((error) => {
+                                    console.error('Connection error', error)
+                                })
+                        }) : ''
+                    }
+                }
+                else if (usecaseContent[j].lookerContent[i].type === "api") {
+                    // console.log('inside api else ifff')
+                    // let lookerResposnse = await fetch('/fetchdashboard/' + usecaseContent[j].lookerContent[i].id, { //+ usecaseContent[j].type + '/'
+                    // console.log('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].result_format)
+                    let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
+                        method: 'GET',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+
+
+                    let lookerResponseData = await lookerResposnse.json();
+                    // console.log('lookerResponseData', lookerResponseData);
+
+                    this.setState((prevState) => ({
+                        splashPageContent: [...prevState.splashPageContent, lookerResponseData]
+                    }), () => {
+                        // console.log('usecaseContent api callback')
+                        // console.log('this.state.splashPageContent', this.state.splashPageContent)
+                    })
+
+                }
             }
+
         }
     }
 
     //need to revisit if this is working...?
     dropdownSelect = (e) => {
-        // console.log('dropdownSelect')
-        // console.log('e.target', e.target)
         const targetId = e.target.id
-        const dashboardStateName = e.target.getAttribute("dashboardstatename")
-        const dropdownFilterName = e.target.getAttribute("dropdownfiltername")
+        const dashboardStateName = e.target.getAttribute("dashboardstatename");
+        const dropdownFilterName = e.target.getAttribute("dropdownfiltername");
         this.setState({
             [targetId]: e.target.value
         }, () => {
@@ -190,21 +307,24 @@ class Content extends React.Component {
             renderSampleCode: prevState.renderSampleCode ? false : true
         }))
     }
-    // think about this
+
+    // could I combine these???
     setActiveTab = (tabIndex) => {
         // console.log('setActiveTab')
         // console.log('tabIndex', tabIndex)
 
         if (this.state.renderSampleCode) this.toggleCodeBar();
 
-        let tabsArray = $("#parentTabList a");
-        let contentArray = $("#parentTabContent > div");
+        let tabsArray = $(".parentTabList:visible a");
+        let contentArray = $(".parentTabContent:visible > div");
+        // console.log('tabsArray', tabsArray);
+        // console.log('contentArray', contentArray);
 
         //simulate tab change, when looker action taken...
         if (!$(tabsArray[tabIndex]).hasClass('active')) {
             for (let i = 0; i < tabsArray.length; i++) {
                 if (i === tabIndex) {
-                    tabsArray[i].className = "nav-link active show"
+                    tabsArray[i].className = "nav-link active "
                     contentArray[i].className = "tab-pane fade show active"
                 } else {
                     tabsArray[i].className = "nav-link"
@@ -214,20 +334,49 @@ class Content extends React.Component {
         }
 
         let newTabContentType = $(tabsArray[tabIndex]).attr('contenttype');
-        this.setState({
-            activeTabType: newTabContentType
-        }, () => {
-            const sampleCodeFilePath = require(`../sample-code/${newTabContentType}.sample.txt`);
-            fetch(sampleCodeFilePath)
-                .then(response => {
-                    return response.text()
-                })
-                .then(text => {
-                    this.setState({
-                        sampleCode: text
+        // console.log('newTabContentType', newTabContentType)
+        if (newTabContentType) {
+            this.setState({
+                activeTabType: newTabContentType
+            }, () => {
+                const sampleCodeFilePath = require(`../sample-code/${newTabContentType}.sample.txt`);
+                fetch(sampleCodeFilePath)
+                    .then(response => {
+                        return response.text()
                     })
-                })
-        })
+                    .then(text => {
+                        this.setState({
+                            sampleCode: text
+                        })
+                    })
+            })
+        }
+    }
+
+    setActiveDemoComponent = (listIndex) => {
+        // console.log('setActiveDemoComponent')
+        // console.log('listIndex', listIndex)
+        let listArray = $("#list-tab:visible a");
+        let tabArray = $("#nav-tabContent:visible > div");
+        // console.log('listArray', listArray)
+        // console.log('tabArray', tabArray)
+
+        if (!$(tabArray[listIndex]).hasClass('active')) {
+            for (let i = 0; i < listArray.length; i++) {
+                if (i === listIndex) {
+                    listArray[i].className = "list-group-item list-group-item-action active"
+                    tabArray[i].className = "tab-pane fade position-relative show active"
+                } else {
+                    listArray[i].className = "list-group-item list-group-item-action"
+                    tabArray[i].className = "tab-pane position-relative fade"
+                }
+            }
+        }
+
+        $(window).scrollTop(0);
+        //call activeTab once pill has been organized
+        this.setActiveTab(0);
+
     }
 
     toggleModal = () => {
@@ -281,7 +430,7 @@ class Content extends React.Component {
             let lookerResposnseData = await lookerResposnse.json();
 
             if (lookerResposnseData.content_metadata_id) {
-                this.props.saveLookerContent(objToUse)
+                this.props.saveLookerContent(objToUse) //here we make call to save...
                 this.toggleModal()
             } else {
                 this.setState(prevState => ({
@@ -301,7 +450,7 @@ class Content extends React.Component {
     // also not well suited for tabular structure :/
     // leave for now but comment out invocation
     changeHeight(event, containerId) {
-        console.log('changeHeight')
+        // console.log('changeHeight')
         // console.log('event', event)
         // console.log('containerId', containerId)
         const div = document.getElementById(containerId)
@@ -325,16 +474,13 @@ class Content extends React.Component {
             let stateName = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
             const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
             const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
+<<<<<<< HEAD
 
+=======
+>>>>>>> feature/demo-components
 
-            // console.log('parsedUrl', parsedUrl)
-            // console.log('url', url)
-            // console.log('000 stateName', stateName)
-            // console.log('filterName', filterName)
-            // console.log('filterValue', filterValue)
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
             //urls changed to relative, need slugs to work across instances?
-            // console.log('111 stateName', stateName)
 
             this.state[stateName].updateFilters({ [filterName]: filterValue })
             this.state[stateName].run()
@@ -346,16 +492,16 @@ class Content extends React.Component {
     }
 
     //async 
-    filtersUpdates(event) {
+    /*filtersUpdates(event) {
         // loadingIcon(true);
         // console.log('filtersUpdates')
         // console.log('event', event)
-
+     
         // instantiate elements, filters, and query objects
         // const dashboard_filters: any = (event && event.dashboard && event.dashboard.dashboard_filters) ? event.dashboard && event.dashboard.dashboard_filters : undefined
         // let dropdown = document.getElementById('select-dropdown')
         // let new_filters = query_object.filters
-
+     
         // // update query object and run query
         // if (dashboard_filters && (dashboard_date_filter in dashboard_filters)) { // check to make sure our filter is in the changed
         //     if (dropdown) { // check to make sure we found our elements to update/keep
@@ -373,201 +519,136 @@ class Content extends React.Component {
         // if (dashboard_filters && dashboard_filters[dashbord_layout_filter] && dashboard_filters[dashbord_layout_filter]) {
         //     layoutFilter(dashboard_filters[dashbord_layout_filter])
         // }
+    }*/
+
+
+    toggleSideBar = () => {
+        // console.log('toggleSideBar')
+
+        this.setState(prevState => ({
+            renderSideBar: prevState.renderSideBar ? false : true
+        }), () => {
+            // console.log('toggleSideBar callback', this.state.renderSideBar)
+        })
     }
 
+    toggleMenu = (e) => {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    }
 
     render() {
         // console.log('Content render')
-        // console.log('this.props.lookerUser', this.props.lookerUser)
-        const { lookerContent } = this.props
-        const { renderSampleCode } = this.state
-        const { sampleCode } = this.state
-        const { renderModal } = this.state
-        const { newLookerContent } = this.state
-        const { activeCustomization } = this.props
-        const { newLookerContentErrorMessage } = this.state
-        let { lookerUser } = this.props
-        let { location } = window;
-        // console.log('location', location)
+        // console.log('this.props', this.props)
 
-        let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
-        // console.log('lookerUserCanExplore', lookerUserCanExplore)
+
+        const { lookerContent, activeCustomization, lookerUser } = this.props
+        const { pathname } = this.props.location
+        const { renderSampleCode,
+            sampleCode,
+            renderModal,
+            newLookerContent,
+            newLookerContentErrorMessage,
+            renderSideBar,
+            splashPageContent,
+            customDropdownOptions,
+            reportBuilderContent } = this.state
+
+        // let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
+
         return (
+            <div className="d-flex pt-5" id="wrapper">
+                <div className="bg-light border-right" id="sidebar-wrapper">
+                    <div className="sidebar-heading">Navigation </div>
 
-            <div className="home container-fluid p-5 position-relative">
-
-
-                {/* <Button variant="contained" color="primary">
-                    Hello World
-                </Button> */}
-
-
-                <div className="row pt-5">
-                    <ul id="parentTabList" className="nav nav-tabs w-100" role="tablist">
-                        {lookerContent.map((item, index) => {
-                            // console.log('item', item)
-                            return (
-                                <li className="nav-item">
-                                    <a key={validIdHelper(item.id)}
-                                        className={index === 0 ? "nav-link active show" : item.type !== 'explore' ? "nav-link" : lookerUserCanExplore ? "nav-link" : "nav-link sudo-disabled"}
-                                        id={validIdHelper(`${item.id}-tab`)}
-                                        data-toggle="tab"
-                                        href={validIdHelper(`#${item.id}`)}
+                    <div className="list-group list-group-flush" id="list-tab" role="tablist">
+                        {
+                            UsecaseContent.marketing.demoComponents.map((item, index) => {
+                                return (
+                                    <a
+                                        id={validIdHelper(`list-${item.type}-list`)}
+                                        className={index === 0 ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action"}
+                                        data-toggle="pill"
+                                        href={validIdHelper(`#list-${item.type}`)}
                                         role="tab"
-                                        aria-controls={validIdHelper(`${item.id}`)}
+                                        aria-controls={validIdHelper(`#list-${item.type}`)}
                                         aria-selected="true"
-                                        contenttype={item.type}
-                                        onClick={() => this.setActiveTab(index)}>
-                                        {item.name}
+                                        onClick={() => {
+                                            this.setActiveDemoComponent(index);
+                                        }}>
+                                        {item.label}
+                                        <i className={`fas ${item.icon} ml-3`} />
                                     </a>
-                                </li>
-
-                            )
-                        })}
-                        {/* {activeCustomization.id !== 'defaultCustomization' ? < li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
-                            : ''} */}
-                        <li className="nav-item"><i className="fas fa-plus cursor text-secondary" onClick={this.toggleModal} /></li>
-                        <li className="nav-item ml-auto"><i className="fas fa-code cursor text-secondary" onClick={this.toggleCodeBar} /></li>
-                    </ul>
-                </div>
-
-                <div className="row">
-
-                    <div className="tab-content w-100" id="parentTabContent">
-
-                        {lookerContent.map((item, index) => {
-                            return (
-                                <div key={validIdHelper(item.id)} className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"} id={validIdHelper(`${item.id}`)} role="tabpanel" aria-labelledby={validIdHelper(`${item.id}-tab`)}>
-                                    {item.customDropdown ?
-                                        <div className="row pt-3">
-
-                                            <div className="col-sm-3">
-                                                <label htmlFor="modalForm">{item.customDropdown.title}</label>
-                                                <select
-                                                    id={`dropdownSelect${item.id}`}
-                                                    className="form-control"
-                                                    onChange={(e) => this.dropdownSelect(e)}
-                                                    type="select-one"
-                                                    dropdownfiltername={item.customDropdown.filterName}
-                                                    dashboardstatename={item.id}
-                                                >
-                                                    {item.customDropdown.options.map(item => {
-                                                        return <option
-                                                            key={item == null ? 'Any' : item}
-                                                            value={item == null ? 'Any' : item}
-                                                        > {item == null ? 'Any' : item}</option>
-                                                    })}
-                                                </select>
-                                            </div>
-                                        </div> :
-                                        ''}
-                                    <div className="row pt-3">
-                                        <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer">
-
-                                        </div>
-
-                                        <ReactCSSTransitionGroup
-                                            transitionName="slide"
-                                            transitionAppear={true}
-                                            transitionAppearTimeout={500}
-                                            transitionEnterTimeout={500}
-                                            transitionLeaveTimeout={500}>
-                                            {renderSampleCode ?
-                                                <div className="col-sm-8 position-absolute right-abs top-abs p-3 bg-light rounded">
-
-
-                                                    <ul className="nav nav-tabs" id={`nestedTab${index}`} role="tablist">
-
-                                                        <li className="nav-item">
-                                                            <a className="nav-link active show"
-                                                                id={`sample-code-tab-${index}`}
-                                                                data-toggle="tab"
-                                                                href={`#sample-code-${index}`}
-                                                                role="tab"
-                                                                aria-controls={`sample-code-${index}`}
-                                                                aria-selected="true"
-                                                            >Sample Code</a>
-                                                        </li>
-                                                        <li className="nav-item">
-                                                            <a className="nav-link"
-                                                                id={`user-properties-tab-${index}`}
-                                                                data-toggle="tab"
-                                                                href={`#user-properties-${index}`}
-                                                                role="tab"
-                                                                aria-controls={`user-properties-${index}`}
-                                                                aria-selected="true"
-                                                            >User Properties</a>
-                                                        </li>
-
-                                                        <button
-                                                            type="button"
-                                                            className="close ml-auto mr-2"
-                                                            data-dismiss="modal"
-                                                            aria-label="Close"
-                                                            onClick={this.toggleCodeBar}
-                                                        >
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </ul>
-                                                    <div className="tab-content" id={`nestedContent${index}`}>
-                                                        <div className="tab-pane fade show active" id={`sample-code-${index}`} role="tabpanel" aria-labelledby={`sample-code-tab-${index}`}>
-
-                                                            <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} >
-                                                                {sampleCode}
-                                                            </SyntaxHighlighter>
-                                                        </div>
-
-                                                        <div className="tab-pane fade" id={`user-properties-${index}`} role="tabpanel" aria-labelledby={`user-properties-tab-${index}`}>
-
-                                                            <SyntaxHighlighter language="json" style={docco} showLineNumbers={true} >
-                                                                {JSON.stringify(lookerUser, true, 4)}
-                                                            </SyntaxHighlighter>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                : ''}
-                                        </ReactCSSTransitionGroup>
-                                    </div>
-                                </div>
-
-                            )
-                        })}
+                                )
+                            })
+                        }
+                        {/* <SimpleList /> */}
                     </div>
                 </div>
+                <div id="page-content-wrapper">
 
 
-                {
-                    renderModal ?
-                        <Modal title="Select Looker Content to Add"
-                            toggleModal={this.toggleModal}
-                            objForModal={newLookerContent}
-                            handleModalFormChange={this.handleModalFormChange}
-                            validateAction={this.validateLookerContent}
-                            newLookerContentErrorMessage={newLookerContentErrorMessage} />
-                        : ''
-                }
+                    {/* < Header
+                        onLogoutSuccess={this.props.applySession}
+                        companyName={activeCustomization.companyName || "WYSIWYG"} //default
+                        logoUrl={activeCustomization.logoUrl || "https://looker.com/assets/img/images/logos/looker_black.svg"} //default
+                        lookerUser={this.props.lookerUser}
+                        switchLookerUser={this.props.switchLookerUser}
+                        pathname={pathname}
+                        toggleMenu={this.toggleMenu}
+                    /> */}
 
+                    <div className="container-fluid">
+                        <div className="tab-content" id="nav-tabContent">
+                            {
+                                UsecaseContent.marketing.demoComponents.map((item, index) => {
+                                    // hack for dynamic component name
+                                    const Map = {
+                                        "splash page": SplashPage,
+                                        "custom filter": CustomFilter,
+                                        "dashboard overview detail": DashboardOverviewDetail,
+                                        "report builder": ReportBuilder,
+                                        "query builder": ComingSoon,
+                                        "custom viz": ComingSoon
+                                    }
+                                    const DemoComponent = Map[item.type];
+                                    return (
+                                        <div
+                                            id={validIdHelper(`list-${item.type}`)}
+                                            className={index === 0 ? "tab-pane fade position-relative show active" : "tab-pane fade position-relative"}
+                                            role="tabpanel"
+                                            aria-labelledby={validIdHelper(`list-${item.type}-list`)}>
+
+                                            <DemoComponent key={validIdHelper(`list-${item.type}`)}
+                                                lookerContent={item.lookerContent}
+                                                setActiveTab={this.setActiveTab}
+                                                setActiveDemoComponent={this.setActiveDemoComponent}
+                                                dropdownSelect={this.dropdownSelect}
+                                                splashPageContent={splashPageContent}
+                                                demoComponentType={item.type}
+                                                customDropdownOptions={customDropdownOptions}
+                                                reportBuilderContent={reportBuilderContent}
+                                            />
+
+                                            {
+                                                index > 0 ?
+                                                    <CodeSideBar
+                                                        renderSampleCode={renderSampleCode}
+                                                        sampleCode={sampleCode}
+                                                        lookerUser={lookerUser}
+                                                        toggleCodeBar={this.toggleCodeBar}
+                                                        demoComponentType={item.type} /> : ''
+                                            }
+
+                                        </div>
+                                    )
+                                })}
+                        </div>
+                    </div>
+                </div >
             </div >
         )
     }
 }
 
-
 export default Content;
-
-function validIdHelper(str) {
-    // console.log('validIdHelper')
-    // console.log('str', str)
-    //need to replace special characters that may be associated with id...
-    return str.replace(/[^a-zA-Z0-9-.# ]/g, "")
-}
-
-// function jump(h) {
-//     console.log('jump')
-//     console.log('h', h)
-//     var url = location.href;               //Save down the URL without hash.
-//     console.log('url', url)
-//     location.href = "#" + h;                 //Go to the target element.
-//     // history.replaceState(null, null, url);   //Don't like hashes. Changing it back.
-//     // console.log('url', url)
-// }

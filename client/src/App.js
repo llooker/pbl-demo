@@ -3,15 +3,41 @@ import './App.css';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter, useHistory } from 'react-router-dom'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './clientConfig.json';
+import Content from './components/Content'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import Content from './components/Content'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
 import DefaultLookerContent from './lookerIndustriesByInstance.json';
 //make looker user dynamic
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
+
+
+
+
+
+//material
+// import { makeStyles } from '@material-ui/core/styles';
+// import AppBar from '@material-ui/core/AppBar';
+// import Toolbar from '@material-ui/core/Toolbar';
+// import Typography from '@material-ui/core/Typography';
+// import Button from '@material-ui/core/Button';
+// import IconButton from '@material-ui/core/IconButton';
+// import MenuIcon from '@material-ui/icons/Menu';
+// import Dashboard from './components/Dashboard'
+
+// const useStyles = makeStyles((theme) => ({
+//   root: {
+//     flexGrow: 1,
+//   },
+//   menuButton: {
+//     marginRight: theme.spacing(2),
+//   },
+//   title: {
+//     flexGrow: 1,
+//   },
+// }));
 
 class Login extends React.Component {
   constructor(props) {
@@ -29,10 +55,14 @@ class Login extends React.Component {
 
   render() {
     // console.log("Login render")
+    // console.log("this.props", this.props)
     const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
     const { pathname } = this.props.location
     const { activeCustomization } = this.props
     const { userProfile } = this.props
+
+
+    // console.log('from', from)
 
     const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
 
@@ -50,6 +80,7 @@ class Login extends React.Component {
           <Redirect to={from} />
           <Footer pathname={pathname}
             lookerHost={this.props.lookerHost} />
+          {/* <Redirect to={from} /> */}
         </div>
       )
     } else {
@@ -82,7 +113,8 @@ class Login extends React.Component {
   }
 }
 
-const PrivateRoute = ({ component: Component,
+const PrivateRoute = ({
+  component: Component,
   customizations,
   activeCustomization,
   applyCustomization,
@@ -95,6 +127,8 @@ const PrivateRoute = ({ component: Component,
   userProfile,
   lookerUser,
   lookerHost,
+  switchLookerUser, //added
+  applySession, //added
   ...rest }) => (
     < Route {...rest} render={(props) => (
       Object.keys(userProfile).length ?
@@ -111,6 +145,8 @@ const PrivateRoute = ({ component: Component,
           userProfile={userProfile}
           lookerUser={lookerUser}
           lookerHost={lookerHost}
+          switchLookerUser={switchLookerUser} //added
+          applySession={applySession} //added
         />
         : <Redirect to={{
           pathname: '/',
@@ -131,7 +167,8 @@ class App extends React.Component {
       lookerUser: {
         ...InitialLookerUser
       },
-      lookerHost: '', //'demo.looker.com'
+      lookerHost: '', //'demo.looker.com',
+      // activeIndustry: 'marketing'
     }
   }
 
@@ -315,7 +352,7 @@ class App extends React.Component {
     // console.log('saveLookerContent')
     // console.log('newLookerContent', newLookerContent)
 
-    let customizationResponse = await fetch('/savelookercontent', {
+    /*let customizationResponse = await fetch('/savelookercontent', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -327,7 +364,7 @@ class App extends React.Component {
 
     this.setState(prevState => ({
       lookerContent: [...prevState.lookerContent, newLookerContent] //should I be using DB as source here?
-    }))
+    }))*/
 
   }
 
@@ -360,6 +397,10 @@ class App extends React.Component {
     });
   }
 
+
+
+
+
   render() {
     // console.log('App render');
     // console.log('this.props', this.props);
@@ -370,6 +411,8 @@ class App extends React.Component {
     const { lookerContent } = this.state
     const { lookerUser } = this.state;
     const { lookerHost } = this.state;
+    const { activeUsecase } = this.state;
+    // const { activeIndustry } = this.state;
     // console.log('activeCustomization', activeCustomization);
     // console.log('lookerUser', lookerUser);
     // console.log('lookerHost', lookerHost);
@@ -386,6 +429,7 @@ class App extends React.Component {
             lookerHost={lookerHost}
           />}
           />
+          {/* Dashboard */}
           <PrivateRoute path='/home' component={Content}
             activeCustomization={activeCustomization}
             lookerContent={lookerContent}
@@ -394,6 +438,7 @@ class App extends React.Component {
             lookerUser={lookerUser}
             applySession={this.applySession}
             lookerHost={lookerHost}
+            switchLookerUser={this.switchLookerUser}
           />
           <PrivateRoute exact path='/customize'
             component={Customizations}
@@ -419,4 +464,25 @@ class App extends React.Component {
   }
 }
 export default App
+
+//export default 
+// function ButtonAppBar() {
+//   const classes = useStyles();
+
+//   return (
+//     <div className={classes.root}>
+//       <AppBar position="static">
+//         <Toolbar>
+//           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+//             <MenuIcon />
+//           </IconButton>
+//           <Typography variant="h6" className={classes.title}>
+//             News
+//           </Typography>
+//           <Button color="inherit">Login</Button>
+//         </Toolbar>
+//       </AppBar>
+//     </div>
+//   );
+// }
 

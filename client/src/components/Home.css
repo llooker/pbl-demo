@@ -37,11 +37,21 @@ ul li {
   transition: 0.5s;
 }
 
-.right-abs{
-    right: -120px;
+.abs {
+  position: absolute;
 }
-.top-abs{
-    top: 80px;
+
+.right-abs{
+    right: 0px;
+}
+.top-abs-0{
+  top: 0px
+}
+.top-abs-20{
+    top: 20px;
+}
+.top-abs--20{
+    top: -20px;
 }
 
 #logoUrlNav{
@@ -89,3 +99,19 @@ iframe{
 .modal-footer {
   display: block;
 }
+
+/*#parentTabContent a{
+  color: #6c757d!important;
+  background-color: transparent;
+}*/
+
+.card-body{
+  min-height: 100px;
+}
+
+.min-height-200{
+  min-height: 200px;
+}
+/* .nav-pills .nav-link.active, .nav-pills .show>.nav-link  {
+  background-color:#6c757d;
+} */

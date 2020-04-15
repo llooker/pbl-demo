@@ -1,0 +1,123 @@
+{
+    "marketing": {
+        "label": "Marketing",
+        "demoComponents": [
+            {
+                "type": "splash page",
+                "label": "Home",
+                "title": "Your marketing efforts at a glance:",
+                "icon": "fa-home",
+                "lookerContent": [
+                    {
+                        "type": "api",
+                        "id": "585321",
+                        "resultFormat": "json",
+                        "label": "Total Spend",
+                        "desiredProperty": "adevents.total_cost"
+                    },
+                    {
+                        "type": "api",
+                        "id": "607764",
+                        "resultFormat": "json",
+                        "label": "Number of Active Campaigns",
+                        "desiredMethod": "length"
+                    },
+                    {
+                        "type": "api",
+                        "id": "984096",
+                        "resultFormat": "json",
+                        "label": "Total ROI",
+                        "desiredProperty": "session_attribution.total_attribution"
+                    }
+                ]
+            },
+            {
+                "type": "custom filter",
+                "label": "Custom Filter",
+                "description": "See how you can easily add custom dropdowns that interact with a Looker dashboard",
+                "icon": "fa-filter",
+                "lookerContent": [
+                    {
+                        "type": "dashboard",
+                        "id": "5280",
+                        "name": "Advertising Pulse",
+                        "customDropdown": {
+                            "label": "Select Brand",
+                            "options": [
+                                "10 deep",
+                                "106 Shades",
+                                "12XLShop Inc.",
+                                "180s"
+                            ],
+                            "filterName": "Brand",
+                            "inlineQuery": {
+                                "model": "thelook",
+                                "view": "order_items",
+                                "fields": [
+                                    "products.brand"
+                                ],
+                                "query_timezone": "America/Los_Angeles"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "type": "dashboard overview detail",
+                "label": "Dashboard Overview Detail",
+                "description": "See how you can easily add modify link actions to have embedded dashboards interact with one another",
+                "icon": "fa-link",
+                "lookerContent": [
+                    {
+                        "type": "dashboard",
+                        "id": "5277",
+                        "name": "Advertising Overview"
+                    },
+                    {
+                        "type": "dashboard",
+                        "id": "3106",
+                        "name": "Campaign Search"
+                    }
+                ]
+            },
+            {
+                "type": "report builder",
+                "label": "Report Builder",
+                "description": "See how you can easily embed reports and give users the power to create new ones",
+                "icon": "fa-hammer",
+                "lookerContent": [
+                    {
+                        "type": "folder",
+                        "id": "1827",
+                        "name": "Saved Reports"
+                    },
+                    {
+                        "type": "explore",
+                        "id": "thelook_adwords::events",
+                        "name": "Create New Report"
+                    }
+                ]
+            },
+            {
+                "type": "query builder",
+                "label": "Query Builder",
+                "description": "Build a query",
+                "icon": "fa-search",
+                "lookerContent": []
+            },
+            {
+                "type": "custom viz",
+                "label": "Custom Visualization",
+                "description": "Build a custom visualization",
+                "icon": "fa-wrench",
+                "lookerContent": []
+            }
+        ]
+    },
+    "retail": {
+        "splashPage": {
+            "title": "Your next great retail application"
+        },
+        "demoComponents": {}
+    }
+}
