@@ -16,22 +16,21 @@ import DashboardOverviewDetail from './DashboardOverviewDetail';
 import ReportBuilder from './ReportBuilder';
 import ComingSoon from './ComingSoon';
 import CodeSideBar from './CodeSideBar';
+
 import UsecaseContent from '../usecaseContent.json';
 
-//start of material????
-import { Container } from '@material-ui/core';
+//start of material
+import MenuAppBar from './Material/MenuAppBar';
+import PersistentDrawerLeft from './Material/PersistentDrawer';
+
+
+
+
+
 
 const { validIdHelper } = require('../tools');
 
 
-
-// import Button from '@material-ui/core/Button';
-// import Box from '@material-ui/core/Box';
-// import Container from '@material-ui/core/Container';
-// import Typography from '@material-ui/core/Typography';
-// import Link from '@material-ui/core/Link';
-
-// import { render } from '@testing-library/react';
 
 
 
@@ -535,8 +534,8 @@ class Content extends React.Component {
     }
 
     render() {
-        // console.log('Content render')
-        // console.log('this.props', this.props)
+        console.log('Content render')
+        console.log('this.props', this.props)
 
 
         const { lookerContent, activeCustomization, lookerUser } = this.props
@@ -554,8 +553,10 @@ class Content extends React.Component {
         // let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
 
         return (
-            <Container maxWidth="sm">
-            </Container>
+            <>
+                {/* <MenuAppBar activeCustomization={activeCustomization} /> */}
+                <PersistentDrawerLeft activeCustomization={activeCustomization} usecaseContent={UsecaseContent} />
+            </>
 
             // <div className="d-flex pt-5" id="wrapper">
             //     <div className="bg-light border-right" id="sidebar-wrapper">

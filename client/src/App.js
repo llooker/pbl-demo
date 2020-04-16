@@ -4,54 +4,14 @@ import { BrowserRouter as Router, Route, Link, Redirect, withRouter, useHistory 
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './clientConfig.json';
 import Content from './components/Content'
-import Header from './components/Header'
-import Footer from './components/Footer'
+// import Header from './components/Header'
+// import Footer from './components/Footer'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
 import DefaultLookerContent from './lookerIndustriesByInstance.json';
 //make looker user dynamic
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
-
-//material
-
-// import { AppBar, BottomNavigation, Container } from '@material-ui/core';
-
-// import ThemeProvider from '@material-ui/styles/ThemeProvider'; //working
-// import { AppBar, TextField, RaisedButton } from '@material-ui/core';
-
-
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-
-import Button from '@material-ui/core/Button'
-
-
-
-
-
-//material
-// import { makeStyles } from '@material-ui/core/styles';
-// import AppBar from '@material-ui/core/AppBar';
-// import Toolbar from '@material-ui/core/Toolbar';
-// import Typography from '@material-ui/core/Typography';
-// import Button from '@material-ui/core/Button';
-// import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
-// import Dashboard from './components/Dashboard'
-
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     flexGrow: 1,
-//   },
-//   menuButton: {
-//     marginRight: theme.spacing(2),
-//   },
-//   title: {
-//     flexGrow: 1,
-//   },
-// }));
 
 class Login extends React.Component {
   constructor(props) {
@@ -96,18 +56,7 @@ class Login extends React.Component {
           <Redirect to={from} />
           <Footer pathname={pathname}
             lookerHost={this.props.lookerHost} /> */}
-          {/* <Redirect to={from} /> */}
-
-
-          <AppBar position="static">
-            <Toolbar>
-              <Typography variant="title" color="inherit">
-                React & Material-UI Sample Application
-                </Typography>
-            </Toolbar>
-          </AppBar>
-
-
+          <Redirect to={from} />
         </div>
       )
     } else {
