@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import $ from 'jquery';
-let { validIdHelper } = require('../tools');
+let { validIdHelper } = require('../../tools');
 
 function ReportBuilder(props) {
     // console.log('ReportBuilder')

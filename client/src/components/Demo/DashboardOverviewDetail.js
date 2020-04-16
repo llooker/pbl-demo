@@ -1,5 +1,5 @@
 import React from 'react'
-let { validIdHelper } = require('../tools');
+let { validIdHelper } = require('../../tools');
 
 function DashboardOverviewDetail(props) {
     // console.log('DashboardOverviewDetail')

@@ -12,16 +12,46 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+// import ListItem from '@material-ui/core/ListItem';
+// import ListItemIcon from '@material-ui/core/ListItemIcon';
+// import ListItemText from '@material-ui/core/ListItemText';
+// import InboxIcon from '@material-ui/icons/MoveToInbox';
+// import MailIcon from '@material-ui/icons/Mail';
+
+
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+import HomeIcon from '@material-ui/icons/Home';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import LinkIcon from '@material-ui/icons/Link';
+import GavelIcon from '@material-ui/icons/Gavel';
+import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
+import BuildIcon from '@material-ui/icons/Build';
 
 import SimpleMenu from './UserMenu'
+import TabPanel from './TabPanel'
+
+
+
+// import SplashPage from '../Demo/SplashPage';
+// import CustomFilter from '../Demo/CustomFilter';
+// import DashboardOverviewDetail from '../Demo/DashboardOverviewDetail';
+// import ReportBuilder from '../Demo/ReportBuilder';
+// import ComingSoon from '../Demo/ComingSoon';
+// import CodeSideBar from '../CodeSideBar';
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../../tools');
+
+function a11yProps(index) {
+    // console.log('a11yProps')
+    // console.log('index', index)
+    return {
+        id: `vertical-tab-${index}`,
+        'aria-controls': `vertical-tabpanel-${index}`,
+    };
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -81,16 +111,24 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
     },
+    tabs: {
+        borderRight: `1px solid ${theme.palette.divider}`,
+    },
 }));
 
-export default function PersistentDrawerLeft(props) {
-    console.log('PersistentDrawerLeft')
-    console.log('props', props)
+export default function MainLayout(props) {
+    // console.log('MainLayout')
+    // console.log('props', props)
 
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -108,6 +146,26 @@ export default function PersistentDrawerLeft(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+
+    const iconMap = {
+        "splash page": HomeIcon,
+        "custom filter": FilterListIcon,
+        "dashboard overview detail": LinkIcon,
+        "report builder": GavelIcon,
+        "query builder": QueryBuilderIcon,
+        "custom viz": BuildIcon
+    }
+
+
+    // const demoComponentMap = {
+    //     "splash page": SplashPage,
+    //     "custom filter": CustomFilter,
+    //     "dashboard overview detail": DashboardOverviewDetail,
+    //     "report builder": ReportBuilder,
+    //     "query builder": ComingSoon,
+    //     "custom viz": ComingSoon
+    // }
 
     return (
         <div className={classes.root}>
@@ -131,37 +189,6 @@ export default function PersistentDrawerLeft(props) {
                     <Typography variant="h6" noWrap className={classes.title}>
                         {props.activeCustomization.companyName}
                     </Typography>
-
-                    {/* menu */}
-                    {/* <div>
-                        <IconButton
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleMenu}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={open}
-                            onClose={handleClose}
-                        >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
-                        </Menu>
-                    </div> */}
                     <SimpleMenu />
                 </Toolbar>
             </AppBar>
@@ -180,23 +207,26 @@ export default function PersistentDrawerLeft(props) {
                     </IconButton>
                 </div>
                 <Divider />
-                <List>
+                <Tabs
+                    orientation="vertical"
+                    variant="scrollable"
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="Vertical tabs example"
+                    className={classes.tabs}
+                >
+
                     {props.usecaseContent.marketing.demoComponents.map((item, index) => (
-                        <ListItem button key={validIdHelper(item.type)}>
-                            {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
-                            <ListItemText primary={item.label} />
-                        </ListItem>
-                    ))}
-                </List>
-                {/* <Divider />
-                <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List> */}
+
+                        <Tab label={item.label}
+                            icon={React.createElement(iconMap[item.type])}
+                            {...a11yProps(index)}
+                            wrapped="true"></Tab>
+
+
+                    ))
+                    }
+                </Tabs>
             </Drawer>
             <main
                 className={clsx(classes.content, {
@@ -204,30 +234,19 @@ export default function PersistentDrawerLeft(props) {
                 })}
             >
                 <div className={classes.drawerHeader} />
-                <Typography paragraph>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                    ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-                    facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-                    gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-                    donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-                    adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-                    Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-                    imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-                    arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-                    donec massa sapien faucibus et molestie ac.
-        </Typography>
-                <Typography paragraph>
-                    Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-                    facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-                    tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-                    consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-                    vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In
-                    hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et
-                    tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin
-                    nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
-                    accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+
+                {props.usecaseContent.marketing.demoComponents.map((item, index) => (
+
+                    <TabPanel value={value} index={index}>
+
+                        {index}
+                        {item.label}
+                    </TabPanel>
+                ))
+                }
             </main>
-        </div>
+        </div >
     );
 }
+
+

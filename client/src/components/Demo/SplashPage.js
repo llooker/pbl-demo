@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import $ from 'jquery';
-import UsecaseContent from '../usecaseContent.json'
-import './Home.css';
-let { validIdHelper } = require('../tools');
+import UsecaseContent from '../../usecaseContent.json'
+import '../Home.css';
+let { validIdHelper } = require('../../tools');
 
 function SplashPage(props) {
     // console.log('SplashPage')

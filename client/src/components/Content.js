@@ -10,18 +10,18 @@ import $ from 'jquery';
 
 // import Header from './Header'
 // import Footer from './Footer'
-import SplashPage from './SplashPage';
-import CustomFilter from './CustomFilter';
-import DashboardOverviewDetail from './DashboardOverviewDetail';
-import ReportBuilder from './ReportBuilder';
-import ComingSoon from './ComingSoon';
+import SplashPage from './Demo/SplashPage';
+import CustomFilter from './Demo/CustomFilter';
+import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
+import ReportBuilder from './Demo/ReportBuilder';
+import ComingSoon from './Demo/ComingSoon';
 import CodeSideBar from './CodeSideBar';
 
 import UsecaseContent from '../usecaseContent.json';
 
 //start of material
 import MenuAppBar from './Material/MenuAppBar';
-import PersistentDrawerLeft from './Material/PersistentDrawer';
+import MainLayout from './Material/MainLayout';
 
 
 
@@ -554,8 +554,7 @@ class Content extends React.Component {
 
         return (
             <>
-                {/* <MenuAppBar activeCustomization={activeCustomization} /> */}
-                <PersistentDrawerLeft activeCustomization={activeCustomization} usecaseContent={UsecaseContent} />
+                <MainLayout activeCustomization={activeCustomization} usecaseContent={UsecaseContent} />
             </>
 
             // <div className="d-flex pt-5" id="wrapper">
