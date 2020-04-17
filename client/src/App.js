@@ -3,7 +3,8 @@ import './App.css';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter, useHistory } from 'react-router-dom'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './clientConfig.json';
-import Content from './components/Content'
+import Content from './components/Content_OLD'
+import Home from './components/Home'
 // import Header from './components/Header'
 // import Footer from './components/Footer'
 import Customizations from './components/Customizations'
@@ -405,8 +406,8 @@ class App extends React.Component {
             lookerHost={lookerHost}
           />}
           />
-          {/* Dashboard */}
-          <PrivateRoute path='/home' component={Content}
+          {/* Content */}
+          <PrivateRoute path='/home' component={Home}
             activeCustomization={activeCustomization}
             lookerContent={lookerContent}
             saveLookerContent={this.saveLookerContent}

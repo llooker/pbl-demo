@@ -29,8 +29,11 @@ import GavelIcon from '@material-ui/icons/Gavel';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import BuildIcon from '@material-ui/icons/Build';
 
-import SimpleMenu from './UserMenu'
-import TabPanel from './TabPanel'
+import UserMenu from './Material/UserMenu'
+import TabPanel from './Material/TabPanel'
+
+
+import UsecaseContent from '../usecaseContent.json';
 
 
 
@@ -42,7 +45,7 @@ import TabPanel from './TabPanel'
 // import CodeSideBar from '../CodeSideBar';
 
 const drawerWidth = 240;
-const { validIdHelper } = require('../../tools');
+const { validIdHelper } = require('../tools');
 
 function a11yProps(index) {
     // console.log('a11yProps')
@@ -116,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function MainLayout(props) {
+export default function Home(props) {
     // console.log('MainLayout')
     // console.log('props', props)
 
@@ -189,7 +192,7 @@ export default function MainLayout(props) {
                     <Typography variant="h6" noWrap className={classes.title}>
                         {props.activeCustomization.companyName}
                     </Typography>
-                    <SimpleMenu />
+                    <UserMenu />
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -216,7 +219,7 @@ export default function MainLayout(props) {
                     className={classes.tabs}
                 >
 
-                    {props.usecaseContent.marketing.demoComponents.map((item, index) => (
+                    {UsecaseContent.marketing.demoComponents.map((item, index) => (
 
                         <Tab label={item.label}
                             icon={React.createElement(iconMap[item.type])}
@@ -235,7 +238,7 @@ export default function MainLayout(props) {
             >
                 <div className={classes.drawerHeader} />
 
-                {props.usecaseContent.marketing.demoComponents.map((item, index) => (
+                {UsecaseContent.marketing.demoComponents.map((item, index) => (
 
                     <TabPanel value={value} index={index}>
 

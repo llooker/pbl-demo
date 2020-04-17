@@ -20,8 +20,7 @@ import CodeSideBar from './CodeSideBar';
 import UsecaseContent from '../usecaseContent.json';
 
 //start of material
-import MenuAppBar from './Material/MenuAppBar';
-import MainLayout from './Material/MainLayout';
+import MainLayout from './Home_FUNCTIONAL';
 
 
 
