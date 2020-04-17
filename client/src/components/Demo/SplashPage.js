@@ -18,8 +18,6 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-
-import $ from 'jquery';
 import UsecaseContent from '../../usecaseContent.json'
 import '../Home.css'
 
@@ -61,18 +59,6 @@ export default function SplashPage(props) {
     const { lookerContent, handleChange } = props;
     const classes = useStyles();
 
-    //old from report builder, leave for now
-    /*const [activeFolder, setActiveFolder] = useState("all")
-    const handleChange = (event) => {
-        // console.log('handleChange');
-        // console.log('event.target', event.target);
-        setActiveFolder(event.target.name)
-    }*/
-
-    // Similar to componentDidMount and componentDidUpdate:
-    useEffect(() => {
-        // console.log('useEffect')
-    });
 
     return (
         <div className={classes.root}>

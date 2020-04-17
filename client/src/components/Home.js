@@ -284,6 +284,7 @@ class Home extends Component {
                         }
                     })
                     let lookerResponseData = await lookerResposnse.json();
+                    //leave it this way for now, nicer loading experience
                     this.setState((prevState) => ({
                         dynamicLookerContentForSplashPage: [...prevState.dynamicLookerContentForSplashPage, lookerResponseData]
                     }), () => {
@@ -396,6 +397,7 @@ class Home extends Component {
     render() {
         // console.log('Home render');
         // console.log('this.state', this.state);
+        // console.log('this.props', this.props);
 
 
         const iconMap = {
@@ -420,7 +422,8 @@ class Home extends Component {
         const { value, open,
             dynamicLookerContentForSplashPage, reportBuilderContent, customDropdownOptions } = this.state
         const { handleDrawerOpen, handleDrawerClose, handleDrawer, handleChange, dropdownSelect, setActiveTab } = this
-        const { classes, activeCustomization } = this.props
+        const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
+        // console.log('applySession', applySession)
 
         return (
             <div className={classes.root}>
@@ -444,7 +447,7 @@ class Home extends Component {
                         <Typography variant="h6" noWrap className={classes.title}>
                             {activeCustomization.companyName}
                         </Typography>
-                        <UserMenu />
+                        <UserMenu switchLookerUser={switchLookerUser} lookerUser={lookerUser} onLogoutSuccess={applySession} />
                     </Toolbar>
                 </AppBar>
                 <Drawer
@@ -474,7 +477,7 @@ class Home extends Component {
 
                         {UsecaseContent.marketing.demoComponents.map((item, index) => (
 
-                            <Tab label={item.label}
+                            <Tab label={item.label} key={`homeVerticalTabs${index}`}
                                 icon={React.createElement(iconMap[item.type])}
                                 {...a11yProps(index)}
                                 wrapped="true"></Tab>
@@ -494,9 +497,9 @@ class Home extends Component {
                     {UsecaseContent.marketing.demoComponents.map((item, index) => {
                         const DemoComponent = demoComponentMap[item.type];
                         return (
-                            <TabPanel value={value} index={index}>
+                            <TabPanel value={value} index={index} >
 
-                                {DemoComponent ? <DemoComponent key={validIdHelper(`list-${item.type}`)}
+                                <DemoComponent key={validIdHelper(`list-${item.type}`)}
                                     lookerContent={item.lookerContent}
                                     setActiveTab={setActiveTab}
                                     handleChange={handleChange}
@@ -505,9 +508,7 @@ class Home extends Component {
                                     dynamicLookerContentForSplashPage={dynamicLookerContentForSplashPage}
                                     customDropdownOptions={customDropdownOptions}
                                     reportBuilderContent={reportBuilderContent}
-                                /> : <>
-                                        {index}
-                                        {item.label}</>}
+                                />
 
                             </TabPanel>)
                     })

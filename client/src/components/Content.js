@@ -10,7 +10,7 @@ import $ from 'jquery';
 
 // import Header from './Header'
 // import Footer from './Footer'
-import SplashPage from './Demo/SplashPage_OLD';
+import SplashPage from './Demo/SplashPage';
 import CustomFilter from './Demo/CustomFilter';
 import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
 import ReportBuilder from './Demo/ReportBuilder';

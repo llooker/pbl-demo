@@ -197,8 +197,8 @@ class App extends React.Component {
   // called by responseGoogle once it gets response
   // since login can assume activeCustomization will be default..
   applySession = async (userProfile) => {
-    // console.log('applySession')
-    // console.log('userProfile', userProfile)
+    console.log('applySession')
+    console.log('userProfile', userProfile)
 
     if (Object.keys(userProfile).length === 0) {
       // console.log('inside ifff')
