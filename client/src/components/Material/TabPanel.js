@@ -14,7 +14,9 @@ export default function TabPanel(props) {
             aria-labelledby={`vertical-tab-${index}`}
             {...other}
         >
-            {value === index && <Box p={3}>{children}</Box>}
+            {/* crucial */}
+            {/* {value === index && <Box p={3}>{children}</Box>} */}
+            <Box p={3}>{children}</Box>
         </Typography>
     );
 }

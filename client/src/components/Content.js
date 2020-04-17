@@ -20,7 +20,7 @@ import CodeSideBar from './CodeSideBar';
 import UsecaseContent from '../usecaseContent.json';
 
 //start of material
-import MainLayout from './Home_FUNCTIONAL';
+// import MainLayout from './Home_FUNCTIONAL';
 
 
 
@@ -552,9 +552,11 @@ class Content extends React.Component {
         // let lookerUserCanExplore = lookerUser.permission_level === 'best' ? true : false;
 
         return (
-            <>
-                <MainLayout activeCustomization={activeCustomization} usecaseContent={UsecaseContent} />
-            </>
+            // <>
+            //     <MainLayout activeCustomization={activeCustomization} usecaseContent={UsecaseContent} />
+            // </>
+
+            <h1>test</h1>
 
             // <div className="d-flex pt-5" id="wrapper">
             //     <div className="bg-light border-right" id="sidebar-wrapper">

@@ -1,15 +1,15 @@
 import React from 'react'
 let { validIdHelper } = require('../../tools');
+import $ from 'jquery';
+
 
 function CustomFilter(props) {
-    // console.log('CustomFilter')
     const { lookerContent, setActiveTab, dropdownSelect, customDropdownOptions } = props
-    // console.log('customDropdownOptions', customDropdownOptions)
 
     return (
         <div className="pt-3 pl-3 position-relative">
             <div className="row">
-                <ul id="customFilterTabList" className="nav nav-tabs w-100 parentTabList" role="tablist">
+                <ul id="customFilterTabList" className="nav nav-tabs w-100 parentTabList customFilter" role="tablist">
                     {lookerContent.map((item, index) => {
                         return (
                             <li className="nav-item">

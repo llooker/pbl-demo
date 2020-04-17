@@ -8,7 +8,7 @@ function ReportBuilder(props) {
     const { lookerContent, setActiveTab, reportBuilderContent } = props
     const [activeFolder, setActiveFolder] = useState("all")
 
-    console.log('reportBuilderContent', reportBuilderContent)
+    // console.log('reportBuilderContent', reportBuilderContent)
 
     const handleChange = (event) => {
         // console.log('handleChange');

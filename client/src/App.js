@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter, useHistory } from 'react-router-dom'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import Config from './clientConfig.json';
-import Content from './components/Content_OLD'
+import Content from './components/Content'
 import Home from './components/Home'
 // import Header from './components/Header'
 // import Footer from './components/Footer'

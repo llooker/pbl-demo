@@ -9,7 +9,7 @@ function SplashPage(props) {
     // console.log('props', props)
 
 
-    const { lookerContent, setActiveDemoComponent, dropdownSelect, splashPageContent } = props
+    const { lookerContent, splashPageContent, handleChange } = props
 
     // console.log('splashPageContent', splashPageContent)
 
@@ -54,7 +54,7 @@ function SplashPage(props) {
     ]*/
 
     return (
-        <div className="pt-3 pl-3 position-relative">
+        <div className="pt-3 pl-3 position-relative splashPage">
             <div className="row">
                 <h4>{UsecaseContent.marketing.demoComponents[0].title}</h4>
             </div>
@@ -114,7 +114,8 @@ function SplashPage(props) {
                                         <a className="btn btn-primary"
                                             href={`#v-pills-${validIdHelper(item.type)}`}
                                             role="button"
-                                            onClick={() => setActiveDemoComponent(index)}>{item.label}</a>
+                                            onClick={(e) => handleChange(e, index)}
+                                        >{item.label}</a>
 
                                     </div>
                                 </div> : '')
