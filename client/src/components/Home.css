@@ -54,6 +54,13 @@ ul li {
     top: -20px;
 }
 
+.abs-center{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 #logoUrlNav{
   height: 75%;
   width: auto;
@@ -115,3 +122,7 @@ iframe{
 /* .nav-pills .nav-link.active, .nav-pills .show>.nav-link  {
   background-color:#6c757d;
 } */
+
+.pointer{
+  cursor: pointer;
+}

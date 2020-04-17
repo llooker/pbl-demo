@@ -113,7 +113,7 @@ class Home extends Component {
         this.state = {
             open: true,
             value: 0,
-            splashPageContent: [],
+            dynamicLookerContentForSplashPage: [],
             customDropdownOptions: [],
             reportBuilderContent: {}
         }
@@ -143,11 +143,12 @@ class Home extends Component {
     //     this.setupLookerContent(UsecaseContent.marketing.demoComponents);
     // }
 
+    //think about how to 
     async setupLookerContent(usecaseContent) {
         // console.log('setupLookerContent')
         // console.log('usecaseContent', usecaseContent)
 
-        //delete old content..?
+        //delete old content
         let embedContainerArray = document.getElementsByClassName("embedContainer");
         // console.log('embedContainerArray', embedContainerArray)
         for (let h = 0; h < embedContainerArray.length; h++) {
@@ -155,9 +156,10 @@ class Home extends Component {
             document.getElementById(thisEmbedContainerId).innerHTML = ''
         }
 
+
+        //think about refactor here involving promise.all()
         let objForState = {}
         for (let j = 0; j < usecaseContent.length; j++) {
-            // for (let j = 0; j < 2; j++) {
             for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
 
@@ -282,18 +284,18 @@ class Home extends Component {
                         }
                     })
                     let lookerResponseData = await lookerResposnse.json();
-                    // this.setState((prevState) => ({
-                    //     splashPageContent: [...prevState.splashPageContent, lookerResponseData]
-                    // }), () => {
-                    //     // console.log('usecaseContent api callback')
-                    //     // console.log('this.state.splashPageContent', this.state.splashPageContent)
-                    // })
+                    this.setState((prevState) => ({
+                        dynamicLookerContentForSplashPage: [...prevState.dynamicLookerContentForSplashPage, lookerResponseData]
+                    }), () => {
+                        // console.log('usecaseContent api callback')
+                        // console.log('this.state.splashPageContent', this.state.splashPageContent)
+                    })
 
-                    if (objForState.hasOwnProperty('splashPageContent')) {
-                        objForState['splashPageContent'].push(lookerResponseData)
-                    } else {
-                        objForState['splashPageContent'] = [lookerResponseData]
-                    }
+                    // if (objForState.hasOwnProperty('dynamicLookerContentForSplashPage')) {
+                    //     objForState['dynamicLookerContentForSplashPage'].push(lookerResponseData)
+                    // } else {
+                    //     objForState['dynamicLookerContentForSplashPage'] = [lookerResponseData]
+                    // }
                 }
             }
 
@@ -416,7 +418,7 @@ class Home extends Component {
         }
 
         const { value, open,
-            splashPageContent, reportBuilderContent, customDropdownOptions } = this.state
+            dynamicLookerContentForSplashPage, reportBuilderContent, customDropdownOptions } = this.state
         const { handleDrawerOpen, handleDrawerClose, handleDrawer, handleChange, dropdownSelect, setActiveTab } = this
         const { classes, activeCustomization } = this.props
 
@@ -500,7 +502,7 @@ class Home extends Component {
                                     handleChange={handleChange}
                                     dropdownSelect={dropdownSelect}
                                     demoComponentType={item.type}
-                                    splashPageContent={splashPageContent}
+                                    dynamicLookerContentForSplashPage={dynamicLookerContentForSplashPage}
                                     customDropdownOptions={customDropdownOptions}
                                     reportBuilderContent={reportBuilderContent}
                                 /> : <>
