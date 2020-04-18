@@ -16,6 +16,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 // import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Icon from '@material-ui/core/Icon';
 import HomeIcon from '@material-ui/icons/Home';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import LinkIcon from '@material-ui/icons/Link';
@@ -26,6 +27,8 @@ import UserMenu from './Material/UserMenu';
 import TabPanel from './Material/TabPanel';
 
 import $ from 'jquery';
+import _ from 'lodash'
+
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
 //demoComponents
@@ -41,6 +44,7 @@ import CodeSideBar from './CodeSideBar';
 // constants
 const drawerWidth = 240;
 const { validIdHelper, a11yProps } = require('../tools');
+
 
 
 const styles = theme => ({
@@ -103,7 +107,7 @@ const styles = theme => ({
     },
     tabs: {
         borderRight: `1px solid ${theme.palette.divider}`,
-    },
+    }
 });
 
 
@@ -111,24 +115,22 @@ class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            open: true,
-            value: 0,
-            dynamicLookerContentForSplashPage: [],
-            customDropdownOptions: [],
-            reportBuilderContent: {}
+            drawerOpen: false,
+            drawerTabValue: 0,
         }
     }
 
     //material  methods for layout
-    handleChange = (event, newValue) => {
+    handleDrawerTabChange = (event, newValue) => {
+        this.handleDrawerChange(true)
         this.setState({
-            value: newValue
+            drawerTabValue: newValue
         })
     };
 
-    handleDrawer = (open) => {
+    handleDrawerChange = (open) => {
         this.setState({
-            open
+            drawerOpen: open
         })
     }
 
@@ -143,7 +145,8 @@ class Home extends Component {
     //     this.setupLookerContent(UsecaseContent.marketing.demoComponents);
     // }
 
-    //think about how to 
+    // think about refactor to make more efficient 
+    // promise.all()
     async setupLookerContent(usecaseContent) {
         // console.log('setupLookerContent')
         // console.log('usecaseContent', usecaseContent)
@@ -157,7 +160,6 @@ class Home extends Component {
         }
 
 
-        //think about refactor here involving promise.all()
         let objForState = {}
         for (let j = 0; j < usecaseContent.length; j++) {
             for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
@@ -176,14 +178,12 @@ class Home extends Component {
                         .build()
                         .connect()
                         .then((dashboard) => {
-                            // this.setState({
-                            //     [usecaseContent[j].lookerContent[i].id]: dashboard //5277
-                            // })
                             objForState[usecaseContent[j].lookerContent[i].id] = dashboard;
                         })
                         .catch((error) => {
                             console.error('Connection error', error)
                         })
+
                     if (usecaseContent[j].lookerContent[i].hasOwnProperty('customDropdown')) {
 
                         let stringifiedQuery = encodeURIComponent(JSON.stringify(usecaseContent[j].lookerContent[i].customDropdown.inlineQuery))
@@ -195,12 +195,13 @@ class Home extends Component {
                             }
                         })
                         let lookerResponseData = await lookerResponse.json();
-                        // this.setState({
-                        //     customDropdownOptions: lookerResponseData.queryResults
-                        // })
-                        objForState['customDropdownOptions'] = lookerResponseData.queryResults;
+
+                        const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
+                        objForState[stateKey] = lookerResponseData.queryResults;
                     }
+
                 } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
+
                     LookerEmbedSDK.createExploreWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
@@ -212,6 +213,7 @@ class Home extends Component {
                         })
 
                 } else if (usecaseContent[j].lookerContent[i].type === 'folder') {
+
                     let lookerResponse = await fetch('/fetchfolder/' + usecaseContent[j].lookerContent[i].id, { //+ usecaseContent[j].type + '/'
                         method: 'GET',
                         headers: {
@@ -248,7 +250,6 @@ class Home extends Component {
                             }) : ''
                     }
 
-
                     {
                         objToUse.dashboards.length ? objToUse.dashboards.map((item, index) => {
                             let dashboardId = item.id
@@ -267,13 +268,8 @@ class Home extends Component {
                         }) : ''
                     }
 
-                    // this.setState({
-                    //     reportBuilderContent: objToUse
-                    // }, () => {
-                    //     // console.log('setState callback ', this.state.reportBuilderContent)
-                    // })
-
-                    objForState['reportBuilderContent'] = objToUse;
+                    const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
+                    objForState[stateKey] = objToUse;
                 }
                 else if (usecaseContent[j].lookerContent[i].type === "api") {
                     let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
@@ -284,18 +280,18 @@ class Home extends Component {
                         }
                     })
                     let lookerResponseData = await lookerResposnse.json();
-                    //leave it this way for now, nicer loading experience
-                    this.setState((prevState) => ({
-                        dynamicLookerContentForSplashPage: [...prevState.dynamicLookerContentForSplashPage, lookerResponseData]
-                    }), () => {
-                        // console.log('usecaseContent api callback')
-                        // console.log('this.state.splashPageContent', this.state.splashPageContent)
-                    })
 
-                    // if (objForState.hasOwnProperty('dynamicLookerContentForSplashPage')) {
-                    //     objForState['dynamicLookerContentForSplashPage'].push(lookerResponseData)
+                    //leave it this way for now, nicer loading experience
+                    const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
+                    this.setState((prevState) => ({
+                        [stateKey]: prevState[stateKey] ? [...prevState[stateKey], lookerResponseData] : [lookerResponseData]
+                    }))
+
+                    //use state for this for now for better loading experience
+                    // if (objForState.hasOwnProperty(stateKey)) {
+                    //     objForState[stateKey].push(lookerResponseData)
                     // } else {
-                    //     objForState['dynamicLookerContentForSplashPage'] = [lookerResponseData]
+                    //     objForState[stateKey] = [lookerResponseData]
                     // }
                 }
             }
@@ -308,7 +304,7 @@ class Home extends Component {
 
     }
 
-    dropdownSelect = (e) => {
+    /*dropdownSelect = (e) => {
         const targetId = e.target.id
         const dashboardStateName = e.target.getAttribute("dashboardstatename");
         const dropdownFilterName = e.target.getAttribute("dropdownfiltername");
@@ -318,9 +314,9 @@ class Home extends Component {
             this.state[dashboardStateName].updateFilters({ [dropdownFilterName]: this.state[targetId] })
             this.state[dashboardStateName].run()
         })
-    }
+    }*/
 
-    setActiveTab = (tabIndex) => {
+    /*setActiveTab = (tabIndex) => {
         // console.log('setActiveTab')
         // console.log('tabIndex', tabIndex)
 
@@ -362,7 +358,7 @@ class Home extends Component {
                     })
             })
         }
-    }
+    }*/
 
     drillClick(event) {
         // console.log('drillClick')
@@ -400,28 +396,27 @@ class Home extends Component {
         // console.log('this.props', this.props);
 
 
-        const iconMap = {
-            "splash page": HomeIcon,
-            "custom filter": FilterListIcon,
-            "dashboard overview detail": LinkIcon,
-            "report builder": GavelIcon,
-            "query builder": QueryBuilderIcon,
-            "custom viz": BuildIcon
-        }
+        // const iconMap = {
+        //     "splash page": HomeIcon,
+        //     "custom filter": FilterListIcon,
+        //     "dashboard overview detail": LinkIcon,
+        //     "report builder": GavelIcon,
+        //     "query builder": QueryBuilderIcon,
+        //     "custom viz": BuildIcon
+        // }
 
 
         const demoComponentMap = {
             "splash page": SplashPage,
             "custom filter": CustomFilter,
-            "dashboard overview detail": DashboardOverviewDetail,
-            "report builder": ReportBuilder,
-            "query builder": ComingSoon,
-            "custom viz": ComingSoon
+            // "dashboard overview detail": DashboardOverviewDetail,
+            // "report builder": ReportBuilder,
+            // "query builder": ComingSoon,
+            // "custom viz": ComingSoon
         }
 
-        const { value, open,
-            dynamicLookerContentForSplashPage, reportBuilderContent, customDropdownOptions } = this.state
-        const { handleDrawerOpen, handleDrawerClose, handleDrawer, handleChange, dropdownSelect, setActiveTab } = this
+        const { drawerTabValue, drawerOpen } = this.state;
+        const { handleDrawerChange, handleDrawerTabChange } = this; //, dropdownSelect, setActiveTab
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
         // console.log('applySession', applySession)
 
@@ -431,16 +426,16 @@ class Home extends Component {
                 <AppBar
                     position="fixed"
                     className={clsx(classes.appBar, {
-                        [classes.appBarShift]: open,
+                        [classes.appBarShift]: drawerOpen,
                     })}
                 >
                     <Toolbar>
                         <IconButton
                             color="inherit"
                             aria-label="open drawer"
-                            onClick={() => handleDrawer(true)}
+                            onClick={() => handleDrawerChange(true)}
                             edge="start"
-                            className={clsx(classes.menuButton, open && classes.hide)}
+                            className={clsx(classes.menuButton, drawerOpen && classes.hide)}
                         >
                             <MenuIcon />
                         </IconButton>
@@ -454,13 +449,13 @@ class Home extends Component {
                     className={classes.drawer}
                     variant="persistent"
                     anchor="left"
-                    open={open}
+                    open={drawerOpen}
                     classes={{
                         paper: classes.drawerPaper,
                     }}
                 >
                     <div className={classes.drawerHeader}>
-                        <IconButton onClick={() => handleDrawer(false)}>
+                        <IconButton onClick={() => handleDrawerChange(false)}>
                             {/* {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />} */}
                             <ChevronLeftIcon />
                         </IconButton>
@@ -469,8 +464,8 @@ class Home extends Component {
                     <Tabs
                         orientation="vertical"
                         variant="scrollable"
-                        value={value}
-                        onChange={handleChange}
+                        value={drawerTabValue}
+                        onChange={handleDrawerTabChange}
                         aria-label="Vertical tabs example"
                         className={classes.tabs}
                     >
@@ -478,7 +473,8 @@ class Home extends Component {
                         {UsecaseContent.marketing.demoComponents.map((item, index) => (
 
                             <Tab label={item.label} key={`homeVerticalTabs${index}`}
-                                icon={React.createElement(iconMap[item.type])}
+                                // icon={React.createElement(iconMap[item.type])}
+                                icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
                                 {...a11yProps(index)}
                                 wrapped="true"></Tab>
 
@@ -489,7 +485,7 @@ class Home extends Component {
                 </Drawer>
                 <main
                     className={clsx(classes.content, {
-                        [classes.contentShift]: open,
+                        [classes.contentShift]: drawerOpen,
                     })}
                 >
                     <div className={classes.drawerHeader} />
@@ -497,18 +493,14 @@ class Home extends Component {
                     {UsecaseContent.marketing.demoComponents.map((item, index) => {
                         const DemoComponent = demoComponentMap[item.type];
                         return (
-                            <TabPanel value={value} index={index} >
+                            <TabPanel value={drawerTabValue} index={index} >
 
-                                <DemoComponent key={validIdHelper(`list-${item.type}`)}
-                                    lookerContent={item.lookerContent}
-                                    setActiveTab={setActiveTab}
-                                    handleChange={handleChange}
-                                    dropdownSelect={dropdownSelect}
-                                    demoComponentType={item.type}
-                                    dynamicLookerContentForSplashPage={dynamicLookerContentForSplashPage}
-                                    customDropdownOptions={customDropdownOptions}
-                                    reportBuilderContent={reportBuilderContent}
-                                />
+                                {DemoComponent ? <DemoComponent key={validIdHelper(`list-${item.type}`)}
+                                    staticContent={item}
+                                    apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
+                                    handleDrawerTabChange={handleDrawerTabChange}
+                                /> : item.label}
+
 
                             </TabPanel>)
                     })

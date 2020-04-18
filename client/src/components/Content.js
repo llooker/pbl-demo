@@ -11,7 +11,7 @@ import $ from 'jquery';
 // import Header from './Header'
 // import Footer from './Footer'
 import SplashPage from './Demo/SplashPage';
-import CustomFilter from './Demo/CustomFilter';
+import CustomFilter from './Demo/CustomFilter_OLD';
 import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
 import ReportBuilder from './Demo/ReportBuilder';
 import ComingSoon from './Demo/ComingSoon';

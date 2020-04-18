@@ -134,7 +134,7 @@ module.exports.writeSession = async (req, res, next) => {
 
 
 module.exports.endSession = async (req, res, next) => {
-    console.log('endSession')
+    // console.log('endSession')
 
     req.session.destroy();
     res.status(200).send('session destroyed :)');
