@@ -1,79 +1,85 @@
-import React from 'react'
-let { validIdHelper } = require('../../tools');
+import React, { useState, useEffect } from 'react';
 
-function DashboardOverviewDetail(props) {
+//material
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+
+import Icon from '@material-ui/core/Icon';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import LinkIcon from '@material-ui/icons/Link';
+import GavelIcon from '@material-ui/icons/Gavel';
+import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
+import BuildIcon from '@material-ui/icons/Build';
+
+
+import Tabs from '../Material/SimpleTabs'
+import $ from 'jquery';
+
+import UsecaseContent from '../../usecaseContent.json'; // still necessary to map over demo components
+import '../Home.css'
+
+const { validIdHelper } = require('../../tools');
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+    },
+    card: {
+        minWidth: 275,
+        minHeight: 720,
+    },
+    flexCentered: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    gridTitle: {
+        marginBottom: 12,
+    },
+    body: {
+        marginLeft: 12
+    },
+    pos: {
+        marginBottom: 12,
+    },
+    divider: {
+        marginTop: 24,
+        marginBottom: 24
+    },
+    icon: {
+        marginLeft: 12
+    }
+}));
+
+export default function DashboardOverviewDetail(props) {
     // console.log('DashboardOverviewDetail')
     // console.log('props', props)
-    // console.log('props.lookerContent', props.lookerContent)
-    const { lookerContent, setActiveTab } = props
+
+    const { staticContent, staticContent: { lookerContent }, activeTabValue, handleTabChange } = props;
+    const classes = useStyles();
+
+    useEffect(() => {
+        // console.log('useEffect');
+    })
+
     return (
-        <div className="pt-3 pl-3 position-relative">
-            <div className="row">
-                <ul className="nav nav-tabs w-100 parentTabList" id="dashboardOverviewDetailTabList" role="tablist">
-                    {lookerContent.map((item, index) => {
-                        return (
-                            <li className="nav-item"
-                                key={validIdHelper(item.id) + 'li'} >
-                                <a key={validIdHelper(item.id) + 'a'}
-                                    id={validIdHelper(`${item.id}-tab`)}
-                                    className={index === 0 ? "nav-link active" : "nav-link"}
-                                    data-toggle="tab"
-                                    href={validIdHelper(`#${item.id}`)}
-                                    role="tab"
-                                    aria-controls={validIdHelper(`${item.id}`)}
-                                    aria-selected="true"
-                                    contenttype={item.type}
-                                    onClick={() => setActiveTab(index)}>
-                                    {item.name}
-                                </a>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </div>
 
-            <div className="row">
-                <div className="tab-content w-100 parentTabContent" id="dashboardOverviewDetailTabContent">
-                    {lookerContent.map((item, index) => {
-                        return (
-                            <div key={validIdHelper(item.id)}
-                                className={index === 0 ? "tab-pane fade show active" : "tab-pane fade"}
-                                id={validIdHelper(`${item.id}`)}
-                                role="tabpanel"
-                                aria-labelledby={validIdHelper(`${item.id}-tab`)}>
-                                {item.customDropdown ?
-                                    <div className="row pt-3">
-                                        <div className="col-sm-3">
-                                            <label htmlFor="modalForm">{item.customDropdown.label}</label>
-                                            <select
-                                                id={`dropdownSelect${item.id}`}
-                                                className="form-control"
-                                                onChange={(e) => this.dropdownSelect(e)}
-                                                type="select-one"
-                                                dropdownfiltername={item.customDropdown.filterName}
-                                                dashboardstatename={item.id}
-                                            >
-                                                {item.customDropdown.options.map(item => {
-                                                    return <option
-                                                        key={item == null ? 'Any' : item}
-                                                        value={item == null ? 'Any' : item}
-                                                    > {item == null ? 'Any' : item}</option>
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div> :
-                                    ''}
-                                <div className="row pt-3">
-                                    <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer"></div>
-                                </div>
-                            </div>
-                        )
-                    })}
-                </div>
-            </div>
+        <div className={classes.root}>
 
-        </div >
+            <Grid container
+                spacing={3} >
+                <Tabs lookerContent={lookerContent} activeTabValue={activeTabValue} handleTabChange={handleTabChange} />
+            </Grid >
+
+        </div>
     )
 }
-
-export default DashboardOverviewDetail

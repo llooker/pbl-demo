@@ -60,8 +60,7 @@ export default function SplashPage(props) {
     // console.log('SplashPage')
     // console.log('props', props)
 
-    const { staticContent, apiContent, handleDrawerTabChange } = props;
-    const { lookerContent } = staticContent
+    const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange } = props;
     const classes = useStyles();
 
     return (

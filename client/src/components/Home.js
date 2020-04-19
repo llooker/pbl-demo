@@ -23,8 +23,10 @@ import LinkIcon from '@material-ui/icons/Link';
 import GavelIcon from '@material-ui/icons/Gavel';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import BuildIcon from '@material-ui/icons/Build';
+import Box from '@material-ui/core/Box';
+
 import UserMenu from './Material/UserMenu';
-import TabPanel from './Material/TabPanel';
+// import TabPanel from './Material/TabPanel';
 
 import $ from 'jquery';
 import _ from 'lodash'
@@ -39,12 +41,39 @@ import ReportBuilder from './Demo/ReportBuilder';
 import ComingSoon from './Demo/ComingSoon';
 import CodeSideBar from './CodeSideBar';
 
-
-
 // constants
 const drawerWidth = 240;
-const { validIdHelper, a11yProps } = require('../tools');
+const { validIdHelper } = require('../tools');
 
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <Typography
+            component="div"
+            role="tabpanel"
+            hidden={value !== index}
+            id={`vertical-tabpanel-${index}`}
+            aria-labelledby={`vertical-tab-${index}`}
+            {...other}
+        >
+            {/* crucial */}
+            {/* {value === index && <Box p={3}>{children}</Box>} */}
+            <Box p={3}>{children}</Box>
+        </Typography>
+    );
+}
+
+
+function a11yProps(index) {
+    // console.log('a11yProps')
+    // console.log('index', index)
+    return {
+        id: `vertical-tab-${index}`,
+        'aria-controls': `vertical-tabpanel-${index}`,
+    };
+}
 
 
 const styles = theme => ({
@@ -117,6 +146,7 @@ class Home extends Component {
         this.state = {
             drawerOpen: false,
             drawerTabValue: 0,
+            activeTabValue: 0
         }
     }
 
@@ -125,8 +155,18 @@ class Home extends Component {
         this.handleDrawerChange(true)
         this.setState({
             drawerTabValue: newValue
+        }, () => {
+            this.handleTabChange(0)
         })
     };
+
+    handleTabChange = newValue => {
+        this.setState({
+            activeTabValue: newValue
+        }, () => {
+            // console.log('handleTabChange callback', this.state.activeTabValue)
+        })
+    }
 
     handleDrawerChange = (open) => {
         this.setState({
@@ -163,8 +203,8 @@ class Home extends Component {
         let objForState = {}
         for (let j = 0; j < usecaseContent.length; j++) {
             for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
+                // let dashboardId = usecaseContent[j].lookerContent[i].id;
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
-
                     LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
@@ -177,8 +217,12 @@ class Home extends Component {
                         // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
                         .build()
                         .connect()
+                        //P.then(doWork.bind(null, 'text'))
                         .then((dashboard) => {
-                            objForState[usecaseContent[j].lookerContent[i].id] = dashboard;
+                            // objForState[usecaseContent[j].lookerContent[i].id] = dashboard; //not working
+                            this.setState({
+                                [usecaseContent[j].lookerContent[i].id]: dashboard
+                            })
                         })
                         .catch((error) => {
                             console.error('Connection error', error)
@@ -304,6 +348,7 @@ class Home extends Component {
 
         }
         //set state once after loop to reduce renders
+        // console.log('objForState', objForState)
         this.setState({
             ...objForState
         })
@@ -341,13 +386,22 @@ class Home extends Component {
             const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
             const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
 
+
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
             //urls changed to relative, need slugs to work across instances?
 
-            this.state[stateName].updateFilters({ [filterName]: filterValue })
-            this.state[stateName].run()
+            // console.log('stateName', stateName)
+            // console.log('filterName', filterName)
+            // console.log('filterValue', filterValue)
 
-            this.setActiveTab(1)
+            // console.log('this.state', this.state)
+
+            this.setState({}, () => {
+                this.state[stateName].updateFilters({ [filterName]: filterValue })
+                this.state[stateName].run()
+            })
+
+            this.handleTabChange(1) //can assume one for now
 
             return { cancel: (isCampaignPerformanceDrill) ? true : false }
         }
@@ -431,14 +485,14 @@ class Home extends Component {
         const demoComponentMap = {
             "splash page": SplashPage,
             "custom filter": CustomFilter,
-            // "dashboard overview detail": DashboardOverviewDetail,
+            "dashboard overview detail": DashboardOverviewDetail,
             // "report builder": ReportBuilder,
             // "query builder": ComingSoon,
             // "custom viz": ComingSoon
         }
 
-        const { drawerTabValue, drawerOpen } = this.state;
-        const { handleDrawerChange, handleDrawerTabChange, customFilterSelect } = this; //, dropdownSelect, setActiveTab
+        const { drawerTabValue, drawerOpen, activeTabValue } = this.state;
+        const { handleDrawerChange, handleDrawerTabChange, customFilterSelect, handleTabChange } = this; //, dropdownSelect, setActiveTab, drillClick
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
         // console.log('applySession', applySession)
 
@@ -522,6 +576,9 @@ class Home extends Component {
                                     handleDrawerTabChange={handleDrawerTabChange}
                                     apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
                                     customFilterSelect={customFilterSelect}
+                                    activeTabValue={activeTabValue}
+                                    // drillClick={drillClick}
+                                    handleTabChange={handleTabChange}
                                 /> : item.label}
 
 

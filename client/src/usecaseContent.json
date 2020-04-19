@@ -40,7 +40,7 @@
                     {
                         "type": "dashboard",
                         "id": "5280",
-                        "name": "Advertising Pulse",
+                        "label": "Advertising Pulse",
                         "customDropdown": {
                             "label": "Select Brand",
                             "options": [
@@ -71,12 +71,12 @@
                     {
                         "type": "dashboard",
                         "id": "5277",
-                        "name": "Advertising Overview"
+                        "label": "Advertising Overview"
                     },
                     {
                         "type": "dashboard",
                         "id": "3106",
-                        "name": "Campaign Search"
+                        "label": "Campaign Search"
                     }
                 ]
             },
@@ -89,12 +89,12 @@
                     {
                         "type": "folder",
                         "id": "1827",
-                        "name": "Saved Reports"
+                        "label": "Saved Reports"
                     },
                     {
                         "type": "explore",
                         "id": "thelook_adwords::events",
-                        "name": "Create New Report"
+                        "label": "Create New Report"
                     }
                 ]
             },

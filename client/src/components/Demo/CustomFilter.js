@@ -65,8 +65,7 @@ export default function CustomFilter(props) {
     // console.log('CustomFilter')
     // console.log('props', props)
 
-    const { staticContent, apiContent, handleDrawerTabChange, customFilterSelect } = props;
-    const { lookerContent } = staticContent
+    const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange, customFilterSelect } = props;
     const classes = useStyles();
 
     return (
