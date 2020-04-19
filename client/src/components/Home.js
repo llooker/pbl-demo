@@ -196,6 +196,12 @@ class Home extends Component {
                         })
                         let lookerResponseData = await lookerResponse.json();
 
+                        let inlineQueryField = usecaseContent[j].lookerContent[i].customDropdown.inlineQuery.fields[0]
+                        for (i = 0; i < lookerResponseData.queryResults.length; i++) {
+                            lookerResponseData.queryResults[i].label = lookerResponseData.queryResults[i][inlineQueryField];
+                            delete lookerResponseData.queryResults[i][inlineQueryField];
+                        }
+
                         const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
                         objForState[stateKey] = lookerResponseData.queryResults;
                     }
@@ -304,6 +310,49 @@ class Home extends Component {
 
     }
 
+    customFilterSelect = (event, stateName, filterName) => {
+        // console.log('customFilterSelect')
+        // console.log('event', event)
+        // console.log('event.target.value', event.target.innerText)
+        // console.log('stateName', stateName)
+        // console.log('filterName', filterName)
+
+        this.setState({}, () => {
+            this.state[stateName].updateFilters({ [filterName]: event.target.innerText })
+            this.state[stateName].run()
+        })
+
+    }
+
+
+    drillClick(event) {
+        // console.log('drillClick')
+        // console.log('event', event)
+        const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
+        if (isCampaignPerformanceDrill) {
+
+            // const parsedUrl = new URL(event.url)
+            // const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
+            // const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
+            // const filterValue = decodeURIComponent(parsedUrl.search.substring(parsedUrl.search.indexOf('=') + 1, parsedUrl.search.length))
+
+            const url = event.url;
+            let stateName = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
+            const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
+            const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
+
+            if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
+            //urls changed to relative, need slugs to work across instances?
+
+            this.state[stateName].updateFilters({ [filterName]: filterValue })
+            this.state[stateName].run()
+
+            this.setActiveTab(1)
+
+            return { cancel: (isCampaignPerformanceDrill) ? true : false }
+        }
+    }
+
     /*dropdownSelect = (e) => {
         const targetId = e.target.id
         const dashboardStateName = e.target.getAttribute("dashboardstatename");
@@ -360,33 +409,6 @@ class Home extends Component {
         }
     }*/
 
-    drillClick(event) {
-        // console.log('drillClick')
-        // console.log('event', event)
-        const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
-        if (isCampaignPerformanceDrill) {
-
-            // const parsedUrl = new URL(event.url)
-            // const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
-            // const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
-            // const filterValue = decodeURIComponent(parsedUrl.search.substring(parsedUrl.search.indexOf('=') + 1, parsedUrl.search.length))
-
-            const url = event.url;
-            let stateName = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
-            const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
-            const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
-
-            if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
-            //urls changed to relative, need slugs to work across instances?
-
-            this.state[stateName].updateFilters({ [filterName]: filterValue })
-            this.state[stateName].run()
-
-            this.setActiveTab(1)
-
-            return { cancel: (isCampaignPerformanceDrill) ? true : false }
-        }
-    }
 
 
 
@@ -416,7 +438,7 @@ class Home extends Component {
         }
 
         const { drawerTabValue, drawerOpen } = this.state;
-        const { handleDrawerChange, handleDrawerTabChange } = this; //, dropdownSelect, setActiveTab
+        const { handleDrawerChange, handleDrawerTabChange, customFilterSelect } = this; //, dropdownSelect, setActiveTab
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
         // console.log('applySession', applySession)
 
@@ -497,8 +519,9 @@ class Home extends Component {
 
                                 {DemoComponent ? <DemoComponent key={validIdHelper(`list-${item.type}`)}
                                     staticContent={item}
-                                    apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
                                     handleDrawerTabChange={handleDrawerTabChange}
+                                    apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
+                                    customFilterSelect={customFilterSelect}
                                 /> : item.label}
 
 

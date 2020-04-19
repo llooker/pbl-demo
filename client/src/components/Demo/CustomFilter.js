@@ -20,6 +20,8 @@ import GavelIcon from '@material-ui/icons/Gavel';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import BuildIcon from '@material-ui/icons/Build';
 
+import ComboBox from '../Material/ComboBox'
+
 import UsecaseContent from '../../usecaseContent.json'; // still necessary to map over demo components
 import '../Home.css'
 
@@ -34,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     },
     card: {
         minWidth: 275,
-        minHeight: '10rem',
+        minHeight: 720,
     },
     flexCentered: {
         display: 'flex',
@@ -60,17 +62,39 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CustomFilter(props) {
-    console.log('CustomFilter')
-    console.log('props', props)
+    // console.log('CustomFilter')
+    // console.log('props', props)
 
-    const { staticContent, apiContent, handleDrawerTabChange } = props;
+    const { staticContent, apiContent, handleDrawerTabChange, customFilterSelect } = props;
     const { lookerContent } = staticContent
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
-            <h1>This is going to be my CustomFilter component</h1>
-            <div id={validIdHelper(`embedContainer${lookerContent[0].id}`)} className="col-sm-12 embedContainer"></div>
+
+            <Grid container
+                spacing={3} >
+                {apiContent.length ?
+
+                    <ComboBox
+                        options={apiContent}
+                        customFilterSelect={customFilterSelect}
+                        correspondingContentId={lookerContent[0].id}
+                        filterName={lookerContent[0].customDropdown.filterName} />
+                    :
+
+                    <Grid item sm={12} >
+                        <Card className={`${classes.card} ${classes.flexCentered}`}>
+                            <CircularProgress className={classes.circularProgress} />
+                        </Card>
+
+                    </Grid>
+                }
+
+                <Grid item sm={12} >
+                    <div id={validIdHelper(`embedContainer${lookerContent[0].id}`)} className="col-sm-12 embedContainer"></div>
+                </Grid>
+            </Grid >
 
         </div>
     )
