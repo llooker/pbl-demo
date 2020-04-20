@@ -13,7 +13,7 @@ import $ from 'jquery';
 import SplashPage from './Demo/SplashPage';
 import CustomFilter from './Demo/CustomFilter_OLD';
 import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
-import ReportBuilder from './Demo/ReportBuilder';
+import ReportBuilder from './Demo/ReportBuilder_OLD';
 import ComingSoon from './Demo/ComingSoon';
 import CodeSideBar from './CodeSideBar';
 

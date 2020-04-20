@@ -26,11 +26,11 @@ export default function UserMenu(props) {
 
     const handleClose = (newUser) => {
         setAnchorEl(null);
-        if (!newUser) {
-            console.log('inside this ifff')
+        if (newUser == null) {
+            // console.log('inside this ifff')
             onLogoutSuccess({})
         }
-        else switchLookerUser(newUser)
+        else if (typeof newUser === 'string') switchLookerUser(newUser)
     };
 
     const { lookerUser, switchLookerUser, onLogoutSuccess } = props
@@ -47,7 +47,8 @@ export default function UserMenu(props) {
             >
                 <AccountCircle className={classes.icon} />
                 <Typography>
-                    {lookerUser.permission_level.charAt(0).toUpperCase() + lookerUser.permission_level.substring(1)}
+                    {typeof lookerUser.permission_level === 'string' ?
+                        lookerUser.permission_level.charAt(0).toUpperCase() + lookerUser.permission_level.substring(1) : ''}
                 </Typography>
             </IconButton>
             <Menu

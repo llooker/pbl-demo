@@ -71,7 +71,7 @@ export default function CustomFilter(props) {
     // console.log('CustomFilter')
     // console.log('props', props)
 
-    const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange, customFilterSelect } = props;
+    const { staticContent, staticContent: { lookerContent }, apiContent, action } = props;
     const classes = useStyles();
 
     // let iFrameExists = $(".embedContainer:visible iframe").length;
@@ -86,7 +86,7 @@ export default function CustomFilter(props) {
 
                     <ComboBox
                         options={apiContent}
-                        customFilterSelect={customFilterSelect}
+                        action={action}
                         correspondingContentId={lookerContent[0].id}
                         filterName={lookerContent[0].customDropdown.filterName} />
                     :

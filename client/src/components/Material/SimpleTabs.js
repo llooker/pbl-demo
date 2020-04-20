@@ -10,6 +10,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 
+// import List from './SimpleList'
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+
 
 import $ from 'jquery';
 
@@ -69,13 +73,22 @@ const useStyles = makeStyles((theme) => ({
     tabs: {
         backgroundColor: 'white',
         color: '#6c757d'
+    },
+    dNone: {
+        display: 'none'
+    },
+    dBlock: {
+        display: 'block'
     }
 }));
 
 export default function SimpleTabs(props) {
-    const { lookerContent, activeTabValue, handleTabChange } = props
+    // console.log('SimpleTabs')
+    // console.log('props', props)
+    const { lookerContent, activeTabValue, handleTabChange, demoComponentType, apiContent, action } = props
     const classes = useStyles();
     const [value, setValue] = useState(0);
+    const [selected, setSelected] = useState(0)
 
     const handleChange = (event, newValue) => {
         handleTabChange(0);
@@ -84,6 +97,7 @@ export default function SimpleTabs(props) {
 
 
     let iFrameExists = $(".embedContainer:visible iframe").length;
+    // console.log('iFrameExists', iFrameExists)
 
 
     useEffect(() => {
@@ -91,6 +105,8 @@ export default function SimpleTabs(props) {
             // console.log('inside ifff')
             setValue(activeTabValue)
         }
+        // if (iFrameExists && action) action({}, 0)
+        // if (action) action({}, 0)
     })
 
     return (
@@ -108,7 +124,6 @@ export default function SimpleTabs(props) {
 
             {/* additional loading logic, need embedContainer to exist but want it hidden until iFrame has content...*/}
             <Box className={iFrameExists ? `` : `${classes.hidden}`}
-            // className={classes.dNone}
             >
                 <AppBar position="static">
                     <Tabs
@@ -126,15 +141,58 @@ export default function SimpleTabs(props) {
 
                 {lookerContent.map((item, index) => (
                     <TabPanel value={value} index={index}>
-                        <div
-                            className="col-sm-12 embedContainer"
-                            id={validIdHelper(`embedContainer${item.id}`)}
-                        >
 
-                        </div>
+                        {demoComponentType === 'report builder' && index === 0 ?
+
+                            <Grid container>
+
+                                <Grid item sm={2} >
+                                    {Object.keys(apiContent).length ? Object.keys(apiContent).map((key, objIndex) => (
+                                        <>
+                                            <Typography variant="h6" noWrap className={classes.title}>
+                                                {key.charAt(0).toUpperCase() + key.substring(1)}:
+                                            </Typography>
+                                            <List component="nav" aria-label="main mailbox folders">
+                                                {
+                                                    apiContent[key].length ?
+                                                        apiContent[key].map((item, index) => (
+
+                                                            <ListItem button
+                                                                // selected={index === 0 ? true : false} 
+                                                                selected={selected === index}
+                                                                onClick={() => {
+                                                                    setSelected(index)
+                                                                    action(index)
+                                                                }}> {item.title}
+                                                            </ListItem>
+                                                        ))
+                                                        :
+                                                        <ListItem disabled> None
+                                                    </ListItem>
+                                                }
+                                            </List>
+                                        </>
+                                    )) : ''}
+                                </Grid>
+                                <Grid item sm={10} >
+
+                                    <div
+                                        className="col-sm-10 embedContainer"
+                                        id={validIdHelper(`embedContainer${item.id}`)}
+                                    >
+                                    </div>
+                                </Grid>
+                            </Grid>
+                            :
+                            <div
+                                className="col-sm-12 embedContainer"
+                                id={validIdHelper(`embedContainer${item.id}`)}
+                            >
+                            </div>}
+
                     </TabPanel>
                 ))}
             </Box>
-        </div>
+        </div >
     );
 }

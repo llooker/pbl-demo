@@ -6,7 +6,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 export default function ComboBox(props) {
     // console.log('ComboBox');
     // console.log('props', props);
-    const { options, customFilterSelect, correspondingContentId, filterName } = props
+    const { options, action, correspondingContentId, filterName } = props
 
     return (
         <Autocomplete
@@ -14,7 +14,7 @@ export default function ComboBox(props) {
             options={options}
             getOptionLabel={(option) => option.label}
             style={{ width: 300 }}
-            onChange={() => customFilterSelect(event, correspondingContentId, filterName)}
+            onChange={() => action(event, correspondingContentId, filterName)}
             renderInput={(params) => <TextField {...params} label={filterName} variant="outlined" />}
         />
     );

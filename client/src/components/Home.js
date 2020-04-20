@@ -136,6 +136,12 @@ const styles = theme => ({
     },
     tabs: {
         borderRight: `1px solid ${theme.palette.divider}`,
+    },
+    dNone: {
+        display: 'none'
+    },
+    dBlock: {
+        display: 'block'
     }
 });
 
@@ -290,6 +296,7 @@ class Home extends Component {
                                     .withClassName('iframe')
                                     .withClassName('look')
                                     .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
+                                    // .withClassName(index == 0 ? 'd-block' : 'd-none')
                                     .on('drillmenu:click', (e) => this.drillClick(e))
                                     .build()
                                     .connect()
@@ -355,8 +362,8 @@ class Home extends Component {
 
     }
 
-    customFilterSelect = (event, stateName, filterName) => {
-        // console.log('customFilterSelect')
+    customFilterAction = (event, stateName, filterName) => {
+        // console.log('customFilterAction')
         // console.log('event', event)
         // console.log('event.target.value', event.target.innerText)
         // console.log('stateName', stateName)
@@ -367,6 +374,29 @@ class Home extends Component {
             this.state[stateName].run()
         })
 
+    }
+
+    reportBuilderAction = (index) => {
+        console.log('reportBuilderAction')
+        // console.log('event', event)
+        // console.log('index', index)
+
+        let iFrameArray = $(".embedContainer:visible > iframe")
+        // console.log('000 iFrameArray', iFrameArray)
+        for (let i = 0; i < iFrameArray.length; i++) {
+            if (i === index) {
+                // console.log('inside ifff')
+                //if (iFrameArray[i].classList.contains('dNone')) 
+                iFrameArray[i].classList.remove('d-none')
+                // iFrameArray[i].classList.add('dBlock')
+            } else {
+                // console.log('inside elllse');
+                //if (iFrameArray[i].classList.contains('dBlock')) 
+                // iFrameArray[i].classList.remove('dBlock')
+                iFrameArray[i].classList.add('d-none')
+            }
+        }
+        // console.log('111 iFrameArray', iFrameArray)
     }
 
 
@@ -486,15 +516,14 @@ class Home extends Component {
             "splash page": SplashPage,
             "custom filter": CustomFilter,
             "dashboard overview detail": DashboardOverviewDetail,
-            // "report builder": ReportBuilder,
+            "report builder": ReportBuilder,
             // "query builder": ComingSoon,
             // "custom viz": ComingSoon
         }
 
         const { drawerTabValue, drawerOpen, activeTabValue } = this.state;
-        const { handleDrawerChange, handleDrawerTabChange, customFilterSelect, handleTabChange } = this; //, dropdownSelect, setActiveTab, drillClick
+        const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
-        // console.log('applySession', applySession)
 
         return (
             <div className={classes.root}>
@@ -575,9 +604,8 @@ class Home extends Component {
                                     staticContent={item}
                                     handleDrawerTabChange={handleDrawerTabChange}
                                     apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
-                                    customFilterSelect={customFilterSelect}
+                                    action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
                                     activeTabValue={activeTabValue}
-                                    // drillClick={drillClick}
                                     handleTabChange={handleTabChange}
                                 /> : item.label}
 
