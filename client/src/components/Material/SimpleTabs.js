@@ -54,71 +54,87 @@ const useStyles = makeStyles((theme) => ({
     },
     card: {
         minWidth: 275,
-        minHeight: 720,
+        minHeight: 800,
     },
     flexCentered: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
     },
+    hidden: {
+        visibility: 'hidden',
+        position: 'absolute', //hack for obscuring other elements within Box
+        zIndex: -1
+    },
+    tabs: {
+        backgroundColor: 'white',
+        color: '#6c757d'
+    }
 }));
 
 export default function SimpleTabs(props) {
     const { lookerContent, activeTabValue, handleTabChange } = props
-    // console.log('activeTabValue', activeTabValue)
     const classes = useStyles();
-    // const [value, setValue] = React.useState(activeTabValue);
     const [value, setValue] = useState(0);
-    // console.log('value', value)
 
     const handleChange = (event, newValue) => {
-        // console.log('handleChange');
-        // console.log('event', event);
-        // console.log('newValue', newValue);
         handleTabChange(0);
         setValue(newValue);
     };
 
 
+    let iFrameExists = $(".embedContainer:visible iframe").length;
+
+
     useEffect(() => {
-        // console.log('useEffect')
-        // action on update of value??
-        // console.log('value', value)
         if (activeTabValue > value) { //change from drill click
             // console.log('inside ifff')
             setValue(activeTabValue)
         }
-        // else {
-        //     console.log('inside ellse')
-        //     setValue(0)
-        // }
     })
-    // console.log('value', value)
 
     return (
         <div className={classes.root}>
 
-            {$('.embedContainer:visible iframe').length ? '' :
+            {/* loading logic */}
+            {iFrameExists ? '' :
                 <Grid item sm={12} >
                     <Card className={`${classes.card} ${classes.flexCentered}`}>
                         <CircularProgress className={classes.circularProgress} />
                     </Card>
 
-                </Grid>}
+                </Grid>
+            }
 
-            <AppBar position="static">
-                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                    {lookerContent.map((item, index) => (
-                        <Tab label={item.label} {...a11yProps(index)} />
-                    ))}
-                </Tabs>
-            </AppBar>
+            {/* additional loading logic, need embedContainer to exist but want it hidden until iFrame has content...*/}
+            <Box className={iFrameExists ? `` : `${classes.hidden}`}
+            // className={classes.dNone}
+            >
+                <AppBar position="static">
+                    <Tabs
+                        className={classes.tabs}
+                        // indicatorColor='secondary'
+                        // textColor='primary'
+                        value={value}
+                        onChange={handleChange}
+                        aria-label="simple tabs example">
+                        {lookerContent.map((item, index) => (
+                            <Tab label={item.label} {...a11yProps(index)} />
+                        ))}
+                    </Tabs>
+                </AppBar>
 
-            {lookerContent.map((item, index) => (
-                <TabPanel value={value} index={index}>
-                    <div id={validIdHelper(`embedContainer${item.id}`)} className="col-sm-12 embedContainer"></div>
-                </TabPanel>
-            ))}
+                {lookerContent.map((item, index) => (
+                    <TabPanel value={value} index={index}>
+                        <div
+                            className="col-sm-12 embedContainer"
+                            id={validIdHelper(`embedContainer${item.id}`)}
+                        >
+
+                        </div>
+                    </TabPanel>
+                ))}
+            </Box>
         </div>
     );
 }

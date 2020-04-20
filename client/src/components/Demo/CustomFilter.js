@@ -33,10 +33,11 @@ const { validIdHelper } = require('../../tools');
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+        // backgroundColor: theme.palette.background.paper,
     },
     card: {
         minWidth: 275,
-        minHeight: 720,
+        minHeight: 800,
     },
     flexCentered: {
         display: 'flex',
@@ -58,6 +59,11 @@ const useStyles = makeStyles((theme) => ({
     },
     icon: {
         marginLeft: 12
+    },
+    hidden: {
+        visibility: 'hidden',
+        position: 'absolute', //hack for obscuring other elements within Box
+        zIndex: -1
     }
 }));
 
@@ -68,11 +74,14 @@ export default function CustomFilter(props) {
     const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange, customFilterSelect } = props;
     const classes = useStyles();
 
+    // let iFrameExists = $(".embedContainer:visible iframe").length;
+
     return (
         <div className={classes.root}>
 
             <Grid container
                 spacing={3} >
+                {/* loading logic */}
                 {apiContent.length ?
 
                     <ComboBox
@@ -91,7 +100,10 @@ export default function CustomFilter(props) {
                 }
 
                 <Grid item sm={12} >
-                    <div id={validIdHelper(`embedContainer${lookerContent[0].id}`)} className="col-sm-12 embedContainer"></div>
+                    <div
+                        className={apiContent.length ? `col-sm-12 embedContainer` : `col-sm-12 embedContainer ${classes.hidden}`}
+                        // className={`col-sm-12 embedContainer ${classes.hidden}`}
+                        id={validIdHelper(`embedContainer${lookerContent[0].id}`)}></div>
                 </Grid>
             </Grid >
 
