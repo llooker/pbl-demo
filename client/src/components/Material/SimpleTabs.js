@@ -16,7 +16,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Icon from '@material-ui/core/Icon';
 
-
+import ComboBox from './ComboBox'
 import $ from 'jquery';
 
 const { validIdHelper } = require('../../tools');
@@ -88,6 +88,12 @@ const useStyles = makeStyles((theme) => ({
     },
     icon: {
         marginRight: 12
+    },
+    mt24: {
+        marginTop: 24
+    },
+    pt24: {
+        paddingTop: 24
     }
 }));
 
@@ -213,13 +219,33 @@ export default function SimpleTabs(props) {
                                     </Grid>
                                 </>
                                 :
-                                <Grid item sm={12} >
-                                    <div
-                                        className="embedContainer"
-                                        id={validIdHelper(`embedContainer${lookerContentItem.id}`)}
-                                    >
-                                    </div>
-                                </Grid>
+                                demoComponentType === 'custom filter' ?
+                                    <>
+                                        <Grid item sm={12}>
+
+                                            <ComboBox
+                                                options={apiContent}
+                                                action={action}
+                                                correspondingContentId={lookerContent[0].id}
+                                                filterName={lookerContent[0].customDropdown.filterName} />
+                                        </Grid>
+                                        <br />
+                                        <Grid item sm={12} className="pt24 mt24">
+                                            <div
+                                                className="embedContainer"
+                                                id={validIdHelper(`embedContainer${lookerContentItem.id}`)}
+                                            >
+                                            </div>
+                                        </Grid>
+                                    </>
+                                    :
+                                    <Grid item sm={12} >
+                                        <div
+                                            className="embedContainer"
+                                            id={validIdHelper(`embedContainer${lookerContentItem.id}`)}
+                                        >
+                                        </div>
+                                    </Grid>
                             }
 
                         </Grid>

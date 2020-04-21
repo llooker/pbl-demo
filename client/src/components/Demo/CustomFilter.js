@@ -21,6 +21,7 @@ import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import BuildIcon from '@material-ui/icons/Build';
 
 import ComboBox from '../Material/ComboBox'
+import Tabs from '../Material/SimpleTabs'
 
 import UsecaseContent from '../../usecaseContent.json'; // still necessary to map over demo components
 import '../Home.css'
@@ -71,7 +72,7 @@ export default function CustomFilter(props) {
     // console.log('CustomFilter')
     // console.log('props', props)
 
-    const { staticContent, staticContent: { lookerContent }, apiContent, action } = props;
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange } = props;
     const classes = useStyles();
 
     // let iFrameExists = $(".embedContainer:visible iframe").length;
@@ -81,8 +82,9 @@ export default function CustomFilter(props) {
 
             <Grid container
                 spacing={3} >
+                {/* move to simple tabs layout */}
                 {/* loading logic */}
-                {apiContent.length ?
+                {/* {apiContent.length ?
 
                     <ComboBox
                         options={apiContent}
@@ -104,7 +106,15 @@ export default function CustomFilter(props) {
                         className={apiContent.length ? `col-sm-12 embedContainer` : `col-sm-12 embedContainer ${classes.hidden}`}
                         // className={`col-sm-12 embedContainer ${classes.hidden}`}
                         id={validIdHelper(`embedContainer${lookerContent[0].id}`)}></div>
-                </Grid>
+                </Grid> */}
+
+
+                <Tabs lookerContent={lookerContent}
+                    activeTabValue={activeTabValue}
+                    handleTabChange={handleTabChange}
+                    demoComponentType={type}
+                    apiContent={apiContent}
+                    action={action} />
             </Grid >
 
         </div>

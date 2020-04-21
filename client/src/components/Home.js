@@ -511,9 +511,9 @@ class Home extends Component {
 
 
     render() {
-        // console.log('Home render');
-        // console.log('this.state', this.state);
-        // console.log('this.props', this.props);
+        console.log('Home render');
+        console.log('this.state', this.state);
+        console.log('this.props', this.props);
 
 
         // const iconMap = {
@@ -607,27 +607,30 @@ class Home extends Component {
                         [classes.contentShift]: drawerOpen,
                     })}
                 >
+
+
                     <div className={classes.drawerHeader} />
 
-                    {UsecaseContent.marketing.demoComponents.map((item, index) => {
-                        const DemoComponent = demoComponentMap[item.type];
-                        return (
-                            <TabPanel value={drawerTabValue} index={index} >
+                    {
+                        UsecaseContent.marketing.demoComponents.map((item, index) => {
+                            const DemoComponent = demoComponentMap[item.type];
+                            return (
+                                <TabPanel value={drawerTabValue} index={index} >
 
-                                {DemoComponent ? <DemoComponent key={validIdHelper(`list-${item.type}`)}
-                                    staticContent={item}
-                                    handleDrawerTabChange={handleDrawerTabChange}
-                                    apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
-                                    action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
-                                    activeTabValue={activeTabValue}
-                                    handleTabChange={handleTabChange}
-                                /> : item.label}
+                                    {DemoComponent ? <DemoComponent key={validIdHelper(`list-${item.type}`)}
+                                        staticContent={item}
+                                        handleDrawerTabChange={handleDrawerTabChange}
+                                        apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
+                                        action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
+                                        activeTabValue={activeTabValue}
+                                        handleTabChange={handleTabChange}
+                                    /> : item.label}
 
 
-                            </TabPanel>)
-                    })
+                                </TabPanel>)
+                        })
                     }
-                </main>
+                </main >
             </div >
         )
     }
