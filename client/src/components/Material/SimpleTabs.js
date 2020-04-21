@@ -13,6 +13,13 @@ import Grid from '@material-ui/core/Grid';
 // import List from './SimpleList'
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Divider from '@material-ui/core/Divider';
+// import Chip from '@material-ui/core/Chip';
+
+import TreeView from '@material-ui/lab/TreeView';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import TreeItem from '@material-ui/lab/TreeItem';
 
 
 import $ from 'jquery';
@@ -51,6 +58,7 @@ function a11yProps(index) {
     };
 }
 
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -79,13 +87,19 @@ const useStyles = makeStyles((theme) => ({
     },
     dBlock: {
         display: 'block'
+    },
+    tree: {
+        height: 240,
+        flexGrow: 1,
+        maxWidth: 400,
     }
 }));
 
 export default function SimpleTabs(props) {
     // console.log('SimpleTabs')
     // console.log('props', props)
-    const { lookerContent, activeTabValue, handleTabChange, demoComponentType, apiContent, action } = props
+    const { lookerContent, activeTabValue, handleTabChange, demoComponentType, apiContent, action } = props;
+
     const classes = useStyles();
     const [value, setValue] = useState(0);
     const [selected, setSelected] = useState(0)
@@ -95,23 +109,17 @@ export default function SimpleTabs(props) {
         setValue(newValue);
     };
 
-
     let iFrameExists = $(".embedContainer:visible iframe").length;
-    // console.log('iFrameExists', iFrameExists)
-
 
     useEffect(() => {
-        if (activeTabValue > value) { //change from drill click
-            // console.log('inside ifff')
+        //change from drill click
+        if (activeTabValue > value) {
             setValue(activeTabValue)
         }
-        // if (iFrameExists && action) action({}, 0)
-        // if (action) action({}, 0)
     })
 
     return (
         <div className={classes.root}>
-
             {/* loading logic */}
             {iFrameExists ? '' :
                 <Grid item sm={12} >
@@ -139,57 +147,66 @@ export default function SimpleTabs(props) {
                     </Tabs>
                 </AppBar>
 
-                {lookerContent.map((item, index) => (
+                {lookerContent.map((lookerContentItem, index) => (
                     <TabPanel value={value} index={index}>
+                        <Grid container>
+                            {demoComponentType === 'report builder' && index === 0 ?
+                                <>
+                                    <Grid item sm={3} >
+                                        {Object.keys(apiContent).length ? Object.keys(apiContent).map((key, objIndex) => (
+                                            <>
+                                                {objIndex > 0 ?
+                                                    <Divider /> : ''}
+                                                <Typography variant="h6"
+                                                    noWrap
+                                                    className={classes.title}
+                                                    key={key}>
+                                                    {key.charAt(0).toUpperCase() + key.substring(1)}:
+                                                </Typography>
+                                                <List component="nav" aria-label="main mailbox folders">
+                                                    {
+                                                        apiContent[key].length ?
+                                                            apiContent[key].map((item, index) => (
 
-                        {demoComponentType === 'report builder' && index === 0 ?
+                                                                <ListItem button
+                                                                    key={item.id}
+                                                                    contentid={item.id}
+                                                                    selected={selected === index}
+                                                                    onClick={() => {
+                                                                        setSelected(index)
+                                                                        action(event)
+                                                                    }}> {item.title}
 
-                            <Grid container>
-
-                                <Grid item sm={2} >
-                                    {Object.keys(apiContent).length ? Object.keys(apiContent).map((key, objIndex) => (
-                                        <>
-                                            <Typography variant="h6" noWrap className={classes.title}>
-                                                {key.charAt(0).toUpperCase() + key.substring(1)}:
-                                            </Typography>
-                                            <List component="nav" aria-label="main mailbox folders">
-                                                {
-                                                    apiContent[key].length ?
-                                                        apiContent[key].map((item, index) => (
-
-                                                            <ListItem button
-                                                                // selected={index === 0 ? true : false} 
-                                                                selected={selected === index}
-                                                                onClick={() => {
-                                                                    setSelected(index)
-                                                                    action(index)
-                                                                }}> {item.title}
-                                                            </ListItem>
-                                                        ))
-                                                        :
-                                                        <ListItem disabled> None
+                                                                    {/* <Chip label="Basic" /> */}
+                                                                </ListItem>
+                                                            ))
+                                                            :
+                                                            <ListItem disabled> None
                                                     </ListItem>
-                                                }
-                                            </List>
-                                        </>
-                                    )) : ''}
-                                </Grid>
-                                <Grid item sm={10} >
-
+                                                    }
+                                                </List>
+                                            </>
+                                        )) : ''}
+                                    </Grid>
+                                    <Grid item sm={9} >
+                                        <div
+                                            className="embedContainer"
+                                            id={validIdHelper(`embedContainer${lookerContentItem.id}`)}
+                                        >
+                                        </div>
+                                    </Grid>
+                                </>
+                                :
+                                <Grid item sm={12} >
                                     <div
-                                        className="col-sm-10 embedContainer"
-                                        id={validIdHelper(`embedContainer${item.id}`)}
+                                        className="embedContainer"
+                                        id={validIdHelper(`embedContainer${lookerContentItem.id}`)}
                                     >
                                     </div>
                                 </Grid>
-                            </Grid>
-                            :
-                            <div
-                                className="col-sm-12 embedContainer"
-                                id={validIdHelper(`embedContainer${item.id}`)}
-                            >
-                            </div>}
+                            }
 
+                        </Grid>
                     </TabPanel>
                 ))}
             </Box>

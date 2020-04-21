@@ -281,6 +281,7 @@ class Home extends Component {
                     let lookerResponseData = await lookerResponse.json();
 
                     let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
+
                     let dashboardsToUse = [...lookerResponseData.sharedFolder.dashboards]
                     let objToUse = {
                         looks: looksToUse,
@@ -296,7 +297,8 @@ class Home extends Component {
                                     .withClassName('iframe')
                                     .withClassName('look')
                                     .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
-                                    // .withClassName(index == 0 ? 'd-block' : 'd-none')
+                                    .withClassName(index > 0 ? 'd-none' : 'oops')
+                                    .withClassName(lookId)
                                     .on('drillmenu:click', (e) => this.drillClick(e))
                                     .build()
                                     .connect()
@@ -326,7 +328,7 @@ class Home extends Component {
                     }
 
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
-                    objForState[stateKey] = objToUse;
+                    objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
                 }
                 else if (usecaseContent[j].lookerContent[i].type === "api") {
                     let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
@@ -376,23 +378,23 @@ class Home extends Component {
 
     }
 
-    reportBuilderAction = (index) => {
-        console.log('reportBuilderAction')
+    //seemes to be non performant, need to think of a new solution...
+    reportBuilderAction = (event) => {
+        // console.log('reportBuilderAction')
         // console.log('event', event)
         // console.log('index', index)
+
+        const desiredContentId = event.target.getAttribute("contentid");
+        // console.log('desiredContentId', desiredContentId);
 
         let iFrameArray = $(".embedContainer:visible > iframe")
         // console.log('000 iFrameArray', iFrameArray)
         for (let i = 0; i < iFrameArray.length; i++) {
-            if (i === index) {
+            if (iFrameArray[i].classList.contains(desiredContentId)) {
                 // console.log('inside ifff')
-                //if (iFrameArray[i].classList.contains('dNone')) 
                 iFrameArray[i].classList.remove('d-none')
-                // iFrameArray[i].classList.add('dBlock')
             } else {
                 // console.log('inside elllse');
-                //if (iFrameArray[i].classList.contains('dBlock')) 
-                // iFrameArray[i].classList.remove('dBlock')
                 iFrameArray[i].classList.add('d-none')
             }
         }
