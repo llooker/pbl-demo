@@ -10,16 +10,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 
-// import List from './SimpleList'
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-// import Chip from '@material-ui/core/Chip';
-
 import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
+import Icon from '@material-ui/core/Icon';
 
 
 import $ from 'jquery';
@@ -38,9 +33,7 @@ function TabPanel(props) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {/* {value === index &&  */}
             <Box p={3}>{children}</Box>
-            {/* } */}
         </Typography>
     );
 }
@@ -92,6 +85,9 @@ const useStyles = makeStyles((theme) => ({
         height: 240,
         flexGrow: 1,
         maxWidth: 400,
+    },
+    icon: {
+        marginRight: 12
     }
 }));
 
@@ -102,7 +98,8 @@ export default function SimpleTabs(props) {
 
     const classes = useStyles();
     const [value, setValue] = useState(0);
-    const [selected, setSelected] = useState(0)
+    const [selected, setSelected] = useState(2)
+    const [expanded, setExpanded] = useState(["1"]);
 
     const handleChange = (event, newValue) => {
         handleTabChange(0);
@@ -116,8 +113,18 @@ export default function SimpleTabs(props) {
         if (activeTabValue > value) {
             setValue(activeTabValue)
         }
-    })
+    });
 
+    const handleToggle = (event, nodeIds) => {
+        setExpanded(nodeIds);
+    }
+
+    const handleSelect = (event, nodeIds) => {
+        setSelected(nodeIds);
+    };
+
+
+    let treeCounter = 0;  //for now
     return (
         <div className={classes.root}>
             {/* loading logic */}
@@ -153,40 +160,49 @@ export default function SimpleTabs(props) {
                             {demoComponentType === 'report builder' && index === 0 ?
                                 <>
                                     <Grid item sm={3} >
-                                        {Object.keys(apiContent).length ? Object.keys(apiContent).map((key, objIndex) => (
-                                            <>
-                                                {objIndex > 0 ?
-                                                    <Divider /> : ''}
-                                                <Typography variant="h6"
-                                                    noWrap
-                                                    className={classes.title}
-                                                    key={key}>
-                                                    {key.charAt(0).toUpperCase() + key.substring(1)}:
-                                                </Typography>
-                                                <List component="nav" aria-label="main mailbox folders">
-                                                    {
-                                                        apiContent[key].length ?
-                                                            apiContent[key].map((item, index) => (
 
-                                                                <ListItem button
-                                                                    key={item.id}
-                                                                    contentid={item.id}
-                                                                    selected={selected === index}
-                                                                    onClick={() => {
-                                                                        setSelected(index)
-                                                                        action(event)
-                                                                    }}> {item.title}
+                                        <TreeView
+                                            className={classes.tree}
+                                            defaultCollapseIcon={<ExpandMoreIcon />}
+                                            defaultExpandIcon={<ChevronRightIcon />}
+                                            expanded={expanded}
+                                            // selected={selected}
+                                            onNodeToggle={handleToggle}
+                                            onNodeSelect={handleSelect}
+                                        >
+                                            {Object.keys(apiContent).length ? Object.keys(apiContent).map((key, outerIndex) => (
+                                                <>
+                                                    <TreeItem
+                                                        nodeId={"" + (treeCounter += 1)}
+                                                        treecounter={treeCounter}
+                                                        label={key.charAt(0).toUpperCase() + key.substring(1)}
+                                                        icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
+                                                        disabled={apiContent[key].length ? false : true}
+                                                    >
 
-                                                                    {/* <Chip label="Basic" /> */}
-                                                                </ListItem>
-                                                            ))
-                                                            :
-                                                            <ListItem disabled> None
-                                                    </ListItem>
-                                                    }
-                                                </List>
-                                            </>
-                                        )) : ''}
+                                                        {
+                                                            apiContent[key].length ?
+                                                                apiContent[key].map((item, index) => (
+                                                                    <TreeItem
+                                                                        nodeId={"" + (treeCounter += 1)}
+                                                                        treecounter={treeCounter}
+                                                                        selected={selected === treeCounter}
+                                                                        className={selected === treeCounter ? "Mui-selected" : ""}
+                                                                        contentid={item.id}
+                                                                        label={item.title}
+                                                                        onClick={() => {
+                                                                            setSelected(treeCounter)
+                                                                            action(item.id)
+                                                                        }} />
+                                                                ))
+                                                                :
+                                                                ''
+                                                        }
+                                                    </TreeItem>
+
+                                                </>
+                                            )) : ''}
+                                        </TreeView>
                                     </Grid>
                                     <Grid item sm={9} >
                                         <div

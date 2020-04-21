@@ -215,20 +215,18 @@ class Home extends Component {
                         .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
                         .withNext()
-                        .withTheme('Looker') //new
-                        .on('dashboard:run:start', (e) => {
-                            // console.log('e', e)
-                        })
-                        .on('drillmenu:click', (e) => this.drillClick(e))
+                        .withTheme('Looker')
+                        // .on('dashboard:run:start', (event) => console.log('event', event))
+                        // .on('drillmenu:click', (event) => this.drillClick(event))
+                        .on('drillmenu:click', (event) => this[_.camelCase(usecaseContent[j].type) + 'Action'](event))
                         // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
                         .build()
                         .connect()
-                        //P.then(doWork.bind(null, 'text'))
                         .then((dashboard) => {
-                            // objForState[usecaseContent[j].lookerContent[i].id] = dashboard; //not working
-                            this.setState({
-                                [usecaseContent[j].lookerContent[i].id]: dashboard
-                            })
+                            objForState[usecaseContent[j].lookerContent[i].id] = dashboard; //not working
+                            // this.setState({
+                            //     [usecaseContent[j].lookerContent[i].id]: dashboard
+                            // })
                         })
                         .catch((error) => {
                             console.error('Connection error', error)
@@ -261,6 +259,10 @@ class Home extends Component {
                     LookerEmbedSDK.createExploreWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
+                        .on('explore:state:changed', (event) => {
+                            // console.log('explore:state:changed')
+                            // console.log('event', event)
+                        })
                         .build()
                         .connect()
                         .then(this.setupExplore)
@@ -279,9 +281,7 @@ class Home extends Component {
                     })
 
                     let lookerResponseData = await lookerResponse.json();
-
                     let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
-
                     let dashboardsToUse = [...lookerResponseData.sharedFolder.dashboards]
                     let objToUse = {
                         looks: looksToUse,
@@ -299,7 +299,11 @@ class Home extends Component {
                                     .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
                                     .withClassName(index > 0 ? 'd-none' : 'oops')
                                     .withClassName(lookId)
-                                    .on('drillmenu:click', (e) => this.drillClick(e))
+                                    // .on('drillmenu:click', (e) => this.drillClick(e))
+                                    .on('drillmodal:look', (event) => {
+                                        // console.log('drillmodal:explore')
+                                        // console.log('event', event)
+                                    })
                                     .build()
                                     .connect()
                                     .then(this.setupLook)
@@ -317,7 +321,7 @@ class Home extends Component {
                                 .withClassName('iframe')
                                 .withClassName('dashboard')
                                 .withClassName(lookerResponseData.sharedFolder.dashboard.indexOf(item) > -1 ? "shared" : "personal")
-                                .on('drillmenu:click', (e) => this.drillClick(e))
+                                // .on('drillmenu:click', (e) => this.drillClick(e))
                                 .build()
                                 .connect()
                                 .then(this.setupLook)
@@ -340,28 +344,35 @@ class Home extends Component {
                     })
                     let lookerResponseData = await lookerResposnse.json();
 
-                    //leave it this way for now, nicer loading experience
+
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
-                    this.setState((prevState) => ({
-                        [stateKey]: prevState[stateKey] ? [...prevState[stateKey], lookerResponseData] : [lookerResponseData]
-                    }))
+                    // this gives better performance...
+                    // this.setState((prevState) => ({
+                    //     [stateKey]: prevState[stateKey] ? [...prevState[stateKey], lookerResponseData] : [lookerResponseData]
+                    // }))
 
                     //use state for this for now for better loading experience
-                    // if (objForState.hasOwnProperty(stateKey)) {
-                    //     objForState[stateKey].push(lookerResponseData)
-                    // } else {
-                    //     objForState[stateKey] = [lookerResponseData]
-                    // }
+                    if (objForState.hasOwnProperty(stateKey)) {
+                        objForState[stateKey].push(lookerResponseData)
+                    } else {
+                        objForState[stateKey] = [lookerResponseData]
+                    }
                 }
             }
 
         }
-        //set state once after loop to reduce renders
-        // console.log('objForState', objForState)
-        this.setState({
-            ...objForState
-        })
 
+        // set state once after loop to reduce renders
+        //not working, or is it???
+        setTimeout(() => {
+            // console.log('objForState', objForState)
+            this.setState((prevState) => ({
+                ...prevState,
+                ...objForState
+            }), () => {
+                // console.log('setState callback', this.state)
+            })
+        }, 1000)
     }
 
     customFilterAction = (event, stateName, filterName) => {
@@ -379,18 +390,17 @@ class Home extends Component {
     }
 
     //seemes to be non performant, need to think of a new solution...
-    reportBuilderAction = (event) => {
+    reportBuilderAction = (contentId) => {
         // console.log('reportBuilderAction')
-        // console.log('event', event)
-        // console.log('index', index)
+        // console.log('contentId', contentId)
 
-        const desiredContentId = event.target.getAttribute("contentid");
+        // const desiredContentId = event.target.getAttribute("contentid");
         // console.log('desiredContentId', desiredContentId);
 
         let iFrameArray = $(".embedContainer:visible > iframe")
         // console.log('000 iFrameArray', iFrameArray)
         for (let i = 0; i < iFrameArray.length; i++) {
-            if (iFrameArray[i].classList.contains(desiredContentId)) {
+            if (iFrameArray[i].classList.contains(contentId)) {
                 // console.log('inside ifff')
                 iFrameArray[i].classList.remove('d-none')
             } else {
@@ -402,8 +412,10 @@ class Home extends Component {
     }
 
 
-    drillClick(event) {
+    // drillClick(event) {
+    dashboardOverviewDetailAction(event) {
         // console.log('drillClick')
+        // console.log('dashboardOverviewDetailAction')
         // console.log('event', event)
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
