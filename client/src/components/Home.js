@@ -223,10 +223,10 @@ class Home extends Component {
                         .build()
                         .connect()
                         .then((dashboard) => {
-                            objForState[usecaseContent[j].lookerContent[i].id] = dashboard; //not working
-                            // this.setState({
-                            //     [usecaseContent[j].lookerContent[i].id]: dashboard
-                            // })
+                            // objForState[usecaseContent[j].lookerContent[i].id] = dashboard; //not working
+                            this.setState({
+                                [usecaseContent[j].lookerContent[i].id]: dashboard
+                            })
                         })
                         .catch((error) => {
                             console.error('Connection error', error)

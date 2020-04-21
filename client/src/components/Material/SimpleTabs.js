@@ -94,6 +94,9 @@ const useStyles = makeStyles((theme) => ({
     },
     pt24: {
         paddingTop: 24
+    },
+    w100: {
+        width: '100%'
     }
 }));
 
@@ -221,7 +224,7 @@ export default function SimpleTabs(props) {
                                 :
                                 demoComponentType === 'custom filter' ?
                                     <>
-                                        <Grid item sm={12}>
+                                        <Grid item sm={12} gutterBottom>
 
                                             <ComboBox
                                                 options={apiContent}
@@ -229,14 +232,16 @@ export default function SimpleTabs(props) {
                                                 correspondingContentId={lookerContent[0].id}
                                                 filterName={lookerContent[0].customDropdown.filterName} />
                                         </Grid>
-                                        <br />
-                                        <Grid item sm={12} className="pt24 mt24">
-                                            <div
-                                                className="embedContainer"
-                                                id={validIdHelper(`embedContainer${lookerContentItem.id}`)}
-                                            >
-                                            </div>
-                                        </Grid>
+
+                                        <Box className={classes.w100} mt={2}>
+                                            <Grid item sm={12}>
+                                                <div
+                                                    className="embedContainer"
+                                                    id={validIdHelper(`embedContainer${lookerContentItem.id}`)}
+                                                >
+                                                </div>
+                                            </Grid>
+                                        </Box>
                                     </>
                                     :
                                     <Grid item sm={12} >
