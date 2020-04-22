@@ -64,9 +64,9 @@ export default function ReportBuilder(props) {
     // console.log('props', props)
 
     //custom filter
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange } = props;
-
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange, lookerUser } = props;
     const classes = useStyles();
+    const lookerUserForTab = { type: 'sample code', label: 'Sample Code', id: 'sampleCode', lookerUser }
 
     useEffect(() => {
         // console.log('useEffect');
@@ -78,10 +78,10 @@ export default function ReportBuilder(props) {
 
             <Grid container
                 spacing={3} >
-                <Tabs lookerContent={lookerContent}
+                <Tabs
+                    tabContent={[...lookerContent, lookerUserForTab]}
                     activeTabValue={activeTabValue}
                     handleTabChange={handleTabChange}
-                    demoComponentType={type}
                     apiContent={apiContent}
                     action={action} />
             </Grid >

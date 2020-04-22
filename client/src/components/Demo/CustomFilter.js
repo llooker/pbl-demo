@@ -72,8 +72,9 @@ export default function CustomFilter(props) {
     // console.log('CustomFilter')
     // console.log('props', props)
 
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange } = props;
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange, lookerUser } = props;
     const classes = useStyles();
+    const lookerUserForTab = { type: 'sample code', label: 'Sample Code', id: 'sampleCode', lookerUser }
 
     // let iFrameExists = $(".embedContainer:visible iframe").length;
 
@@ -82,37 +83,10 @@ export default function CustomFilter(props) {
 
             <Grid container
                 spacing={3} >
-                {/* move to simple tabs layout */}
-                {/* loading logic */}
-                {/* {apiContent.length ?
-
-                    <ComboBox
-                        options={apiContent}
-                        action={action}
-                        correspondingContentId={lookerContent[0].id}
-                        filterName={lookerContent[0].customDropdown.filterName} />
-                    :
-
-                    <Grid item sm={12} >
-                        <Card className={`${classes.card} ${classes.flexCentered}`}>
-                            <CircularProgress className={classes.circularProgress} />
-                        </Card>
-
-                    </Grid>
-                }
-
-                <Grid item sm={12} >
-                    <div
-                        className={apiContent.length ? `col-sm-12 embedContainer` : `col-sm-12 embedContainer ${classes.hidden}`}
-                        // className={`col-sm-12 embedContainer ${classes.hidden}`}
-                        id={validIdHelper(`embedContainer${lookerContent[0].id}`)}></div>
-                </Grid> */}
-
-
-                <Tabs lookerContent={lookerContent}
+                <Tabs
+                    tabContent={[...lookerContent, lookerUserForTab]}
                     activeTabValue={activeTabValue}
                     handleTabChange={handleTabChange}
-                    demoComponentType={type}
                     apiContent={apiContent}
                     action={action} />
             </Grid >

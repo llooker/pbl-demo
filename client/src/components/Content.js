@@ -15,7 +15,7 @@ import CustomFilter from './Demo/CustomFilter_OLD';
 import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
 import ReportBuilder from './Demo/ReportBuilder_OLD';
 import ComingSoon from './Demo/ComingSoon';
-import CodeSideBar from './CodeSideBar';
+import CodeSideBar from './Demo/CodeSideBar';
 
 import UsecaseContent from '../usecaseContent.json';
 

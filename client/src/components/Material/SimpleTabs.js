@@ -15,9 +15,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Icon from '@material-ui/core/Icon';
+import CodeIcon from '@material-ui/icons/Code';
 
 import ComboBox from './ComboBox'
 import $ from 'jquery';
+import CodeSideBar from '../Demo/CodeSideBar'
 
 const { validIdHelper } = require('../../tools');
 
@@ -87,24 +89,26 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: 400,
     },
     icon: {
-        marginRight: 12
+        marginRight: 12,
+        fontSize: '1rem',
+        overflow: 'visible'
     },
-    mt24: {
-        marginTop: 24
-    },
-    pt24: {
-        paddingTop: 24
+    mt12: {
+        marginTop: 12
     },
     w100: {
         width: '100%'
+    },
+    mlAuto: {
+        marginLeft: 'auto'
     }
 }));
 
 export default function SimpleTabs(props) {
     // console.log('SimpleTabs')
     // console.log('props', props)
-    const { lookerContent, activeTabValue, handleTabChange, demoComponentType, apiContent, action } = props;
-
+    const { tabContent, activeTabValue, handleTabChange, apiContent, action } = props; //demoComponentType
+    console.log('tabContent', tabContent)
     const classes = useStyles();
     const [value, setValue] = useState(0);
     const [selected, setSelected] = useState(2)
@@ -115,7 +119,9 @@ export default function SimpleTabs(props) {
         setValue(newValue);
     };
 
-    let iFrameExists = $(".embedContainer:visible iframe").length;
+    // let iFrameExists = $(".embedContainer:visible iframe").length;
+    let iFrameExists = $(".tabPanelsContainer:visible iframe").length
+    console.log('iFrameExists', iFrameExists)
 
     useEffect(() => {
         //change from drill click
@@ -136,7 +142,7 @@ export default function SimpleTabs(props) {
     let treeCounter = 0;  //for now
     return (
         <div className={classes.root}>
-            {/* loading logic */}
+            {/* loading  */}
             {iFrameExists ? '' :
                 <Grid item sm={12} >
                     <Card className={`${classes.card} ${classes.flexCentered}`}>
@@ -152,110 +158,116 @@ export default function SimpleTabs(props) {
                 <AppBar position="static">
                     <Tabs
                         className={classes.tabs}
-                        // indicatorColor='secondary'
-                        // textColor='primary'
                         value={value}
                         onChange={handleChange}
                         aria-label="simple tabs example">
-                        {lookerContent.map((item, index) => (
-                            <Tab label={item.label} {...a11yProps(index)} />
+                        {tabContent.map((item, index) => (
+                            <Tab label={item.label} {...a11yProps(index)} className={item.type === 'sample code' ? `${classes.mlAuto}` : ``} />
                         ))}
                     </Tabs>
                 </AppBar>
 
-                {lookerContent.map((lookerContentItem, index) => (
-                    <TabPanel value={value} index={index}>
-                        <Grid container>
-                            {demoComponentType === 'report builder' && index === 0 ?
-                                <>
-                                    <Grid item sm={3} >
-
-                                        <TreeView
-                                            className={classes.tree}
-                                            defaultCollapseIcon={<ExpandMoreIcon />}
-                                            defaultExpandIcon={<ChevronRightIcon />}
-                                            expanded={expanded}
-                                            // selected={selected}
-                                            onNodeToggle={handleToggle}
-                                            onNodeSelect={handleSelect}
-                                        >
-                                            {Object.keys(apiContent).length ? Object.keys(apiContent).map((key, outerIndex) => (
-                                                <>
-                                                    <TreeItem
-                                                        nodeId={"" + (treeCounter += 1)}
-                                                        treecounter={treeCounter}
-                                                        label={key.charAt(0).toUpperCase() + key.substring(1)}
-                                                        icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
-                                                        disabled={apiContent[key].length ? false : true}
-                                                    >
-
-                                                        {
-                                                            apiContent[key].length ?
-                                                                apiContent[key].map((item, index) => (
-                                                                    <TreeItem
-                                                                        nodeId={"" + (treeCounter += 1)}
-                                                                        treecounter={treeCounter}
-                                                                        selected={selected === treeCounter}
-                                                                        className={selected === treeCounter ? "Mui-selected" : ""}
-                                                                        contentid={item.id}
-                                                                        label={item.title}
-                                                                        onClick={() => {
-                                                                            setSelected(treeCounter)
-                                                                            action(item.id)
-                                                                        }} />
-                                                                ))
-                                                                :
-                                                                ''
-                                                        }
-                                                    </TreeItem>
-
-                                                </>
-                                            )) : ''}
-                                        </TreeView>
-                                    </Grid>
-                                    <Grid item sm={9} >
-                                        <div
-                                            className="embedContainer"
-                                            id={validIdHelper(`embedContainer${lookerContentItem.id}`)}
-                                        >
-                                        </div>
-                                    </Grid>
-                                </>
-                                :
-                                demoComponentType === 'custom filter' ?
+                <Box className="tabPanelsContainer">
+                    {tabContent.map((tabContentItem, index) => (
+                        <TabPanel value={value} index={index}>
+                            <Grid container>
+                                {tabContentItem.type === 'report builder' && index === 0 ?
                                     <>
-                                        <Grid item sm={12} gutterBottom>
+                                        <Grid item sm={3} >
 
-                                            <ComboBox
-                                                options={apiContent}
-                                                action={action}
-                                                correspondingContentId={lookerContent[0].id}
-                                                filterName={lookerContent[0].customDropdown.filterName} />
+                                            <TreeView
+                                                className={classes.tree}
+                                                defaultCollapseIcon={<ExpandMoreIcon />}
+                                                defaultExpandIcon={<ChevronRightIcon />}
+                                                expanded={expanded}
+                                                // selected={selected}
+                                                onNodeToggle={handleToggle}
+                                                onNodeSelect={handleSelect}
+                                            >
+                                                {Object.keys(apiContent).length ? Object.keys(apiContent).map((key, outerIndex) => (
+                                                    <>
+                                                        <TreeItem
+                                                            nodeId={"" + (treeCounter += 1)}
+                                                            treecounter={treeCounter}
+                                                            label={key.charAt(0).toUpperCase() + key.substring(1)}
+                                                            icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
+                                                            disabled={apiContent[key].length ? false : true}
+                                                        >
+
+                                                            {
+                                                                apiContent[key].length ?
+                                                                    apiContent[key].map((item, index) => (
+                                                                        <TreeItem
+                                                                            nodeId={"" + (treeCounter += 1)}
+                                                                            treecounter={treeCounter}
+                                                                            selected={selected === treeCounter}
+                                                                            className={selected === treeCounter ? "Mui-selected" : ""}
+                                                                            contentid={item.id}
+                                                                            label={item.title}
+                                                                            onClick={() => {
+                                                                                setSelected(treeCounter)
+                                                                                action(item.id)
+                                                                            }} />
+                                                                    ))
+                                                                    :
+                                                                    ''
+                                                            }
+                                                        </TreeItem>
+
+                                                    </>
+                                                )) : ''}
+                                            </TreeView>
                                         </Grid>
+                                        <Grid item sm={9} >
+                                            <div
+                                                className="embedContainer"
+                                                id={validIdHelper(`embedContainer${tabContentItem.id}`)}
+                                            >
+                                            </div>
+                                        </Grid>
+                                    </>
+                                    :
+                                    tabContentItem.type === 'custom filter' && index == 0 ?
+                                        <>
+                                            <Grid item sm={12} gutterBottom>
 
-                                        <Box className={classes.w100} mt={2}>
-                                            <Grid item sm={12}>
+                                                <ComboBox
+                                                    options={apiContent}
+                                                    action={action}
+                                                    correspondingContentId={tabContent[0].id}
+                                                    filterName={tabContent[0].customDropdown.filterName} />
+                                            </Grid>
+
+                                            <Box className={classes.w100} mt={2}>
+                                                <Grid item sm={12}>
+                                                    <div
+                                                        className="embedContainer"
+                                                        id={validIdHelper(`embedContainer${tabContentItem.id}`)}
+                                                    >
+                                                    </div>
+                                                </Grid>
+                                            </Box>
+                                        </>
+                                        :
+                                        tabContentItem.type === 'sample code' ?
+
+                                            <Grid item sm={12} >
+                                                <CodeSideBar lookerUser={tabContentItem.lookerUser} />
+                                            </Grid>
+                                            :
+                                            <Grid item sm={12} >
                                                 <div
                                                     className="embedContainer"
-                                                    id={validIdHelper(`embedContainer${lookerContentItem.id}`)}
+                                                    id={validIdHelper(`embedContainer${tabContentItem.id}`)}
                                                 >
                                                 </div>
                                             </Grid>
-                                        </Box>
-                                    </>
-                                    :
-                                    <Grid item sm={12} >
-                                        <div
-                                            className="embedContainer"
-                                            id={validIdHelper(`embedContainer${lookerContentItem.id}`)}
-                                        >
-                                        </div>
-                                    </Grid>
-                            }
+                                }
 
-                        </Grid>
-                    </TabPanel>
-                ))}
+                            </Grid>
+                        </TabPanel>
+                    ))}
+                </Box>
             </Box>
         </div >
     );

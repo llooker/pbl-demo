@@ -64,8 +64,9 @@ export default function DashboardOverviewDetail(props) {
     // console.log('DashboardOverviewDetail')
     // console.log('props', props)
 
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange } = props;
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser } = props;
     const classes = useStyles();
+    const lookerUserForTab = { type: 'sample code', label: 'Sample Code', id: 'sampleCode', lookerUser }
 
     useEffect(() => {
         // console.log('useEffect');
@@ -77,10 +78,10 @@ export default function DashboardOverviewDetail(props) {
 
             <Grid container
                 spacing={3} >
-                <Tabs lookerContent={lookerContent}
+                <Tabs
+                    tabContent={[...lookerContent, lookerUserForTab]}
                     activeTabValue={activeTabValue}
-                    handleTabChange={handleTabChange}
-                    demoComponentType={type} />
+                    handleTabChange={handleTabChange} />
             </Grid >
 
         </div>

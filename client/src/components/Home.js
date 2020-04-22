@@ -24,6 +24,7 @@ import GavelIcon from '@material-ui/icons/Gavel';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import BuildIcon from '@material-ui/icons/Build';
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 
 import UserMenu from './Material/UserMenu';
 // import TabPanel from './Material/TabPanel';
@@ -39,7 +40,7 @@ import CustomFilter from './Demo/CustomFilter';
 import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
 import ReportBuilder from './Demo/ReportBuilder';
 import ComingSoon from './Demo/ComingSoon';
-import CodeSideBar from './CodeSideBar';
+import CodeSideBar from './Demo/CodeSideBar';
 
 // constants
 const drawerWidth = 240;
@@ -58,8 +59,6 @@ function TabPanel(props) {
             aria-labelledby={`vertical-tab-${index}`}
             {...other}
         >
-            {/* crucial */}
-            {/* {value === index && <Box p={3}>{children}</Box>} */}
             <Box p={3}>{children}</Box>
         </Typography>
     );
@@ -142,6 +141,24 @@ const styles = theme => ({
     },
     dBlock: {
         display: 'block'
+    },
+    relative: {
+        position: 'relative'
+    },
+    absolute: {
+        position: 'absolute'
+    },
+    right0: {
+        right: 0
+    },
+    top0: {
+        top: 0
+    },
+    right24: {
+        right: 24
+    },
+    top24: {
+        top: 24
     }
 });
 
@@ -152,15 +169,19 @@ class Home extends Component {
         this.state = {
             drawerOpen: false,
             drawerTabValue: 0,
-            activeTabValue: 0
+            activeTabValue: 0,
+            // renderSampleCode: false
         }
     }
 
     //material  methods for layout
     handleDrawerTabChange = (event, newValue) => {
+        // console.log('handleDrawerTabChange')
+        // console.log('event.target', event.target)
         this.handleDrawerChange(true)
         this.setState({
-            drawerTabValue: newValue
+            drawerTabValue: newValue,
+            // renderSampleCode: false
         }, () => {
             this.handleTabChange(0)
         })
@@ -451,69 +472,16 @@ class Home extends Component {
         }
     }
 
-    /*dropdownSelect = (e) => {
-        const targetId = e.target.id
-        const dashboardStateName = e.target.getAttribute("dashboardstatename");
-        const dropdownFilterName = e.target.getAttribute("dropdownfiltername");
-        this.setState({
-            [targetId]: e.target.value
-        }, () => {
-            this.state[dashboardStateName].updateFilters({ [dropdownFilterName]: this.state[targetId] })
-            this.state[dashboardStateName].run()
-        })
-    }*/
-
-    /*setActiveTab = (tabIndex) => {
-        // console.log('setActiveTab')
-        // console.log('tabIndex', tabIndex)
-
-        if (this.state.renderSampleCode) this.toggleCodeBar();
-
-        let tabsArray = $(".parentTabList:visible a");
-        let contentArray = $(".parentTabContent:visible > div");
-        // console.log('tabsArray', tabsArray);
-        // console.log('contentArray', contentArray);
-
-        //simulate tab change, when looker action taken...
-        if (!$(tabsArray[tabIndex]).hasClass('active')) {
-            for (let i = 0; i < tabsArray.length; i++) {
-                if (i === tabIndex) {
-                    tabsArray[i].className = "nav-link active "
-                    contentArray[i].className = "tab-pane fade show active"
-                } else {
-                    tabsArray[i].className = "nav-link"
-                    contentArray[i].className = "tab-pane fade"
-                }
-            }
-        }
-
-        let newTabContentType = $(tabsArray[tabIndex]).attr('contenttype');
-        // console.log('newTabContentType', newTabContentType)
-        if (newTabContentType) {
-            this.setState({
-                activeTabType: newTabContentType
-            }, () => {
-                const sampleCodeFilePath = require(`../sample-code/${newTabContentType}.sample.txt`);
-                fetch(sampleCodeFilePath)
-                    .then(response => {
-                        return response.text()
-                    })
-                    .then(text => {
-                        this.setState({
-                            sampleCode: text
-                        })
-                    })
-            })
-        }
-    }*/
-
-
-
+    // toggleCodeBar = () => {
+    //     this.setState(prevState => ({
+    //         renderSampleCode: prevState.renderSampleCode ? false : true
+    //     }))
+    // }
 
     render() {
-        console.log('Home render');
-        console.log('this.state', this.state);
-        console.log('this.props', this.props);
+        // console.log('Home render');
+        // console.log('this.state', this.state);
+        // console.log('this.props', this.props);
 
 
         // const iconMap = {
@@ -535,10 +503,11 @@ class Home extends Component {
             // "custom viz": ComingSoon
         }
 
-        const { drawerTabValue, drawerOpen, activeTabValue } = this.state;
-        const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
+        const { drawerTabValue, drawerOpen, activeTabValue } = this.state; //renderSampleCode
+        const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this; //toggleCodeBar
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
 
+        // console.log('drawerTabValue', drawerTabValue);
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -559,7 +528,8 @@ class Home extends Component {
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" noWrap className={classes.title}>
-                            {activeCustomization.companyName}
+                            {/* {activeCustomization.companyName} */}
+                            Atom Fashion
                         </Typography>
                         <UserMenu switchLookerUser={switchLookerUser} lookerUser={lookerUser} onLogoutSuccess={applySession} />
                     </Toolbar>
@@ -615,16 +585,32 @@ class Home extends Component {
                         UsecaseContent.marketing.demoComponents.map((item, index) => {
                             const DemoComponent = demoComponentMap[item.type];
                             return (
-                                <TabPanel value={drawerTabValue} index={index} >
+                                <TabPanel
+                                    key={validIdHelper(`tab-panel-${item.type}`)}
+                                    value={drawerTabValue}
+                                    index={index}
+                                    className={classes.relative}
+                                >
 
-                                    {DemoComponent ? <DemoComponent key={validIdHelper(`list-${item.type}`)}
-                                        staticContent={item}
-                                        handleDrawerTabChange={handleDrawerTabChange}
-                                        apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
-                                        action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
-                                        activeTabValue={activeTabValue}
-                                        handleTabChange={handleTabChange}
-                                    /> : item.label}
+                                    {DemoComponent ?
+                                        <DemoComponent key={validIdHelper(`list-${item.type}`)}
+                                            staticContent={item}
+                                            handleDrawerTabChange={handleDrawerTabChange}
+                                            apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
+                                            action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
+                                            activeTabValue={activeTabValue}
+                                            handleTabChange={handleTabChange}
+                                            // toggleCodeBar={toggleCodeBar}
+                                            lookerUser={lookerUser}
+                                        /> :
+                                        item.label
+                                    }
+
+                                    {/* {renderSampleCode ?
+                                        <div className={`${classes.absolute} ${classes.right24} ${classes.top24}`}>
+                                            <CodeSideBar lookerUser={lookerUser} />
+                                        </div>
+                                        : ''} */}
 
 
                                 </TabPanel>)
