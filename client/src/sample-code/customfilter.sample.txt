@@ -1,4 +1,4 @@
-//dashboard.sample.txt
+//customfilter.sample.txt
 //import the emebed sdk
 import { LookerEmbedSDK, LookerEmbedDashboard } from '@looker/embed-sdk'
 

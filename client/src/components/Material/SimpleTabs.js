@@ -107,8 +107,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleTabs(props) {
     // console.log('SimpleTabs')
     // console.log('props', props)
-    const { tabContent, activeTabValue, handleTabChange, apiContent, action } = props; //demoComponentType
-    console.log('tabContent', tabContent)
+    const { tabContent, activeTabValue, handleTabChange, apiContent, action, demoComponentType } = props; //demoComponentType
     const classes = useStyles();
     const [value, setValue] = useState(0);
     const [selected, setSelected] = useState(2)
@@ -121,7 +120,7 @@ export default function SimpleTabs(props) {
 
     // let iFrameExists = $(".embedContainer:visible iframe").length;
     let iFrameExists = $(".tabPanelsContainer:visible iframe").length
-    console.log('iFrameExists', iFrameExists)
+    // console.log('iFrameExists', iFrameExists)
 
     useEffect(() => {
         //change from drill click
@@ -162,17 +161,25 @@ export default function SimpleTabs(props) {
                         onChange={handleChange}
                         aria-label="simple tabs example">
                         {tabContent.map((item, index) => (
-                            <Tab label={item.label} {...a11yProps(index)} className={item.type === 'sample code' ? `${classes.mlAuto}` : ``} />
+                            <Tab
+                                key={`${validIdHelper(demoComponentType + '-tab-' + index)}`} //
+                                label={item.label}
+                                className={item.type === 'sample code' ? `${classes.mlAuto}` : ``}
+                                {...a11yProps(index)} />
                         ))}
                     </Tabs>
                 </AppBar>
 
                 <Box className="tabPanelsContainer">
                     {tabContent.map((tabContentItem, index) => (
-                        <TabPanel value={value} index={index}>
+                        <TabPanel
+                            key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`} //
+                            value={value}
+                            index={index}>
                             <Grid container>
-                                {tabContentItem.type === 'report builder' && index === 0 ?
-                                    <>
+                                {demoComponentType === 'report builder' && index === 0 ?
+                                    <React.Fragment
+                                        key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
                                         <Grid item sm={3} >
 
                                             <TreeView
@@ -180,13 +187,14 @@ export default function SimpleTabs(props) {
                                                 defaultCollapseIcon={<ExpandMoreIcon />}
                                                 defaultExpandIcon={<ChevronRightIcon />}
                                                 expanded={expanded}
-                                                // selected={selected}
                                                 onNodeToggle={handleToggle}
                                                 onNodeSelect={handleSelect}
                                             >
                                                 {Object.keys(apiContent).length ? Object.keys(apiContent).map((key, outerIndex) => (
-                                                    <>
+                                                    <React.Fragment
+                                                        key={`${validIdHelper(demoComponentType + '-innerFragment-' + outerIndex)}`}>
                                                         <TreeItem
+                                                            key={`${validIdHelper(demoComponentType + '-outerTreeItem-' + outerIndex)}`} //
                                                             nodeId={"" + (treeCounter += 1)}
                                                             treecounter={treeCounter}
                                                             label={key.charAt(0).toUpperCase() + key.substring(1)}
@@ -198,6 +206,7 @@ export default function SimpleTabs(props) {
                                                                 apiContent[key].length ?
                                                                     apiContent[key].map((item, index) => (
                                                                         <TreeItem
+                                                                            key={`${validIdHelper(demoComponentType + '-innerTreeItem-' + index)}`}
                                                                             nodeId={"" + (treeCounter += 1)}
                                                                             treecounter={treeCounter}
                                                                             selected={selected === treeCounter}
@@ -214,7 +223,7 @@ export default function SimpleTabs(props) {
                                                             }
                                                         </TreeItem>
 
-                                                    </>
+                                                    </React.Fragment>
                                                 )) : ''}
                                             </TreeView>
                                         </Grid>
@@ -222,14 +231,16 @@ export default function SimpleTabs(props) {
                                             <div
                                                 className="embedContainer"
                                                 id={validIdHelper(`embedContainer${tabContentItem.id}`)}
+                                                key={validIdHelper(`embedContainer${tabContentItem.id}`)}
                                             >
                                             </div>
                                         </Grid>
-                                    </>
+                                    </React.Fragment>
                                     :
-                                    tabContentItem.type === 'custom filter' && index == 0 ?
-                                        <>
-                                            <Grid item sm={12} gutterBottom>
+                                    demoComponentType === 'custom filter' && index == 0 ?
+                                        <React.Fragment
+                                            key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
+                                            <Grid item sm={12}>
 
                                                 <ComboBox
                                                     options={apiContent}
@@ -243,15 +254,17 @@ export default function SimpleTabs(props) {
                                                     <div
                                                         className="embedContainer"
                                                         id={validIdHelper(`embedContainer${tabContentItem.id}`)}
+                                                        key={validIdHelper(`embedContainer${tabContentItem.id}`)}
                                                     >
                                                     </div>
                                                 </Grid>
                                             </Box>
-                                        </>
+                                        </React.Fragment>
                                         :
-                                        tabContentItem.type === 'sample code' ?
+                                        tabContentItem.type === 'sample code' ? //think about how this uses a different property than demoComponent
 
                                             <Grid item sm={12} >
+                                                <CodeSideBar lookerUser={tabContentItem.sampleCode} />
                                                 <CodeSideBar lookerUser={tabContentItem.lookerUser} />
                                             </Grid>
                                             :
@@ -259,6 +272,7 @@ export default function SimpleTabs(props) {
                                                 <div
                                                     className="embedContainer"
                                                     id={validIdHelper(`embedContainer${tabContentItem.id}`)}
+                                                    key={validIdHelper(`embedContainer${tabContentItem.id}`)}
                                                 >
                                                 </div>
                                             </Grid>

@@ -27,7 +27,6 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 
 import UserMenu from './Material/UserMenu';
-// import TabPanel from './Material/TabPanel';
 
 import $ from 'jquery';
 import _ from 'lodash'
@@ -170,7 +169,8 @@ class Home extends Component {
             drawerOpen: false,
             drawerTabValue: 0,
             activeTabValue: 0,
-            // renderSampleCode: false
+            // renderSampleCode: false,
+            sampleCode: {}
         }
     }
 
@@ -178,13 +178,34 @@ class Home extends Component {
     handleDrawerTabChange = (event, newValue) => {
         // console.log('handleDrawerTabChange')
         // console.log('event.target', event.target)
-        this.handleDrawerChange(true)
-        this.setState({
-            drawerTabValue: newValue,
-            // renderSampleCode: false
-        }, () => {
-            this.handleTabChange(0)
-        })
+
+        this.handleDrawerChange(true);
+
+        if (newValue > 0) {
+
+            const contenttype = $("#drawerTabs button")[newValue].getAttribute('contenttype')
+            const sampleCodeFilePath = require(`../sample-code/${contenttype}.sample.txt`);
+            fetch(sampleCodeFilePath)
+                .then(response => {
+                    return response.text()
+                })
+                .then(text => {
+                    this.setState({
+                        drawerTabValue: newValue,
+                        sampleCode: text
+                    }, () => {
+                        this.handleTabChange(0)
+                    })
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+        } else {
+            this.setState({
+                drawerTabValue: newValue
+            })
+        }
     };
 
     handleTabChange = newValue => {
@@ -503,11 +524,13 @@ class Home extends Component {
             // "custom viz": ComingSoon
         }
 
-        const { drawerTabValue, drawerOpen, activeTabValue } = this.state; //renderSampleCode
+        const { drawerTabValue, drawerOpen, activeTabValue, sampleCode } = this.state; //renderSampleCode
         const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this; //toggleCodeBar
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
 
         // console.log('drawerTabValue', drawerTabValue);
+        // console.log('sampleCode', sampleCode);
+
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -551,6 +574,7 @@ class Home extends Component {
                     </div>
                     <Divider />
                     <Tabs
+                        id="drawerTabs"
                         orientation="vertical"
                         variant="scrollable"
                         value={drawerTabValue}
@@ -561,11 +585,12 @@ class Home extends Component {
 
                         {UsecaseContent.marketing.demoComponents.map((item, index) => (
 
-                            <Tab label={item.label} key={`homeVerticalTabs${index}`}
-                                // icon={React.createElement(iconMap[item.type])}
+                            <Tab label={item.label}
+                                key={`homeVerticalTabs${index}`}
                                 icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
                                 {...a11yProps(index)}
-                                wrapped="true"></Tab>
+                                contenttype={validIdHelper(item.type)}
+                            ></Tab>
 
 
                         ))
@@ -600,8 +625,8 @@ class Home extends Component {
                                             action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
                                             activeTabValue={activeTabValue}
                                             handleTabChange={handleTabChange}
-                                            // toggleCodeBar={toggleCodeBar}
                                             lookerUser={lookerUser}
+                                            sampleCode={sampleCode}
                                         /> :
                                         item.label
                                     }
