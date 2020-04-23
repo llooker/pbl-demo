@@ -1,20 +1,17 @@
 'use strict'
 
-const { LookerNodeSDK } = require('@looker/sdk')
-const config = require('../config');
+// const { LookerNodeSDK } = require('@looker/sdk')
+const { Looker40SDK, Looker31SDK, NodeSession, NodeSettingsIniFile } = require('@looker/sdk')
+const { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
+// const sdk = LookerNodeSDK.init31() //valid client :D //.createClient()
+const settings = new NodeSettingsIniFile()
+const session = new NodeSession(settings)
+const sdk = new Looker40SDK(session)
+const sdk31 = new Looker31SDK(session)
 
-var crypto = require('crypto');
-var querystring = require('querystring');
-
+const lookerHostNameToUse = process.env.LOOKER_HOST.substr(0, process.env.LOOKER_HOST.indexOf('.')) //lookerHost.substr(0, lookerHost.indexOf('.'));
 const Customization = require('../models/Customization');
-var { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
-let tools = require('../tools');
-const lookerHost = config.looker.host;
-const lookerHostNameToUse = lookerHost.substr(0, lookerHost.indexOf('.'));
-
-// console.log('top of indexController')
-
-const sdk = LookerNodeSDK.init31() //valid client :D //.createClient()
+const { makeid } = require('../tools');
 
 
 
@@ -146,7 +143,7 @@ async function checkForCustomizations(session) {
 
     let defaultCustomizationObj = {
         // id: 'defaultCustomization',
-        id: tools.makeid(16), //makeid(16),
+        id: makeid(16),
         companyName: 'WYSIWYG',
         logoUrl: 'https://looker.com/assets/img/images/logos/looker_black.svg',
         date: new Date()
@@ -233,7 +230,7 @@ module.exports.auth = (req, res, next) => {
     // console.log('req.session.lookerUser', req.session.lookerUser);
     // Authenticate the request is from a valid user here
     const src = req.query.src;
-    const url = createSignedUrl(src, req.session.lookerUser, config.looker.host, config.looker.embed_secret); //  user
+    const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
     // console.log('url', url)
     res.json({ url });
 }

@@ -1,8 +1,7 @@
 'use strict';
 const Customization = require('../models/Customization');
-const config = require('../config');
 let tools = require('../tools');
-const lookerHostNameToUse = config.looker.host.substr(0, config.looker.host.indexOf('.')); //is this right??
+const lookerHostNameToUse = process.env.LOOKER_HOST.substr(0, process.env.LOOKER_HOST.indexOf('.')); //config.looker.host.substr(0, config.looker.host.indexOf('.')); //is this right??
 
 module.exports.main = (req, res, next) => {
     // console.log('customizeController main')

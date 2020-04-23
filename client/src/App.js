@@ -13,6 +13,8 @@ import DefaultLookerContent from './lookerIndustriesByInstance.json';
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
 
+console.log('process.env.NODE_ENV', process.env.PROCESS_ENV)
+
 class Login extends React.Component {
   constructor(props) {
     super(props);

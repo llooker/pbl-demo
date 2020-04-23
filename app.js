@@ -1,18 +1,13 @@
 const app = require('express')();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const config = require('./config.js');
+require('dotenv').config();
 
-console.log('000 process.env.NODE_ENV', process.env.NODE_ENV)
-// process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-// console.log('111 process.env.NODE_ENV', process.env.NODE_ENV)
-
-require('dotenv-flow').config({
-    path: './config'
-});
-
-console.log('NODE_ENV from env: ', process.env.NODE_ENV)
-console.log('LOOKERSDK_CLIENT_SECRET from env: ', process.env.LOOKERSDK_CLIENT_SECRET)
+// console.log('process.env', process.env)
+// console.log('NODE_ENV from env: ', process.env.NODE_ENV)
+// console.log('LOOKERSDK_CLIENT_SECRET from env: ', process.env.LOOKERSDK_CLIENT_SECRET)
+// console.log('MONGO_USERNAME from env: ', process.env.MONGO_USERNAME)
+// console.log('MONGO_PASSWORD from env: ', process.env.MONGO_PASSWORD)
 
 
 var session = require('express-session');
@@ -23,7 +18,7 @@ let mongoDB;
 // if (process.env.NODE_ENV === 'development') {
 //     mongoDB = `mongodb://127.0.0.1/wysiwyg`
 // } else {
-mongoDB = `mongodb+srv://${config.mongo.username}:${config.mongo.password}@cluster0-97hzq.mongodb.net/wysiwyg`
+mongoDB = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0-97hzq.mongodb.net/wysiwyg`
 //}
 console.log('mongoDB', mongoDB)
 
