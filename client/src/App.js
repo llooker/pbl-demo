@@ -149,14 +149,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // console.log('App componentDidMount')
+    console.log('App componentDidMount')
     this.checkSession()
   }
 
   //called on componentDidMount
   //get request so should only check info, never update
   checkSession = async () => {
-    // console.log('checkSession')
+    console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {

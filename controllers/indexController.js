@@ -14,7 +14,7 @@ const lookerHostNameToUse = lookerHost.substr(0, lookerHost.indexOf('.'));
 
 // console.log('top of indexController')
 
-const sdk = LookerNodeSDK.createClient() //valid client :D
+const sdk = LookerNodeSDK.init31() //valid client :D //.createClient()
 
 
 

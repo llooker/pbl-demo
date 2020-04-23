@@ -3,15 +3,16 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const config = require('./config.js');
 
-// console.log('000 process.env.NODE_ENV', process.env.NODE_ENV)
-process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-console.log('111 process.env.NODE_ENV', process.env.NODE_ENV)
+console.log('000 process.env.NODE_ENV', process.env.NODE_ENV)
+// process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+// console.log('111 process.env.NODE_ENV', process.env.NODE_ENV)
 
 require('dotenv-flow').config({
     path: './config'
 });
 
-console.log('LOOKER_HOST from env: ', process.env.LOOKER_HOST)
+console.log('NODE_ENV from env: ', process.env.NODE_ENV)
+console.log('LOOKERSDK_CLIENT_SECRET from env: ', process.env.LOOKERSDK_CLIENT_SECRET)
 
 
 var session = require('express-session');
@@ -29,6 +30,7 @@ console.log('mongoDB', mongoDB)
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
+// console.log('db', db)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var sess = {
@@ -59,8 +61,8 @@ app.use(bodyParser.json({ limit: '50mb', extended: true }));
 // console.log('process', process)
 // console.log('process.env.PORT', process.env.PORT)
 const port = 5000; // || process.env.PORT;
-console.log('port', port)
+// console.log('port', port)
 let routes = require('./routes/index')
+// console.log('000 routes', routes)
 app.use('/', routes)
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))//.on(error => console.log('error', error))
