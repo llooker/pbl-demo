@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Link, Redirect, withRouter, useHistory } from 'react-router-dom'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
-import Config from './clientConfig.json';
+// import Config from './clientConfig.json';
 import Home from './components/Home'
 // import Header from './components/Header'
 // import Footer from './components/Footer'
@@ -12,8 +12,6 @@ import DefaultLookerContent from './lookerIndustriesByInstance.json';
 //make looker user dynamic
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
-
-console.log('process.env.NODE_ENV', process.env.PROCESS_ENV)
 
 class Login extends React.Component {
   constructor(props) {
@@ -37,13 +35,7 @@ class Login extends React.Component {
     const { activeCustomization } = this.props
     const { userProfile } = this.props
 
-
-
-
-    // console.log('from', from)
-
-    const googleClientId = `${Config.Google.clientId}.apps.googleusercontent.com`
-
+    const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
     if (Object.keys(userProfile).length) {
       return (
         <div className="App">

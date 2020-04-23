@@ -551,7 +551,6 @@ class Home extends Component {
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" noWrap className={classes.title}>
-                            {/* {activeCustomization.companyName} */}
                             Atom Fashion
                         </Typography>
                         <UserMenu switchLookerUser={switchLookerUser} lookerUser={lookerUser} onLogoutSuccess={applySession} />
