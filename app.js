@@ -10,7 +10,7 @@ console.log('LOOKERSDK_CLIENT_SECRET from env: ', process.env.LOOKERSDK_CLIENT_S
 // console.log('MONGO_USERNAME from env: ', process.env.MONGO_USERNAME)
 // console.log('MONGO_PASSWORD from env: ', process.env.MONGO_PASSWORD)
 
-console.log('env_variables??? ', process.env.env_variables)
+console.log('process.env.BUCKET_NAME ', process.env.BUCKET_NAME)
 
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
