@@ -2,13 +2,15 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
+// require('dotenv').config({ path: './app.yaml' })
 
 // console.log('process.env', process.env)
-// console.log('NODE_ENV from env: ', process.env.NODE_ENV)
-// console.log('LOOKERSDK_CLIENT_SECRET from env: ', process.env.LOOKERSDK_CLIENT_SECRET)
+console.log('NODE_ENV from env: ', process.env.NODE_ENV)
+console.log('LOOKERSDK_CLIENT_SECRET from env: ', process.env.LOOKERSDK_CLIENT_SECRET)
 // console.log('MONGO_USERNAME from env: ', process.env.MONGO_USERNAME)
 // console.log('MONGO_PASSWORD from env: ', process.env.MONGO_PASSWORD)
 
+console.log('env_variables??? ', process.env.env_variables)
 
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);

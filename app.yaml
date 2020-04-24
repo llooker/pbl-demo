@@ -1,0 +1,28 @@
+runtime: nodejs10
+
+instance_class: F2
+
+includes:
+  - env_variables.yaml
+# env_variables:
+#   NODE_ENV: "production"
+#   BUCKET_NAME: "example-gcs-bucket"
+#   LOOKERSDK_BASE_URL: "https://demo.looker.com:19999"
+#   LOOKERSDK_CLIENT_ID: "2wZqZSXyQt5WMPr3gNz7"
+#   LOOKERSDK_CLIENT_SECRET: "3bhwRRn2vnSw3B6DNxYkZkbT"
+#   LOOKERSDK_EMBED_SECRET: "24b1c1d79352ba3ffdab0e2d57ddb1ac5dac0780558087d200837457677250b3"
+#   LOOKER_HOST: "demo.looker.com"
+#   VERIFY_SSL: "false"
+#   MONGO_USERNAME: "admin"
+#   MONGO_PASSWORD: "XvfKTNxEAQ5kb3U0"
+#   GOOGLE_CLIENT_ID: "1026815692414-cdeeupbmb7bbjcmfovmr6bqktsi86c2u"
+#   GOOGLE_CLIENT_SECRET: "S6KpuH_ZhouYbpy7V"
+
+handlers:
+- url: /stylesheets
+  static_dir: stylesheets
+
+- url: /.*
+  secure: always
+  redirect_http_response_code: 301
+  script: auto
