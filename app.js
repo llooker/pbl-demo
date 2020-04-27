@@ -7,9 +7,9 @@ require('dotenv').config();
 // require('dotenv').config({ path: './app.yaml' })
 
 // console.log('process.env', process.env)
-console.log('NODE_ENV from env: ', process.env.NODE_ENV)
-console.log('LOOKERSDK_CLIENT_SECRET from env: ', process.env.LOOKERSDK_CLIENT_SECRET)
-console.log('process.env.BUCKET_NAME ', process.env.BUCKET_NAME) //test for yaml file
+// console.log('NODE_ENV from env: ', process.env.NODE_ENV)
+// console.log('LOOKERSDK_CLIENT_SECRET from env: ', process.env.LOOKERSDK_CLIENT_SECRET)
+// console.log('process.env.BUCKET_NAME ', process.env.BUCKET_NAME) //test for yaml file
 
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
