@@ -14,9 +14,10 @@ console.log('process.env.BUCKET_NAME ', process.env.BUCKET_NAME) //test for yaml
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
-let mongoDB;
-mongoDB = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0-97hzq.mongodb.net/wysiwyg`
-console.log('mongoDB', mongoDB)
+//update for new GCP cluster
+let mongoDB = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster1.97hzq.gcp.mongodb.net/pbl-demo
+`
+// console.log('mongoDB', mongoDB)
 
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;

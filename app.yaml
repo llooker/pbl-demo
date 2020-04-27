@@ -4,6 +4,7 @@ instance_class: F2
 
 env_variables:
   BUCKET_NAME: "example-gcs-bucket"
+  NODE_ENV: "production"
 
 handlers:
 - url: /stylesheets
