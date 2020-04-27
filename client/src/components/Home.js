@@ -330,33 +330,32 @@ class Home extends Component {
                         dashboards: dashboardsToUse
                     }
 
-                    {
-                        objToUse.looks.length ?
-                            objToUse.looks.map((item, index) => {
-                                let lookId = item.id
-                                LookerEmbedSDK.createLookWithId(lookId)
-                                    .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
-                                    .withClassName('iframe')
-                                    .withClassName('look')
-                                    .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
-                                    .withClassName(index > 0 ? 'd-none' : 'oops')
-                                    .withClassName(lookId)
-                                    // .on('drillmenu:click', (e) => this.drillClick(e))
-                                    .on('drillmodal:look', (event) => {
-                                        // console.log('drillmodal:explore')
-                                        // console.log('event', event)
-                                    })
-                                    .build()
-                                    .connect()
-                                    .then(this.setupLook)
-                                    .catch((error) => {
-                                        console.error('Connection error', error)
-                                    })
-                            }) : ''
+                    if (objToUse.looks.length) {
+                        objToUse.looks.map((item, index) => {
+                            let lookId = item.id
+                            LookerEmbedSDK.createLookWithId(lookId)
+                                .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
+                                .withClassName('iframe')
+                                .withClassName('look')
+                                .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
+                                .withClassName(index > 0 ? 'd-none' : 'oops')
+                                .withClassName(lookId)
+                                // .on('drillmenu:click', (e) => this.drillClick(e))
+                                .on('drillmodal:look', (event) => {
+                                    // console.log('drillmodal:explore')
+                                    // console.log('event', event)
+                                })
+                                .build()
+                                .connect()
+                                .then(this.setupLook)
+                                .catch((error) => {
+                                    console.error('Connection error', error)
+                                })
+                        })
                     }
 
-                    {
-                        objToUse.dashboards.length ? objToUse.dashboards.map((item, index) => {
+                    if (objToUse.dashboards.length) {
+                        objToUse.dashboards.map((item, index) => {
                             let dashboardId = item.id
                             LookerEmbedSDK.createDashboardWithId(dashboardId)
                                 .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
@@ -370,7 +369,7 @@ class Home extends Component {
                                 .catch((error) => {
                                     console.error('Connection error', error)
                                 })
-                        }) : ''
+                        })
                     }
 
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
@@ -417,15 +416,15 @@ class Home extends Component {
         }, 1000)
     }
 
-    customFilterAction = (event, stateName, filterName) => {
-        // console.log('customFilterAction')
+    customFilterAction = (newFilterValue, stateName, filterName) => {
+        console.log('customFilterAction')
         // console.log('event', event)
-        // console.log('event.target.value', event.target.innerText)
+        // console.log('newFilterValue', newFilterValue)
         // console.log('stateName', stateName)
         // console.log('filterName', filterName)
 
         this.setState({}, () => {
-            this.state[stateName].updateFilters({ [filterName]: event.target.innerText })
+            this.state[stateName].updateFilters({ [filterName]: newFilterValue })
             this.state[stateName].run()
         })
 

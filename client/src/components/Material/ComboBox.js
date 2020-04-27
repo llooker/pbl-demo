@@ -8,13 +8,19 @@ export default function ComboBox(props) {
     // console.log('props', props);
     const { options, action, correspondingContentId, filterName } = props
 
+
+    const handleChange = (event) => {
+        action(event.target.innerHTML, correspondingContentId, filterName)
+    }
+
     return (
         <Autocomplete
             id="combo-box-demo"
             options={options}
             getOptionLabel={(option) => option.label}
             style={{ width: 300 }}
-            onChange={() => action(event, correspondingContentId, filterName)}
+            // onChange={() => action(event, correspondingContentId, filterName)}
+            onChange={handleChange}
             renderInput={(params) => <TextField {...params} label={filterName} variant="outlined" />}
         />
     );
