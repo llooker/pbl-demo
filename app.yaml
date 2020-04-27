@@ -1,16 +1,28 @@
-runtime: nodejs10
+runtime: nodejs
+env: flex
 
-instance_class: F2
+# https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-with-app-yaml
+# This sample incurs costs to run on the App Engine flexible environment.
+# The settings below are to reduce costs during testing and are not appropriate
+# for production use. For more information, see:
+# https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-with-app-yaml
+manual_scaling:
+  instances: 1
+
+resources:
+  cpu: .5
+  memory_gb: 0.5
+  disk_size_gb: 10
+
+handlers:
+  - url: /
+    static_files: client/build/index.html
+    upload: client/build/index.html
+  - url: /
+    static_dir: client/build
+# manual_scaling - Lock instances to 1 . using App Engine Flexible will create VM instances to serve from. If you want to lower your usage, you might restrict your App to just one 1 instance (probably not what you want in production, but perfect for in prototyping and development cases ).
+# https://stackoverflow.com/questions/37381694/google-app-engine-how-to-correctly-deploy-an-app
 
 env_variables:
   BUCKET_NAME: "example-gcs-bucket"
   NODE_ENV: "production"
-
-handlers:
-- url: /stylesheets
-  static_dir: stylesheets
-
-- url: /.*
-  secure: always
-  redirect_http_response_code: 301
-  script: auto
