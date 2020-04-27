@@ -62,4 +62,16 @@ const port = 5000; // || process.env.PORT;
 let routes = require('./routes/index')
 // console.log('000 routes', routes)
 app.use('/', routes)
+
+if (process.env.NODE_ENV === 'production') {
+    // Serve any static files
+    app.use(express.static(path.join(__dirname, 'client/build')));
+
+    // Handle React routing, return all requests to React app
+    app.get('*', function (req, res) {
+        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    });
+}
+
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))//.on(error => console.log('error', error))
