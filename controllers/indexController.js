@@ -1,9 +1,9 @@
 'use strict'
 
 // const { LookerNodeSDK } = require('@looker/sdk')
+// const sdk = LookerNodeSDK.init31() //valid client :D //.createClient()
 const { Looker40SDK, Looker31SDK, NodeSession, NodeSettingsIniFile } = require('@looker/sdk')
 const { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
-// const sdk = LookerNodeSDK.init31() //valid client :D //.createClient()
 const settings = new NodeSettingsIniFile()
 const session = new NodeSession(settings)
 const sdk = new Looker40SDK(session)
@@ -119,11 +119,14 @@ module.exports.readSession = async (req, res, next) => {
 module.exports.writeSession = async (req, res, next) => {
     // console.log('writeSession')
     let { session } = req;
-    // console.log('000 session', session)
-    // console.log('000 session.id', session.id)
     session.userProfile = req.body.userProfile;
     session.lookerUser = req.body.lookerUser;
     session.lookerHost = lookerHostNameToUse;
+    /**/
+    session.lookerUser.external_user_id = session.userProfile.googleId;
+    session.lookerUser.first_name = session.userProfile.givenName;
+    session.lookerUser.last_name = session.userProfile.familyName;
+    /**/
     session = await checkForCustomizations(session)
     res.status(200).send({ session });
 }
@@ -225,9 +228,9 @@ async function checkForCustomizations(session) {
 
 //function createSignedUrl(src, user, host, secret, nonce) {
 module.exports.auth = (req, res, next) => {
-    // console.log('indexController authh');
+    console.log('indexController authh');
     // console.log('user', user)
-    // console.log('req.session.lookerUser', req.session.lookerUser);
+    console.log('req.session.lookerUser', req.session.lookerUser);
     // Authenticate the request is from a valid user here
     const src = req.query.src;
     const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
@@ -291,7 +294,7 @@ module.exports.updateLookerUser = (req, res, next) => {
 }
 
 module.exports.fetchDashboard = async (req, res, next) => {
-    console.log('indexController fetchDashboard');
+    // console.log('indexController fetchDashboard');
 
     const { params } = req
     console.log('params', params)

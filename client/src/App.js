@@ -143,14 +143,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log('App componentDidMount')
+    // console.log('App componentDidMount')
     this.checkSession()
   }
 
   //called on componentDidMount
   //get request so should only check info, never update
   checkSession = async () => {
-    console.log('checkSession')
+    // console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -190,8 +190,8 @@ class App extends React.Component {
   // called by responseGoogle once it gets response
   // since login can assume activeCustomization will be default..
   applySession = async (userProfile) => {
-    console.log('applySession')
-    console.log('userProfile', userProfile)
+    // console.log('applySession')
+    // console.log('userProfile', userProfile)
 
     if (Object.keys(userProfile).length === 0) {
       // console.log('inside ifff')
