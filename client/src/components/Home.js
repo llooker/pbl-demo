@@ -208,8 +208,8 @@ class Home extends Component {
     };
 
     handleTabChange = newValue => {
-        console.log('handleTabChange')
-        console.log('newValue', newValue)
+        // console.log('handleTabChange')
+        // console.log('newValue', newValue)
         this.setState({
             activeTabValue: newValue
         }, () => {
@@ -457,8 +457,8 @@ class Home extends Component {
 
     // drillClick(event) {
     dashboardOverviewDetailAction(event) {
-        console.log('drillClick')
-        console.log('dashboardOverviewDetailAction')
+        // console.log('drillClick')
+        // console.log('dashboardOverviewDetailAction')
         // console.log('event', event)
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
