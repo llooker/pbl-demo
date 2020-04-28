@@ -10,7 +10,7 @@ export default function ComboBox(props) {
 
 
     const handleChange = (event) => {
-        action(event.target.innerHTML, correspondingContentId, filterName)
+        action(event.target.innerText || '', correspondingContentId, filterName)
     }
 
     return (

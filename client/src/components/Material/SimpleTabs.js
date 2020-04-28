@@ -118,8 +118,7 @@ export default function SimpleTabs(props) {
         setValue(newValue);
     };
 
-    // let iFrameExists = $(".embedContainer:visible iframe").length;
-    let iFrameExists = $(".tabPanelsContainer:visible iframe").length
+    let iFrameExists = $(".tabPanelContainer:visible iframe").length
     // console.log('iFrameExists', iFrameExists)
 
     useEffect(() => {
@@ -170,7 +169,7 @@ export default function SimpleTabs(props) {
                     </Tabs>
                 </AppBar>
 
-                <Box className="tabPanelsContainer">
+                <Box className="tabPanelContainer">
                     {tabContent.map((tabContentItem, index) => (
                         <TabPanel
                             key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`} //
@@ -230,8 +229,8 @@ export default function SimpleTabs(props) {
                                         <Grid item sm={9} >
                                             <div
                                                 className="embedContainer"
-                                                id={validIdHelper(`embedContainer${tabContentItem.id}`)}
-                                                key={validIdHelper(`embedContainer${tabContentItem.id}`)}
+                                                id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                                key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                                             >
                                             </div>
                                         </Grid>
@@ -253,29 +252,52 @@ export default function SimpleTabs(props) {
                                                 <Grid item sm={12}>
                                                     <div
                                                         className="embedContainer"
-                                                        id={validIdHelper(`embedContainer${tabContentItem.id}`)}
-                                                        key={validIdHelper(`embedContainer${tabContentItem.id}`)}
+                                                        id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                                        key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                                                     >
                                                     </div>
                                                 </Grid>
                                             </Box>
                                         </React.Fragment>
                                         :
-                                        tabContentItem.type === 'sample code' ? //think about how this uses a different property than demoComponent
-
-                                            <Grid item sm={12} >
-                                                <CodeSideBar lookerUser={tabContentItem.sampleCode} />
-                                                <CodeSideBar lookerUser={tabContentItem.lookerUser} />
-                                            </Grid>
-                                            :
+                                        demoComponentType === 'query builder' ?
                                             <Grid item sm={12} >
                                                 <div
-                                                    className="embedContainer"
-                                                    id={validIdHelper(`embedContainer${tabContentItem.id}`)}
-                                                    key={validIdHelper(`embedContainer${tabContentItem.id}`)}
+                                                    className="embedContainer querybuilder????"
+                                                    id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                                    key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                                                 >
+                                                    <div>we out here</div>
+                                                    <iframe src='llllll'></iframe>
                                                 </div>
                                             </Grid>
+
+                                            :
+                                            tabContentItem.type === 'sample code' ? //think about how this uses a different property than demoComponent
+
+
+                                                <Grid item sm={12} >
+
+                                                    <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                                                        Sample Code
+                                            <br />
+                                                    </Typography>
+                                                    <CodeSideBar code={tabContentItem.sampleCode} />
+                                                    <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                                                        Looker User
+                                            <br />
+                                                    </Typography>
+                                                    <CodeSideBar code={tabContentItem.lookerUser} />
+                                                </Grid>
+                                                :
+                                                <Grid item sm={12} >
+                                                    <div
+                                                        className="embedContainer"
+                                                        id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                                        key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                                    >
+                                                    </div>
+                                                </Grid>
                                 }
 
                             </Grid>

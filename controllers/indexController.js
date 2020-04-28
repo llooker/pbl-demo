@@ -228,7 +228,7 @@ async function checkForCustomizations(session) {
 
 //function createSignedUrl(src, user, host, secret, nonce) {
 module.exports.auth = (req, res, next) => {
-    console.log('indexController authh');
+    // console.log('indexController authh');
     // console.log('user', user)
     // console.log('req.session.lookerUser', req.session.lookerUser);
     // Authenticate the request is from a valid user here

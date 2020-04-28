@@ -103,7 +103,13 @@
                 "label": "Query Builder",
                 "description": "Build a query",
                 "icon": "fa-search",
-                "lookerContent": []
+                "lookerContent": [
+                    {
+                        "type": "explore-lite",
+                        "id": "thelook_adwords::events",
+                        "label": "Run Queries"
+                    }
+                ]
             },
             {
                 "type": "custom viz",

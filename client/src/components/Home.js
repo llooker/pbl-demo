@@ -38,8 +38,8 @@ import SplashPage from './Demo/SplashPage';
 import CustomFilter from './Demo/CustomFilter';
 import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
 import ReportBuilder from './Demo/ReportBuilder';
+import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
-import CodeSideBar from './Demo/CodeSideBar';
 
 // constants
 const drawerWidth = 240;
@@ -169,7 +169,6 @@ class Home extends Component {
             drawerOpen: false,
             drawerTabValue: 0,
             activeTabValue: 0,
-            // renderSampleCode: false,
             sampleCode: {}
         }
     }
@@ -251,10 +250,10 @@ class Home extends Component {
         let objForState = {}
         for (let j = 0; j < usecaseContent.length; j++) {
             for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
-                // let dashboardId = usecaseContent[j].lookerContent[i].id;
+                console.log('usecaseContent[j].lookerContent[i].type', usecaseContent[j].lookerContent[i].type)
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
                     LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
-                        .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
+                        .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
                         .withNext()
                         .withTheme('Looker')
@@ -299,7 +298,7 @@ class Home extends Component {
                 } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
 
                     LookerEmbedSDK.createExploreWithId(usecaseContent[j].lookerContent[i].id)
-                        .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
+                        .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
                         .on('explore:state:changed', (event) => {
                             // console.log('explore:state:changed')
@@ -334,7 +333,7 @@ class Home extends Component {
                         objToUse.looks.map((item, index) => {
                             let lookId = item.id
                             LookerEmbedSDK.createLookWithId(lookId)
-                                .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
+                                .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
                                 .withClassName('iframe')
                                 .withClassName('look')
                                 .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
@@ -358,7 +357,7 @@ class Home extends Component {
                         objToUse.dashboards.map((item, index) => {
                             let dashboardId = item.id
                             LookerEmbedSDK.createDashboardWithId(dashboardId)
-                                .appendTo(validIdHelper(`#embedContainer${usecaseContent[j].lookerContent[i].id}`))
+                                .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
                                 .withClassName('iframe')
                                 .withClassName('dashboard')
                                 .withClassName(lookerResponseData.sharedFolder.dashboard.indexOf(item) > -1 ? "shared" : "personal")
@@ -374,8 +373,7 @@ class Home extends Component {
 
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
                     objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
-                }
-                else if (usecaseContent[j].lookerContent[i].type === "api") {
+                } else if (usecaseContent[j].lookerContent[i].type === "api") {
                     let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
                         method: 'GET',
                         headers: {
@@ -398,7 +396,9 @@ class Home extends Component {
                     } else {
                         objForState[stateKey] = [lookerResponseData]
                     }
-                }
+                } else if (usecaseContent[j].lookerContent[i].type === "explore-lite") {
+                    console.log('inside elllse if for explore-lite')
+                } else { console.log('catch all else') }
             }
 
         }
@@ -417,7 +417,7 @@ class Home extends Component {
     }
 
     customFilterAction = (newFilterValue, stateName, filterName) => {
-        console.log('customFilterAction')
+        // console.log('customFilterAction')
         // console.log('event', event)
         // console.log('newFilterValue', newFilterValue)
         // console.log('stateName', stateName)
@@ -492,12 +492,6 @@ class Home extends Component {
         }
     }
 
-    // toggleCodeBar = () => {
-    //     this.setState(prevState => ({
-    //         renderSampleCode: prevState.renderSampleCode ? false : true
-    //     }))
-    // }
-
     render() {
         // console.log('Home render');
         // console.log('this.state', this.state);
@@ -519,12 +513,12 @@ class Home extends Component {
             "custom filter": CustomFilter,
             "dashboard overview detail": DashboardOverviewDetail,
             "report builder": ReportBuilder,
-            // "query builder": ComingSoon,
-            // "custom viz": ComingSoon
+            "query builder": ComingSoon,
+            "custom viz": ComingSoon
         }
 
-        const { drawerTabValue, drawerOpen, activeTabValue, sampleCode } = this.state; //renderSampleCode
-        const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this; //toggleCodeBar
+        const { drawerTabValue, drawerOpen, activeTabValue, sampleCode } = this.state;
+        const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
 
         // console.log('drawerTabValue', drawerTabValue);
@@ -628,12 +622,6 @@ class Home extends Component {
                                         /> :
                                         item.label
                                     }
-
-                                    {/* {renderSampleCode ?
-                                        <div className={`${classes.absolute} ${classes.right24} ${classes.top24}`}>
-                                            <CodeSideBar lookerUser={lookerUser} />
-                                        </div>
-                                        : ''} */}
 
 
                                 </TabPanel>)

@@ -52,7 +52,7 @@ let routes = require('./routes/index')
 app.use('/', routes)
 
 if (process.env.NODE_ENV === 'production') {
-    console.log('inside ifff')
+    // console.log('inside ifff')
     // Serve any static files
     app.use(express.static(path.join(__dirname, 'client/build')));
 
@@ -60,7 +60,8 @@ if (process.env.NODE_ENV === 'production') {
     app.get('*', function (req, res) {
         res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
-} else console.log('elllse')
+}
+// else console.log('elllse')
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
