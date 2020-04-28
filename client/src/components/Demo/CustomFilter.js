@@ -121,6 +121,7 @@ export default function CustomFilter(props) {
         setValue(newValue);
     };
 
+
     return (
         <div className={classes.root}>
 
@@ -171,7 +172,19 @@ export default function CustomFilter(props) {
                                     value={value}
                                     index={index}>
                                     <Grid container>
-                                        {index === 0 ?
+                                        {tabContentItem.type === 'sample code' ?
+
+                                            <Grid item sm={12} >
+
+                                                <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                                                    Sample Code<br />
+                                                </Typography>
+                                                <CodeSideBar code={tabContentItem.sampleCode} />
+                                                <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                                                    Looker User<br />
+                                                </Typography>
+                                                <CodeSideBar code={tabContentItem.lookerUser} />
+                                            </Grid> :
                                             <React.Fragment
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
                                                 <Grid item sm={12}>
@@ -193,20 +206,8 @@ export default function CustomFilter(props) {
                                                         </div>
                                                     </Grid>
                                                 </Box>
-                                            </React.Fragment> :
+                                            </React.Fragment>
 
-
-                                            <Grid item sm={12} >
-
-                                                <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                                                    Sample Code<br />
-                                                </Typography>
-                                                <CodeSideBar code={tabContentItem.sampleCode} />
-                                                <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                                                    Looker User<br />
-                                                </Typography>
-                                                <CodeSideBar code={tabContentItem.lookerUser} />
-                                            </Grid>
                                         }
                                     </Grid>
                                 </TabPanel>

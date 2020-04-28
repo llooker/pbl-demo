@@ -208,6 +208,8 @@ class Home extends Component {
     };
 
     handleTabChange = newValue => {
+        console.log('handleTabChange')
+        console.log('newValue', newValue)
         this.setState({
             activeTabValue: newValue
         }, () => {
@@ -455,11 +457,13 @@ class Home extends Component {
 
     // drillClick(event) {
     dashboardOverviewDetailAction(event) {
-        // console.log('drillClick')
-        // console.log('dashboardOverviewDetailAction')
+        console.log('drillClick')
+        console.log('dashboardOverviewDetailAction')
         // console.log('event', event)
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
+
+            console.log('inside ifff')
 
             // const parsedUrl = new URL(event.url)
             // const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
@@ -475,11 +479,11 @@ class Home extends Component {
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
             //urls changed to relative, need slugs to work across instances?
 
-            // console.log('stateName', stateName)
-            // console.log('filterName', filterName)
-            // console.log('filterValue', filterValue)
+            console.log('stateName', stateName)
+            console.log('filterName', filterName)
+            console.log('filterValue', filterValue)
 
-            // console.log('this.state', this.state)
+            console.log('this.state', this.state)
 
             this.setState({}, () => {
                 this.state[stateName].updateFilters({ [filterName]: filterValue })
