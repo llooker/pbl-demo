@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,18 +10,9 @@ import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-import TreeView from '@material-ui/lab/TreeView';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import TreeItem from '@material-ui/lab/TreeItem';
-import Icon from '@material-ui/core/Icon';
-import CodeIcon from '@material-ui/icons/Code';
-import ComboBox from '../Material/ComboBox'
-import $ from 'jquery';
-import CodeSideBar from '../Demo/CodeSideBar'
-
-import UsecaseContent from '../../usecaseContent.json'; // still necessary to map over demo components
+import ComboBox from '../Material/ComboBox';
 import '../Home.css'
+import CodeSideBar from '../Demo/CodeSideBar';
 const { validIdHelper } = require('../../tools');
 
 function TabPanel(props) {
@@ -106,6 +98,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CustomFilter(props) {
     // console.log('CustomFilter')
     // console.log('props', props)
+
     const classes = useStyles();
     const [value, setValue] = useState(0);
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
@@ -115,35 +108,22 @@ export default function CustomFilter(props) {
     let iFrameExists = $(".tabPanelContainer:visible iframe").length;
     let demoComponentType = type || 'sample code';
 
-
     const handleChange = (event, newValue) => {
         handleTabChange(0);
         setValue(newValue);
     };
 
-
     return (
         <div className={classes.root}>
-
             <Grid container
                 spacing={3}
                 key={validIdHelper(type)} >
-
-                {/* <Tabs
-                    tabContent={[...lookerContent, sampleCodeTab]}
-                    activeTabValue={activeTabValue}
-                    handleTabChange={handleTabChange}
-                    apiContent={apiContent}
-                    action={action}
-                    demoComponentType={type || 'sample code'} /> */}
-
                 <div className={classes.root}>
                     {iFrameExists ? '' :
                         <Grid item sm={12} >
                             <Card className={`${classes.card} ${classes.flexCentered}`}>
                                 <CircularProgress className={classes.circularProgress} />
                             </Card>
-
                         </Grid>
                     }
 
@@ -157,25 +137,22 @@ export default function CustomFilter(props) {
                                 aria-label="simple tabs example">
                                 {tabContent.map((item, index) => (
                                     <Tab
-                                        key={`${validIdHelper(demoComponentType + '-tab-' + index)}`} //
+                                        key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
                                         label={item.label}
                                         className={item.type === 'sample code' ? `${classes.mlAuto}` : ``}
                                         {...a11yProps(index)} />
                                 ))}
                             </Tabs>
                         </AppBar>
-
                         <Box className="tabPanelContainer">
                             {tabContent.map((tabContentItem, index) => (
                                 <TabPanel
-                                    key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`} //
+                                    key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
                                     value={value}
                                     index={index}>
                                     <Grid container>
                                         {tabContentItem.type === 'sample code' ?
-
                                             <Grid item sm={12} >
-
                                                 <Typography variant="h5" component="h2" className={classes.gridTitle}>
                                                     Sample Code<br />
                                                 </Typography>
@@ -184,18 +161,17 @@ export default function CustomFilter(props) {
                                                     Looker User<br />
                                                 </Typography>
                                                 <CodeSideBar code={tabContentItem.lookerUser} />
-                                            </Grid> :
+                                            </Grid>
+                                            :
                                             <React.Fragment
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
                                                 <Grid item sm={12}>
-
                                                     <ComboBox
                                                         options={apiContent}
                                                         action={action}
                                                         correspondingContentId={tabContent[0].id}
                                                         filterName={tabContent[0].customDropdown.filterName} />
                                                 </Grid>
-
                                                 <Box className={classes.w100} mt={2}>
                                                     <Grid item sm={12}>
                                                         <div
@@ -207,7 +183,6 @@ export default function CustomFilter(props) {
                                                     </Grid>
                                                 </Box>
                                             </React.Fragment>
-
                                         }
                                     </Grid>
                                 </TabPanel>

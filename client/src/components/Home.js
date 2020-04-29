@@ -1,50 +1,33 @@
-import React, { Component } from 'react'
 
-//material
+import $ from 'jquery';
+import _ from 'lodash'
+import React, { Component } from 'react'
 import clsx from 'clsx';
 import { withStyles } from "@material-ui/core/styles";
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-// import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-// import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Icon from '@material-ui/core/Icon';
-import HomeIcon from '@material-ui/icons/Home';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import LinkIcon from '@material-ui/icons/Link';
-import GavelIcon from '@material-ui/icons/Gavel';
-import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
-import BuildIcon from '@material-ui/icons/Build';
 import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-
 import UserMenu from './Material/UserMenu';
-
-import $ from 'jquery';
-import _ from 'lodash'
-
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
-//demoComponents
 import SplashPage from './Demo/SplashPage';
 import CustomFilter from './Demo/CustomFilter';
 import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
 import ReportBuilder from './Demo/ReportBuilder';
-import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
 
-// constants
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
-
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -63,16 +46,12 @@ function TabPanel(props) {
     );
 }
 
-
 function a11yProps(index) {
-    // console.log('a11yProps')
-    // console.log('index', index)
     return {
         id: `vertical-tab-${index}`,
         'aria-controls': `vertical-tabpanel-${index}`,
     };
 }
-
 
 const styles = theme => ({
     root: {
@@ -175,8 +154,6 @@ class Home extends Component {
 
     //material  methods for layout
     handleDrawerTabChange = (event, newValue) => {
-        // console.log('handleDrawerTabChange')
-        // console.log('event.target', event.target)
 
         this.handleDrawerChange(true);
 
@@ -208,12 +185,8 @@ class Home extends Component {
     };
 
     handleTabChange = newValue => {
-        // console.log('handleTabChange')
-        // console.log('newValue', newValue)
         this.setState({
             activeTabValue: newValue
-        }, () => {
-            // console.log('handleTabChange callback', this.state.activeTabValue)
         })
     }
 
@@ -224,7 +197,6 @@ class Home extends Component {
     }
 
     componentDidMount(props) {
-        // console.log('Home componentDidMount')
         LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
         this.setupLookerContent(UsecaseContent.marketing.demoComponents);
     }
@@ -247,7 +219,6 @@ class Home extends Component {
             let thisEmbedContainerId = embedContainerArray[h].id
             document.getElementById(thisEmbedContainerId).innerHTML = ''
         }
-
 
         let objForState = {}
         for (let j = 0; j < usecaseContent.length; j++) {
@@ -276,7 +247,6 @@ class Home extends Component {
                         })
 
                     if (usecaseContent[j].lookerContent[i].hasOwnProperty('customDropdown')) {
-
                         let stringifiedQuery = encodeURIComponent(JSON.stringify(usecaseContent[j].lookerContent[i].customDropdown.inlineQuery))
                         let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
                             method: 'GET',
@@ -298,7 +268,6 @@ class Home extends Component {
                     }
 
                 } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
-
                     LookerEmbedSDK.createExploreWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
@@ -314,7 +283,6 @@ class Home extends Component {
                         })
 
                 } else if (usecaseContent[j].lookerContent[i].type === 'folder') {
-
                     let lookerResponse = await fetch('/fetchfolder/' + usecaseContent[j].lookerContent[i].id, { //+ usecaseContent[j].type + '/'
                         method: 'GET',
                         headers: {
@@ -375,6 +343,7 @@ class Home extends Component {
 
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
                     objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
+
                 } else if (usecaseContent[j].lookerContent[i].type === "api") {
                     let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
                         method: 'GET',
@@ -398,8 +367,20 @@ class Home extends Component {
                     } else {
                         objForState[stateKey] = [lookerResponseData]
                     }
-                } else if (usecaseContent[j].lookerContent[i].type === "explore-lite") {
-                    console.log('inside elllse if for explore-lite')
+
+                } else if (usecaseContent[j].lookerContent[i].type === "explorelite") {
+                    // console.log('inside elllse if for explore-lite')
+                    // console.log('usecaseContent[j].lookerContent[i].queryBody', usecaseContent[j].lookerContent[i].queryBody)
+                    let lookerResposnse = await fetch('/createquery/' + JSON.stringify(usecaseContent[j].lookerContent[i].queryBody) + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
+                        method: 'GET',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    let lookerResponseData = await lookerResposnse.json();
+                    console.log('lookerResponseData', lookerResponseData)
+
                 } else { console.log('catch all else') }
             }
 
@@ -462,9 +443,6 @@ class Home extends Component {
         // console.log('event', event)
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
-
-            console.log('inside ifff')
-
             // const parsedUrl = new URL(event.url)
             // const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
             // const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
@@ -479,11 +457,10 @@ class Home extends Component {
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
             //urls changed to relative, need slugs to work across instances?
 
-            console.log('stateName', stateName)
-            console.log('filterName', filterName)
-            console.log('filterValue', filterValue)
+            // console.log('stateName', stateName)
+            // console.log('filterName', filterName)
+            // console.log('filterValue', filterValue)
 
-            console.log('this.state', this.state)
 
             this.setState({}, () => {
                 this.state[stateName].updateFilters({ [filterName]: filterValue })
@@ -500,17 +477,6 @@ class Home extends Component {
         // console.log('Home render');
         // console.log('this.state', this.state);
         // console.log('this.props', this.props);
-
-
-        // const iconMap = {
-        //     "splash page": HomeIcon,
-        //     "custom filter": FilterListIcon,
-        //     "dashboard overview detail": LinkIcon,
-        //     "report builder": GavelIcon,
-        //     "query builder": QueryBuilderIcon,
-        //     "custom viz": BuildIcon
-        // }
-
 
         const demoComponentMap = {
             "splash page": SplashPage,
@@ -564,7 +530,6 @@ class Home extends Component {
                 >
                     <div className={classes.drawerHeader}>
                         <IconButton onClick={() => handleDrawerChange(false)}>
-                            {/* {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />} */}
                             <ChevronLeftIcon />
                         </IconButton>
                     </div>
@@ -578,17 +543,13 @@ class Home extends Component {
                         aria-label="Vertical tabs example"
                         className={classes.tabs}
                     >
-
                         {UsecaseContent.marketing.demoComponents.map((item, index) => (
-
                             <Tab label={item.label}
                                 key={`homeVerticalTabs${index}`}
                                 icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
                                 {...a11yProps(index)}
                                 contenttype={validIdHelper(item.type)}
                             ></Tab>
-
-
                         ))
                         }
                     </Tabs>
@@ -598,10 +559,7 @@ class Home extends Component {
                         [classes.contentShift]: drawerOpen,
                     })}
                 >
-
-
                     <div className={classes.drawerHeader} />
-
                     {
                         UsecaseContent.marketing.demoComponents.map((item, index) => {
                             const DemoComponent = demoComponentMap[item.type];
@@ -612,7 +570,6 @@ class Home extends Component {
                                     index={index}
                                     className={classes.relative}
                                 >
-
                                     {DemoComponent ?
                                         <DemoComponent key={validIdHelper(`list-${item.type}`)}
                                             staticContent={item}
@@ -626,8 +583,6 @@ class Home extends Component {
                                         /> :
                                         item.label
                                     }
-
-
                                 </TabPanel>)
                         })
                     }

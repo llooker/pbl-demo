@@ -5,29 +5,27 @@ const router = express.Router();
 
 const indexCtrl = require('../controllers/indexController')
 const customizeCtrl = require('../controllers/customizeController')
+const lookerCtrl = require('../controllers/lookerController')
 
-// router.get('/', indexCtrl.readSession)
-router.get('/fetchfolder/:folder_id', indexCtrl.fetchFolder)
-router.get('/fetchdashboard/:dashboard_id', indexCtrl.fetchDashboard)
-router.get('/runquery/:query_id/:result_format', indexCtrl.runQuery)
-router.get('/runinlinequery/:inline_query/:result_format', indexCtrl.runInlineQuery)
-// router.get('/fetchfolder/:demo_component_type/:folder_id', indexCtrl.fetchFolder)
+//session 
 router.get('/readsession', indexCtrl.readSession)
 router.post('/writesession', indexCtrl.writeSession)
-router.get('/retievedashboardfilters/:content_id', indexCtrl.retrieveDashboardFilters)
-// router.get('/performapicall/:type', indexCtrl.performApiCall)
-router.get('/validatelookercontent/:content_id/:content_type', indexCtrl.validateLookerContent)
 router.post('/endsession', indexCtrl.endSession)
-router.post('/updatelookeruser', indexCtrl.updateLookerUser)
 
+//customization
 router.get('/customize', customizeCtrl.main)
 router.post('/savecustomization', customizeCtrl.saveCustomization)
 router.post('/savelookercontent', customizeCtrl.saveLookerContent)
 router.post('/applyactivecustomziation', customizeCtrl.applyActiveCustomizationToSession)
 
-//for embed sdk
-router.get('/auth', indexCtrl.auth)
-
-
+//looker
+router.get('/auth', lookerCtrl.auth)
+router.get('/validatelookercontent/:content_id/:content_type', lookerCtrl.validateLookerContent)
+router.get('/fetchfolder/:folder_id', lookerCtrl.fetchFolder)
+router.get('/fetchdashboard/:dashboard_id', lookerCtrl.fetchDashboard)
+router.post('/updatelookeruser', lookerCtrl.updateLookerUser)
+router.get('/runquery/:query_id/:result_format', lookerCtrl.runQuery)
+router.get('/runinlinequery/:inline_query/:result_format', lookerCtrl.runInlineQuery)
+router.get('/createquery/:query_body/:result_format', lookerCtrl.createQuery)
 
 module.exports = router

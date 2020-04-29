@@ -105,9 +105,23 @@
                 "icon": "fa-search",
                 "lookerContent": [
                     {
-                        "type": "explore-lite",
-                        "id": "thelook_adwords::events",
-                        "label": "Run Queries"
+                        "type": "explorelite",
+                        "id": "explorelite",
+                        "label": "Run Queries",
+                        "queryBody": {
+                            "model": "thelook_adwords",
+                            "view": "events",
+                            "fields": [
+                                "campaigns.campaign_id",
+                                "campaigns.campaign_name",
+                                "campaigns.campaign_type",
+                                "session_purchase_facts.ROI",
+                                "adevents.cost_per_click",
+                                "adevents.total_cost",
+                                "adevents.total_clicks"
+                            ]
+                        },
+                        "resultFormat": "json"
                     }
                 ]
             },
