@@ -24,6 +24,7 @@ import SplashPage from './Demo/SplashPage';
 import CustomFilter from './Demo/CustomFilter';
 import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
 import ReportBuilder from './Demo/ReportBuilder';
+import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
 
 const drawerWidth = 240;
@@ -223,7 +224,7 @@ class Home extends Component {
         let objForState = {}
         for (let j = 0; j < usecaseContent.length; j++) {
             for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
-                console.log('usecaseContent[j].lookerContent[i].type', usecaseContent[j].lookerContent[i].type)
+                // console.log('usecaseContent[j].lookerContent[i].type', usecaseContent[j].lookerContent[i].type)
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
                     LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
@@ -370,16 +371,7 @@ class Home extends Component {
 
                 } else if (usecaseContent[j].lookerContent[i].type === "explorelite") {
                     // console.log('inside elllse if for explore-lite')
-                    // console.log('usecaseContent[j].lookerContent[i].queryBody', usecaseContent[j].lookerContent[i].queryBody)
-                    let lookerResposnse = await fetch('/createquery/' + JSON.stringify(usecaseContent[j].lookerContent[i].queryBody) + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
-                        method: 'GET',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    let lookerResponseData = await lookerResposnse.json();
-                    console.log('lookerResponseData', lookerResponseData)
+                    this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
 
                 } else { console.log('catch all else') }
             }
@@ -473,6 +465,33 @@ class Home extends Component {
         }
     }
 
+    queryBuilderAction = async (newQuery, resultFormat) => {
+        // console.log('queryBuilderAction')
+        // console.log('newQuery', newQuery);
+        // console.log('resultFormat', resultFormat);
+
+        this.setState({
+            'queryBuilderApiContent': 0
+        })
+
+        let lookerResposnse = await fetch('/createquery/' + JSON.stringify(newQuery) + '/' + resultFormat, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        let lookerResponseData = await lookerResposnse.json();
+        // console.log('lookerResponseData', lookerResponseData)
+
+        // const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
+        // objForState[stateKey] = lookerResponseData.queryResults; //for now
+
+        this.setState({
+            'queryBuilderApiContent': lookerResponseData.queryResults
+        })
+    }
+
     render() {
         // console.log('Home render');
         // console.log('this.state', this.state);
@@ -483,7 +502,7 @@ class Home extends Component {
             "custom filter": CustomFilter,
             "dashboard overview detail": DashboardOverviewDetail,
             "report builder": ReportBuilder,
-            "query builder": ComingSoon,
+            "query builder": QueryBuilder,
             "custom viz": ComingSoon
         }
 

@@ -144,24 +144,16 @@ module.exports.runInlineQuery = async (req, res, next) => {
 }
 
 module.exports.createQuery = async (req, res, next) => {
-    console.log('indexController createQuery');
-
+    // console.log('indexController createQuery');
+    //feedback from fabio 4/29
+    //two calls, could you make 1 via runinlinequery
+    //json level detail to get field definitions
     const { params } = req
-    console.log('params', params)
-    // const queryBody = params.query_body
-    // let fields = queryBody.fields;
-    // delete queryBody.fields
-
-    // console.log('111 queryBody', queryBody)
-    // console.log('111 fields', fields)
-
-    console.log(sdk.create_query.toString())
-
     try {
         let create_query_response = await sdk.ok(sdk.create_query(params.query_body, ''));
         let query_response = await sdk.ok(sdk.run_query({ query_id: create_query_response.id, result_format: params.result_format }))
         let resObj = {
-            queryResponse: query_response
+            queryResults: query_response
         }
         res.status(200).send(resObj)
     } catch (err) {

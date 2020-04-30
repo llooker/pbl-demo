@@ -82,7 +82,7 @@
             },
             {
                 "type": "report builder",
-                "label": "Report Builder",
+                "label": "Saved Reports",
                 "description": "See how you can easily embed reports and give users the power to create new ones",
                 "icon": "fa-hammer",
                 "lookerContent": [
@@ -107,7 +107,7 @@
                     {
                         "type": "explorelite",
                         "id": "explorelite",
-                        "label": "Run Queries",
+                        "label": "Build & Run Queries",
                         "queryBody": {
                             "model": "thelook_adwords",
                             "view": "events",
@@ -121,7 +121,16 @@
                                 "adevents.total_clicks"
                             ]
                         },
-                        "resultFormat": "json"
+                        "resultFormat": "json",
+                        "fieldType": [
+                            "dimension",
+                            "dimension",
+                            "dimension",
+                            "measure",
+                            "measure",
+                            "measure",
+                            "measure"
+                        ]
                     }
                 ]
             },
