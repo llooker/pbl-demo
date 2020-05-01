@@ -465,6 +465,33 @@ class Home extends Component {
         }
     }
 
+    // queryBuilderAction = async (newQuery, resultFormat) => {
+    //     console.log('queryBuilderAction')
+    //     console.log('newQuery', newQuery);
+    //     console.log('resultFormat', resultFormat);
+
+    //     this.setState({
+    //         'queryBuilderApiContent': 0
+    //     })
+
+    //     let lookerResposnse = await fetch('/createquery/' + JSON.stringify(newQuery) + '/' + resultFormat, {
+    //         method: 'GET',
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //     let lookerResponseData = await lookerResposnse.json();
+    //     // console.log('lookerResponseData', lookerResponseData)
+
+    //     // const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
+    //     // objForState[stateKey] = lookerResponseData.queryResults; //for now
+
+    //     this.setState({
+    //         'queryBuilderApiContent': lookerResponseData.queryResults
+    //     })
+    // }
+
     queryBuilderAction = async (newQuery, resultFormat) => {
         // console.log('queryBuilderAction')
         // console.log('newQuery', newQuery);
@@ -474,22 +501,36 @@ class Home extends Component {
             'queryBuilderApiContent': 0
         })
 
-        let lookerResposnse = await fetch('/createquery/' + JSON.stringify(newQuery) + '/' + resultFormat, {
+        let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             }
         })
-        let lookerResponseData = await lookerResposnse.json();
-        // console.log('lookerResponseData', lookerResponseData)
+        let lookerCreateTaskResponseData = await lookerCreateTaskResposnse.json();
+        // console.log('lookerCreateTaskResponseData', lookerCreateTaskResponseData)
 
-        // const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
-        // objForState[stateKey] = lookerResponseData.queryResults; //for now
+        let taskInterval = setInterval(async () => {
+            let lookerCheckTaskResposnse = await fetch('/checkquerytask/' + lookerCreateTaskResponseData.queryTaskId, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            let lookerCheckTaskResponseData = await lookerCheckTaskResposnse.json();
+            // console.log('lookerCheckTaskResponseData', lookerCheckTaskResponseData)
+            // console.log('lookerCheckTaskResponseData.queryResults.data', lookerCheckTaskResponseData.queryResults.data)
 
-        this.setState({
-            'queryBuilderApiContent': lookerResponseData.queryResults
-        })
+            if (lookerCheckTaskResponseData.queryResults.status === 'complete') {
+                // console.log('inside ifff')
+                clearInterval(taskInterval)
+                this.setState({
+                    'queryBuilderApiContent': lookerCheckTaskResponseData.queryResults.data
+                })
+            }
+        }, 1000)
     }
 
     render() {

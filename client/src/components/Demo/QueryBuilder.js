@@ -122,7 +122,7 @@ function FilterBar(props) {
     const [fieldsChipData, setFieldsChipData] = useState(lookerContent[0].queryBody.fields.map((item, index) => {
         return {
             key: 'fieldChipData' + index,
-            label: item,
+            label: item, //prettifyString(item.substring(item.lastIndexOf('.') + 1, item.length)), 
             selected: true,
             fieldType: lookerContent[0].fieldType[index]
         }
@@ -172,6 +172,12 @@ function FilterBar(props) {
         }
     }
 
+
+    useEffect(() => {
+        // console.log('useEffect')
+        handleQuerySubmit()
+    }, [fieldsChipData, filtersData]);
+
     return (
         <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel}>
             <ExpansionPanelSummary
@@ -183,7 +189,7 @@ function FilterBar(props) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                    <Grid item sm={2}>
+                    {/* <Grid item sm={2}>
                         <Typography variant="subtitle1">
                             Model: <Chip className={classes.ml12} label={lookerContent[0].queryBody.model} disabled /><br />
                         </Typography>
@@ -192,7 +198,7 @@ function FilterBar(props) {
                         <Typography variant="subtitle1">
                             View: <Chip className={classes.ml12} label={lookerContent[0].queryBody.view} disabled /><br />
                         </Typography>
-                    </Grid>
+                    </Grid> */}
 
                     <Grid item sm={12}>
                         <Typography variant="subtitle1">
@@ -204,7 +210,7 @@ function FilterBar(props) {
                                             <Chip
                                                 key={item.label}
                                                 measurecounter={measureCounter += 1}
-                                                className={measureCounter > 1 ? `${classes.tealPrimary}` : `${classes.ml12} ${classes.tealPrimary}`}
+                                                className={item.selected ? `${classes.tealPrimary}` : ``}
                                                 label={item.label}
                                                 onClick={() => handleFieldChipClick(item, index)}
                                                 icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
@@ -224,7 +230,7 @@ function FilterBar(props) {
                                             <Chip
                                                 key={item.label}
                                                 dimensioncounter={dimensionCounter += 1}
-                                                className={dimensionCounter > 1 ? `${classes.indigoPrimary}` : `${classes.ml12} ${classes.indigoPrimary}`}
+                                                className={item.selected ? `${classes.indigoPrimary}` : ``}
                                                 label={item.label}
                                                 onClick={() => handleFieldChipClick(item, index)}
                                                 icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
@@ -285,7 +291,7 @@ function FilterBar(props) {
                             )
                         })}
                     </Grid>
-                    <Grid item sm={12}>
+                    {/* <Grid item sm={12}>
                         <Button
                             variant="contained"
                             color="primary"
@@ -293,7 +299,7 @@ function FilterBar(props) {
                             onClick={handleQuerySubmit}
                         >
                             Submit</Button>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </ExpansionPanelDetails>
         </ExpansionPanel>
@@ -380,7 +386,7 @@ function EnhancedTable(props) {
                                         id={validIdHelper(key + '-TableBody-TableCell-' + index)}
                                         className={lookerContent[0].fieldType[index] === 'dimension' ? classes.indigoSecondary : classes.tealSecondary}
                                         align="right">
-                                        {typeof item[key] === 'number' ? Math.round(item[key] * 100) / 100 : item[key]}</TableCell>
+                                        {typeof item[key].value === 'number' ? Math.round(item[key].value * 100) / 100 : item[key].value}</TableCell>
                                 ))}
                             </TableRow>
                         ))}
@@ -498,6 +504,8 @@ export default function QueryBuilder(props) {
     const tabContent = [...lookerContent, sampleCodeTab];
     const demoComponentType = type || 'sample code';
 
+    // console.log('apiContent', apiContent)
+
     //state
     const [value, setValue] = useState(0);
 
@@ -552,6 +560,7 @@ export default function QueryBuilder(props) {
                                                 <CodeSideBar code={tabContentItem.lookerUser} />
                                             </Grid>
                                             :
+
 
                                             <React.Fragment
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>

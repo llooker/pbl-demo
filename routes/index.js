@@ -26,6 +26,8 @@ router.get('/fetchdashboard/:dashboard_id', lookerCtrl.fetchDashboard)
 router.post('/updatelookeruser', lookerCtrl.updateLookerUser)
 router.get('/runquery/:query_id/:result_format', lookerCtrl.runQuery)
 router.get('/runinlinequery/:inline_query/:result_format', lookerCtrl.runInlineQuery)
-router.get('/createquery/:query_body/:result_format', lookerCtrl.createQuery)
+// router.get('/createquery/:query_body/:result_format', lookerCtrl.createQuery)
+router.get('/createquerytask/:query_body', lookerCtrl.createQueryTask)
+router.get('/checkquerytask/:task_id', lookerCtrl.checkQueryTask)
 
 module.exports = router
