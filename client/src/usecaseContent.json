@@ -119,7 +119,11 @@
                                 "adevents.cost_per_click",
                                 "adevents.total_cost",
                                 "adevents.total_clicks"
-                            ]
+                            ],
+                            "filters": {
+                                "campaigns.is_active_now": "Yes",
+                                "campaigns.created_date": "6 months"
+                            }
                         },
                         "resultFormat": "json",
                         "fieldType": [
@@ -130,7 +134,11 @@
                             "measure",
                             "measure",
                             "measure"
-                        ]
+                        ],
+                        "filterType": {
+                            "campaigns.is_active_now": "yesno",
+                            "campaigns.created_date": "date"
+                        }
                     }
                 ]
             },

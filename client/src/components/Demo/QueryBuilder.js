@@ -10,12 +10,15 @@ import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
-
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -28,7 +31,12 @@ import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import DoneIcon from '@material-ui/icons/Done';
 import Divider from '@material-ui/core/Divider';
+import { palette } from '@material-ui/system';
 import grey from '@material-ui/core/colors/grey';
+import indigo from '@material-ui/core/colors/indigo';
+import teal from '@material-ui/core/colors/teal';
+// import HUE from '@material-ui/core/colors/HUE';
+
 
 import '../Home.css'
 import CodeSideBar from '../Demo/CodeSideBar';
@@ -110,18 +118,30 @@ function FilterBar(props) {
     let dimensionCounter = 0;
 
     //state
-    const [fieldsChipData, setFieldsChipData] = React.useState(lookerContent[0].queryBody.fields.map((item, index) => {
+    const [expanded, setExpanded] = useState(true);
+    const [fieldsChipData, setFieldsChipData] = useState(lookerContent[0].queryBody.fields.map((item, index) => {
         return {
-            key: index,
+            key: 'fieldChipData' + index,
             label: item,
             selected: true,
             fieldType: lookerContent[0].fieldType[index]
         }
     }));
     const [queryModified, setQueryModified] = useState(false);
-    const [expanded, setExpanded] = useState(true);
+    const [filtersData, setFilterData] = useState(Object.keys(lookerContent[0].queryBody.filters).map((key, index) => {
+        return {
+            key: 'filter' + index,
+            label: key,
+            value: lookerContent[0].queryBody.filters[key],
+            type: lookerContent[0].filterType[key]
+        }
+    }))
 
     //handlers
+    const handleExpansionPanel = (event, newValue) => {
+        setExpanded(expanded ? false : true);
+    };
+
     const handleFieldChipClick = (chip, index) => {
         let updatedFieldsChipData = [...fieldsChipData]
         updatedFieldsChipData[index].selected = updatedFieldsChipData[index].selected === false ? true : false
@@ -129,18 +149,28 @@ function FilterBar(props) {
         setQueryModified(true)
     }
 
+    const handleSelectChange = (index, newValue) => {
+        let updatedFiltersData = [...filtersData]
+        updatedFiltersData[index].value = newValue;
+        setFilterData(updatedFiltersData)
+        setQueryModified(true)
+    }
+
     const handleQuerySubmit = (event) => {
         if (queryModified) {
             let newFields = fieldsChipData.filter(chip => chip.selected).map(item => item.label)
+            let currentFilters = {}; //needs to be object
+            filtersData.map((item, index) => {
+                currentFilters[item.label] = item.value
+            })
+            // console.log('currentFilters', currentFilters)
             let newQueryObj = lookerContent[0].queryBody;
             newQueryObj.fields = newFields;
+            newQueryObj.filters = currentFilters;
+            // console.log('newQueryObj', newQueryObj)
             action(newQueryObj, lookerContent[0].resultFormat);
         }
     }
-
-    const handleExpansionPanel = (event, newValue) => {
-        setExpanded(expanded ? false : true);
-    };
 
     return (
         <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel}>
@@ -163,9 +193,30 @@ function FilterBar(props) {
                             View: <Chip className={classes.ml12} label={lookerContent[0].queryBody.view} disabled /><br />
                         </Typography>
                     </Grid>
+
                     <Grid item sm={12}>
                         <Typography variant="subtitle1">
-                            Select Dimension:
+                            Select KPIs:
+        {
+                                fieldsChipData.map((item, index) => {
+                                    return (
+                                        item.fieldType === 'measure' ?
+                                            <Chip
+                                                key={item.label}
+                                                measurecounter={measureCounter += 1}
+                                                className={measureCounter > 1 ? `${classes.tealPrimary}` : `${classes.ml12} ${classes.tealPrimary}`}
+                                                label={item.label}
+                                                onClick={() => handleFieldChipClick(item, index)}
+                                                icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
+                                            /> : ''
+                                    )
+                                })
+                            }<br />
+                        </Typography>
+                    </Grid>
+                    <Grid item sm={12}>
+                        <Typography variant="subtitle1">
+                            Group KPIs By:
                             {
                                 fieldsChipData.map((item, index) => {
                                     return (
@@ -173,7 +224,7 @@ function FilterBar(props) {
                                             <Chip
                                                 key={item.label}
                                                 dimensioncounter={dimensionCounter += 1}
-                                                className={dimensionCounter > 1 ? '' : classes.ml12}
+                                                className={dimensionCounter > 1 ? `${classes.indigoPrimary}` : `${classes.ml12} ${classes.indigoPrimary}`}
                                                 label={item.label}
                                                 onClick={() => handleFieldChipClick(item, index)}
                                                 icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
@@ -186,23 +237,53 @@ function FilterBar(props) {
 
                     <Grid item sm={12}>
                         <Typography variant="subtitle1">
-                            Select Measure:
-                            {
-                                fieldsChipData.map((item, index) => {
-                                    return (
-                                        item.fieldType === 'measure' ?
-                                            <Chip
-                                                key={item.label}
-                                                measurecounter={measureCounter += 1}
-                                                className={measureCounter > 1 ? '' : classes.ml12}
-                                                label={item.label}
-                                                onClick={() => handleFieldChipClick(item, index)}
-                                                icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
-                                            /> : ''
-                                    )
-                                })
-                            }<br />
+                            Filter By:
                         </Typography>
+                        {filtersData.map((item, index) => {
+
+                            return (
+                                <FormControl className={classes.formControl} key={validIdHelper(`${item.label}FormControl`)}>
+
+                                    {
+                                        item.type === 'yesno' ?
+                                            <>
+                                                <InputLabel id={validIdHelper(`${item.label}FilterLabel`)}>{prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}:</InputLabel>
+
+                                                <Select
+                                                    labelId={validIdHelper(`${item.label}FilterLabel`)}
+                                                    id={validIdHelper(`${item.label}FilterSelect`)}
+                                                    value={item.value}
+                                                    onChange={(event) => handleSelectChange(index, event.target.value)}
+                                                >
+                                                    <MenuItem value="Yes">Yes</MenuItem>
+                                                    <MenuItem value="No">No</MenuItem>
+                                                    <MenuItem value="All">All</MenuItem>
+                                                </Select>
+                                            </>
+
+                                            : item.type === 'date' ?
+
+                                                <>
+                                                    <InputLabel id={validIdHelper(`${item.label}FilterLabel`)}>{prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}:</InputLabel>
+
+                                                    <Select
+                                                        labelId={validIdHelper(`${item.label}FilterLabel`)}
+                                                        id={validIdHelper(`${item.label}FilterSelect`)}
+                                                        value={item.value}
+                                                        onChange={(event) => handleSelectChange(index, event.target.value)}
+                                                    >
+                                                        <MenuItem value="1 week">1 week</MenuItem>
+                                                        <MenuItem value="1 month">1 month</MenuItem>
+                                                        <MenuItem value="3 months">3 months</MenuItem>
+                                                        <MenuItem value="6 months">6 months</MenuItem>
+                                                        <MenuItem value="1 year">1 year</MenuItem>
+                                                    </Select>
+                                                </>
+                                                : ''
+                                    }
+                                </FormControl>
+                            )
+                        })}
                     </Grid>
                     <Grid item sm={12}>
                         <Button
@@ -232,7 +313,8 @@ function EnhancedTableHead(props) {
                     <TableCell
                         key={validIdHelper(key + '-TableHead-TableCell-' + index)}
                         id={validIdHelper(key + '-TableHead-TableCell-' + index)}
-                        align={key.numeric ? 'right' : 'left'}
+                        // align={key.numeric ? 'left' : 'right'}
+                        align='right'
                         padding={key.disablePadding ? 'none' : 'default'}
                         sortDirection={orderBy === key ? order : false}>
                         <TableSortLabel
@@ -240,7 +322,7 @@ function EnhancedTableHead(props) {
                             direction={orderBy === key ? order : 'asc'}
                             onClick={createSortHandler(key)}
                         >
-                            {key}
+                            {prettifyString(key.substring(key.lastIndexOf('.') + 1, key.length))}
                             {orderBy === key ? (
                                 <span className={classes.visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -265,7 +347,7 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTable(props) {
     // console.log('EnhancedTable')
-    const { apiContent, classes } = props;
+    const { apiContent, classes, lookerContent } = props;
     const [order, setOrder] = React.useState(''); //'asc'
     const [orderBy, setOrderBy] = React.useState(''); //'lookerContent[0].queryBody.fields[0]'
 
@@ -296,8 +378,9 @@ function EnhancedTable(props) {
                                     <TableCell
                                         key={validIdHelper(key + '-TableBody-TableCell-' + index)}
                                         id={validIdHelper(key + '-TableBody-TableCell-' + index)}
+                                        className={lookerContent[0].fieldType[index] === 'dimension' ? classes.indigoSecondary : classes.tealSecondary}
                                         align="right">
-                                        {item[key]}</TableCell>
+                                        {typeof item[key] === 'number' ? Math.round(item[key] * 100) / 100 : item[key]}</TableCell>
                                 ))}
                             </TableRow>
                         ))}
@@ -307,7 +390,13 @@ function EnhancedTable(props) {
 }
 
 
-const lightBackground = grey[100];
+// const lightBackground = grey[100];
+// const color = HUE[SHADE];
+const indigoPrimary = indigo[400];
+const indigoSecondary = indigo[100];
+const tealPrimary = teal[400];
+const tealSecondary = teal[100];
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -379,6 +468,22 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         top: 20,
         width: 1,
+    },
+    indigoPrimary: {
+        backgroundColor: indigoPrimary
+    },
+    indigoSecondary: {
+        backgroundColor: indigoSecondary
+    },
+    tealPrimary: {
+        backgroundColor: tealPrimary
+    },
+    tealSecondary: {
+        backgroundColor: tealSecondary
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
     },
 }));
 
@@ -452,13 +557,6 @@ export default function QueryBuilder(props) {
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
                                                 <FilterBar {...props}
                                                     classes={classes}
-                                                // lookerContent={lookerContent}
-                                                // action={action}
-                                                // expanded={expanded}
-                                                // handleExpansionPanel={handleExpansionPanel}
-                                                // fieldsChipData={fieldsChipData}
-                                                // handleFieldChipClick={handleFieldChipClick}
-                                                // handleQuerySubmit={handleQuerySubmit}
                                                 />
                                                 <Divider className={classes.divider} />
                                                 <Box
@@ -470,8 +568,8 @@ export default function QueryBuilder(props) {
                                                             <EnhancedTable
                                                                 {...props}
                                                                 classes={classes}
-                                                                // order={order}
                                                                 apiContent={apiContent}
+                                                                lookerContent={lookerContent}
                                                             >
                                                             </EnhancedTable>
 
@@ -497,3 +595,10 @@ export default function QueryBuilder(props) {
     )
 }
 
+function prettifyString(str) {
+    var i, frags = str.split('_');
+    for (i = 0; i < frags.length; i++) {
+        frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+    }
+    return frags.join(' ');
+}
