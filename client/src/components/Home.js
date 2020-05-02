@@ -497,9 +497,13 @@ class Home extends Component {
         // console.log('newQuery', newQuery);
         // console.log('resultFormat', resultFormat);
 
-        this.setState({
+        /*this.setState({
             'queryBuilderApiContent': 0
-        })
+        })*/
+
+        let queryBuilderApiContent = { ...this.state.queryBuilderApiContent }
+        queryBuilderApiContent.status = 'running';
+        this.setState({ queryBuilderApiContent })
 
         let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
             method: 'GET',
@@ -527,7 +531,7 @@ class Home extends Component {
                 // console.log('inside ifff')
                 clearInterval(taskInterval)
                 this.setState({
-                    'queryBuilderApiContent': lookerCheckTaskResponseData.queryResults.data
+                    'queryBuilderApiContent': lookerCheckTaskResponseData.queryResults
                 })
             }
         }, 1000)

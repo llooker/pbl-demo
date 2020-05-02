@@ -7,8 +7,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Card from '@material-ui/core/Card';
+import Skeleton from '@material-ui/lab/Skeleton';
 import Grid from '@material-ui/core/Grid';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -36,7 +35,6 @@ import grey from '@material-ui/core/colors/grey';
 import indigo from '@material-ui/core/colors/indigo';
 import teal from '@material-ui/core/colors/teal';
 // import HUE from '@material-ui/core/colors/HUE';
-
 
 import '../Home.css'
 import CodeSideBar from '../Demo/CodeSideBar';
@@ -113,7 +111,7 @@ function FilterBar(props) {
     // console.log('FilterBar')
     // console.log('props', props)
     // const classes = useFilterBarStyles();
-    const { staticContent, staticContent: { lookerContent }, apiContent, classes, action } = props;
+    const { staticContent, staticContent: { lookerContent }, classes, action } = props;
     let measureCounter = 0;
     let dimensionCounter = 0;
 
@@ -124,7 +122,7 @@ function FilterBar(props) {
             key: 'fieldChipData' + index,
             label: item, //prettifyString(item.substring(item.lastIndexOf('.') + 1, item.length)), 
             selected: true,
-            fieldType: lookerContent[0].fieldType[index]
+            fieldType: lookerContent[0].fieldType[item]
         }
     }));
     const [queryModified, setQueryModified] = useState(false);
@@ -163,20 +161,17 @@ function FilterBar(props) {
             filtersData.map((item, index) => {
                 currentFilters[item.label] = item.value
             })
-            // console.log('currentFilters', currentFilters)
             let newQueryObj = lookerContent[0].queryBody;
             newQueryObj.fields = newFields;
             newQueryObj.filters = currentFilters;
-            // console.log('newQueryObj', newQueryObj)
             action(newQueryObj, lookerContent[0].resultFormat);
         }
     }
 
-
     useEffect(() => {
-        // console.log('useEffect')
         handleQuerySubmit()
     }, [fieldsChipData, filtersData]);
+
 
     return (
         <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel}>
@@ -189,17 +184,6 @@ function FilterBar(props) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                    {/* <Grid item sm={2}>
-                        <Typography variant="subtitle1">
-                            Model: <Chip className={classes.ml12} label={lookerContent[0].queryBody.model} disabled /><br />
-                        </Typography>
-                    </Grid>
-                    <Grid item sm={2}>
-                        <Typography variant="subtitle1">
-                            View: <Chip className={classes.ml12} label={lookerContent[0].queryBody.view} disabled /><br />
-                        </Typography>
-                    </Grid> */}
-
                     <Grid item sm={12}>
                         <Typography variant="subtitle1">
                             Select KPIs:
@@ -246,15 +230,12 @@ function FilterBar(props) {
                             Filter By:
                         </Typography>
                         {filtersData.map((item, index) => {
-
                             return (
                                 <FormControl className={classes.formControl} key={validIdHelper(`${item.label}FormControl`)}>
-
                                     {
                                         item.type === 'yesno' ?
                                             <>
                                                 <InputLabel id={validIdHelper(`${item.label}FilterLabel`)}>{prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}:</InputLabel>
-
                                                 <Select
                                                     labelId={validIdHelper(`${item.label}FilterLabel`)}
                                                     id={validIdHelper(`${item.label}FilterSelect`)}
@@ -266,9 +247,7 @@ function FilterBar(props) {
                                                     <MenuItem value="All">All</MenuItem>
                                                 </Select>
                                             </>
-
                                             : item.type === 'date' ?
-
                                                 <>
                                                     <InputLabel id={validIdHelper(`${item.label}FilterLabel`)}>{prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}:</InputLabel>
 
@@ -291,15 +270,6 @@ function FilterBar(props) {
                             )
                         })}
                     </Grid>
-                    {/* <Grid item sm={12}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            disabled={apiContent.length ? false : true}
-                            onClick={handleQuerySubmit}
-                        >
-                            Submit</Button>
-                    </Grid> */}
                 </Grid>
             </ExpansionPanelDetails>
         </ExpansionPanel>
@@ -307,7 +277,7 @@ function FilterBar(props) {
 }
 
 function EnhancedTableHead(props) {
-    const { apiContent, classes, order, orderBy, onRequestSort } = props;
+    const { tableData, classes, order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -315,11 +285,10 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                {Object.keys(apiContent[0]).map((key, index) => (
+                {Object.keys(tableData[0]).map((key, index) => (
                     <TableCell
                         key={validIdHelper(key + '-TableHead-TableCell-' + index)}
                         id={validIdHelper(key + '-TableHead-TableCell-' + index)}
-                        // align={key.numeric ? 'left' : 'right'}
                         align='right'
                         padding={key.disablePadding ? 'none' : 'default'}
                         sortDirection={orderBy === key ? order : false}>
@@ -353,7 +322,7 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTable(props) {
     // console.log('EnhancedTable')
-    const { apiContent, classes, lookerContent } = props;
+    const { tableData, classes, lookerContent } = props;
     const [order, setOrder] = React.useState(''); //'asc'
     const [orderBy, setOrderBy] = React.useState(''); //'lookerContent[0].queryBody.fields[0]'
 
@@ -375,7 +344,7 @@ function EnhancedTable(props) {
                     onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                    {stableSort(apiContent, getComparator(order, orderBy))
+                    {stableSort(tableData, getComparator(order, orderBy))
                         .map((item, index) => (
                             <TableRow
                                 key={validIdHelper('TableRow-' + index)}
@@ -384,7 +353,8 @@ function EnhancedTable(props) {
                                     <TableCell
                                         key={validIdHelper(key + '-TableBody-TableCell-' + index)}
                                         id={validIdHelper(key + '-TableBody-TableCell-' + index)}
-                                        className={lookerContent[0].fieldType[index] === 'dimension' ? classes.indigoSecondary : classes.tealSecondary}
+                                        //this has a bug
+                                        className={lookerContent[0].fieldType[key] === 'dimension' ? classes.indigoSecondary : classes.tealSecondary}
                                         align="right">
                                         {typeof item[key].value === 'number' ? Math.round(item[key].value * 100) / 100 : item[key].value}</TableCell>
                                 ))}
@@ -411,10 +381,6 @@ const useStyles = makeStyles((theme) => ({
     heading: {
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
-    },
-    card: {
-        minWidth: 275,
-        minHeight: 800,
     },
     flexCentered: {
         display: 'flex',
@@ -491,6 +457,13 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         minWidth: 120,
     },
+    skeleton: {
+        minWidth: 275,
+        minHeight: 400,
+    },
+    textCenter: {
+        textAlign: 'center'
+    }
 }));
 
 
@@ -499,8 +472,8 @@ export default function QueryBuilder(props) {
     // console.log('props', props)
 
     const classes = useStyles();
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
-    const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, apiContent: { sql }, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode, sql }
     const tabContent = [...lookerContent, sampleCodeTab];
     const demoComponentType = type || 'sample code';
 
@@ -513,10 +486,6 @@ export default function QueryBuilder(props) {
     const handleChange = (event, newValue) => {
         handleTabChange(0);
         setValue(newValue);
-    };
-
-    const handleDelete = () => {
-        console.info('You clicked the delete icon.');
     };
 
     return (
@@ -550,18 +519,23 @@ export default function QueryBuilder(props) {
                                     <Grid container>
                                         {tabContentItem.type === 'sample code' ?
                                             <Grid item sm={12} >
-                                                <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                                                    Sample Code<br />
+                                                <Typography variant="h6" component="h6" className={classes.gridTitle}>
+                                                    Sample Code:<br />
                                                 </Typography>
                                                 <CodeSideBar code={tabContentItem.sampleCode} />
                                                 <Typography variant="h6" component="h6" className={classes.gridTitle}>
-                                                    Looker User<br />
+                                                    Looker User:<br />
                                                 </Typography>
                                                 <CodeSideBar code={tabContentItem.lookerUser} />
+                                                {tabContentItem.sql ?
+                                                    <>
+                                                        <Typography variant="h6" component="h6" className={classes.gridTitle}>
+                                                            SQL:<br />
+                                                        </Typography>
+                                                        <CodeSideBar code={tabContentItem.sql} />
+                                                    </> : ''}
                                             </Grid>
                                             :
-
-
                                             <React.Fragment
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
                                                 <FilterBar {...props}
@@ -571,24 +545,32 @@ export default function QueryBuilder(props) {
                                                 <Box
                                                     className={classes.w100}
                                                     mt={2}>
-                                                    {apiContent.length ?
-                                                        <Grid item sm={12}>
-
-                                                            <EnhancedTable
-                                                                {...props}
-                                                                classes={classes}
-                                                                apiContent={apiContent}
-                                                                lookerContent={lookerContent}
-                                                            >
-                                                            </EnhancedTable>
-
-                                                        </Grid> :
+                                                    {apiContent.status === 'running' ?
 
                                                         <Grid item sm={12} >
-                                                            <Card className={`${classes.card} ${classes.flexCentered}`}>
-                                                                <CircularProgress className={classes.circularProgress} />
-                                                            </Card>
+                                                            <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
                                                         </Grid>
+
+                                                        : apiContent.data && apiContent.data.length ?
+
+
+                                                            <Grid item sm={12}>
+
+                                                                <EnhancedTable
+                                                                    {...props}
+                                                                    classes={classes}
+                                                                    tableData={apiContent.data}
+                                                                    lookerContent={lookerContent}
+                                                                >
+                                                                </EnhancedTable>
+
+                                                            </Grid>
+                                                            :
+                                                            <Grid item sm={12} >
+                                                                <Typography variant="h6" component="h6" className={`${classes.gridTitle} ${classes.textCenter}`}>
+                                                                    No results found, try a new query<br />
+                                                                </Typography>
+                                                            </Grid>
                                                     }
                                                 </Box>
                                             </React.Fragment>

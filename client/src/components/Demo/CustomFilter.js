@@ -7,10 +7,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import ComboBox from '../Material/ComboBox';
+import Skeleton from '@material-ui/lab/Skeleton';
 import '../Home.css'
 import CodeSideBar from '../Demo/CodeSideBar';
 const { validIdHelper } = require('../../tools');
@@ -50,10 +49,6 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
     },
-    card: {
-        minWidth: 275,
-        minHeight: 800,
-    },
     flexCentered: {
         display: 'flex',
         justifyContent: 'center',
@@ -92,7 +87,11 @@ const useStyles = makeStyles((theme) => ({
     },
     mlAuto: {
         marginLeft: 'auto'
-    }
+    },
+    skeleton: {
+        minWidth: 275,
+        minHeight: 400,
+    },
 }));
 
 export default function CustomFilter(props) {
@@ -121,9 +120,7 @@ export default function CustomFilter(props) {
                 <div className={classes.root}>
                     {iFrameExists ? '' :
                         <Grid item sm={12} >
-                            <Card className={`${classes.card} ${classes.flexCentered}`}>
-                                <CircularProgress className={classes.circularProgress} />
-                            </Card>
+                            <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
                         </Grid>
                     }
 

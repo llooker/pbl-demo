@@ -126,15 +126,15 @@
                             }
                         },
                         "resultFormat": "json",
-                        "fieldType": [
-                            "dimension",
-                            "dimension",
-                            "dimension",
-                            "measure",
-                            "measure",
-                            "measure",
-                            "measure"
-                        ],
+                        "fieldType": {
+                            "campaigns.campaign_id": "dimension",
+                            "campaigns.campaign_name": "dimension",
+                            "campaigns.campaign_type": "dimension",
+                            "session_purchase_facts.ROI": "measure",
+                            "adevents.cost_per_click": "measure",
+                            "adevents.total_cost": "measure",
+                            "adevents.total_clicks": "measure"
+                        },
                         "filterType": {
                             "campaigns.is_active_now": "yesno",
                             "campaigns.created_date": "date"
