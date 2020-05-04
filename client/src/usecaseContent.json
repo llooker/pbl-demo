@@ -1,6 +1,10 @@
 {
     "marketing": {
         "label": "Marketing",
+        "vignette": {
+            "name": "Atom Fashion",
+            "logo": "https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png"
+        },
         "demoComponents": [
             {
                 "type": "splash page",
@@ -151,10 +155,50 @@
             }
         ]
     },
-    "retail": {
-        "splashPage": {
-            "title": "Your next great retail application"
+    "recruiting": {
+        "label": "Recruiting",
+        "vignette": {
+            "name": "HR Partners",
+            "logo": "https://static.vecteezy.com/system/resources/previews/000/424/228/non_2x/magnifying-glass-icon-vector-illustration.jpg"
         },
-        "demoComponents": {}
+        "demoComponents": [
+            {
+                "type": "splash page",
+                "label": "Home",
+                "title": "Your recruiting efforts at a glance:",
+                "icon": "fa-home",
+                "lookerContent": []
+            },
+            {
+                "type": "custom viz",
+                "label": "Custom Visualization",
+                "description": "Build a custom visualization",
+                "icon": "fa-wrench",
+                "lookerContent": []
+            }
+        ]
+    },
+    "insurance": {
+        "label": "Insurance",
+        "vignette": {
+            "name": "Quality Insurance Co",
+            "logo": "https://images-na.ssl-images-amazon.com/images/I/61cKLDstV3L._AC_SX425_.jpg"
+        },
+        "demoComponents": [
+            {
+                "type": "splash page",
+                "label": "Home",
+                "title": "Your insurance efforts at a glance:",
+                "icon": "fa-home",
+                "lookerContent": []
+            },
+            {
+                "type": "custom viz",
+                "label": "Custom Visualization",
+                "description": "Build a custom visualization",
+                "icon": "fa-wrench",
+                "lookerContent": []
+            }
+        ]
     }
 }

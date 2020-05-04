@@ -29,8 +29,10 @@ class Login extends React.Component {
 
   render() {
     // console.log("Login render")
-    // console.log("this.props", this.props)
-    const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
+    // console.log("this.props.location", this.props.location)
+    // const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
+    const { from } = this.props.location.state || { from: { pathname: this.props.location.pathname + this.props.location.search } } //seems to be working
+    // console.log('from', from)
     const { pathname } = this.props.location
     const { activeCustomization } = this.props
     const { userProfile } = this.props
@@ -389,7 +391,7 @@ class App extends React.Component {
     return (
       <Router>
         <div>
-          <Route extact path='/' render={(props) => <Login
+          <Route path='/' render={(props) => <Login
             {...props}
             applySession={this.applySession}
             userProfile={userProfile}
@@ -399,7 +401,7 @@ class App extends React.Component {
             lookerHost={lookerHost}
           />}
           />
-          <PrivateRoute path='/home' component={Home}
+          <PrivateRoute path='/home*' component={Home}
             activeCustomization={activeCustomization}
             lookerContent={lookerContent}
             saveLookerContent={this.saveLookerContent}

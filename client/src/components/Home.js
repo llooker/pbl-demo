@@ -17,6 +17,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Icon from '@material-ui/core/Icon';
 import Box from '@material-ui/core/Box';
+import Avatar from '@material-ui/core/Avatar'
+import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { blue, green, orange, indigo, red } from '@material-ui/core/colors';
+
+
 import UserMenu from './Material/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
@@ -138,8 +143,36 @@ const styles = theme => ({
     },
     top24: {
         top: 24
+    },
+    ml12: {
+        marginLeft: 12
     }
 });
+
+const defaultTheme = createMuiTheme({})
+const marketingTheme = createMuiTheme({
+    palette: {
+        primary: {
+            main: indigo[500],
+        },
+    },
+});
+
+const recruitingTheme = createMuiTheme({
+    palette: {
+        primary: {
+            main: red[500],
+        },
+    },
+})
+
+const insuranceTheme = createMuiTheme({
+    palette: {
+        primary: {
+            main: orange[500],
+        },
+    },
+})
 
 
 class Home extends Component {
@@ -149,7 +182,8 @@ class Home extends Component {
             drawerOpen: false,
             drawerTabValue: 0,
             activeTabValue: 0,
-            sampleCode: {}
+            sampleCode: {},
+            activeUsecase: ''
         }
     }
 
@@ -198,14 +232,24 @@ class Home extends Component {
     }
 
     componentDidMount(props) {
-        LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
-        this.setupLookerContent(UsecaseContent.marketing.demoComponents);
-    }
+        // console.log('Home componentDidMount);
+        let url = new URL(window.location.href);
+        let usecaseFromUrl = url.searchParams.get('usecase');
 
-    // componentDidUpdate(prevProps) {
-    //     console.log('LookerContent componentDidUpdate')
-    //     this.setupLookerContent(UsecaseContent.marketing.demoComponents);
-    // }
+        if (UsecaseContent.hasOwnProperty(usecaseFromUrl)) {
+            this.setState({
+                activeUsecase: usecaseFromUrl
+            }, () => {
+                // console.log('callback')
+                // console.log('this.state.activeUsecase', this.state.activeUsecase)
+                LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
+                this.setupLookerContent(UsecaseContent[usecaseFromUrl].demoComponents);
+            })
+        } else {
+            let defaultSearchString = window.location.search.replace(usecaseFromUrl, 'marketing');
+            window.location.search = defaultSearchString
+        }
+    }
 
     // think about refactor to make more efficient 
     // promise.all()
@@ -550,107 +594,124 @@ class Home extends Component {
             "query builder": QueryBuilder,
             "custom viz": ComingSoon
         }
+        const themeMap = {
+            "marketing": marketingTheme,
+            "recruiting": recruitingTheme,
+            "insurance": insuranceTheme
+        }
 
-        const { drawerTabValue, drawerOpen, activeTabValue, sampleCode } = this.state;
+        const { drawerTabValue, drawerOpen, activeTabValue, sampleCode, activeUsecase } = this.state;
         const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
 
+        // console.log('activeUsecase', activeUsecase)
+        // console.log('themeMap[activeUsecase]', activeUsecase ? themeMap[activeUsecase] : '')
+
         // console.log('drawerTabValue', drawerTabValue);
         // console.log('sampleCode', sampleCode);
+        // console.log('activeUsecase', activeUsecase);
 
         return (
             <div className={classes.root}>
-                <CssBaseline />
-                <AppBar
-                    position="fixed"
-                    className={clsx(classes.appBar, {
-                        [classes.appBarShift]: drawerOpen,
-                    })}
-                >
-                    <Toolbar>
-                        <IconButton
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={() => handleDrawerChange(true)}
-                            edge="start"
-                            className={clsx(classes.menuButton, drawerOpen && classes.hide)}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6" noWrap className={classes.title}>
-                            Atom Fashion
-                        </Typography>
-                        <UserMenu switchLookerUser={switchLookerUser} lookerUser={lookerUser} onLogoutSuccess={applySession} />
-                    </Toolbar>
-                </AppBar>
-                <Drawer
-                    className={classes.drawer}
-                    variant="persistent"
-                    anchor="left"
-                    open={drawerOpen}
-                    classes={{
-                        paper: classes.drawerPaper,
-                    }}
-                >
-                    <div className={classes.drawerHeader}>
-                        <IconButton onClick={() => handleDrawerChange(false)}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    </div>
-                    <Divider />
-                    <Tabs
-                        id="drawerTabs"
-                        orientation="vertical"
-                        variant="scrollable"
-                        value={drawerTabValue}
-                        onChange={handleDrawerTabChange}
-                        aria-label="Vertical tabs example"
-                        className={classes.tabs}
+
+                <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
+                    <CssBaseline />
+                    <AppBar
+                        position="fixed"
+                        className={clsx(classes.appBar, {
+                            [classes.appBarShift]: drawerOpen,
+                        })}
                     >
-                        {UsecaseContent.marketing.demoComponents.map((item, index) => (
-                            <Tab label={item.label}
-                                key={`homeVerticalTabs${index}`}
-                                icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
-                                {...a11yProps(index)}
-                                contenttype={validIdHelper(item.type)}
-                            ></Tab>
-                        ))
+                        <Toolbar>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={() => handleDrawerChange(true)}
+                                edge="start"
+                                className={clsx(classes.menuButton, drawerOpen && classes.hide)}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+
+                            {activeUsecase ? <Avatar alt="Icon" src={UsecaseContent[activeUsecase].vignette.logo} /> : ''}
+
+                            <Typography variant="h6" noWrap className={`${classes.title} ${classes.ml12}`}>
+
+                                {activeUsecase ? UsecaseContent[activeUsecase].vignette.name : ''}
+                            </Typography>
+                            <UserMenu switchLookerUser={switchLookerUser} lookerUser={lookerUser} onLogoutSuccess={applySession} />
+                        </Toolbar>
+                    </AppBar>
+                    <Drawer
+                        className={classes.drawer}
+                        variant="persistent"
+                        anchor="left"
+                        open={drawerOpen}
+                        classes={{
+                            paper: classes.drawerPaper,
+                        }}
+                    >
+                        <div className={classes.drawerHeader}>
+                            <IconButton onClick={() => handleDrawerChange(false)}>
+                                <ChevronLeftIcon />
+                            </IconButton>
+                        </div>
+                        <Divider />
+                        <Tabs
+                            id="drawerTabs"
+                            orientation="vertical"
+                            variant="scrollable"
+                            value={drawerTabValue}
+                            onChange={handleDrawerTabChange}
+                            aria-label="Vertical tabs example"
+                            className={classes.tabs}
+                        >
+                            {activeUsecase ? UsecaseContent[activeUsecase].demoComponents.map((item, index) => (
+                                <Tab label={item.label}
+                                    key={`homeVerticalTabs${index}`}
+                                    icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
+                                    {...a11yProps(index)}
+                                    contenttype={validIdHelper(item.type)}
+                                ></Tab>
+                            ))
+                                : ''
+                            }
+                        </Tabs>
+                    </Drawer>
+                    <main
+                        className={clsx(classes.content, {
+                            [classes.contentShift]: drawerOpen,
+                        })}
+                    >
+                        <div className={classes.drawerHeader} />
+                        {activeUsecase ?
+                            UsecaseContent[activeUsecase].demoComponents.map((item, index) => {
+                                const DemoComponent = demoComponentMap[item.type];
+                                return (
+                                    <TabPanel
+                                        key={validIdHelper(`tab-panel-${item.type}`)}
+                                        value={drawerTabValue}
+                                        index={index}
+                                        className={classes.relative}
+                                    >
+                                        {DemoComponent ?
+                                            <DemoComponent key={validIdHelper(`list-${item.type}`)}
+                                                staticContent={item}
+                                                handleDrawerTabChange={handleDrawerTabChange}
+                                                apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
+                                                action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
+                                                activeTabValue={activeTabValue}
+                                                handleTabChange={handleTabChange}
+                                                lookerUser={lookerUser}
+                                                sampleCode={sampleCode}
+                                            /> :
+                                            item.label
+                                        }
+                                    </TabPanel>)
+                            }) : ''
                         }
-                    </Tabs>
-                </Drawer>
-                <main
-                    className={clsx(classes.content, {
-                        [classes.contentShift]: drawerOpen,
-                    })}
-                >
-                    <div className={classes.drawerHeader} />
-                    {
-                        UsecaseContent.marketing.demoComponents.map((item, index) => {
-                            const DemoComponent = demoComponentMap[item.type];
-                            return (
-                                <TabPanel
-                                    key={validIdHelper(`tab-panel-${item.type}`)}
-                                    value={drawerTabValue}
-                                    index={index}
-                                    className={classes.relative}
-                                >
-                                    {DemoComponent ?
-                                        <DemoComponent key={validIdHelper(`list-${item.type}`)}
-                                            staticContent={item}
-                                            handleDrawerTabChange={handleDrawerTabChange}
-                                            apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
-                                            action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
-                                            activeTabValue={activeTabValue}
-                                            handleTabChange={handleTabChange}
-                                            lookerUser={lookerUser}
-                                            sampleCode={sampleCode}
-                                        /> :
-                                        item.label
-                                    }
-                                </TabPanel>)
-                        })
-                    }
-                </main >
+                    </main >
+                </ThemeProvider>
             </div >
         )
     }
