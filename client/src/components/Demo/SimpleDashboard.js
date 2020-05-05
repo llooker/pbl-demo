@@ -8,7 +8,6 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import ComboBox from '../Material/ComboBox';
 import Skeleton from '@material-ui/lab/Skeleton';
 import '../Home.css'
 import CodeSideBar from '../Demo/CodeSideBar';
@@ -94,8 +93,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function CustomFilter(props) {
-    // console.log('CustomFilter')
+export default function SimpleDashboard(props) {
+    // console.log('SimpleDashboard')
     // console.log('props', props)
 
     const classes = useStyles();
@@ -162,13 +161,6 @@ export default function CustomFilter(props) {
                                             :
                                             <React.Fragment
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
-                                                <Grid item sm={12}>
-                                                    <ComboBox
-                                                        options={apiContent}
-                                                        action={action}
-                                                        correspondingContentId={tabContent[0].id}
-                                                        filterName={tabContent[0].filter.filterName} />
-                                                </Grid>
                                                 <Box className={classes.w100} mt={2}>
                                                     <Grid item sm={12}>
                                                         <div

@@ -1,6 +1,6 @@
 {
-    "marketing": {
-        "label": "Marketing",
+    "ecomm": {
+        "label": "Ecomm",
         "vignette": {
             "name": "Atom Fashion",
             "logo": "https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png"
@@ -36,6 +36,19 @@
                 ]
             },
             {
+                "type": "simple dashboard",
+                "label": "Simple Dashboard",
+                "description": "See how easily you can embed a looker dashboard",
+                "icon": "fa-filter",
+                "lookerContent": [
+                    {
+                        "type": "dashboard",
+                        "id": "4608",
+                        "label": "Business Pulse"
+                    }
+                ]
+            },
+            {
                 "type": "custom filter",
                 "label": "Custom Filter",
                 "description": "See how you can easily add custom dropdowns that interact with a Looker dashboard",
@@ -45,14 +58,8 @@
                         "type": "dashboard",
                         "id": "5280",
                         "label": "Advertising Pulse",
-                        "customDropdown": {
+                        "filter": {
                             "label": "Select Brand",
-                            "options": [
-                                "10 deep",
-                                "106 Shades",
-                                "12XLShop Inc.",
-                                "180s"
-                            ],
                             "filterName": "Brand",
                             "inlineQuery": {
                                 "model": "thelook",

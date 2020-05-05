@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
-import DefaultLookerContent from '../lookerIndustriesByInstance.json';
+// import DefaultLookerContent from '../lookerIndustriesByInstance.json';
 
 let emptyCustomizationObj = {
     id: '',

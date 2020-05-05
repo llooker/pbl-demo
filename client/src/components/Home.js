@@ -31,6 +31,7 @@ import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
 import ReportBuilder from './Demo/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
+import SimpleDashboard from './Demo/SimpleDashboard';
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
@@ -150,19 +151,29 @@ const styles = theme => ({
 });
 
 const defaultTheme = createMuiTheme({})
-const marketingTheme = createMuiTheme({
+const ecommTheme = createMuiTheme({
     palette: {
         primary: {
             main: indigo[500],
         },
-    },
-});
+        typography: {
+            fontFamily: "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
+            fontSize: 14,
+        }
+    }
+})
 
 const recruitingTheme = createMuiTheme({
     palette: {
         primary: {
             main: red[500],
         },
+
+        typography: {
+            fontFamily: [
+                "Courier New", "Courier", "Monaco"
+            ]
+        }
     },
 })
 
@@ -179,7 +190,7 @@ class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            drawerOpen: false,
+            drawerOpen: true,
             drawerTabValue: 0,
             activeTabValue: 0,
             sampleCode: {},
@@ -232,23 +243,16 @@ class Home extends Component {
     }
 
     componentDidMount(props) {
-        // console.log('Home componentDidMount);
-        let url = new URL(window.location.href);
-        let usecaseFromUrl = url.searchParams.get('usecase');
-
-        if (UsecaseContent.hasOwnProperty(usecaseFromUrl)) {
-            this.setState({
-                activeUsecase: usecaseFromUrl
-            }, () => {
-                // console.log('callback')
-                // console.log('this.state.activeUsecase', this.state.activeUsecase)
-                LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
-                this.setupLookerContent(UsecaseContent[usecaseFromUrl].demoComponents);
-            })
-        } else {
-            let defaultSearchString = window.location.search.replace(usecaseFromUrl, 'marketing');
-            window.location.search = defaultSearchString
-        }
+        // console.log('Home componentDidMount');
+        let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
+        this.setState({
+            activeUsecase: usecaseFromUrl
+        }, () => {
+            // console.log('callback')
+            // console.log('this.state.activeUsecase', this.state.activeUsecase)
+            LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
+            this.setupLookerContent(UsecaseContent[usecaseFromUrl].demoComponents);
+        })
     }
 
     // think about refactor to make more efficient 
@@ -291,8 +295,8 @@ class Home extends Component {
                             console.error('Connection error', error)
                         })
 
-                    if (usecaseContent[j].lookerContent[i].hasOwnProperty('customDropdown')) {
-                        let stringifiedQuery = encodeURIComponent(JSON.stringify(usecaseContent[j].lookerContent[i].customDropdown.inlineQuery))
+                    if (usecaseContent[j].lookerContent[i].hasOwnProperty('filter')) {
+                        let stringifiedQuery = encodeURIComponent(JSON.stringify(usecaseContent[j].lookerContent[i].filter.inlineQuery))
                         let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
                             method: 'GET',
                             headers: {
@@ -302,13 +306,13 @@ class Home extends Component {
                         })
                         let lookerResponseData = await lookerResponse.json();
 
-                        let inlineQueryField = usecaseContent[j].lookerContent[i].customDropdown.inlineQuery.fields[0]
+                        let inlineQueryField = usecaseContent[j].lookerContent[i].filter.inlineQuery.fields[0]
                         for (i = 0; i < lookerResponseData.queryResults.length; i++) {
                             lookerResponseData.queryResults[i].label = lookerResponseData.queryResults[i][inlineQueryField];
                             delete lookerResponseData.queryResults[i][inlineQueryField];
                         }
 
-                        const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
+                        const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent'; //customFilterApiContent
                         objForState[stateKey] = lookerResponseData.queryResults;
                     }
 
@@ -509,33 +513,6 @@ class Home extends Component {
         }
     }
 
-    // queryBuilderAction = async (newQuery, resultFormat) => {
-    //     console.log('queryBuilderAction')
-    //     console.log('newQuery', newQuery);
-    //     console.log('resultFormat', resultFormat);
-
-    //     this.setState({
-    //         'queryBuilderApiContent': 0
-    //     })
-
-    //     let lookerResposnse = await fetch('/createquery/' + JSON.stringify(newQuery) + '/' + resultFormat, {
-    //         method: 'GET',
-    //         headers: {
-    //             Accept: 'application/json',
-    //             'Content-Type': 'application/json'
-    //         }
-    //     })
-    //     let lookerResponseData = await lookerResposnse.json();
-    //     // console.log('lookerResponseData', lookerResponseData)
-
-    //     // const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
-    //     // objForState[stateKey] = lookerResponseData.queryResults; //for now
-
-    //     this.setState({
-    //         'queryBuilderApiContent': lookerResponseData.queryResults
-    //     })
-    // }
-
     queryBuilderAction = async (newQuery, resultFormat) => {
         // console.log('queryBuilderAction')
         // console.log('newQuery', newQuery);
@@ -592,10 +569,11 @@ class Home extends Component {
             "dashboard overview detail": DashboardOverviewDetail,
             "report builder": ReportBuilder,
             "query builder": QueryBuilder,
-            "custom viz": ComingSoon
+            "custom viz": ComingSoon,
+            "simple dashboard": SimpleDashboard
         }
         const themeMap = {
-            "marketing": marketingTheme,
+            "ecomm": ecommTheme,
             "recruiting": recruitingTheme,
             "insurance": insuranceTheme
         }
@@ -704,6 +682,7 @@ class Home extends Component {
                                                 handleTabChange={handleTabChange}
                                                 lookerUser={lookerUser}
                                                 sampleCode={sampleCode}
+                                                activeUsecase={activeUsecase}
                                             /> :
                                             item.label
                                         }

@@ -60,7 +60,7 @@ export default function SplashPage(props) {
     // console.log('SplashPage')
     // console.log('props', props)
 
-    const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange } = props;
+    const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange, activeUsecase } = props;
     const classes = useStyles();
 
     return (
@@ -108,7 +108,7 @@ export default function SplashPage(props) {
             </Typography>
             <Grid container
                 spacing={3} >
-                {UsecaseContent.marketing.demoComponents.map((item, index) => (
+                {UsecaseContent[activeUsecase].demoComponents.map((item, index) => (
                     index > 0 ?
                         <Grid item xs={12} sm={4} className="pointer" key={`demoComponentLink${index}`} onClick={(e) => handleDrawerTabChange(e, index)}>
                             <Card className={classes.card}>

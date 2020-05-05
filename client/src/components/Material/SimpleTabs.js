@@ -245,7 +245,7 @@ export default function SimpleTabs(props) {
                                                     options={apiContent}
                                                     action={action}
                                                     correspondingContentId={tabContent[0].id}
-                                                    filterName={tabContent[0].customDropdown.filterName} />
+                                                    filterName={tabContent[0].filter.filterName} />
                                             </Grid>
 
                                             <Box className={classes.w100} mt={2}>

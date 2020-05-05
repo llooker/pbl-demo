@@ -12,6 +12,7 @@ import DefaultLookerContent from './lookerIndustriesByInstance.json';
 //make looker user dynamic
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
+import UsecaseContent from './usecaseContent.json';
 
 class Login extends React.Component {
   constructor(props) {
@@ -29,11 +30,17 @@ class Login extends React.Component {
 
   render() {
     // console.log("Login render")
-    // console.log("this.props.location", this.props.location)
-    // const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
-    const { from } = this.props.location.state || { from: { pathname: this.props.location.pathname + this.props.location.search } } //seems to be working
-    // console.log('from', from)
-    const { pathname } = this.props.location
+
+    let usecaseFromUrl = this.props.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
+    let includesHome = this.props.location.pathname.includes('home');
+    let pathnameToUse;
+    if (UsecaseContent.hasOwnProperty(usecaseFromUrl) && includesHome) {
+      pathnameToUse = this.props.location.pathname
+    } else {
+      pathnameToUse = '/ecomm/home';
+    }
+
+    const { from } = this.props.location.state || { from: { pathname: pathnameToUse } }
     const { activeCustomization } = this.props
     const { userProfile } = this.props
 
@@ -41,17 +48,6 @@ class Login extends React.Component {
     if (Object.keys(userProfile).length) {
       return (
         <div className="App">
-          {/* <Header
-            onLogoutSuccess={this.props.applySession}
-            companyName={activeCustomization.companyName || "WYSIWYG"} //default
-            logoUrl={activeCustomization.logoUrl || "https://looker.com/assets/img/images/logos/looker_black.svg"} //default
-            lookerUser={this.props.lookerUser}
-            switchLookerUser={this.props.switchLookerUser}
-            pathname={pathname}
-          />
-          <Redirect to={from} />
-          <Footer pathname={pathname}
-            lookerHost={this.props.lookerHost} /> */}
           <Redirect to={from} />
         </div>
       )
@@ -139,8 +135,8 @@ class App extends React.Component {
       lookerUser: {
         ...InitialLookerUser
       },
-      lookerHost: '', //'demo.looker.com',
-      // activeIndustry: 'marketing'
+      lookerHost: '',
+      activeUsecase: ''
     }
   }
 
@@ -369,25 +365,13 @@ class App extends React.Component {
     });
   }
 
-
-
-
-
   render() {
     // console.log('App render');
     // console.log('this.props', this.props);
-    const { userProfile } = this.state
-    const { customizations } = this.state
-    const { activeCustomization } = this.state
-    const { indexOfCustomizationToEdit } = this.state
-    const { lookerContent } = this.state
-    const { lookerUser } = this.state;
-    const { lookerHost } = this.state;
-    const { activeUsecase } = this.state;
+    const { userProfile, customizations, activeCustomization, indexOfCustomizationToEdit, lookerContent, lookerUser, lookerHost } = this.state
     // const { activeIndustry } = this.state;
     // console.log('activeCustomization', activeCustomization);
     // console.log('lookerUser', lookerUser);
-    // console.log('lookerHost', lookerHost);
     return (
       <Router>
         <div>
@@ -401,7 +385,7 @@ class App extends React.Component {
             lookerHost={lookerHost}
           />}
           />
-          <PrivateRoute path='/home*' component={Home}
+          <PrivateRoute path='*/home' component={Home}
             activeCustomization={activeCustomization}
             lookerContent={lookerContent}
             saveLookerContent={this.saveLookerContent}
