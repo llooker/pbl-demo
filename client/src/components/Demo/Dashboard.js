@@ -7,8 +7,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Skeleton from '@material-ui/lab/Skeleton';
 import Grid from '@material-ui/core/Grid';
+import ComboBox from '../Material/ComboBox';
+import Skeleton from '@material-ui/lab/Skeleton';
 import '../Home.css'
 import CodeSideBar from '../Demo/CodeSideBar';
 const { validIdHelper } = require('../../tools');
@@ -90,11 +91,11 @@ const useStyles = makeStyles((theme) => ({
     skeleton: {
         minWidth: 275,
         minHeight: 400,
-    }
+    },
 }));
 
-export default function DashboardOverviewDetail(props) {
-    // console.log('DashboardOverviewDetail')
+export default function Dashboard(props) {
+    // console.log('Dashboard')
     // console.log('props', props)
 
     const classes = useStyles();
@@ -166,14 +167,29 @@ export default function DashboardOverviewDetail(props) {
                                                 <CodeSideBar code={tabContentItem.lookerUser} />
                                             </Grid>
                                             :
-                                            <Grid item sm={12} >
-                                                <div
-                                                    className="embedContainer"
-                                                    id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                                                    key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                                                >
-                                                </div>
-                                            </Grid>
+                                            <React.Fragment
+                                                key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
+                                                {tabContentItem.filter ?
+                                                    <Grid item sm={12}>
+                                                        <ComboBox
+                                                            options={apiContent}
+                                                            action={action}
+                                                            correspondingContentId={tabContentItem.id}
+                                                            filterName={tabContentItem.filter.filterName} />
+                                                    </Grid> : ''
+
+                                                }
+                                                <Box className={classes.w100} mt={2}>
+                                                    <Grid item sm={12}>
+                                                        <div
+                                                            className="embedContainer"
+                                                            id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                                            key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                                        >
+                                                        </div>
+                                                    </Grid>
+                                                </Box>
+                                            </React.Fragment>
                                         }
                                     </Grid>
                                 </TabPanel>

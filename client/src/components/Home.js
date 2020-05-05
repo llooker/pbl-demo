@@ -26,12 +26,10 @@ import UserMenu from './Material/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
 import SplashPage from './Demo/SplashPage';
-import CustomFilter from './Demo/CustomFilter';
-import DashboardOverviewDetail from './Demo/DashboardOverviewDetail';
 import ReportBuilder from './Demo/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
-import SimpleDashboard from './Demo/SimpleDashboard';
+import Dashboard from './Demo/Dashboard';
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
@@ -565,12 +563,12 @@ class Home extends Component {
 
         const demoComponentMap = {
             "splash page": SplashPage,
-            "custom filter": CustomFilter,
-            "dashboard overview detail": DashboardOverviewDetail,
+            "custom filter": Dashboard,
+            "dashboard overview detail": Dashboard,
             "report builder": ReportBuilder,
             "query builder": QueryBuilder,
             "custom viz": ComingSoon,
-            "simple dashboard": SimpleDashboard
+            "simple dashboard": Dashboard
         }
         const themeMap = {
             "ecomm": ecommTheme,

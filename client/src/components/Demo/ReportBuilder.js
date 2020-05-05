@@ -7,7 +7,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Skeleton from '@material-ui/lab/Skeleton';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -53,6 +54,10 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
     },
+    card: {
+        minWidth: 275,
+        minHeight: 800,
+    },
     flexCentered: {
         display: 'flex',
         justifyContent: 'center',
@@ -91,10 +96,6 @@ const useStyles = makeStyles((theme) => ({
     },
     mlAuto: {
         marginLeft: 'auto'
-    },
-    skeleton: {
-        minWidth: 275,
-        minHeight: 400,
     }
 }));
 
@@ -136,7 +137,9 @@ export default function DashboardOverviewDetail(props) {
                 <div className={classes.root}>
                     {iFrameExists ? '' :
                         <Grid item sm={12} >
-                            <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
+                            <Card className={`${classes.card} ${classes.flexCentered}`}>
+                                <CircularProgress className={classes.circularProgress} />
+                            </Card>
                         </Grid>
                     }
 
