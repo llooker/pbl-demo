@@ -9,28 +9,31 @@
             {
                 "type": "splash page",
                 "label": "Home",
-                "title": "Your marketing efforts at a glance:",
+                "title": "Your ecomm efforts at a glance:",
                 "icon": "fa-home",
                 "lookerContent": [
                     {
                         "type": "api",
                         "id": "585321",
-                        "resultFormat": "json",
-                        "label": "Total Spend",
+                        "resultFormat": "json_detail",
+                        "cardLabel": "Total Spend Last Quarter",
+                        "modalLabel": "Total Spend By Quarter Detail",
                         "desiredProperty": "adevents.total_cost"
                     },
                     {
                         "type": "api",
                         "id": "607764",
-                        "resultFormat": "json",
-                        "label": "Number of Active Campaigns",
+                        "resultFormat": "json_detail",
+                        "cardLabel": "Number of Active Campaigns",
+                        "modalLabel": "Active Campaigns Detail",
                         "desiredMethod": "length"
                     },
                     {
                         "type": "api",
                         "id": "984096",
-                        "resultFormat": "json",
-                        "label": "Total ROI",
+                        "resultFormat": "json_detail",
+                        "cardLabel": "Total ROI",
+                        "modalLabel": "ROI Detail",
                         "desiredProperty": "session_attribution.total_attribution"
                     }
                 ]
@@ -39,7 +42,7 @@
                 "type": "simple dashboard",
                 "label": "Simple Dashboard",
                 "description": "See how easily you can embed a looker dashboard",
-                "icon": "fa-filter",
+                "icon": "fa-tachometer",
                 "lookerContent": [
                     {
                         "type": "dashboard",

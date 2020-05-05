@@ -3,27 +3,24 @@ import React, { useState, useEffect } from 'react';
 //material
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-
+import Modal from '@material-ui/core/Modal';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import Icon from '@material-ui/core/Icon';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import LinkIcon from '@material-ui/icons/Link';
-import GavelIcon from '@material-ui/icons/Gavel';
-import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
-import BuildIcon from '@material-ui/icons/Build';
-
 import UsecaseContent from '../../usecaseContent.json'; // still necessary to map over demo components
 import '../Home.css'
 
-const { validIdHelper } = require('../../tools');
+const { validIdHelper, prettifyString } = require('../../tools');
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -53,15 +50,59 @@ const useStyles = makeStyles((theme) => ({
     },
     icon: {
         marginLeft: 12
+    },
+    paper: {
+        position: 'absolute',
+        width: 800,
+        maxHeight: 400,
+        overflow: 'scroll',
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
     }
 }));
+
+function rand() {
+    return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+    const top = 50; //+ rand();
+    const left = 50; // + rand();
+
+    return {
+        top: `${top}%`,
+        left: `${left}%`,
+        transform: `translate(-${top}%, -${left}%)`,
+    };
+}
 
 export default function SplashPage(props) {
     // console.log('SplashPage')
     // console.log('props', props)
 
-    const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange, activeUsecase } = props;
     const classes = useStyles();
+    const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange, activeUsecase } = props;
+    const [open, setOpen] = useState(false);
+    const [modalContent, setModalContent] = useState({});
+
+    const handleOpen = (title, data) => {
+        let updatedModalContent = { ...modalContent }
+        updatedModalContent.title = title;
+        updatedModalContent.body = data;
+        setOpen(true);
+        setModalContent(updatedModalContent)
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    useEffect(() => {
+        // console.log('useEffect')
+        // console.log('modalContent', modalContent)
+    }, [modalContent]);
 
     return (
         <div className={classes.root}>
@@ -75,18 +116,20 @@ export default function SplashPage(props) {
                 {lookerContent.map((item, index) => (
                     <Grid item xs={12} sm={4} key={`atAGlance${index}`}>
                         {apiContent[index] ?
-                            <Card className={classes.card}>
+                            <Card className={classes.card}
+                                onClick={() => handleOpen(lookerContent[index].modalLabel, apiContent[index].queryResults.data)}
+                            >
                                 <CardContent>
                                     <Typography variant="h5" component="h2">
-                                        {lookerContent[index].label}
+                                        {lookerContent[index].cardLabel}
                                     </Typography>
                                     <br />
                                     <Typography className={classes.body} variant="body2" component="p">
                                         {
                                             lookerContent[index].desiredProperty
                                                 ?
-                                                (apiContent[index].queryResults[0][lookerContent[index].desiredProperty]).toLocaleString()
-                                                : (apiContent[index].queryResults[lookerContent[index].desiredMethod]).toLocaleString()
+                                                (apiContent[index].queryResults.data[0][lookerContent[index].desiredProperty].rendered).toLocaleString() //value
+                                                : (apiContent[index].queryResults.data[lookerContent[index].desiredMethod]).toLocaleString()
                                         }
                                     </Typography>
                                 </CardContent>
@@ -97,6 +140,15 @@ export default function SplashPage(props) {
                             </Card>}
                     </Grid>
                 ))}
+
+                {open ? <ModalTable
+                    {...props}
+                    open={open}
+                    onClose={handleClose}
+                    classes={classes}
+                    modalContent={modalContent}
+                /> : ''}
+
             </Grid >
 
 
@@ -115,7 +167,6 @@ export default function SplashPage(props) {
                                 <CardContent>
                                     <Typography variant="h5" component="h2">
                                         {item.label}
-                                        {/* {React.createElement(iconMap[item.type])} */}
                                         <Icon className={`fa ${item.icon} ${classes.icon}`} />
                                     </Typography>
                                     <br />
@@ -129,5 +180,57 @@ export default function SplashPage(props) {
                 ))}
             </Grid >
         </div >
+    )
+}
+
+function ModalTable(props) {
+    // console.log('ModalTable')
+    // console.log('props', props)
+    const { open, onClose, modalContent, classes } = props;
+    const [modalStyle] = React.useState(getModalStyle);
+
+    return (
+        <Modal
+            open={open}
+            onClose={onClose}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+        >
+
+            <div style={modalStyle} className={classes.paper}>
+                <h2 id="simple-modal-title">{modalContent.title}</h2>
+                <TableContainer component={Paper}>
+                    <Table stickyHeader className={classes.table} size="small" aria-label="a dense table">
+                        <TableHead>
+                            <TableRow>
+                                {Object.keys(modalContent.body[0]).map((key, index) => (
+                                    <TableCell align="right"
+                                        key={validIdHelper(key + '-TableHead-TableCell-' + index)}
+                                        id={validIdHelper(key + '-TableHead-TableCell-' + index)}>
+                                        {prettifyString(key.substring(key.lastIndexOf('.') + 1, key.length))}</TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {modalContent.body.map((item, index) => (
+
+                                <TableRow
+                                    key={validIdHelper('TableRow-' + index)}
+                                    id={validIdHelper('TableRow-' + index)} >
+                                    {
+                                        Object.keys(item).map(key => (
+                                            <TableCell align="right"
+                                                key={validIdHelper(key + '-TableBody-TableCell-' + index)}
+                                                id={validIdHelper(key + '-TableBody-TableCell-' + index)}>{modalContent.body[index][key].rendered ? modalContent.body[index][key].rendered : modalContent.body[index][key].value}</TableCell>
+                                        ))
+                                    }
+
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
+        </Modal >
     )
 }

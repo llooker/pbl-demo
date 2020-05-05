@@ -392,6 +392,7 @@ class Home extends Component {
                     objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
 
                 } else if (usecaseContent[j].lookerContent[i].type === "api") {
+                    // console.log('inside ellse if api')
                     let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
                         method: 'GET',
                         headers: {
@@ -400,9 +401,10 @@ class Home extends Component {
                         }
                     })
                     let lookerResponseData = await lookerResposnse.json();
-
+                    // console.log('lookerResponseData', lookerResponseData)
 
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
+                    // console.log('stateKey', stateKey)
                     // this gives better performance...
                     // this.setState((prevState) => ({
                     //     [stateKey]: prevState[stateKey] ? [...prevState[stateKey], lookerResponseData] : [lookerResponseData]
@@ -436,6 +438,10 @@ class Home extends Component {
             })
         }, 1000)
     }
+
+    // splashPageAction = () => {
+    //     console.log('splashPageAction')
+    // }
 
     customFilterAction = (newFilterValue, stateName, filterName) => {
         // console.log('customFilterAction')

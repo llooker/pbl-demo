@@ -99,8 +99,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function DashboardOverviewDetail(props) {
-    // console.log('DashboardOverviewDetail')
+export default function ReportBuilder(props) {
+    // console.log('ReportBuilder')
     // console.log('props', props)
 
     const classes = useStyles();

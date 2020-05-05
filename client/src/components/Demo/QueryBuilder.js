@@ -38,7 +38,11 @@ import teal from '@material-ui/core/colors/teal';
 
 import '../Home.css'
 import CodeSideBar from '../Demo/CodeSideBar';
-const { validIdHelper } = require('../../tools');
+const { makeid, validIdHelper, prettifyString } = require('../../tools');
+
+console.log('makeid', makeid)
+console.log('validIdHelper', validIdHelper)
+console.log('prettifyString', prettifyString)
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -356,7 +360,9 @@ function EnhancedTable(props) {
                                         //this has a bug
                                         className={lookerContent[0].fieldType[key] === 'dimension' ? classes.indigoSecondary : classes.tealSecondary}
                                         align="right">
-                                        {typeof item[key].value === 'number' ? Math.round(item[key].value * 100) / 100 : item[key].value}</TableCell>
+                                        {item[key].rendered ? item[key].rendered : item[key].value}
+                                        {/* {typeof item[key].value === 'number' ? Math.round(item[key].value * 100) / 100 : item[key].value}</TableCell> */}
+                                    </TableCell>
                                 ))}
                             </TableRow>
                         ))}
@@ -584,12 +590,4 @@ export default function QueryBuilder(props) {
             </Grid >
         </div >
     )
-}
-
-function prettifyString(str) {
-    var i, frags = str.split('_');
-    for (i = 0; i < frags.length; i++) {
-        frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
-    }
-    return frags.join(' ');
 }
