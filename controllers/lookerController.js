@@ -8,7 +8,7 @@ const sdk = new Looker40SDK(session)
 const sdk31 = new Looker31SDK(session)
 
 module.exports.auth = (req, res, next) => {
-    // console.log('indexController authh');
+    // console.log('lookerController authh');
     // console.log('user', user)
     // console.log('req.session.lookerUser', req.session.lookerUser);
     // Authenticate the request is from a valid user here
@@ -19,7 +19,7 @@ module.exports.auth = (req, res, next) => {
 }
 
 module.exports.validateLookerContent = async (req, res, next) => {
-    // console.log('indexController validateLookerContent');
+    // console.log('lookerController validateLookerContent');
 
     const contentId = req.params.content_id;
     const contentType = req.params.content_type;
@@ -39,7 +39,7 @@ module.exports.validateLookerContent = async (req, res, next) => {
 }
 
 module.exports.fetchFolder = async (req, res, next) => {
-    // console.log('indexController fetchFolder');
+    // console.log('lookerController fetchFolder');
 
     const { params } = req
 
@@ -64,7 +64,7 @@ module.exports.fetchFolder = async (req, res, next) => {
 }
 
 module.exports.fetchDashboard = async (req, res, next) => {
-    // console.log('indexController fetchDashboard');
+    // console.log('lookerController fetchDashboard');
 
     const { params } = req
     console.log('params', params)
@@ -93,7 +93,7 @@ module.exports.updateLookerUser = (req, res, next) => {
 
 
 module.exports.runQuery = async (req, res, next) => {
-    // console.log('indexController runQuery');
+    // console.log('lookerController runQuery');
 
     const { params } = req
     // console.log('params', params)
@@ -121,14 +121,14 @@ module.exports.runQuery = async (req, res, next) => {
 }
 
 module.exports.runInlineQuery = async (req, res, next) => {
-    // console.log('indexController runInlineQuery');
+    console.log('lookerController runInlineQuery');
 
     const { params } = req
-    // console.log('params', params)
+    console.log('params', params)
 
     try {
         let query_response = await sdk.ok(sdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
-
+        console.log('query_response', query_response)
         let resObj = {
             queryResults: query_response
         }
@@ -144,7 +144,7 @@ module.exports.runInlineQuery = async (req, res, next) => {
 }
 //og attempt
 module.exports.createQuery = async (req, res, next) => {
-    // console.log('indexController createQuery');
+    // console.log('lookerController createQuery');
     const { params } = req
     // console.log('params', params)
     try {
@@ -165,7 +165,7 @@ module.exports.createQuery = async (req, res, next) => {
 }
 
 module.exports.createQueryTask = async (req, res, next) => {
-    // console.log('indexController createQueryTask');
+    // console.log('lookerController createQueryTask');
     const { params } = req
     // console.log('params', params)
     try {
@@ -193,7 +193,7 @@ module.exports.createQueryTask = async (req, res, next) => {
 }
 
 module.exports.checkQueryTask = async (req, res, next) => {
-    // console.log('indexController checkQueryTask');
+    // console.log('lookerController checkQueryTask');
     const { params } = req;
     // console.log('params', params)
     try {
@@ -202,6 +202,28 @@ module.exports.checkQueryTask = async (req, res, next) => {
             queryResults: async_query_results
         }
         res.status(200).send(resObj)
+
+    } catch (err) {
+        console.log('catch')
+        console.log('err', err)
+        let errorObj = {
+            errorMessage: 'Not working!'
+        }
+        res.status(404).send(errorObj)
+    }
+}
+
+module.exports.runUrlEncodedQuery = async (req, res, next) => {
+    console.log('lookerController runUrlEncodedQuery');
+    const { params } = req;
+    console.log('params', params)
+    try {
+        let run_url_encoded_query_results = await sdk.ok(sdk.run_url_encoded_query(
+            params.model_name,
+            params.view_name,
+            params.result_format,
+            params.query_params))
+        console.log('run_url_encoded_query_results', run_url_encoded_query_results)
 
     } catch (err) {
         console.log('catch')

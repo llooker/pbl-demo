@@ -29,5 +29,6 @@ router.get('/runinlinequery/:inline_query/:result_format', lookerCtrl.runInlineQ
 // router.get('/createquery/:query_body/:result_format', lookerCtrl.createQuery)
 router.get('/createquerytask/:query_body', lookerCtrl.createQueryTask)
 router.get('/checkquerytask/:task_id', lookerCtrl.checkQueryTask)
+router.get('/runurlencodedquery/:model_name/:view_name/:result_format/:query_params', lookerCtrl.runUrlEncodedQuery)
 
 module.exports = router

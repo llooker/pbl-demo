@@ -192,7 +192,8 @@ class Home extends Component {
             drawerTabValue: 0,
             activeTabValue: 0,
             sampleCode: {},
-            activeUsecase: ''
+            activeUsecase: '',
+            modalContent: {}
         }
     }
 
@@ -444,9 +445,37 @@ class Home extends Component {
         }, 1000)
     }
 
-    // splashPageAction = () => {
-    //     console.log('splashPageAction')
-    // }
+    splashPageAction = async (title, sharedUrl) => {
+        // console.log('splashPageAction');
+        // console.log('title', title);
+        // console.log('sharedUrl', sharedUrl);
+
+        let splitUrl = sharedUrl.split('?');
+        let queryParams = getUrlVars(splitUrl[1]);
+        let modelName = splitUrl[0].split('/')[2];
+        let viewName = splitUrl[0].split('/')[3];
+
+        queryParams.fields = queryParams.fields.split(",");
+        queryParams.model = modelName;
+        queryParams.view = viewName;
+
+        let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(queryParams) + '/json', {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        let lookerResponseData = await lookerResponse.json();
+        console.log('lookerResponseData', lookerResponseData);
+        let modalObj = {
+            "body": lookerResponseData,
+            "title": title
+        }
+        this.setState({ modalContent: modalObj }, () => {
+            console.log('callback this.state.modalContent', this.state.modalContent)
+        })
+    }
 
     customFilterAction = (newFilterValue, stateName, filterName) => {
         // console.log('customFilterAction')
@@ -706,3 +735,15 @@ class Home extends Component {
 }
 export default withStyles(styles)(Home);
 
+function getUrlVars(url) {
+    var hash;
+    var myJson = {};
+    var hashes = url.slice(url.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        myJson[hash[0]] = hash[1];
+        // If you want to get in native datatypes
+        // myJson[hash[0]] = JSON.parse(hash[1]); 
+    }
+    return myJson;
+}

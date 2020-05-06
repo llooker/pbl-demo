@@ -26,8 +26,7 @@
                         "resultFormat": "json_detail",
                         "cardLabel": "Number of Active Campaigns",
                         "modalLabel": "Active Campaigns Detail",
-                        "desiredMethod": "length",
-                        "desiredProperty": "campaigns.campaign_name"
+                        "desiredMethod": "length"
                     },
                     {
                         "type": "api",
@@ -41,7 +40,7 @@
             },
             {
                 "type": "simple dashboard",
-                "label": "Sales",
+                "label": "Simple Dashboard",
                 "description": "Keep a pulse on your business directly from your marketing application",
                 "icon": "fa-tachometer-alt",
                 "lookerContent": [

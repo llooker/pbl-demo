@@ -77,13 +77,15 @@ function getModalStyle() {
         transform: `translateX(-${left}%)`,
     };
 }
-
+//https://demo.looker.com/explore/thelook_adwords/sessions?qid=GsGOKU9FHlQ3cHoqaw57l5
+//option 1 create iframe using url from links response in api call
+//option 2 taking fields from URL
 export default function SplashPage(props) {
-    // console.log('SplashPage')
-    // console.log('props', props)
+    console.log('SplashPage')
+    console.log('props', props)
 
     const classes = useStyles();
-    const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange, activeUsecase } = props;
+    const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange, activeUsecase, action } = props;
     const [open, setOpen] = useState(false);
     const [modalContent, setModalContent] = useState({});
 
@@ -117,7 +119,8 @@ export default function SplashPage(props) {
                     <Grid item xs={12} sm={4} key={`atAGlance${index}`}>
                         {apiContent[index] ?
                             <Card className={`${classes.card} text-center`}
-                                onClick={() => handleOpen(lookerContent[index].modalLabel, apiContent[index].queryResults.data)}
+                                // onClick={() => handleOpen(lookerContent[index].modalLabel, apiContent[index].queryResults.data)}
+                                onClick={() => action(lookerContent[index].modalLabel, apiContent[index].queryResults.data[0][lookerContent[index].desiredProperty].links[0].url)}
                             >
                                 <CardContent>
                                     <Typography variant="h5" component="h2">
@@ -126,10 +129,10 @@ export default function SplashPage(props) {
                                     <br />
                                     <Typography variant="h6" component="h6">
                                         {
-                                            lookerContent[index].desiredProperty
+                                            lookerContent[index].desiredMethod
                                                 ?
-                                                (apiContent[index].queryResults.data[0][lookerContent[index].desiredProperty].rendered).toLocaleString() //value
-                                                : (apiContent[index].queryResults.data[lookerContent[index].desiredMethod]).toLocaleString()
+                                                (apiContent[index].queryResults.data[lookerContent[index].desiredMethod]).toLocaleString() //value
+                                                : (apiContent[index].queryResults.data[0][lookerContent[index].desiredProperty].rendered).toLocaleString()
                                         }
                                     </Typography>
                                 </CardContent>
