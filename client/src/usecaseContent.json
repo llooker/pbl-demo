@@ -41,8 +41,8 @@
             {
                 "type": "simple dashboard",
                 "label": "Simple Dashboard",
-                "description": "See how easily you can embed a looker dashboard",
-                "icon": "fa-tachometer",
+                "description": "Keep a pulse on your business directly from your marketing application",
+                "icon": "fa-tachometer-alt",
                 "lookerContent": [
                     {
                         "type": "dashboard",
@@ -54,7 +54,7 @@
             {
                 "type": "custom filter",
                 "label": "Custom Filter",
-                "description": "See how you can easily add custom dropdowns that interact with a Looker dashboard",
+                "description": "Filter by brands to better understand ad performance",
                 "icon": "fa-filter",
                 "lookerContent": [
                     {
@@ -79,7 +79,7 @@
             {
                 "type": "dashboard overview detail",
                 "label": "Dashboard Overview Detail",
-                "description": "See how you can easily add modify link actions to have embedded dashboards interact with one another",
+                "description": "Get an overview of all campaigns and drill down for campaign specific data",
                 "icon": "fa-link",
                 "lookerContent": [
                     {
@@ -97,7 +97,7 @@
             {
                 "type": "report builder",
                 "label": "Saved Reports",
-                "description": "See how you can easily embed reports and give users the power to create new ones",
+                "description": "Give users the ability to explore existing reports as well as create new ones all from within your application",
                 "icon": "fa-hammer",
                 "lookerContent": [
                     {
@@ -115,7 +115,7 @@
             {
                 "type": "query builder",
                 "label": "Query Builder",
-                "description": "Build a query",
+                "description": "Enable business users to self serve of data and answer their own questions",
                 "icon": "fa-search",
                 "lookerContent": [
                     {

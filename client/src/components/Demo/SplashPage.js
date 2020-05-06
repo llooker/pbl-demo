@@ -68,13 +68,13 @@ function rand() {
 }
 
 function getModalStyle() {
-    const top = 50; //+ rand();
+    const top = 64; //+ rand();
     const left = 50; // + rand();
 
     return {
-        top: `${top}%`,
+        top: top,
         left: `${left}%`,
-        transform: `translate(-${top}%, -${left}%)`,
+        transform: `translateX(-${left}%)`,
     };
 }
 
@@ -116,7 +116,7 @@ export default function SplashPage(props) {
                 {lookerContent.map((item, index) => (
                     <Grid item xs={12} sm={4} key={`atAGlance${index}`}>
                         {apiContent[index] ?
-                            <Card className={classes.card}
+                            <Card className={`${classes.card} text-center`}
                                 onClick={() => handleOpen(lookerContent[index].modalLabel, apiContent[index].queryResults.data)}
                             >
                                 <CardContent>
@@ -124,7 +124,7 @@ export default function SplashPage(props) {
                                         {lookerContent[index].cardLabel}
                                     </Typography>
                                     <br />
-                                    <Typography className={classes.body} variant="body2" component="p">
+                                    <Typography variant="h6" component="h6">
                                         {
                                             lookerContent[index].desiredProperty
                                                 ?
@@ -151,7 +151,6 @@ export default function SplashPage(props) {
 
             </Grid >
 
-
             <Divider className={classes.divider} />
 
             <Typography variant="h5" component="h2" className={classes.gridTitle}>
@@ -163,7 +162,7 @@ export default function SplashPage(props) {
                 {UsecaseContent[activeUsecase].demoComponents.map((item, index) => (
                     index > 0 ?
                         <Grid item xs={12} sm={4} className="pointer" key={`demoComponentLink${index}`} onClick={(e) => handleDrawerTabChange(e, index)}>
-                            <Card className={classes.card}>
+                            <Card className={`${classes.card} text-center`}>
                                 <CardContent>
                                     <Typography variant="h5" component="h2">
                                         {item.label}

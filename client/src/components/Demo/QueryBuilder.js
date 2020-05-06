@@ -40,9 +40,6 @@ import '../Home.css'
 import CodeSideBar from '../Demo/CodeSideBar';
 const { makeid, validIdHelper, prettifyString } = require('../../tools');
 
-console.log('makeid', makeid)
-console.log('validIdHelper', validIdHelper)
-console.log('prettifyString', prettifyString)
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -124,7 +121,8 @@ function FilterBar(props) {
     const [fieldsChipData, setFieldsChipData] = useState(lookerContent[0].queryBody.fields.map((item, index) => {
         return {
             key: 'fieldChipData' + index,
-            label: item, //prettifyString(item.substring(item.lastIndexOf('.') + 1, item.length)), 
+            label: prettifyString(item.substring(item.lastIndexOf('.') + 1, item.length)),
+            datalabel: item,
             selected: true,
             fieldType: lookerContent[0].fieldType[item]
         }
@@ -160,7 +158,7 @@ function FilterBar(props) {
 
     const handleQuerySubmit = (event) => {
         if (queryModified) {
-            let newFields = fieldsChipData.filter(chip => chip.selected).map(item => item.label)
+            let newFields = fieldsChipData.filter(chip => chip.selected).map(item => item.datalabel);
             let currentFilters = {}; //needs to be object
             filtersData.map((item, index) => {
                 currentFilters[item.label] = item.value
@@ -197,9 +195,11 @@ function FilterBar(props) {
                                         item.fieldType === 'measure' ?
                                             <Chip
                                                 key={item.label}
+                                                // key={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
                                                 measurecounter={measureCounter += 1}
                                                 className={item.selected ? `${classes.tealPrimary}` : ``}
-                                                label={item.label}
+                                                label={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
+                                                datalabel={item.label}
                                                 onClick={() => handleFieldChipClick(item, index)}
                                                 icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
                                             /> : ''
@@ -219,7 +219,8 @@ function FilterBar(props) {
                                                 key={item.label}
                                                 dimensioncounter={dimensionCounter += 1}
                                                 className={item.selected ? `${classes.indigoPrimary}` : ``}
-                                                label={item.label}
+                                                label={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
+                                                datalabel={item.label}
                                                 onClick={() => handleFieldChipClick(item, index)}
                                                 icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
                                             /> : ''

@@ -272,8 +272,10 @@ class Home extends Component {
             for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
                 // console.log('usecaseContent[j].lookerContent[i].type', usecaseContent[j].lookerContent[i].type)
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
+                    let dashboardId = usecaseContent[j].lookerContent[i].id
+                    // console.log('inside dashboard ifff dashboardId', dashboardId);
                     LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
-                        .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
+                        .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${dashboardId}`))
                         .withClassName('iframe')
                         .withNext()
                         .withTheme('Looker')
@@ -284,10 +286,13 @@ class Home extends Component {
                         .build()
                         .connect()
                         .then((dashboard) => {
-                            // objForState[usecaseContent[j].lookerContent[i].id] = dashboard; //not working
-                            this.setState({
-                                [usecaseContent[j].lookerContent[i].id]: dashboard
-                            })
+                            // console.log('callback dashboardId', dashboardId)
+                            // if (dashboardId) objForState[dashboardId] = dashboard; //not working
+                            if (dashboardId) {
+                                this.setState({
+                                    [dashboardId]: dashboard
+                                })
+                            }
                         })
                         .catch((error) => {
                             console.error('Connection error', error)
@@ -482,8 +487,8 @@ class Home extends Component {
 
     // drillClick(event) {
     dashboardOverviewDetailAction(event) {
-        // console.log('drillClick')
-        // console.log('dashboardOverviewDetailAction')
+        console.log('drillClick')
+        console.log('dashboardOverviewDetailAction')
         // console.log('event', event)
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
@@ -501,9 +506,9 @@ class Home extends Component {
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
             //urls changed to relative, need slugs to work across instances?
 
-            // console.log('stateName', stateName)
-            // console.log('filterName', filterName)
-            // console.log('filterValue', filterValue)
+            console.log('stateName', stateName)
+            console.log('filterName', filterName)
+            console.log('filterValue', filterValue)
 
 
             this.setState({}, () => {
@@ -518,7 +523,7 @@ class Home extends Component {
     }
 
     queryBuilderAction = async (newQuery, resultFormat) => {
-        // console.log('queryBuilderAction')
+        // console.log('queryBuilderAction');
         // console.log('newQuery', newQuery);
         // console.log('resultFormat', resultFormat);
 
