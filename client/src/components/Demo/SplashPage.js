@@ -9,13 +9,14 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import Modal from '@material-ui/core/Modal';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+// import Modal from '@material-ui/core/Modal';
+// import Table from '@material-ui/core/Table';
+// import TableBody from '@material-ui/core/TableBody';
+// import TableCell from '@material-ui/core/TableCell';
+// import TableContainer from '@material-ui/core/TableContainer';
+// import TableHead from '@material-ui/core/TableHead';
+// import TableRow from '@material-ui/core/TableRow';
+import ModalTable from '../Material/ModalTable';
 import Icon from '@material-ui/core/Icon';
 import UsecaseContent from '../../usecaseContent.json'; // still necessary to map over demo components
 import '../Home.css'
@@ -77,9 +78,11 @@ function getModalStyle() {
         transform: `translateX(-${left}%)`,
     };
 }
+
 //https://demo.looker.com/explore/thelook_adwords/sessions?qid=GsGOKU9FHlQ3cHoqaw57l5
 //option 1 create iframe using url from links response in api call
 //option 2 taking fields from URL
+
 export default function SplashPage(props) {
     console.log('SplashPage')
     console.log('props', props)
@@ -89,7 +92,9 @@ export default function SplashPage(props) {
     const [open, setOpen] = useState(false);
     const [modalContent, setModalContent] = useState({});
 
-    const handleOpen = (title, data) => {
+    // console.log('apiContent', apiContent)
+
+    const handleModalOpen = (title, data) => {
         let updatedModalContent = { ...modalContent }
         updatedModalContent.title = title;
         updatedModalContent.body = data;
@@ -97,14 +102,17 @@ export default function SplashPage(props) {
         setModalContent(updatedModalContent)
     };
 
-    const handleClose = () => {
+    const handleModalClose = () => {
         setOpen(false);
     };
 
     useEffect(() => {
         // console.log('useEffect')
-        // console.log('modalContent', modalContent)
+        // console.log('modalContent', modalContent);
+        // console.log('open', open)
     }, [modalContent]);
+
+
 
     return (
         <div className={classes.root}>
@@ -119,8 +127,17 @@ export default function SplashPage(props) {
                     <Grid item xs={12} sm={4} key={`atAGlance${index}`}>
                         {apiContent[index] ?
                             <Card className={`${classes.card} text-center`}
-                                // onClick={() => handleOpen(lookerContent[index].modalLabel, apiContent[index].queryResults.data)}
-                                onClick={() => action(lookerContent[index].modalLabel, apiContent[index].queryResults.data[0][lookerContent[index].desiredProperty].links[0].url)}
+
+                                onClick={() => handleModalOpen(lookerContent[index].modalLabel, apiContent[index].detail.length ? apiContent[index].detail : apiContent[index].atAGlance.queryResults.data)}
+                            // onClick={() => handleModalOpen(lookerContent[index].modalLabel, apiContent[index].queryResults.data)}
+                            // onClick={() =>
+                            //     lookerContent[index].desiredMethod ?
+                            //         action(lookerContent[index].modalLabel,
+                            //             null,
+                            //             apiContent[index].atAGlance.queryResults.data)
+                            //         :
+                            //         action(lookerContent[index].modalLabel,
+                            //             apiContent[index].atAGlance.queryResults.data[0][lookerContent[index].desiredProperty].links[0].url)}
                             >
                                 <CardContent>
                                     <Typography variant="h5" component="h2">
@@ -131,8 +148,8 @@ export default function SplashPage(props) {
                                         {
                                             lookerContent[index].desiredMethod
                                                 ?
-                                                (apiContent[index].queryResults.data[lookerContent[index].desiredMethod]).toLocaleString() //value
-                                                : (apiContent[index].queryResults.data[0][lookerContent[index].desiredProperty].rendered).toLocaleString()
+                                                (apiContent[index].atAGlance.queryResults.data[lookerContent[index].desiredMethod]).toLocaleString() //value
+                                                : (apiContent[index].atAGlance.queryResults.data[0][lookerContent[index].desiredProperty].rendered).toLocaleString()
                                         }
                                     </Typography>
                                 </CardContent>
@@ -147,7 +164,7 @@ export default function SplashPage(props) {
                 {open ? <ModalTable
                     {...props}
                     open={open}
-                    onClose={handleClose}
+                    onClose={handleModalClose}
                     classes={classes}
                     modalContent={modalContent}
                 /> : ''}
@@ -185,7 +202,7 @@ export default function SplashPage(props) {
     )
 }
 
-function ModalTable(props) {
+/*function ModalTable(props) {
     // console.log('ModalTable')
     // console.log('props', props)
     const { open, onClose, modalContent, classes } = props;
@@ -223,7 +240,18 @@ function ModalTable(props) {
                                         Object.keys(item).map(key => (
                                             <TableCell align="right"
                                                 key={validIdHelper(key + '-TableBody-TableCell-' + index)}
-                                                id={validIdHelper(key + '-TableBody-TableCell-' + index)}>{modalContent.body[index][key].rendered ? modalContent.body[index][key].rendered : modalContent.body[index][key].value}</TableCell>
+                                                id={validIdHelper(key + '-TableBody-TableCell-' + index)}>
+
+                                                {
+                                                    modalContent.body[index][key] ?
+                                                        modalContent.body[index][key].value ?
+                                                            modalContent.body[index][key].value :
+                                                            modalContent.body[index][key].rendered ?
+                                                                modalContent.body[index][key].rendered :
+                                                                modalContent.body[index][key] :
+                                                        ''
+                                                }
+                                            </TableCell>
                                         ))
                                     }
 
@@ -235,4 +263,4 @@ function ModalTable(props) {
             </div>
         </Modal >
     )
-}
+}*/

@@ -22,13 +22,11 @@ router.post('/applyactivecustomziation', customizeCtrl.applyActiveCustomizationT
 router.get('/auth', lookerCtrl.auth)
 router.get('/validatelookercontent/:content_id/:content_type', lookerCtrl.validateLookerContent)
 router.get('/fetchfolder/:folder_id', lookerCtrl.fetchFolder)
-router.get('/fetchdashboard/:dashboard_id', lookerCtrl.fetchDashboard)
 router.post('/updatelookeruser', lookerCtrl.updateLookerUser)
 router.get('/runquery/:query_id/:result_format', lookerCtrl.runQuery)
 router.get('/runinlinequery/:inline_query/:result_format', lookerCtrl.runInlineQuery)
 // router.get('/createquery/:query_body/:result_format', lookerCtrl.createQuery)
 router.get('/createquerytask/:query_body', lookerCtrl.createQueryTask)
 router.get('/checkquerytask/:task_id', lookerCtrl.checkQueryTask)
-router.get('/runurlencodedquery/:model_name/:view_name/:result_format/:query_params', lookerCtrl.runUrlEncodedQuery)
 
 module.exports = router

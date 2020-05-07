@@ -8,9 +8,6 @@ const sdk = new Looker40SDK(session)
 const sdk31 = new Looker31SDK(session)
 
 module.exports.auth = (req, res, next) => {
-    // console.log('lookerController authh');
-    // console.log('user', user)
-    // console.log('req.session.lookerUser', req.session.lookerUser);
     // Authenticate the request is from a valid user here
     const src = req.query.src;
     const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
@@ -20,41 +17,29 @@ module.exports.auth = (req, res, next) => {
 
 module.exports.validateLookerContent = async (req, res, next) => {
     // console.log('lookerController validateLookerContent');
-
-    const contentId = req.params.content_id;
-    const contentType = req.params.content_type;
+    const { params } = req;
 
     let returnVal;
-
     try {
-        returnVal = await sdk.ok(sdk[contentType](contentId))
-        res.status(200).send(returnVal)
+        returnVal = await sdk.ok(sdk[params.content_type](params.content_id));
+        res.status(200).send(returnVal);
     } catch (err) {
-        // returnVal = err
         let errorObj = {
             errorMessage: 'Invalid id!'
         }
-        res.status(404).send(errorObj)
+        res.status(404).send(errorObj);
     }
 }
 
 module.exports.fetchFolder = async (req, res, next) => {
     // console.log('lookerController fetchFolder');
+    const { params } = req;
 
-    const { params } = req
-
-    const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id))
+    const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
     const embedUser = await sdk.ok(sdk.user(userCred.id));
+    const sharedFolder = await sdk.ok(sdk.folder(params.folder_id));
+    const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id));
 
-    // const folderListAsString = `${params.folder_id},${embedUser.personal_folder_id}`;
-    // console.log('folderListAsString', folderListAsString)
-    // const looks = await sdk.ok(sdk.search_looks({ space_id: folderListAsString }))
-    // console.log('looks', looks)
-    // let resObj = { looks }
-
-
-    const sharedFolder = await sdk.ok(sdk.folder(params.folder_id))
-    const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id))
     let resObj = {
         sharedFolder,
         embeddedUserFolder
@@ -63,128 +48,99 @@ module.exports.fetchFolder = async (req, res, next) => {
     res.send(resObj)
 }
 
-module.exports.fetchDashboard = async (req, res, next) => {
-    // console.log('lookerController fetchDashboard');
-
-    const { params } = req
-    console.log('params', params)
-    const dashboard = await sdk.ok(sdk.dashboard(params.dashboard_id));
-    sdk.da
-
-    let resObj = {
-        dashboard
-    }
-
-    res.send(resObj)
-}
-
-
 module.exports.updateLookerUser = (req, res, next) => {
     // console.log('updateLookerUser')
     // console.log('req.body', req.body)
-    const lookerUser = req.body
-    // console.log('lookerUser', lookerUser)
-    let { session } = req
-    // console.log('session', session)
+    const lookerUser = req.body;
+    let { session } = req;
     session.lookerUser = lookerUser;
-    // console.log('111 session', session)
     res.status(200).send({ session });
 }
 
-
+//at a glance cards
 module.exports.runQuery = async (req, res, next) => {
     // console.log('lookerController runQuery');
-
-    const { params } = req
-    // console.log('params', params)
-
+    const { params } = req;
 
     try {
-        // console.log(sdk.run_query.toString())
-        let query = await sdk.ok(sdk.run_query({ query_id: params.query_id, result_format: params.result_format }))
-        // console.log('000 query', query)
-        // query.id = params.query_id
-        // console.log('111 query', query)
+        let query = await sdk.ok(sdk.run_query({ query_id: params.query_id, result_format: params.result_format }));
         let resObj = {
             queryId: params.query_id,
             queryResults: query
         }
-        res.status(200).send(resObj)
+        res.status(200).send(resObj);
     } catch (err) {
-        console.log('catch')
-        console.log('err', err)
+        // console.log('catch')
+        // console.log('err', err)
         let errorObj = {
             errorMessage: 'Not working!'
         }
         res.status(404).send(errorObj)
     }
 }
-
+//shared url?
 module.exports.runInlineQuery = async (req, res, next) => {
-    console.log('lookerController runInlineQuery');
-
-    const { params } = req
-    console.log('params', params)
+    // console.log('lookerController runInlineQuery');
+    const { params } = req;
 
     try {
         let query_response = await sdk.ok(sdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
-        console.log('query_response', query_response)
         let resObj = {
             queryResults: query_response
-        }
-        res.status(200).send(resObj)
+        };
+        res.status(200).send(resObj);
     } catch (err) {
-        console.log('catch')
-        console.log('err', err)
+        // console.log('catch')
+        // console.log('err', err)
         let errorObj = {
             errorMessage: 'Not working!'
         }
-        res.status(404).send(errorObj)
+        res.status(404).send(errorObj);
     }
 }
 //og attempt
 module.exports.createQuery = async (req, res, next) => {
     // console.log('lookerController createQuery');
-    const { params } = req
-    // console.log('params', params)
+    const { params } = req;
     try {
         let create_query_response = await sdk.ok(sdk.create_query(params.query_body, ''));
-        let query_response = await sdk.ok(sdk.run_query({ query_id: create_query_response.id, result_format: params.result_format }))
+        let query_response = await sdk.ok(sdk.run_query({
+            query_id: create_query_response.id,
+            result_format: params.result_format
+        }));
         let resObj = {
             queryResults: query_response
-        }
-        res.status(200).send(resObj)
+        };
+        res.status(200).send(resObj);
     } catch (err) {
-        console.log('catch')
-        console.log('err', err)
+        // console.log('catch')
+        // console.log('err', err)
         let errorObj = {
             errorMessage: 'Not working!'
         }
-        res.status(404).send(errorObj)
+        res.status(404).send(errorObj);
     }
 }
 
 module.exports.createQueryTask = async (req, res, next) => {
     // console.log('lookerController createQueryTask');
-    const { params } = req
-    // console.log('params', params)
+    const { params } = req;
+
     try {
         let create_query_response = await sdk.ok(sdk.create_query(params.query_body, ''));
-        let query_task = await sdk.ok(sdk.create_query_task(
-            {
-                body: {
-                    query_id: create_query_response.id,
-                    result_format: params.result_format,
-                }
+        let query_task = await sdk.ok(sdk.create_query_task({
+            body: {
+                query_id: create_query_response.id,
+                result_format: params.result_format,
             }
-        ))
+        }));
         let resObj = {
             queryTaskId: query_task.id
-        }
-        res.status(200).send(resObj)
+        };
+        res.status(200).send(resObj);
     } catch (err) {
-        console.log('catch')
-        console.log('err', err)
+        // console.log('catch')
+        // console.log('err', err)
         let errorObj = {
             errorMessage: 'Not working!'
         }
@@ -195,42 +151,20 @@ module.exports.createQueryTask = async (req, res, next) => {
 module.exports.checkQueryTask = async (req, res, next) => {
     // console.log('lookerController checkQueryTask');
     const { params } = req;
-    // console.log('params', params)
+
     try {
         let async_query_results = await sdk.ok(sdk.query_task_results(params.task_id));
         let resObj = {
             queryResults: async_query_results
-        }
-        res.status(200).send(resObj)
+        };
+        res.status(200).send(resObj);
 
     } catch (err) {
-        console.log('catch')
-        console.log('err', err)
+        // console.log('catch')
+        // console.log('err', err)
         let errorObj = {
             errorMessage: 'Not working!'
         }
-        res.status(404).send(errorObj)
-    }
-}
-
-module.exports.runUrlEncodedQuery = async (req, res, next) => {
-    console.log('lookerController runUrlEncodedQuery');
-    const { params } = req;
-    console.log('params', params)
-    try {
-        let run_url_encoded_query_results = await sdk.ok(sdk.run_url_encoded_query(
-            params.model_name,
-            params.view_name,
-            params.result_format,
-            params.query_params))
-        console.log('run_url_encoded_query_results', run_url_encoded_query_results)
-
-    } catch (err) {
-        console.log('catch')
-        console.log('err', err)
-        let errorObj = {
-            errorMessage: 'Not working!'
-        }
-        res.status(404).send(errorObj)
+        res.status(404).send(errorObj);
     }
 }

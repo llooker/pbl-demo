@@ -177,13 +177,13 @@ function FilterBar(props) {
 
     return (
         <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel}>
-            <ExpansionPanelSummary
+            {/* <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
                 <Typography className={classes.heading}>Build Query</Typography>
-            </ExpansionPanelSummary>
+            </ExpansionPanelSummary> */}
             <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                     <Grid item sm={12}>

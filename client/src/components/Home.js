@@ -30,9 +30,10 @@ import ReportBuilder from './Demo/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
 import Dashboard from './Demo/Dashboard';
+import ModalTable from './Material/ModalTable';
 
 const drawerWidth = 240;
-const { validIdHelper } = require('../tools');
+const { validIdHelper, getUrlVars } = require('../tools');
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -193,7 +194,8 @@ class Home extends Component {
             activeTabValue: 0,
             sampleCode: {},
             activeUsecase: '',
-            modalContent: {}
+            // modalContent: {},
+            // renderModal: false
         }
     }
 
@@ -240,6 +242,9 @@ class Home extends Component {
             drawerOpen: open
         })
     }
+
+
+
 
     componentDidMount(props) {
         // console.log('Home componentDidMount');
@@ -398,7 +403,7 @@ class Home extends Component {
                     objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
 
                 } else if (usecaseContent[j].lookerContent[i].type === "api") {
-                    // console.log('inside ellse if api')
+                    console.log('inside ellse if api')
                     let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
                         method: 'GET',
                         headers: {
@@ -407,21 +412,25 @@ class Home extends Component {
                         }
                     })
                     let lookerResponseData = await lookerResposnse.json();
-                    // console.log('lookerResponseData', lookerResponseData)
+                    console.log('lookerResponseData', lookerResponseData)
 
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
-                    // console.log('stateKey', stateKey)
+                    console.log('stateKey', stateKey)
                     // this gives better performance...
-                    // this.setState((prevState) => ({
-                    //     [stateKey]: prevState[stateKey] ? [...prevState[stateKey], lookerResponseData] : [lookerResponseData]
-                    // }))
+                    this.setState((prevState) => ({
+                        [stateKey]: prevState[stateKey] ? [...prevState[stateKey], { 'atAGlance': lookerResponseData }] : [{ 'atAGlance': lookerResponseData }]
+                    }), () => {
+                        this.splashPageDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
+                    })
 
                     //use state for this for now for better loading experience
-                    if (objForState.hasOwnProperty(stateKey)) {
-                        objForState[stateKey].push(lookerResponseData)
-                    } else {
-                        objForState[stateKey] = [lookerResponseData]
-                    }
+                    // if (objForState.hasOwnProperty(stateKey)) {
+                    //     objForState[stateKey].push({ 'atAGlance': lookerResponseData })
+                    // } else {
+                    //     objForState[stateKey] = [{ 'atAGlance': lookerResponseData }]
+                    // }
+
+
 
                 } else if (usecaseContent[j].lookerContent[i].type === "explorelite") {
                     // console.log('inside elllse if for explore-lite')
@@ -445,37 +454,109 @@ class Home extends Component {
         }, 1000)
     }
 
-    splashPageAction = async (title, sharedUrl) => {
-        // console.log('splashPageAction');
-        // console.log('title', title);
-        // console.log('sharedUrl', sharedUrl);
+    splashPageDetail = async (sharedUrl, index) => {
+        // console.log('splashPageDetail')
+        // console.log('sharedUrl', sharedUrl)
+        // console.log('index', index)
+
 
         let splitUrl = sharedUrl.split('?');
         let queryParams = getUrlVars(splitUrl[1]);
         let modelName = splitUrl[0].split('/')[2];
         let viewName = splitUrl[0].split('/')[3];
 
-        queryParams.fields = queryParams.fields.split(",");
-        queryParams.model = modelName;
-        queryParams.view = viewName;
+        // console.log('splitUrl', splitUrl)
+        // console.log('queryParams', queryParams)
+        // console.log('modelName', modelName)
+        // console.log('viewName', viewName)
+        // console.log('this.state.splashPageApiContent', this.state.splashPageApiContent)
 
-        let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(queryParams) + '/json', {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        let lookerResponseData = await lookerResponse.json();
-        console.log('lookerResponseData', lookerResponseData);
-        let modalObj = {
-            "body": lookerResponseData,
-            "title": title
+        let splashPageApiContentCopy;
+        if (viewName) {
+
+
+            queryParams.fields = queryParams.fields.split(",");
+            queryParams.model = modelName;
+            queryParams.view = viewName;
+
+            let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(queryParams) + '/json', {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            let lookerResponseData = await lookerResponse.json();
+            // console.log('lookerResponseData', lookerResponseData);
+            // modalObj.body = lookerResponseData.queryResults
+            splashPageApiContentCopy = [...this.state.splashPageApiContent]
+            splashPageApiContentCopy[index].detail = lookerResponseData.queryResults;
+
+        } else {
+            splashPageApiContentCopy = [...this.state.splashPageApiContent]
+            splashPageApiContentCopy[index].detail = [];
         }
-        this.setState({ modalContent: modalObj }, () => {
-            console.log('callback this.state.modalContent', this.state.modalContent)
+        this.setState({
+            splashPageApiContent: splashPageApiContentCopy
         })
+
     }
+
+    // splashPageAction = (title, sharedUrl, tableData) => {
+    //     // console.log('splashPageAction');
+    //     // console.log('title', title);
+    //     // console.log('sharedUrl', sharedUrl);
+    //     // console.log('tableData', tableData);
+
+    //     let modalObj = {
+    //         "title": title
+    //     }
+
+    //     this.setState({
+    //         renderModal: true
+    //     }, async () => {
+    //         if (sharedUrl) {
+    //             console.log('inside ifff')
+    //             let splitUrl = sharedUrl.split('?');
+    //             let queryParams = getUrlVars(splitUrl[1]);
+    //             let modelName = splitUrl[0].split('/')[2];
+    //             let viewName = splitUrl[0].split('/')[3];
+
+    //             queryParams.fields = queryParams.fields.split(",");
+    //             queryParams.model = modelName;
+    //             queryParams.view = viewName;
+
+    //             let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(queryParams) + '/json', {
+    //                 method: 'GET',
+    //                 headers: {
+    //                     Accept: 'application/json',
+    //                     'Content-Type': 'application/json'
+    //                 }
+    //             })
+    //             let lookerResponseData = await lookerResponse.json();
+    //             console.log('lookerResponseData', lookerResponseData);
+    //             modalObj.body = lookerResponseData.queryResults
+
+    //         } else if (tableData) {
+    //             console.log('inside elllse');
+    //             modalObj.body = tableData
+    //         }
+
+
+    //         this.setState({
+    //             modalContent: modalObj
+    //         }, () => {
+    //             // console.log('callback this.state.modalContent', this.state.modalContent)
+    //         })
+    //     })
+    // }
+
+    // handleModalClose = () => {
+    //     this.setState({
+    //         modalContent: {},
+    //         renderModal: false
+    //     })
+    // };
 
     customFilterAction = (newFilterValue, stateName, filterName) => {
         // console.log('customFilterAction')
@@ -616,7 +697,7 @@ class Home extends Component {
             "insurance": insuranceTheme
         }
 
-        const { drawerTabValue, drawerOpen, activeTabValue, sampleCode, activeUsecase } = this.state;
+        const { drawerTabValue, drawerOpen, activeTabValue, sampleCode, activeUsecase } = this.state; //, renderModal, modalContent 
         const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
 
@@ -728,22 +809,18 @@ class Home extends Component {
                             }) : ''
                         }
                     </main >
+
+                    {/* {renderModal ? <ModalTable
+                        // {...props}
+                        open={renderModal}
+                        onClose={this.handleModalClose}
+                        classes={classes}
+                        modalContent={modalContent}
+                    /> : ''} */}
+
                 </ThemeProvider>
             </div >
         )
     }
 }
 export default withStyles(styles)(Home);
-
-function getUrlVars(url) {
-    var hash;
-    var myJson = {};
-    var hashes = url.slice(url.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        myJson[hash[0]] = hash[1];
-        // If you want to get in native datatypes
-        // myJson[hash[0]] = JSON.parse(hash[1]); 
-    }
-    return myJson;
-}

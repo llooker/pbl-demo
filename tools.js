@@ -23,5 +23,18 @@ module.exports = {
             frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
         }
         return frags.join(' ');
+    },
+
+    getUrlVars: (url) => {
+        var hash;
+        var myJson = {};
+        var hashes = url.slice(url.indexOf('?') + 1).split('&');
+        for (var i = 0; i < hashes.length; i++) {
+            hash = hashes[i].split('=');
+            myJson[hash[0]] = hash[1];
+            // If you want to get in native datatypes
+            // myJson[hash[0]] = JSON.parse(hash[1]); 
+        }
+        return myJson;
     }
 }
