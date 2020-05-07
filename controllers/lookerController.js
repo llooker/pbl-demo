@@ -82,6 +82,7 @@ module.exports.runQuery = async (req, res, next) => {
 module.exports.runInlineQuery = async (req, res, next) => {
     // console.log('lookerController runInlineQuery');
     const { params } = req;
+    // console.log('params', params);
 
     try {
         let query_response = await sdk.ok(sdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));

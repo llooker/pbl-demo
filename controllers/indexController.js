@@ -1,6 +1,6 @@
 'use strict'
 
-
+//const lookerHost = process.env.LOOKER_HOST;
 const lookerHostNameToUse = process.env.LOOKER_HOST.substr(0, process.env.LOOKER_HOST.indexOf('.')) //lookerHost.substr(0, lookerHost.indexOf('.'));
 const Customization = require('../models/Customization');
 const { makeid } = require('../tools');
@@ -10,7 +10,7 @@ const { makeid } = require('../tools');
 module.exports.readSession = async (req, res, next) => {
     // console.log('readSession')
     let { session } = req
-    session.lookerHost = lookerHostNameToUse
+    session.lookerHost = lookerHostNameToUse; //lookerHostNameToUse
     if (session.userProfile) session = await checkForCustomizations(session)
     res.status(200).send({ session })
 }
@@ -20,7 +20,7 @@ module.exports.writeSession = async (req, res, next) => {
     let { session } = req;
     session.userProfile = req.body.userProfile;
     session.lookerUser = req.body.lookerUser;
-    session.lookerHost = lookerHostNameToUse;
+    session.lookerHost = lookerHostNameToUse; //lookerHostNameToUse;
     /**/
     session.lookerUser.external_user_id = session.userProfile.googleId;
     session.lookerUser.first_name = session.userProfile.givenName;

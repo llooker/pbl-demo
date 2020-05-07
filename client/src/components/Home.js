@@ -21,7 +21,6 @@ import Avatar from '@material-ui/core/Avatar'
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { blue, green, orange, indigo, red } from '@material-ui/core/colors';
 
-
 import UserMenu from './Material/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
@@ -30,10 +29,9 @@ import ReportBuilder from './Demo/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
 import Dashboard from './Demo/Dashboard';
-import ModalTable from './Material/ModalTable';
 
 const drawerWidth = 240;
-const { validIdHelper, getUrlVars } = require('../tools');
+const { validIdHelper } = require('../tools');
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -194,8 +192,6 @@ class Home extends Component {
             activeTabValue: 0,
             sampleCode: {},
             activeUsecase: '',
-            // modalContent: {},
-            // renderModal: false
         }
     }
 
@@ -279,7 +275,7 @@ class Home extends Component {
                 // console.log('usecaseContent[j].lookerContent[i].type', usecaseContent[j].lookerContent[i].type)
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
                     let dashboardId = usecaseContent[j].lookerContent[i].id
-                    // console.log('inside dashboard ifff dashboardId', dashboardId);
+                    console.log('inside dashboard ifff dashboardId', dashboardId);
                     LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${dashboardId}`))
                         .withClassName('iframe')
@@ -292,7 +288,7 @@ class Home extends Component {
                         .build()
                         .connect()
                         .then((dashboard) => {
-                            // console.log('callback dashboardId', dashboardId)
+                            console.log('then callback dashboardId', dashboardId)
                             // if (dashboardId) objForState[dashboardId] = dashboard; //not working
                             if (dashboardId) {
                                 this.setState({
@@ -403,7 +399,6 @@ class Home extends Component {
                     objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
 
                 } else if (usecaseContent[j].lookerContent[i].type === "api") {
-                    console.log('inside ellse if api')
                     let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
                         method: 'GET',
                         headers: {
@@ -412,29 +407,25 @@ class Home extends Component {
                         }
                     })
                     let lookerResponseData = await lookerResposnse.json();
-                    console.log('lookerResponseData', lookerResponseData)
 
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
-                    console.log('stateKey', stateKey)
                     // this gives better performance...
                     this.setState((prevState) => ({
-                        [stateKey]: prevState[stateKey] ? [...prevState[stateKey], { 'atAGlance': lookerResponseData }] : [{ 'atAGlance': lookerResponseData }]
+                        [stateKey]: prevState[stateKey] ? [...prevState[stateKey], { 'glance': lookerResponseData }] : [{ 'glance': lookerResponseData }]
                     }), () => {
                         this.splashPageDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
                     })
 
-                    //use state for this for now for better loading experience
+                    // use state for this for now for better loading experience
                     // if (objForState.hasOwnProperty(stateKey)) {
-                    //     objForState[stateKey].push({ 'atAGlance': lookerResponseData })
+                    //     objForState[stateKey].push({ 'glance': lookerResponseData })
                     // } else {
-                    //     objForState[stateKey] = [{ 'atAGlance': lookerResponseData }]
+                    //     objForState[stateKey] = [{ 'glance': lookerResponseData }]
                     // }
-
-
 
                 } else if (usecaseContent[j].lookerContent[i].type === "explorelite") {
                     // console.log('inside elllse if for explore-lite')
-                    this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
+                    //this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
 
                 } else { console.log('catch all else') }
             }
@@ -458,28 +449,24 @@ class Home extends Component {
         // console.log('splashPageDetail')
         // console.log('sharedUrl', sharedUrl)
         // console.log('index', index)
-
-
-        let splitUrl = sharedUrl.split('?');
-        let queryParams = getUrlVars(splitUrl[1]);
-        let modelName = splitUrl[0].split('/')[2];
-        let viewName = splitUrl[0].split('/')[3];
-
-        // console.log('splitUrl', splitUrl)
-        // console.log('queryParams', queryParams)
-        // console.log('modelName', modelName)
-        // console.log('viewName', viewName)
-        // console.log('this.state.splashPageApiContent', this.state.splashPageApiContent)
-
+        let parsedUrl = new URL(`https://${this.props.lookerHost}.looker.com${sharedUrl}`);
         let splashPageApiContentCopy;
-        if (viewName) {
+        if (parsedUrl.pathname.split('/')[1] === "explore") {
+            let filters = parsedUrl.search.match(/(?<=&f\[).+?(?=\])/g);
+            let filtersObj = {}
+            filters.forEach(item => {
+                filtersObj[item] = parsedUrl.searchParams.get(`f[${item}]`)
+            })
+            let newQueryParams = {
+                model: parsedUrl.pathname.split('/')[2],
+                view: parsedUrl.pathname.split('/')[3],
+                fields: parsedUrl.searchParams.get("fields").split(","),
+                filters: filtersObj,
+                total: true,
+                limit: "25"
+            }
 
-
-            queryParams.fields = queryParams.fields.split(",");
-            queryParams.model = modelName;
-            queryParams.view = viewName;
-
-            let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(queryParams) + '/json', {
+            let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(newQueryParams) + '/json', {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
@@ -487,8 +474,6 @@ class Home extends Component {
                 }
             })
             let lookerResponseData = await lookerResponse.json();
-            // console.log('lookerResponseData', lookerResponseData);
-            // modalObj.body = lookerResponseData.queryResults
             splashPageApiContentCopy = [...this.state.splashPageApiContent]
             splashPageApiContentCopy[index].detail = lookerResponseData.queryResults;
 
@@ -501,62 +486,6 @@ class Home extends Component {
         })
 
     }
-
-    // splashPageAction = (title, sharedUrl, tableData) => {
-    //     // console.log('splashPageAction');
-    //     // console.log('title', title);
-    //     // console.log('sharedUrl', sharedUrl);
-    //     // console.log('tableData', tableData);
-
-    //     let modalObj = {
-    //         "title": title
-    //     }
-
-    //     this.setState({
-    //         renderModal: true
-    //     }, async () => {
-    //         if (sharedUrl) {
-    //             console.log('inside ifff')
-    //             let splitUrl = sharedUrl.split('?');
-    //             let queryParams = getUrlVars(splitUrl[1]);
-    //             let modelName = splitUrl[0].split('/')[2];
-    //             let viewName = splitUrl[0].split('/')[3];
-
-    //             queryParams.fields = queryParams.fields.split(",");
-    //             queryParams.model = modelName;
-    //             queryParams.view = viewName;
-
-    //             let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(queryParams) + '/json', {
-    //                 method: 'GET',
-    //                 headers: {
-    //                     Accept: 'application/json',
-    //                     'Content-Type': 'application/json'
-    //                 }
-    //             })
-    //             let lookerResponseData = await lookerResponse.json();
-    //             console.log('lookerResponseData', lookerResponseData);
-    //             modalObj.body = lookerResponseData.queryResults
-
-    //         } else if (tableData) {
-    //             console.log('inside elllse');
-    //             modalObj.body = tableData
-    //         }
-
-
-    //         this.setState({
-    //             modalContent: modalObj
-    //         }, () => {
-    //             // console.log('callback this.state.modalContent', this.state.modalContent)
-    //         })
-    //     })
-    // }
-
-    // handleModalClose = () => {
-    //     this.setState({
-    //         modalContent: {},
-    //         renderModal: false
-    //     })
-    // };
 
     customFilterAction = (newFilterValue, stateName, filterName) => {
         // console.log('customFilterAction')
@@ -697,7 +626,7 @@ class Home extends Component {
             "insurance": insuranceTheme
         }
 
-        const { drawerTabValue, drawerOpen, activeTabValue, sampleCode, activeUsecase } = this.state; //, renderModal, modalContent 
+        const { drawerTabValue, drawerOpen, activeTabValue, sampleCode, activeUsecase } = this.state;
         const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession } = this.props
 
@@ -809,15 +738,6 @@ class Home extends Component {
                             }) : ''
                         }
                     </main >
-
-                    {/* {renderModal ? <ModalTable
-                        // {...props}
-                        open={renderModal}
-                        onClose={this.handleModalClose}
-                        classes={classes}
-                        modalContent={modalContent}
-                    /> : ''} */}
-
                 </ThemeProvider>
             </div >
         )

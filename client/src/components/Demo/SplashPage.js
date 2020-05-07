@@ -84,8 +84,8 @@ function getModalStyle() {
 //option 2 taking fields from URL
 
 export default function SplashPage(props) {
-    console.log('SplashPage')
-    console.log('props', props)
+    // console.log('SplashPage')
+    // console.log('props', props)
 
     const classes = useStyles();
     const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange, activeUsecase, action } = props;
@@ -108,9 +108,7 @@ export default function SplashPage(props) {
 
     useEffect(() => {
         // console.log('useEffect')
-        // console.log('modalContent', modalContent);
-        // console.log('open', open)
-    }, [modalContent]);
+    }, [modalContent, apiContent]);
 
 
 
@@ -125,19 +123,15 @@ export default function SplashPage(props) {
                 spacing={3} >
                 {lookerContent.map((item, index) => (
                     <Grid item xs={12} sm={4} key={`atAGlance${index}`}>
-                        {apiContent[index] ?
+                        {apiContent[index] && apiContent[index].detail ?
                             <Card className={`${classes.card} text-center`}
-
-                                onClick={() => handleModalOpen(lookerContent[index].modalLabel, apiContent[index].detail.length ? apiContent[index].detail : apiContent[index].atAGlance.queryResults.data)}
-                            // onClick={() => handleModalOpen(lookerContent[index].modalLabel, apiContent[index].queryResults.data)}
-                            // onClick={() =>
-                            //     lookerContent[index].desiredMethod ?
-                            //         action(lookerContent[index].modalLabel,
-                            //             null,
-                            //             apiContent[index].atAGlance.queryResults.data)
-                            //         :
-                            //         action(lookerContent[index].modalLabel,
-                            //             apiContent[index].atAGlance.queryResults.data[0][lookerContent[index].desiredProperty].links[0].url)}
+                                onClick={() => {
+                                    setOpen(true);
+                                    handleModalOpen(lookerContent[index].modalLabel,
+                                        apiContent[index].detail.length ? apiContent[index].detail : apiContent[index].glance.queryResults.data
+                                    )
+                                }
+                                }
                             >
                                 <CardContent>
                                     <Typography variant="h5" component="h2">
@@ -148,8 +142,8 @@ export default function SplashPage(props) {
                                         {
                                             lookerContent[index].desiredMethod
                                                 ?
-                                                (apiContent[index].atAGlance.queryResults.data[lookerContent[index].desiredMethod]).toLocaleString() //value
-                                                : (apiContent[index].atAGlance.queryResults.data[0][lookerContent[index].desiredProperty].rendered).toLocaleString()
+                                                (apiContent[index].glance.queryResults.data[lookerContent[index].desiredMethod]).toLocaleString() //value
+                                                : (apiContent[index].glance.queryResults.data[0][lookerContent[index].desiredProperty].rendered).toLocaleString()
                                         }
                                     </Typography>
                                 </CardContent>
@@ -201,66 +195,3 @@ export default function SplashPage(props) {
         </div >
     )
 }
-
-/*function ModalTable(props) {
-    // console.log('ModalTable')
-    // console.log('props', props)
-    const { open, onClose, modalContent, classes } = props;
-    const [modalStyle] = React.useState(getModalStyle);
-
-    return (
-        <Modal
-            open={open}
-            onClose={onClose}
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
-        >
-
-            <div style={modalStyle} className={classes.paper}>
-                <h2 id="simple-modal-title">{modalContent.title}</h2>
-                <TableContainer component={Paper}>
-                    <Table stickyHeader className={classes.table} size="small" aria-label="a dense table">
-                        <TableHead>
-                            <TableRow>
-                                {Object.keys(modalContent.body[0]).map((key, index) => (
-                                    <TableCell align="right"
-                                        key={validIdHelper(key + '-TableHead-TableCell-' + index)}
-                                        id={validIdHelper(key + '-TableHead-TableCell-' + index)}>
-                                        {prettifyString(key.substring(key.lastIndexOf('.') + 1, key.length))}</TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {modalContent.body.map((item, index) => (
-
-                                <TableRow
-                                    key={validIdHelper('TableRow-' + index)}
-                                    id={validIdHelper('TableRow-' + index)} >
-                                    {
-                                        Object.keys(item).map(key => (
-                                            <TableCell align="right"
-                                                key={validIdHelper(key + '-TableBody-TableCell-' + index)}
-                                                id={validIdHelper(key + '-TableBody-TableCell-' + index)}>
-
-                                                {
-                                                    modalContent.body[index][key] ?
-                                                        modalContent.body[index][key].value ?
-                                                            modalContent.body[index][key].value :
-                                                            modalContent.body[index][key].rendered ?
-                                                                modalContent.body[index][key].rendered :
-                                                                modalContent.body[index][key] :
-                                                        ''
-                                                }
-                                            </TableCell>
-                                        ))
-                                    }
-
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </div>
-        </Modal >
-    )
-}*/

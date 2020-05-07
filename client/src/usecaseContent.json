@@ -14,20 +14,20 @@
                 "lookerContent": [
                     {
                         "type": "api",
-                        "id": "585321",
-                        "resultFormat": "json_detail",
-                        "cardLabel": "Total Spend Last Quarter",
-                        "modalLabel": "Total Spend By Quarter Detail",
-                        "desiredProperty": "adevents.total_cost"
-                    },
-                    {
-                        "type": "api",
                         "id": "607764",
                         "resultFormat": "json_detail",
                         "cardLabel": "Number of Active Campaigns",
                         "modalLabel": "Active Campaigns Detail",
                         "desiredMethod": "length",
                         "desiredProperty": "campaigns.campaign_name"
+                    },
+                    {
+                        "type": "api",
+                        "id": "585321",
+                        "resultFormat": "json_detail",
+                        "cardLabel": "Total Spend Last Quarter",
+                        "modalLabel": "Total Spend By Quarter Detail",
+                        "desiredProperty": "adevents.total_cost"
                     },
                     {
                         "type": "api",
