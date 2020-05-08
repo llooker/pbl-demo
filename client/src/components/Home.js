@@ -288,7 +288,7 @@ class Home extends Component {
                         .build()
                         .connect()
                         .then((dashboard) => {
-                            console.log('then callback dashboardId', dashboardId)
+                            // console.log('then callback dashboardId', dashboardId)
                             // if (dashboardId) objForState[dashboardId] = dashboard; //not working
                             if (dashboardId) {
                                 this.setState({
@@ -424,7 +424,7 @@ class Home extends Component {
                     // }
 
                 } else if (usecaseContent[j].lookerContent[i].type === "explorelite") {
-                    console.log('inside elllse if for explore-lite')
+                    // console.log('inside elllse if for explore-lite')
                     this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
 
                 } else { console.log('catch all else') }

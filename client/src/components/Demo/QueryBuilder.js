@@ -475,8 +475,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function QueryBuilder(props) {
-    console.log('QueryBuilder')
-    console.log('props', props)
+    // console.log('QueryBuilder')
+    // console.log('props', props)
 
     const classes = useStyles();
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, apiContent: { sql }, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
