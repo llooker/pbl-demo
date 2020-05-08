@@ -137,7 +137,7 @@
                             ],
                             "filters": {
                                 "campaigns.is_active_now": "Yes",
-                                "campaigns.created_date": "6 months"
+                                "campaigns.created_date": "1 year"
                             }
                         },
                         "resultFormat": "json",

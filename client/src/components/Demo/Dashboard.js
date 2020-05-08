@@ -11,7 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import ComboBox from '../Material/ComboBox';
 import Skeleton from '@material-ui/lab/Skeleton';
 import '../Home.css'
-import CodeSideBar from '../Demo/CodeSideBar';
+import CodeFlyout from './CodeFlyout';
 const { validIdHelper } = require('../../tools');
 
 function TabPanel(props) {
@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     },
     skeleton: {
         minWidth: 275,
-        minHeight: 400,
+        minHeight: 600,
     },
 }));
 
@@ -160,11 +160,11 @@ export default function Dashboard(props) {
                                                 <Typography variant="h5" component="h2" className={classes.gridTitle}>
                                                     Sample Code<br />
                                                 </Typography>
-                                                <CodeSideBar code={tabContentItem.sampleCode} />
+                                                <CodeFlyout code={tabContentItem.sampleCode} />
                                                 <Typography variant="h5" component="h2" className={classes.gridTitle}>
                                                     Looker User<br />
                                                 </Typography>
-                                                <CodeSideBar code={tabContentItem.lookerUser} />
+                                                <CodeFlyout code={tabContentItem.lookerUser} />
                                             </Grid>
                                             :
                                             <React.Fragment

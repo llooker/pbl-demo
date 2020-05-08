@@ -37,7 +37,7 @@ import teal from '@material-ui/core/colors/teal';
 // import HUE from '@material-ui/core/colors/HUE';
 
 import '../Home.css'
-import CodeSideBar from '../Demo/CodeSideBar';
+import CodeFlyout from './CodeFlyout';
 const { makeid, validIdHelper, prettifyString } = require('../../tools');
 
 
@@ -466,7 +466,7 @@ const useStyles = makeStyles((theme) => ({
     },
     skeleton: {
         minWidth: 275,
-        minHeight: 400,
+        minHeight: 600,
     },
     textCenter: {
         textAlign: 'center'
@@ -475,8 +475,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function QueryBuilder(props) {
-    // console.log('QueryBuilder')
-    // console.log('props', props)
+    console.log('QueryBuilder')
+    console.log('props', props)
 
     const classes = useStyles();
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, apiContent: { sql }, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
@@ -529,17 +529,17 @@ export default function QueryBuilder(props) {
                                                 <Typography variant="h6" component="h6" className={classes.gridTitle}>
                                                     Sample Code:<br />
                                                 </Typography>
-                                                <CodeSideBar code={tabContentItem.sampleCode} />
+                                                <CodeFlyout code={tabContentItem.sampleCode} />
                                                 <Typography variant="h6" component="h6" className={classes.gridTitle}>
                                                     Looker User:<br />
                                                 </Typography>
-                                                <CodeSideBar code={tabContentItem.lookerUser} />
+                                                <CodeFlyout code={tabContentItem.lookerUser} />
                                                 {tabContentItem.sql ?
                                                     <>
                                                         <Typography variant="h6" component="h6" className={classes.gridTitle}>
                                                             SQL:<br />
                                                         </Typography>
-                                                        <CodeSideBar code={tabContentItem.sql} />
+                                                        <CodeFlyout code={tabContentItem.sql} />
                                                     </> : ''}
                                             </Grid>
                                             :

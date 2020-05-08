@@ -4,7 +4,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 let { validIdHelper } = require('../../tools');
 
-function CodeSideBar(props) {
+function CodeFlyout(props) {
     // console.log('CodeSideBar');
     // console.log('props', props);
     const { code } = props
@@ -14,4 +14,4 @@ function CodeSideBar(props) {
         </SyntaxHighlighter>)
 }
 
-export default CodeSideBar
+export default CodeFlyout

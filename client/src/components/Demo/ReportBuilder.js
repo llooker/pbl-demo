@@ -7,15 +7,14 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import TreeView from '@material-ui/lab/TreeView';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Icon from '@material-ui/core/Icon';
-import CodeSideBar from '../Demo/CodeSideBar'
+import Skeleton from '@material-ui/lab/Skeleton';
+import CodeFlyout from './CodeFlyout'
 import '../Home.css'
 const { validIdHelper } = require('../../tools');
 
@@ -96,6 +95,10 @@ const useStyles = makeStyles((theme) => ({
     },
     mlAuto: {
         marginLeft: 'auto'
+    },
+    skeleton: {
+        minWidth: 275,
+        minHeight: 600,
     }
 }));
 
@@ -137,9 +140,7 @@ export default function ReportBuilder(props) {
                 <div className={classes.root}>
                     {iFrameExists ? '' :
                         <Grid item sm={12} >
-                            <Card className={`${classes.card} ${classes.flexCentered}`}>
-                                <CircularProgress className={classes.circularProgress} />
-                            </Card>
+                            <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
                         </Grid>
                     }
 
@@ -173,11 +174,11 @@ export default function ReportBuilder(props) {
                                                 <Typography variant="h5" component="h2" className={classes.gridTitle}>
                                                     Sample Code<br />
                                                 </Typography>
-                                                <CodeSideBar code={tabContentItem.sampleCode} />
+                                                <CodeFlyout code={tabContentItem.sampleCode} />
                                                 <Typography variant="h5" component="h2" className={classes.gridTitle}>
                                                     Looker User<br />
                                                 </Typography>
-                                                <CodeSideBar code={tabContentItem.lookerUser} />
+                                                <CodeFlyout code={tabContentItem.lookerUser} />
                                             </Grid>
                                             :
                                             index === 0

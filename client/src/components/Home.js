@@ -275,7 +275,7 @@ class Home extends Component {
                 // console.log('usecaseContent[j].lookerContent[i].type', usecaseContent[j].lookerContent[i].type)
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
                     let dashboardId = usecaseContent[j].lookerContent[i].id
-                    console.log('inside dashboard ifff dashboardId', dashboardId);
+                    // console.log('inside dashboard ifff dashboardId', dashboardId);
                     LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${dashboardId}`))
                         .withClassName('iframe')
@@ -424,8 +424,8 @@ class Home extends Component {
                     // }
 
                 } else if (usecaseContent[j].lookerContent[i].type === "explorelite") {
-                    // console.log('inside elllse if for explore-lite')
-                    //this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
+                    console.log('inside elllse if for explore-lite')
+                    this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
 
                 } else { console.log('catch all else') }
             }
@@ -528,7 +528,7 @@ class Home extends Component {
     dashboardOverviewDetailAction(event) {
         console.log('drillClick')
         console.log('dashboardOverviewDetailAction')
-        // console.log('event', event)
+        console.log('event', event)
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
             // const parsedUrl = new URL(event.url)
