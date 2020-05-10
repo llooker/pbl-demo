@@ -274,7 +274,7 @@ class Home extends Component {
             for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
                 // console.log('usecaseContent[j].lookerContent[i].type', usecaseContent[j].lookerContent[i].type)
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
-                    let dashboardId = usecaseContent[j].lookerContent[i].id
+                    let dashboardId = usecaseContent[j].lookerContent[i].id;
                     // console.log('inside dashboard ifff dashboardId', dashboardId);
                     LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${dashboardId}`))
@@ -322,6 +322,8 @@ class Home extends Component {
                     }
 
                 } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
+                    let exploreId = usecaseContent[j].lookerContent[i].id
+                    console.log('exploreId', exploreId)
                     LookerEmbedSDK.createExploreWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
@@ -329,9 +331,21 @@ class Home extends Component {
                             // console.log('explore:state:changed')
                             // console.log('event', event)
                         })
+                        // .withParams({
+                        //     qid: 'QBtnsUlBRDctxq5jSWmksJ',
+                        //     toggle: 'dat,pik,vis'
+                        // })
                         .build()
                         .connect()
-                        .then(this.setupExplore)
+                        .then((explore) => {
+                            console.log('explore then callback')
+                            if (exploreId) {
+                                console.log('inside ifff')
+                                this.setState({
+                                    [validIdHelper(exploreId)]: explore
+                                })
+                            }
+                        })
                         .catch((error) => {
                             console.error('Connection error', error)
                         })
@@ -364,10 +378,14 @@ class Home extends Component {
                                 .withClassName(index > 0 ? 'd-none' : 'oops')
                                 .withClassName(lookId)
                                 // .on('drillmenu:click', (e) => this.drillClick(e))
-                                .on('drillmodal:look', (event) => {
-                                    // console.log('drillmodal:explore')
-                                    // console.log('event', event)
-                                })
+                                // .on('drillmodal:look', (event) => {
+                                //     console.log('drillmodal:look')
+                                //     console.log('event', event)
+                                // })
+                                // .on('drillmodal:explore', (event) => {
+                                //     console.log('drillmodal:explore')
+                                //     console.log('event', event)
+                                // })
                                 .build()
                                 .connect()
                                 .then(this.setupLook)
@@ -399,6 +417,8 @@ class Home extends Component {
                     objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
 
                 } else if (usecaseContent[j].lookerContent[i].type === "api") {
+                    // console.log('inside elllse if for api')
+                    // console.log('usecaseContent[j].lookerContent[i].id', usecaseContent[j].lookerContent[i].id)
                     let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
                         method: 'GET',
                         headers: {
@@ -407,13 +427,14 @@ class Home extends Component {
                         }
                     })
                     let lookerResponseData = await lookerResposnse.json();
-
+                    // console.log('lookerResponseData', lookerResponseData)
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
                     // this gives better performance...
                     this.setState((prevState) => ({
                         [stateKey]: prevState[stateKey] ? [...prevState[stateKey], { 'glance': lookerResponseData }] : [{ 'glance': lookerResponseData }]
                     }), () => {
-                        this.splashPageDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
+                        if (lookerResponseData.queryResults.data[0]) //for now
+                            this.splashPageDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
                     })
 
                     // use state for this for now for better loading experience
@@ -424,7 +445,6 @@ class Home extends Component {
                     // }
 
                 } else if (usecaseContent[j].lookerContent[i].type === "explorelite") {
-                    // console.log('inside elllse if for explore-lite')
                     this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
 
                 } else { console.log('catch all else') }
@@ -466,6 +486,8 @@ class Home extends Component {
                 limit: "25"
             }
 
+            // console.log('newQueryParams', newQueryParams)
+
             let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(newQueryParams) + '/json', {
                 method: 'GET',
                 headers: {
@@ -502,33 +524,150 @@ class Home extends Component {
     }
 
     //seemes to be non performant, need to think of a new solution...
-    reportBuilderAction = (contentId) => {
-        // console.log('reportBuilderAction')
-        // console.log('contentId', contentId)
+    //ollllldddd
+    /*reportBuilderAction = (contentId, stateName, secondaryActionName, clientId, thisId, otherId) => { //otherId
+        console.log('reportBuilderAction')
+        console.log('contentId', contentId)
+        console.log('stateName', stateName)
+        console.log('secondaryActionName', secondaryActionName)
+        console.log('clientId', clientId)
+        console.log('thisId', thisId)
+        console.log('otherId', otherId)
 
         // const desiredContentId = event.target.getAttribute("contentid");
         // console.log('desiredContentId', desiredContentId);
 
         let iFrameArray = $(".embedContainer:visible > iframe")
         // console.log('000 iFrameArray', iFrameArray)
+
         for (let i = 0; i < iFrameArray.length; i++) {
             if (iFrameArray[i].classList.contains(contentId)) {
-                // console.log('inside ifff')
                 iFrameArray[i].classList.remove('d-none')
             } else {
-                // console.log('inside elllse');
                 iFrameArray[i].classList.add('d-none')
             }
         }
-        // console.log('111 iFrameArray', iFrameArray)
+
+        if (secondaryActionName === 'edit') {
+            console.log('inside this ifff');
+
+
+            // let exploreIframe = $("#embedContainer-reportbuilder-thelookadwordsevents");
+            // console.log('000 exploreIframe', exploreIframe);
+            console.log('000', $(`#${otherId}`).html(''))
+            $(`#${otherId}`).empty();
+            console.log('1111', $(`#${otherId}`).html(''))
+
+
+            LookerEmbedSDK.createExploreWithId(stateName)
+                .appendTo(`#${thisId}`)
+                .withClassName('iframe')
+                .on('explore:state:changed', (event) => {
+                    // console.log('explore:state:changed')
+                    // console.log('event', event)
+                })
+                .withParams({
+                    qid: clientId,
+                    toggle: 'dat,pik,vis'
+                })
+                .build()
+                .connect()
+                .then((explore) => {
+                    console.log('explore then callback')
+                    console.log(explore)
+                    // if (exploreId) {
+                    //     console.log('inside ifff')
+                    //     this.setState({
+                    //         [validIdHelper(exploreId)]: explore
+                    //     })
+                    // }
+                })
+                .catch((error) => {
+                    console.error('Connection error', error)
+                })
+
+            // console.log('validIdHelper(stateName)', validIdHelper(stateName))
+            // console.log('this.state[validIdHelper(stateName)]', this.state[validIdHelper(stateName)])
+
+            //doesn't work
+            // this.state[validIdHelper(stateName)].withParams({
+            //     qid: 'QBtnsUlBRDctxq5jSWmksJ',
+            //     toggle: 'dat,pik,vis'
+            // })
+            // this.state[validIdHelper(stateName)].sendAndReceive('test', { qid: clientId, toggle: 'vis' }).then((callback) => {
+            //     console.log('then callback');
+            //     console.log('callback', callback)
+            // })
+            // this.state[validIdHelper(stateName)].run();
+            // this.handleTabChange(1) //can assume one for now
+        }
+    }*/
+
+
+    //seemes to be non performant, need to think of a new solution...
+    reportBuilderAction = (lookId, secondaryAction, qid, exploreId, savedReportsEmbedContainerId, newReportEmbedContainer) => {
+        // console.log('reportBuilderAction')
+        // console.log('lookId', lookId)
+        // console.log('secondaryAction', secondaryAction)
+        // console.log('qid', qid)
+        // console.log('exploreId', exploreId)
+        // console.log('savedReportsEmbedContainerId', savedReportsEmbedContainerId)
+        // console.log('newReportEmbedContainer', newReportEmbedContainer)
+
+        let iFrameArray = $(".embedContainer:visible > iframe")
+        // console.log('iFrameArray', iFrameArray)
+
+        for (let i = 0; i < iFrameArray.length; i++) {
+            if (iFrameArray[i].classList.contains(lookId)) { //&& !secondaryAction
+                iFrameArray[i].classList.remove('d-none')
+            } else {
+                iFrameArray[i].classList.add('d-none')
+            }
+        }
+
+        if (secondaryAction === 'edit') {
+            $(`#${newReportEmbedContainer}`).empty();
+
+            LookerEmbedSDK.createExploreWithId(exploreId)
+                .appendTo(`#${newReportEmbedContainer}`)
+                .withClassName('iframe')
+                .on('explore:state:changed', (event) => {
+                    // console.log('explore:state:changed')
+                    // console.log('event', event)
+                })
+                .withClassName("exploreIframe")
+                .withParams({
+                    qid: qid,
+                    // toggle: 'dat,pik,vis'
+                })
+                .build()
+                .connect()
+                .then((explore) => {
+                    console.log('explore then callback')
+                    // console.log(explore)
+                    // if (exploreId) {
+                    //     console.log('inside ifff')
+                    //     this.setState({
+                    //         [validIdHelper(exploreId)]: explore
+                    //     })
+                    // }
+                })
+                .catch((error) => {
+                    console.error('Connection error', error)
+                })
+
+
+            this.handleTabChange(1) //can assume one for now
+        }
     }
+
 
 
     // drillClick(event) {
     dashboardOverviewDetailAction(event) {
-        console.log('drillClick')
-        console.log('dashboardOverviewDetailAction')
-        console.log('event', event)
+        // console.log('drillClick')
+        // console.log('dashboardOverviewDetailAction')
+        // console.log('event', event)
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
             // const parsedUrl = new URL(event.url)
@@ -545,9 +684,9 @@ class Home extends Component {
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
             //urls changed to relative, need slugs to work across instances?
 
-            console.log('stateName', stateName)
-            console.log('filterName', filterName)
-            console.log('filterValue', filterValue)
+            // console.log('stateName', stateName)
+            // console.log('filterName', filterName)
+            // console.log('filterValue', filterValue)
 
 
             this.setState({}, () => {

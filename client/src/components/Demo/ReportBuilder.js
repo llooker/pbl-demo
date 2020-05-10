@@ -16,6 +16,8 @@ import Icon from '@material-ui/core/Icon';
 import Skeleton from '@material-ui/lab/Skeleton';
 import CodeFlyout from './CodeFlyout'
 import '../Home.css'
+import Button from '@material-ui/core/Button';
+
 const { validIdHelper } = require('../../tools');
 
 function TabPanel(props) {
@@ -99,6 +101,9 @@ const useStyles = makeStyles((theme) => ({
     skeleton: {
         minWidth: 275,
         minHeight: 600,
+    },
+    ml24: {
+        marginLeft: 24
     }
 }));
 
@@ -130,6 +135,14 @@ export default function ReportBuilder(props) {
     const handleSelect = (event, nodeIds) => {
         setSelected(nodeIds);
     };
+
+
+    useEffect(() => {
+        //change from drill click
+        if (activeTabValue > value) {
+            setValue(activeTabValue)
+        }
+    });
 
     return (
         <div className={classes.root}>
@@ -163,11 +176,11 @@ export default function ReportBuilder(props) {
                         </AppBar>
 
                         <Box className="tabPanelContainer">
-                            {tabContent.map((tabContentItem, index) => (
+                            {tabContent.map((tabContentItem, tabContentItemIndex) => (
                                 <TabPanel
-                                    key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
+                                    key={`${validIdHelper(demoComponentType + '-tabPanel-' + tabContentItemIndex)}`}
                                     value={value}
-                                    index={index}>
+                                    index={tabContentItemIndex}>
                                     <Grid container>
                                         {tabContentItem.type === 'sample code' ?
                                             <Grid item sm={12} >
@@ -181,10 +194,10 @@ export default function ReportBuilder(props) {
                                                 <CodeFlyout code={tabContentItem.lookerUser} />
                                             </Grid>
                                             :
-                                            index === 0
+                                            tabContentItemIndex === 0
                                                 ?
                                                 <React.Fragment
-                                                    key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
+                                                    key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
                                                     <Grid item sm={3} >
 
                                                         <TreeView
@@ -209,18 +222,42 @@ export default function ReportBuilder(props) {
                                                                         {
                                                                             apiContent[key].length ?
                                                                                 apiContent[key].map((item, index) => (
-                                                                                    <TreeItem
-                                                                                        key={`${validIdHelper(demoComponentType + '-innerTreeItem-' + index)}`}
-                                                                                        nodeId={"" + (treeCounter += 1)}
-                                                                                        treecounter={treeCounter}
-                                                                                        selected={selected === treeCounter}
-                                                                                        className={selected === treeCounter ? "Mui-selected" : ""}
-                                                                                        contentid={item.id}
-                                                                                        label={item.title}
-                                                                                        onClick={() => {
-                                                                                            setSelected(treeCounter)
-                                                                                            action(item.id)
-                                                                                        }} />
+                                                                                    <>
+                                                                                        <TreeItem
+                                                                                            key={`${validIdHelper(demoComponentType + '-innerTreeItem-' + index)}`}
+                                                                                            nodeId={"" + (treeCounter += 1)}
+                                                                                            treecounter={treeCounter}
+                                                                                            selected={selected === treeCounter}
+                                                                                            className={selected === treeCounter ? "Mui-selected" : ""}
+                                                                                            contentid={item.id}
+                                                                                            label={<div className={classes.labelRoot}>
+                                                                                                {item.title}
+                                                                                                <Button size="small"
+                                                                                                    className={classes.mlAuto}
+                                                                                                    onClick={(event) => {
+                                                                                                        setSelected(treeCounter);
+                                                                                                        action(
+                                                                                                            item.id,
+                                                                                                            'edit',
+                                                                                                            item.client_id,
+                                                                                                            tabContent[tabContentItemIndex + 1].id,
+                                                                                                            validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`),
+                                                                                                            validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                                                                                                        );
+                                                                                                        event.stopPropagation();
+                                                                                                    }
+                                                                                                    }
+                                                                                                >
+                                                                                                    Edit
+                                                                                                </Button>
+                                                                                            </div>
+                                                                                            }
+                                                                                            onClick={() => {
+                                                                                                setSelected(treeCounter)
+                                                                                                action(item.id)
+                                                                                            }} />
+                                                                                    </>
+
                                                                                 ))
                                                                                 :
                                                                                 ''

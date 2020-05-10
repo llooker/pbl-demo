@@ -40,6 +40,22 @@ module.exports.fetchFolder = async (req, res, next) => {
     const sharedFolder = await sdk.ok(sdk.folder(params.folder_id));
     const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id));
 
+    for (let h = 0; h < sharedFolder.looks.length; h++) {
+        let look = await sdk.ok(sdk.look(sharedFolder.looks[h].id))
+        let clientId = look.query.client_id;
+        sharedFolder.looks[h].client_id = clientId;
+    }
+
+    for (let i = 0; i < embeddedUserFolder.looks.length; i++) {
+        // console.log('embeddedUserFolder.looks[i]', embeddedUserFolder.looks[i])
+        let look = await sdk.ok(sdk.look(embeddedUserFolder.looks[i].id));
+        // console.log('look', look)
+        let clientId = look.query.client_id;
+        // console.log('embeddedUserFolder clientId', clientId)
+        embeddedUserFolder.looks[i].client_id = clientId;
+    }
+
+
     let resObj = {
         sharedFolder,
         embeddedUserFolder

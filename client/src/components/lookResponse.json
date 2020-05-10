@@ -1,0 +1,329 @@
+{
+    "content_metadata_id": 26822,
+    "id": 19586,
+    "title": "Revenue Targets",
+    "created_at": "2020-01-21T22:09:13.000+00:00",
+    "deleted_at": null,
+    "deleter_id": null,
+    "description": "My revenue targets by week in quarter",
+    "favorite_count": 0,
+    "is_run_on_load": true,
+    "last_accessed_at": "2020-05-09T13:53:03.000+00:00",
+    "last_updater_id": 993,
+    "query_id": 988710,
+    "short_url": "/looks/19586",
+    "updated_at": "2020-04-06T21:26:27.000+00:00",
+    "user_id": 993,
+    "view_count": 2,
+    "user": {
+        "id": 993
+    },
+    "space_id": 1827,
+    "space": {
+        "name": "Marketing Look Selector",
+        "parent_id": 1097,
+        "id": 1827,
+        "content_metadata_id": 26820,
+        "created_at": "2020-01-21T22:07:47.000+00:00",
+        "creator_id": 993,
+        "child_count": 0,
+        "external_id": null,
+        "is_embed": false,
+        "is_embed_shared_root": false,
+        "is_embed_users_root": false,
+        "is_personal": false,
+        "is_personal_descendant": false,
+        "is_shared_root": false,
+        "is_users_root": false,
+        "can": {
+            "index": true,
+            "show": true,
+            "create": true,
+            "see_admin_spaces": true,
+            "update": true,
+            "destroy": true,
+            "move_content": true,
+            "edit_content": true
+        }
+    },
+    "query": {
+        "id": 988710,
+        "view": "events",
+        "fields": [
+            "events.event_week",
+            "session_purchase_facts.revenue",
+            "campaigns.bid_type"
+        ],
+        "pivots": [
+            "campaigns.bid_type"
+        ],
+        "fill_fields": null,
+        "filters": {
+            "campaigns.bid_type": "-NULL",
+            "events.event_date": "1 quarters ago for 1 quarters",
+            "user_session_fact.site_acquisition_source": "Adwords"
+        },
+        "filter_expression": null,
+        "sorts": [
+            "events.event_week",
+            "campaigns.bid_type"
+        ],
+        "limit": "500",
+        "column_limit": null,
+        "total": null,
+        "row_total": null,
+        "subtotals": null,
+        "vis_config": {
+            "x_axis_gridlines": false,
+            "y_axis_gridlines": false,
+            "show_view_names": true,
+            "y_axes": [
+                {
+                    "label": "",
+                    "orientation": "left",
+                    "series": [
+                        {
+                            "id": "Display - Revenue Adjusted",
+                            "name": "Display - Revenue Adjusted",
+                            "axisId": "revenue_adjusted"
+                        },
+                        {
+                            "id": "Search - Revenue Adjusted",
+                            "name": "Search - Revenue Adjusted",
+                            "axisId": "revenue_adjusted"
+                        },
+                        {
+                            "id": "total_revenue_won",
+                            "name": "Total Revenue Won",
+                            "axisId": "total_revenue_won"
+                        },
+                        {
+                            "id": "Display - Goal",
+                            "name": "Display - Goal",
+                            "axisId": "goal"
+                        },
+                        {
+                            "id": "Search - Goal",
+                            "name": "Search - Goal",
+                            "axisId": "goal"
+                        }
+                    ],
+                    "showLabels": true,
+                    "showValues": true,
+                    "valueFormat": "$#,##0",
+                    "unpinAxis": false,
+                    "tickDensity": "default",
+                    "tickDensityCustom": 5,
+                    "type": "linear"
+                }
+            ],
+            "show_y_axis_labels": true,
+            "show_y_axis_ticks": true,
+            "y_axis_tick_density": "default",
+            "y_axis_tick_density_custom": 5,
+            "show_x_axis_label": true,
+            "show_x_axis_ticks": true,
+            "y_axis_scale_mode": "linear",
+            "x_axis_reversed": false,
+            "y_axis_reversed": false,
+            "plot_size_by_field": false,
+            "trellis": "",
+            "stacking": "",
+            "limit_displayed_rows": false,
+            "hidden_series": [],
+            "legend_position": "center",
+            "colors": [
+                "#294988",
+                "#87d79b",
+                "#476d70",
+                "#294259",
+                "#747474"
+            ],
+            "series_types": {
+                "Search - revenue_adjusted": "column",
+                "Display - revenue_adjusted": "column",
+                "CPC - revenue_adjusted": "column",
+                "Target CPA - revenue_adjusted": "column",
+                "Enhanced CPC - revenue_adjusted": "column",
+                "total_revenue_won": "area",
+                "revenue_display": "area"
+            },
+            "point_style": "none",
+            "series_colors": {},
+            "series_labels": {
+                "revenue_display": "Revenue"
+            },
+            "show_value_labels": false,
+            "label_density": 25,
+            "x_axis_scale": "ordinal",
+            "y_axis_combined": true,
+            "reference_lines": [
+                {
+                    "reference_type": "range",
+                    "line_value": "mean",
+                    "range_end": "min",
+                    "margin_top": "deviation",
+                    "margin_value": "mean",
+                    "margin_bottom": "deviation",
+                    "label_position": "right",
+                    "color": "#54538f",
+                    "label": "Goal"
+                }
+            ],
+            "show_null_points": false,
+            "interpolation": "monotone",
+            "type": "looker_line",
+            "show_row_numbers": true,
+            "truncate_column_names": false,
+            "hide_totals": false,
+            "hide_row_totals": false,
+            "table_theme": "editable",
+            "enable_conditional_formatting": false,
+            "conditional_formatting_include_totals": false,
+            "conditional_formatting_include_nulls": false,
+            "hidden_fields": [
+                "session_purchase_facts.total_attribution",
+                "quota",
+                "revenue_adjusted",
+                "events.event_week",
+                "session_purchase_facts.revenue",
+                "total_revenue_won"
+            ]
+        },
+        "filter_config": {
+            "campaigns.bid_type": [
+                {
+                    "type": "!null",
+                    "values": [
+                        {
+                            "constant": ""
+                        },
+                        {}
+                    ],
+                    "id": 6,
+                    "error": false
+                }
+            ],
+            "events.event_date": [
+                {
+                    "type": "past",
+                    "values": [
+                        {
+                            "constant": "1",
+                            "unit": "c_qu",
+                            "date": "2018-06-28T12:31:42.420Z",
+                            "tz": true
+                        }
+                    ],
+                    "id": 11,
+                    "error": false
+                }
+            ],
+            "user_session_fact.site_acquisition_source": [
+                {
+                    "type": "=",
+                    "values": [
+                        {
+                            "constant": "Adwords"
+                        },
+                        {}
+                    ],
+                    "id": 10,
+                    "error": false
+                }
+            ]
+        },
+        "visible_ui_sections": null,
+        "slug": "5fBwKJ4",
+        "dynamic_fields": "[{\"table_calculation\":\"revenue_adjusted\",\"label\":\"Revenue Adjusted\",\"expression\":\"if(diff_days(${events.event_week}, now()) \\u003c 0,\\nnull,\\nrunning_total(${session_purchase_facts.revenue}))\",\"value_format\":null,\"value_format_name\":\"usd\",\"_kind_hint\":\"measure\",\"_type_hint\":\"number\"},{\"table_calculation\":\"week_in_quarter\",\"label\":\"Week in Quarter\",\"expression\":\"concat(\\\"WK\\\",running_total(1))\",\"value_format\":null,\"value_format_name\":null,\"_kind_hint\":\"dimension\",\"_type_hint\":\"string\"},{\"table_calculation\":\"goal\",\"label\":\"Goal\",\"expression\":\"running_total(max(${revenue_display})*1.2/6)\",\"value_format\":null,\"value_format_name\":\"usd\",\"_kind_hint\":\"supermeasure\",\"_type_hint\":\"number\"},{\"table_calculation\":\"total_revenue_won\",\"label\":\"Total Revenue Won\",\"expression\":\"if(diff_days(${events.event_week}, now()) \\u003c 0,\\nnull,\\nrunning_total(sum(pivot_row(${session_purchase_facts.revenue}))))\",\"value_format\":null,\"value_format_name\":\"usd\",\"_kind_hint\":\"supermeasure\",\"_type_hint\":\"number\"},{\"table_calculation\":\"revenue_display\",\"label\":\"Revenue Display\",\"expression\":\"if(running_total(1)\\u003c=6,${total_revenue_won},null)\",\"value_format\":null,\"value_format_name\":\"usd_0\",\"_kind_hint\":\"supermeasure\",\"_type_hint\":\"number\"}]",
+        "client_id": "u4pgxgtuC4fUDjv9LEF1Go",
+        "share_url": "https://demo.looker.com/x/u4pgxgtuC4fUDjv9LEF1Go",
+        "expanded_share_url": "https://demo.looker.com/explore/thelook_adwords/events?fields=events.event_week,session_purchase_facts.revenue,campaigns.bid_type&pivots=campaigns.bid_type&f[campaigns.bid_type]=-NULL&f[events.event_date]=1+quarters+ago+for+1+quarters&f[user_session_fact.site_acquisition_source]=Adwords&sorts=events.event_week,campaigns.bid_type&limit=500&query_timezone=user_timezone&vis=%7B%22x_axis_gridlines%22%3Afalse%2C%22y_axis_gridlines%22%3Afalse%2C%22show_view_names%22%3Atrue%2C%22y_axes%22%3A%5B%7B%22label%22%3A%22%22%2C%22orientation%22%3A%22left%22%2C%22series%22%3A%5B%7B%22id%22%3A%22Display+-+Revenue+Adjusted%22%2C%22name%22%3A%22Display+-+Revenue+Adjusted%22%2C%22axisId%22%3A%22revenue_adjusted%22%7D%2C%7B%22id%22%3A%22Search+-+Revenue+Adjusted%22%2C%22name%22%3A%22Search+-+Revenue+Adjusted%22%2C%22axisId%22%3A%22revenue_adjusted%22%7D%2C%7B%22id%22%3A%22total_revenue_won%22%2C%22name%22%3A%22Total+Revenue+Won%22%2C%22axisId%22%3A%22total_revenue_won%22%7D%2C%7B%22id%22%3A%22Display+-+Goal%22%2C%22name%22%3A%22Display+-+Goal%22%2C%22axisId%22%3A%22goal%22%7D%2C%7B%22id%22%3A%22Search+-+Goal%22%2C%22name%22%3A%22Search+-+Goal%22%2C%22axisId%22%3A%22goal%22%7D%5D%2C%22showLabels%22%3Atrue%2C%22showValues%22%3Atrue%2C%22valueFormat%22%3A%22%24%23%2C%23%230%22%2C%22unpinAxis%22%3Afalse%2C%22tickDensity%22%3A%22default%22%2C%22tickDensityCustom%22%3A5%2C%22type%22%3A%22linear%22%7D%5D%2C%22show_y_axis_labels%22%3Atrue%2C%22show_y_axis_ticks%22%3Atrue%2C%22y_axis_tick_density%22%3A%22default%22%2C%22y_axis_tick_density_custom%22%3A5%2C%22show_x_axis_label%22%3Atrue%2C%22show_x_axis_ticks%22%3Atrue%2C%22y_axis_scale_mode%22%3A%22linear%22%2C%22x_axis_reversed%22%3Afalse%2C%22y_axis_reversed%22%3Afalse%2C%22plot_size_by_field%22%3Afalse%2C%22trellis%22%3A%22%22%2C%22stacking%22%3A%22%22%2C%22limit_displayed_rows%22%3Afalse%2C%22hidden_series%22%3A%5B%5D%2C%22legend_position%22%3A%22center%22%2C%22colors%22%3A%5B%22%23294988%22%2C%22%2387d79b%22%2C%22%23476d70%22%2C%22%23294259%22%2C%22%23747474%22%5D%2C%22series_types%22%3A%7B%22Search+-+revenue_adjusted%22%3A%22column%22%2C%22Display+-+revenue_adjusted%22%3A%22column%22%2C%22CPC+-+revenue_adjusted%22%3A%22column%22%2C%22Target+CPA+-+revenue_adjusted%22%3A%22column%22%2C%22Enhanced+CPC+-+revenue_adjusted%22%3A%22column%22%2C%22total_revenue_won%22%3A%22area%22%2C%22revenue_display%22%3A%22area%22%7D%2C%22point_style%22%3A%22none%22%2C%22series_colors%22%3A%7B%7D%2C%22series_labels%22%3A%7B%22revenue_display%22%3A%22Revenue%22%7D%2C%22show_value_labels%22%3Afalse%2C%22label_density%22%3A25%2C%22x_axis_scale%22%3A%22ordinal%22%2C%22y_axis_combined%22%3Atrue%2C%22reference_lines%22%3A%5B%7B%22reference_type%22%3A%22range%22%2C%22line_value%22%3A%22mean%22%2C%22range_end%22%3A%22min%22%2C%22margin_top%22%3A%22deviation%22%2C%22margin_value%22%3A%22mean%22%2C%22margin_bottom%22%3A%22deviation%22%2C%22label_position%22%3A%22right%22%2C%22color%22%3A%22%2354538f%22%2C%22label%22%3A%22Goal%22%7D%5D%2C%22show_null_points%22%3Afalse%2C%22interpolation%22%3A%22monotone%22%2C%22type%22%3A%22looker_line%22%2C%22show_row_numbers%22%3Atrue%2C%22truncate_column_names%22%3Afalse%2C%22hide_totals%22%3Afalse%2C%22hide_row_totals%22%3Afalse%2C%22table_theme%22%3A%22editable%22%2C%22enable_conditional_formatting%22%3Afalse%2C%22conditional_formatting_include_totals%22%3Afalse%2C%22conditional_formatting_include_nulls%22%3Afalse%2C%22hidden_fields%22%3A%5B%22session_purchase_facts.total_attribution%22%2C%22quota%22%2C%22revenue_adjusted%22%2C%22events.event_week%22%2C%22session_purchase_facts.revenue%22%2C%22total_revenue_won%22%5D%7D&filter_config=%7B%22campaigns.bid_type%22%3A%5B%7B%22type%22%3A%22%21null%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22%22%7D%2C%7B%7D%5D%2C%22id%22%3A6%2C%22error%22%3Afalse%7D%5D%2C%22events.event_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%221%22%2C%22unit%22%3A%22c_qu%22%2C%22date%22%3A%222018-06-28T12%3A31%3A42.420Z%22%2C%22tz%22%3Atrue%7D%5D%2C%22id%22%3A11%2C%22error%22%3Afalse%7D%5D%2C%22user_session_fact.site_acquisition_source%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Adwords%22%7D%2C%7B%7D%5D%2C%22id%22%3A10%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22revenue_adjusted%22%2C%22label%22%3A%22Revenue+Adjusted%22%2C%22expression%22%3A%22if%28diff_days%28%24%7Bevents.event_week%7D%2C+now%28%29%29+%5Cu003c+0%2C%5Cnnull%2C%5Cnrunning_total%28%24%7Bsession_purchase_facts.revenue%7D%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22week_in_quarter%22%2C%22label%22%3A%22Week+in+Quarter%22%2C%22expression%22%3A%22concat%28%5C%22WK%5C%22%2Crunning_total%281%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22dimension%22%2C%22_type_hint%22%3A%22string%22%7D%2C%7B%22table_calculation%22%3A%22goal%22%2C%22label%22%3A%22Goal%22%2C%22expression%22%3A%22running_total%28max%28%24%7Brevenue_display%7D%29%2A1.2%2F6%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22supermeasure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22total_revenue_won%22%2C%22label%22%3A%22Total+Revenue+Won%22%2C%22expression%22%3A%22if%28diff_days%28%24%7Bevents.event_week%7D%2C+now%28%29%29+%5Cu003c+0%2C%5Cnnull%2C%5Cnrunning_total%28sum%28pivot_row%28%24%7Bsession_purchase_facts.revenue%7D%29%29%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22supermeasure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22revenue_display%22%2C%22label%22%3A%22Revenue+Display%22%2C%22expression%22%3A%22if%28running_total%281%29%5Cu003c%3D6%2C%24%7Btotal_revenue_won%7D%2Cnull%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22supermeasure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&origin=share-expanded",
+        "url": "/explore/thelook_adwords/events?fields=events.event_week,session_purchase_facts.revenue,campaigns.bid_type&pivots=campaigns.bid_type&f[campaigns.bid_type]=-NULL&f[events.event_date]=1+quarters+ago+for+1+quarters&f[user_session_fact.site_acquisition_source]=Adwords&sorts=events.event_week,campaigns.bid_type&limit=500&query_timezone=user_timezone&vis=%7B%22x_axis_gridlines%22%3Afalse%2C%22y_axis_gridlines%22%3Afalse%2C%22show_view_names%22%3Atrue%2C%22y_axes%22%3A%5B%7B%22label%22%3A%22%22%2C%22orientation%22%3A%22left%22%2C%22series%22%3A%5B%7B%22id%22%3A%22Display+-+Revenue+Adjusted%22%2C%22name%22%3A%22Display+-+Revenue+Adjusted%22%2C%22axisId%22%3A%22revenue_adjusted%22%7D%2C%7B%22id%22%3A%22Search+-+Revenue+Adjusted%22%2C%22name%22%3A%22Search+-+Revenue+Adjusted%22%2C%22axisId%22%3A%22revenue_adjusted%22%7D%2C%7B%22id%22%3A%22total_revenue_won%22%2C%22name%22%3A%22Total+Revenue+Won%22%2C%22axisId%22%3A%22total_revenue_won%22%7D%2C%7B%22id%22%3A%22Display+-+Goal%22%2C%22name%22%3A%22Display+-+Goal%22%2C%22axisId%22%3A%22goal%22%7D%2C%7B%22id%22%3A%22Search+-+Goal%22%2C%22name%22%3A%22Search+-+Goal%22%2C%22axisId%22%3A%22goal%22%7D%5D%2C%22showLabels%22%3Atrue%2C%22showValues%22%3Atrue%2C%22valueFormat%22%3A%22%24%23%2C%23%230%22%2C%22unpinAxis%22%3Afalse%2C%22tickDensity%22%3A%22default%22%2C%22tickDensityCustom%22%3A5%2C%22type%22%3A%22linear%22%7D%5D%2C%22show_y_axis_labels%22%3Atrue%2C%22show_y_axis_ticks%22%3Atrue%2C%22y_axis_tick_density%22%3A%22default%22%2C%22y_axis_tick_density_custom%22%3A5%2C%22show_x_axis_label%22%3Atrue%2C%22show_x_axis_ticks%22%3Atrue%2C%22y_axis_scale_mode%22%3A%22linear%22%2C%22x_axis_reversed%22%3Afalse%2C%22y_axis_reversed%22%3Afalse%2C%22plot_size_by_field%22%3Afalse%2C%22trellis%22%3A%22%22%2C%22stacking%22%3A%22%22%2C%22limit_displayed_rows%22%3Afalse%2C%22hidden_series%22%3A%5B%5D%2C%22legend_position%22%3A%22center%22%2C%22colors%22%3A%5B%22%23294988%22%2C%22%2387d79b%22%2C%22%23476d70%22%2C%22%23294259%22%2C%22%23747474%22%5D%2C%22series_types%22%3A%7B%22Search+-+revenue_adjusted%22%3A%22column%22%2C%22Display+-+revenue_adjusted%22%3A%22column%22%2C%22CPC+-+revenue_adjusted%22%3A%22column%22%2C%22Target+CPA+-+revenue_adjusted%22%3A%22column%22%2C%22Enhanced+CPC+-+revenue_adjusted%22%3A%22column%22%2C%22total_revenue_won%22%3A%22area%22%2C%22revenue_display%22%3A%22area%22%7D%2C%22point_style%22%3A%22none%22%2C%22series_colors%22%3A%7B%7D%2C%22series_labels%22%3A%7B%22revenue_display%22%3A%22Revenue%22%7D%2C%22show_value_labels%22%3Afalse%2C%22label_density%22%3A25%2C%22x_axis_scale%22%3A%22ordinal%22%2C%22y_axis_combined%22%3Atrue%2C%22reference_lines%22%3A%5B%7B%22reference_type%22%3A%22range%22%2C%22line_value%22%3A%22mean%22%2C%22range_end%22%3A%22min%22%2C%22margin_top%22%3A%22deviation%22%2C%22margin_value%22%3A%22mean%22%2C%22margin_bottom%22%3A%22deviation%22%2C%22label_position%22%3A%22right%22%2C%22color%22%3A%22%2354538f%22%2C%22label%22%3A%22Goal%22%7D%5D%2C%22show_null_points%22%3Afalse%2C%22interpolation%22%3A%22monotone%22%2C%22type%22%3A%22looker_line%22%2C%22show_row_numbers%22%3Atrue%2C%22truncate_column_names%22%3Afalse%2C%22hide_totals%22%3Afalse%2C%22hide_row_totals%22%3Afalse%2C%22table_theme%22%3A%22editable%22%2C%22enable_conditional_formatting%22%3Afalse%2C%22conditional_formatting_include_totals%22%3Afalse%2C%22conditional_formatting_include_nulls%22%3Afalse%2C%22hidden_fields%22%3A%5B%22session_purchase_facts.total_attribution%22%2C%22quota%22%2C%22revenue_adjusted%22%2C%22events.event_week%22%2C%22session_purchase_facts.revenue%22%2C%22total_revenue_won%22%5D%7D&filter_config=%7B%22campaigns.bid_type%22%3A%5B%7B%22type%22%3A%22%21null%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22%22%7D%2C%7B%7D%5D%2C%22id%22%3A6%2C%22error%22%3Afalse%7D%5D%2C%22events.event_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%221%22%2C%22unit%22%3A%22c_qu%22%2C%22date%22%3A%222018-06-28T12%3A31%3A42.420Z%22%2C%22tz%22%3Atrue%7D%5D%2C%22id%22%3A11%2C%22error%22%3Afalse%7D%5D%2C%22user_session_fact.site_acquisition_source%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Adwords%22%7D%2C%7B%7D%5D%2C%22id%22%3A10%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22revenue_adjusted%22%2C%22label%22%3A%22Revenue+Adjusted%22%2C%22expression%22%3A%22if%28diff_days%28%24%7Bevents.event_week%7D%2C+now%28%29%29+%5Cu003c+0%2C%5Cnnull%2C%5Cnrunning_total%28%24%7Bsession_purchase_facts.revenue%7D%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22week_in_quarter%22%2C%22label%22%3A%22Week+in+Quarter%22%2C%22expression%22%3A%22concat%28%5C%22WK%5C%22%2Crunning_total%281%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22dimension%22%2C%22_type_hint%22%3A%22string%22%7D%2C%7B%22table_calculation%22%3A%22goal%22%2C%22label%22%3A%22Goal%22%2C%22expression%22%3A%22running_total%28max%28%24%7Brevenue_display%7D%29%2A1.2%2F6%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22supermeasure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22total_revenue_won%22%2C%22label%22%3A%22Total+Revenue+Won%22%2C%22expression%22%3A%22if%28diff_days%28%24%7Bevents.event_week%7D%2C+now%28%29%29+%5Cu003c+0%2C%5Cnnull%2C%5Cnrunning_total%28sum%28pivot_row%28%24%7Bsession_purchase_facts.revenue%7D%29%29%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22supermeasure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22revenue_display%22%2C%22label%22%3A%22Revenue+Display%22%2C%22expression%22%3A%22if%28running_total%281%29%5Cu003c%3D6%2C%24%7Btotal_revenue_won%7D%2Cnull%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22supermeasure%22%2C%22_type_hint%22%3A%22number%22%7D%5D",
+        "query_timezone": "user_timezone",
+        "runtime": 8.420089721679688,
+        "has_table_calculations": true,
+        "model": "thelook_adwords",
+        "can": {
+            "run": true,
+            "see_results": true,
+            "explore": true,
+            "create": true,
+            "show": true,
+            "cost_estimate": true,
+            "index": true,
+            "see_lookml": true,
+            "see_aggregate_table_lookml": true,
+            "see_derived_table_lookml": true,
+            "see_sql": true,
+            "generate_drill_links": true,
+            "download": true,
+            "download_unlimited": true,
+            "use_custom_fields": true,
+            "schedule": true,
+            "render": true
+        }
+    },
+    "url": "/explore/thelook_adwords/events?fields=events.event_week,session_purchase_facts.revenue,campaigns.bid_type&pivots=campaigns.bid_type&f[campaigns.bid_type]=-NULL&f[events.event_date]=1+quarters+ago+for+1+quarters&f[user_session_fact.site_acquisition_source]=Adwords&sorts=events.event_week,campaigns.bid_type&limit=500&query_timezone=user_timezone&vis=%7B%22x_axis_gridlines%22%3Afalse%2C%22y_axis_gridlines%22%3Afalse%2C%22show_view_names%22%3Atrue%2C%22y_axes%22%3A%5B%7B%22label%22%3A%22%22%2C%22orientation%22%3A%22left%22%2C%22series%22%3A%5B%7B%22id%22%3A%22Display+-+Revenue+Adjusted%22%2C%22name%22%3A%22Display+-+Revenue+Adjusted%22%2C%22axisId%22%3A%22revenue_adjusted%22%7D%2C%7B%22id%22%3A%22Search+-+Revenue+Adjusted%22%2C%22name%22%3A%22Search+-+Revenue+Adjusted%22%2C%22axisId%22%3A%22revenue_adjusted%22%7D%2C%7B%22id%22%3A%22total_revenue_won%22%2C%22name%22%3A%22Total+Revenue+Won%22%2C%22axisId%22%3A%22total_revenue_won%22%7D%2C%7B%22id%22%3A%22Display+-+Goal%22%2C%22name%22%3A%22Display+-+Goal%22%2C%22axisId%22%3A%22goal%22%7D%2C%7B%22id%22%3A%22Search+-+Goal%22%2C%22name%22%3A%22Search+-+Goal%22%2C%22axisId%22%3A%22goal%22%7D%5D%2C%22showLabels%22%3Atrue%2C%22showValues%22%3Atrue%2C%22valueFormat%22%3A%22%24%23%2C%23%230%22%2C%22unpinAxis%22%3Afalse%2C%22tickDensity%22%3A%22default%22%2C%22tickDensityCustom%22%3A5%2C%22type%22%3A%22linear%22%7D%5D%2C%22show_y_axis_labels%22%3Atrue%2C%22show_y_axis_ticks%22%3Atrue%2C%22y_axis_tick_density%22%3A%22default%22%2C%22y_axis_tick_density_custom%22%3A5%2C%22show_x_axis_label%22%3Atrue%2C%22show_x_axis_ticks%22%3Atrue%2C%22y_axis_scale_mode%22%3A%22linear%22%2C%22x_axis_reversed%22%3Afalse%2C%22y_axis_reversed%22%3Afalse%2C%22plot_size_by_field%22%3Afalse%2C%22trellis%22%3A%22%22%2C%22stacking%22%3A%22%22%2C%22limit_displayed_rows%22%3Afalse%2C%22hidden_series%22%3A%5B%5D%2C%22legend_position%22%3A%22center%22%2C%22colors%22%3A%5B%22%23294988%22%2C%22%2387d79b%22%2C%22%23476d70%22%2C%22%23294259%22%2C%22%23747474%22%5D%2C%22series_types%22%3A%7B%22Search+-+revenue_adjusted%22%3A%22column%22%2C%22Display+-+revenue_adjusted%22%3A%22column%22%2C%22CPC+-+revenue_adjusted%22%3A%22column%22%2C%22Target+CPA+-+revenue_adjusted%22%3A%22column%22%2C%22Enhanced+CPC+-+revenue_adjusted%22%3A%22column%22%2C%22total_revenue_won%22%3A%22area%22%2C%22revenue_display%22%3A%22area%22%7D%2C%22point_style%22%3A%22none%22%2C%22series_colors%22%3A%7B%7D%2C%22series_labels%22%3A%7B%22revenue_display%22%3A%22Revenue%22%7D%2C%22show_value_labels%22%3Afalse%2C%22label_density%22%3A25%2C%22x_axis_scale%22%3A%22ordinal%22%2C%22y_axis_combined%22%3Atrue%2C%22reference_lines%22%3A%5B%7B%22reference_type%22%3A%22range%22%2C%22line_value%22%3A%22mean%22%2C%22range_end%22%3A%22min%22%2C%22margin_top%22%3A%22deviation%22%2C%22margin_value%22%3A%22mean%22%2C%22margin_bottom%22%3A%22deviation%22%2C%22label_position%22%3A%22right%22%2C%22color%22%3A%22%2354538f%22%2C%22label%22%3A%22Goal%22%7D%5D%2C%22show_null_points%22%3Afalse%2C%22interpolation%22%3A%22monotone%22%2C%22type%22%3A%22looker_line%22%2C%22show_row_numbers%22%3Atrue%2C%22truncate_column_names%22%3Afalse%2C%22hide_totals%22%3Afalse%2C%22hide_row_totals%22%3Afalse%2C%22table_theme%22%3A%22editable%22%2C%22enable_conditional_formatting%22%3Afalse%2C%22conditional_formatting_include_totals%22%3Afalse%2C%22conditional_formatting_include_nulls%22%3Afalse%2C%22hidden_fields%22%3A%5B%22session_purchase_facts.total_attribution%22%2C%22quota%22%2C%22revenue_adjusted%22%2C%22events.event_week%22%2C%22session_purchase_facts.revenue%22%2C%22total_revenue_won%22%5D%7D&filter_config=%7B%22campaigns.bid_type%22%3A%5B%7B%22type%22%3A%22%21null%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22%22%7D%2C%7B%7D%5D%2C%22id%22%3A6%2C%22error%22%3Afalse%7D%5D%2C%22events.event_date%22%3A%5B%7B%22type%22%3A%22past%22%2C%22values%22%3A%5B%7B%22constant%22%3A%221%22%2C%22unit%22%3A%22c_qu%22%2C%22date%22%3A%222018-06-28T12%3A31%3A42.420Z%22%2C%22tz%22%3Atrue%7D%5D%2C%22id%22%3A11%2C%22error%22%3Afalse%7D%5D%2C%22user_session_fact.site_acquisition_source%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22Adwords%22%7D%2C%7B%7D%5D%2C%22id%22%3A10%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%7B%22table_calculation%22%3A%22revenue_adjusted%22%2C%22label%22%3A%22Revenue+Adjusted%22%2C%22expression%22%3A%22if%28diff_days%28%24%7Bevents.event_week%7D%2C+now%28%29%29+%5Cu003c+0%2C%5Cnnull%2C%5Cnrunning_total%28%24%7Bsession_purchase_facts.revenue%7D%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22measure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22week_in_quarter%22%2C%22label%22%3A%22Week+in+Quarter%22%2C%22expression%22%3A%22concat%28%5C%22WK%5C%22%2Crunning_total%281%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3Anull%2C%22_kind_hint%22%3A%22dimension%22%2C%22_type_hint%22%3A%22string%22%7D%2C%7B%22table_calculation%22%3A%22goal%22%2C%22label%22%3A%22Goal%22%2C%22expression%22%3A%22running_total%28max%28%24%7Brevenue_display%7D%29%2A1.2%2F6%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22supermeasure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22total_revenue_won%22%2C%22label%22%3A%22Total+Revenue+Won%22%2C%22expression%22%3A%22if%28diff_days%28%24%7Bevents.event_week%7D%2C+now%28%29%29+%5Cu003c+0%2C%5Cnnull%2C%5Cnrunning_total%28sum%28pivot_row%28%24%7Bsession_purchase_facts.revenue%7D%29%29%29%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd%22%2C%22_kind_hint%22%3A%22supermeasure%22%2C%22_type_hint%22%3A%22number%22%7D%2C%7B%22table_calculation%22%3A%22revenue_display%22%2C%22label%22%3A%22Revenue+Display%22%2C%22expression%22%3A%22if%28running_total%281%29%5Cu003c%3D6%2C%24%7Btotal_revenue_won%7D%2Cnull%29%22%2C%22value_format%22%3Anull%2C%22value_format_name%22%3A%22usd_0%22%2C%22_kind_hint%22%3A%22supermeasure%22%2C%22_type_hint%22%3A%22number%22%7D%5D&title=Revenue+Targets&look_id=19586",
+    "folder": {
+        "name": "Marketing Look Selector",
+        "parent_id": 1097,
+        "id": 1827,
+        "content_metadata_id": 26820,
+        "created_at": "2020-01-21T22:07:47.000+00:00",
+        "creator_id": 993,
+        "child_count": 0,
+        "external_id": null,
+        "is_embed": false,
+        "is_embed_shared_root": false,
+        "is_embed_users_root": false,
+        "is_personal": false,
+        "is_personal_descendant": false,
+        "is_shared_root": false,
+        "is_users_root": false,
+        "can": {
+            "index": true,
+            "show": true,
+            "create": true,
+            "see_admin_spaces": true,
+            "update": true,
+            "destroy": true,
+            "move_content": true,
+            "edit_content": true
+        }
+    },
+    "content_favorite_id": null,
+    "deleted": false,
+    "embed_url": "https://demo.looker.com/embed/public/wqFSCWvVqFjHcHhFyQ8QDgbWqS5PYk93",
+    "excel_file_url": "https://demo.looker.com/looks/wqFSCWvVqFjHcHhFyQ8QDgbWqS5PYk93.iqy?apply_formatting=true&apply_vis=true&filename=Revenue+Targets",
+    "google_spreadsheet_formula": "=ImportXML(\"https://demo.looker.com/looks/wqFSCWvVqFjHcHhFyQ8QDgbWqS5PYk93.gsxml?apply_formatting=true&apply_vis=true\", \"//row\")",
+    "image_embed_url": "https://demo.looker.com/looks/wqFSCWvVqFjHcHhFyQ8QDgbWqS5PYk93.png",
+    "last_viewed_at": "2020-05-09T13:53:05.000+00:00",
+    "model": {
+        "id": "thelook_adwords",
+        "label": "3) Digital Marketing"
+    },
+    "public": null,
+    "public_slug": "wqFSCWvVqFjHcHhFyQ8QDgbWqS5PYk93",
+    "public_url": "https://demo.looker.com/looks/wqFSCWvVqFjHcHhFyQ8QDgbWqS5PYk93.txt?apply_formatting=true&apply_vis=true",
+    "folder_id": 1827,
+    "can": {
+        "download": true,
+        "download_unlimited": true,
+        "index": true,
+        "show": true,
+        "copy": true,
+        "run": true,
+        "create": true,
+        "explore": true,
+        "move": true,
+        "update": true,
+        "destroy": true,
+        "recover": true,
+        "update_publicity": true,
+        "show_errors": true,
+        "find_and_replace": true,
+        "schedule": true,
+        "render": true
+    }
+}
