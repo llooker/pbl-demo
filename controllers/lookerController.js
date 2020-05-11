@@ -185,3 +185,26 @@ module.exports.checkQueryTask = async (req, res, next) => {
         res.status(404).send(errorObj);
     }
 }
+
+module.exports.deleteLook = async (req, res, next) => {
+    console.log('lookerController deleteLook');
+    const { params } = req;
+    console.log('params', params)
+
+    try {
+        let delete_look = await sdk.ok(sdk.delete_look(params.look_id));
+        console.log('delete_look', delete_look)
+        let resObj = {
+            message: delete_look
+        };
+        res.status(200).send(resObj);
+
+    } catch (err) {
+        // console.log('catch')
+        // console.log('err', err)
+        let errorObj = {
+            errorMessage: 'Not working!'
+        }
+        res.status(404).send(errorObj);
+    }
+}

@@ -113,7 +113,7 @@ export default function SplashPage(props) {
 
 
     return (
-        <div className={classes.root}>
+        <div className={`${classes.root} demoComponent`}>
 
             <Typography variant="h5" component="h2" className={classes.gridTitle}>
                 {staticContent.title}

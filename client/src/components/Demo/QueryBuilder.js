@@ -8,6 +8,8 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Skeleton from '@material-ui/lab/Skeleton';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -177,13 +179,13 @@ function FilterBar(props) {
 
     return (
         <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel}>
-            {/* <ExpansionPanelSummary
+            <ExpansionPanelSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                <Typography className={classes.heading}>Build Query</Typography>
-            </ExpansionPanelSummary> */}
+                {/* <Typography className={classes.heading}>Build Query</Typography> */}
+            </ExpansionPanelSummary>
             <ExpansionPanelDetails>
                 <Grid container spacing={3}>
                     <Grid item sm={12}>
@@ -468,6 +470,10 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 275,
         minHeight: 600,
     },
+    card: {
+        minWidth: 275,
+        minHeight: 600,
+    },
     textCenter: {
         textAlign: 'center'
     }
@@ -496,7 +502,7 @@ export default function QueryBuilder(props) {
     };
 
     return (
-        < div className={classes.root} >
+        <div className={`${classes.root} demoComponent`}>
             <Grid container
                 spacing={3}
                 key={validIdHelper(type)} >
@@ -555,7 +561,10 @@ export default function QueryBuilder(props) {
                                                     {apiContent.status === 'running' ?
 
                                                         <Grid item sm={12} >
-                                                            <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
+                                                            {/* <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> */}
+                                                            <Card className={`${classes.card} ${classes.flexCentered}`}>
+                                                                <CircularProgress className={classes.circularProgress} />
+                                                            </Card>
                                                         </Grid>
 
                                                         : apiContent.data && apiContent.data.length ?

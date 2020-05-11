@@ -14,6 +14,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Icon from '@material-ui/core/Icon';
 import Skeleton from '@material-ui/lab/Skeleton';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Card from '@material-ui/core/Card';
 import CodeFlyout from './CodeFlyout'
 import '../Home.css'
 import Button from '@material-ui/core/Button';
@@ -102,6 +104,10 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 275,
         minHeight: 600,
     },
+    card: {
+        minWidth: 275,
+        minHeight: 600,
+    },
     ml24: {
         marginLeft: 24
     }
@@ -115,16 +121,25 @@ export default function ReportBuilder(props) {
     const [value, setValue] = useState(0);
     const [selected, setSelected] = useState(2)
     const [expanded, setExpanded] = useState(["1"]);
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const { staticContent,
+        staticContent: { lookerContent },
+        staticContent: { type },
+        apiContent,
+        action,
+        activeTabValue,
+        handleTabChange,
+        lookerUser,
+        sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
-    const tabContent = [...lookerContent, sampleCodeTab]
+    const tabContent = [...lookerContent, sampleCodeTab];
+    const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
 
     let iFrameExists = $(".tabPanelContainer:visible iframe").length;
     let demoComponentType = type || 'sample code';
     let treeCounter = 0;
 
     const handleChange = (event, newValue) => {
-        handleTabChange(0);
+        handleTabChange(newValue);
         setValue(newValue);
     };
 
@@ -145,7 +160,7 @@ export default function ReportBuilder(props) {
     });
 
     return (
-        <div className={classes.root}>
+        <div className={`${classes.root} demoComponent`}>
 
             <Grid container
                 spacing={3}
@@ -153,7 +168,10 @@ export default function ReportBuilder(props) {
                 <div className={classes.root}>
                     {iFrameExists ? '' :
                         <Grid item sm={12} >
-                            <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
+                            {/* <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> */}
+                            <Card className={`${classes.card} ${classes.flexCentered}`}>
+                                <CircularProgress className={classes.circularProgress} />
+                            </Card>
                         </Grid>
                     }
 
@@ -198,7 +216,7 @@ export default function ReportBuilder(props) {
                                                 ?
                                                 <React.Fragment
                                                     key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
-                                                    <Grid item sm={3} >
+                                                    <Grid item sm={4} >
 
                                                         <TreeView
                                                             className={classes.tree}
@@ -222,18 +240,54 @@ export default function ReportBuilder(props) {
                                                                         {
                                                                             apiContent[key].length ?
                                                                                 apiContent[key].map((item, index) => (
-                                                                                    <>
-                                                                                        <TreeItem
-                                                                                            key={`${validIdHelper(demoComponentType + '-innerTreeItem-' + index)}`}
-                                                                                            nodeId={"" + (treeCounter += 1)}
-                                                                                            treecounter={treeCounter}
-                                                                                            selected={selected === treeCounter}
-                                                                                            className={selected === treeCounter ? "Mui-selected" : ""}
-                                                                                            contentid={item.id}
-                                                                                            label={<div className={classes.labelRoot}>
+                                                                                    <TreeItem
+                                                                                        key={`${validIdHelper(demoComponentType + '-innerTreeItem-' + treeCounter)}`}
+                                                                                        nodeId={"" + (treeCounter += 1)}
+                                                                                        treecounter={treeCounter}
+                                                                                        selected={selected === treeCounter}
+                                                                                        className={selected === treeCounter ? "Mui-selected innerTreeItem" : "innerTreeItem"}
+                                                                                        contentid={item.id}
+                                                                                        label={item.folder_id === sharedFolderId ?
+
+                                                                                            <div
+                                                                                                id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                                                                                                key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                                                                                                className={classes.labelRoot}>
                                                                                                 {item.title}
-                                                                                                <Button size="small"
-                                                                                                    className={classes.mlAuto}
+
+                                                                                                <Button
+                                                                                                    id={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
+                                                                                                    key={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
+                                                                                                    size="small"
+                                                                                                    className={classes.ml24}
+                                                                                                    onClick={(event) => {
+                                                                                                        setSelected(treeCounter);
+                                                                                                        action(
+                                                                                                            item.id,
+                                                                                                            'explore',
+                                                                                                            item.client_id,
+                                                                                                            tabContent[tabContentItemIndex + 1].id,
+                                                                                                            validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                                                                                                        );
+                                                                                                        event.stopPropagation();
+                                                                                                    }
+                                                                                                    }
+                                                                                                    color="default"
+                                                                                                >
+                                                                                                    Explore
+                                                                                            </Button>
+                                                                                            </div>
+                                                                                            :
+                                                                                            <div
+                                                                                                id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                                                                                                key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                                                                                                className={classes.labelRoot}>
+                                                                                                {item.title}
+                                                                                                <Button
+                                                                                                    id={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
+                                                                                                    key={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
+                                                                                                    size="small"
+                                                                                                    className={classes.ml24}
                                                                                                     onClick={(event) => {
                                                                                                         setSelected(treeCounter);
                                                                                                         action(
@@ -241,22 +295,42 @@ export default function ReportBuilder(props) {
                                                                                                             'edit',
                                                                                                             item.client_id,
                                                                                                             tabContent[tabContentItemIndex + 1].id,
-                                                                                                            validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`),
                                                                                                             validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
                                                                                                         );
                                                                                                         event.stopPropagation();
                                                                                                     }
                                                                                                     }
+                                                                                                    color="primary"
                                                                                                 >
                                                                                                     Edit
-                                                                                                </Button>
+                                                                                            </Button>
+                                                                                                <Button
+                                                                                                    id={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
+                                                                                                    key={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
+                                                                                                    size="small"
+                                                                                                    className={classes.ml24}
+                                                                                                    onClick={(event) => {
+                                                                                                        setSelected(treeCounter);
+                                                                                                        action(
+                                                                                                            item.id,
+                                                                                                            'delete',
+                                                                                                            item.client_id,
+                                                                                                            tabContent[tabContentItemIndex + 1].id,
+                                                                                                            validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                                                                                                        );
+                                                                                                        event.stopPropagation();
+                                                                                                    }
+                                                                                                    }
+                                                                                                    color="secondary"
+                                                                                                >
+                                                                                                    Delete
+                                                                                            </Button>
                                                                                             </div>
-                                                                                            }
-                                                                                            onClick={() => {
-                                                                                                setSelected(treeCounter)
-                                                                                                action(item.id)
-                                                                                            }} />
-                                                                                    </>
+                                                                                        }
+                                                                                        onClick={() => {
+                                                                                            setSelected(treeCounter)
+                                                                                            action(item.id)
+                                                                                        }} />
 
                                                                                 ))
                                                                                 :
@@ -268,7 +342,7 @@ export default function ReportBuilder(props) {
                                                             )) : ''}
                                                         </TreeView>
                                                     </Grid>
-                                                    <Grid item sm={9} >
+                                                    <Grid item sm={8} >
                                                         <div
                                                             className="embedContainer"
                                                             id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}

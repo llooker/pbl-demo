@@ -28,5 +28,6 @@ router.get('/runinlinequery/:inline_query/:result_format', lookerCtrl.runInlineQ
 // router.get('/createquery/:query_body/:result_format', lookerCtrl.createQuery)
 router.get('/createquerytask/:query_body', lookerCtrl.createQueryTask)
 router.get('/checkquerytask/:task_id', lookerCtrl.checkQueryTask)
+router.get('/deletelook/:look_id', lookerCtrl.deleteLook)
 
 module.exports = router

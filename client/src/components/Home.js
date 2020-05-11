@@ -185,7 +185,8 @@ const insuranceTheme = createMuiTheme({
 
 class Home extends Component {
     constructor(props) {
-        super(props)
+        super(props);
+
         this.state = {
             drawerOpen: true,
             drawerTabValue: 0,
@@ -223,11 +224,26 @@ class Home extends Component {
         } else {
             this.setState({
                 drawerTabValue: newValue
+            }, () => {
+                this.handleTabChange(0)
             })
         }
     };
 
     handleTabChange = newValue => {
+        // console.log('handleTabChange')
+        // console.log('newValue', newValue)
+        // console.log('this.state.activeTabValue', this.state.activeTabValue)
+        // console.log('this.state.drawerTabValue', this.state.drawerTabValue)
+
+        if (newValue === 0
+            && this.state.activeTabValue !== newValue
+            && this.state.drawerTabValue === 4) {
+            let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
+            this.setupLookerContent([UsecaseContent[usecaseFromUrl].demoComponents[this.state.drawerTabValue]]);
+
+        }
+
         this.setState({
             activeTabValue: newValue
         })
@@ -262,8 +278,14 @@ class Home extends Component {
         // console.log('usecaseContent', usecaseContent)
 
         //delete old content
-        let embedContainerArray = document.getElementsByClassName("embedContainer");
-        // console.log('embedContainerArray', embedContainerArray)
+        let embedContainerArray = []
+        if (usecaseContent.length > 1) {
+            embedContainerArray = document.getElementsByClassName("embedContainer:visble");
+        } else {
+            embedContainerArray = document.getElementsByClassName("embedContainer")
+        }
+        console.log('embedContainerArray', embedContainerArray)
+
         for (let h = 0; h < embedContainerArray.length; h++) {
             let thisEmbedContainerId = embedContainerArray[h].id
             document.getElementById(thisEmbedContainerId).innerHTML = ''
@@ -272,10 +294,8 @@ class Home extends Component {
         let objForState = {}
         for (let j = 0; j < usecaseContent.length; j++) {
             for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
-                // console.log('usecaseContent[j].lookerContent[i].type', usecaseContent[j].lookerContent[i].type)
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
                     let dashboardId = usecaseContent[j].lookerContent[i].id;
-                    // console.log('inside dashboard ifff dashboardId', dashboardId);
                     LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${dashboardId}`))
                         .withClassName('iframe')
@@ -283,7 +303,13 @@ class Home extends Component {
                         .withTheme('Looker')
                         // .on('dashboard:run:start', (event) => console.log('event', event))
                         // .on('drillmenu:click', (event) => this.drillClick(event))
-                        .on('drillmenu:click', (event) => this[_.camelCase(usecaseContent[j].type) + 'Action'](event))
+                        // .on('drillmenu:click', (event) => this[_.camelCase(usecaseContent[j].type) + 'Action'](event))
+                        .on('drillmenu:click', (event) => {
+                            console.log('inside drill menu click')
+                            if (typeof this[_.camelCase(usecaseContent[j].type) + 'Action'] === 'function') {
+                                this[_.camelCase(usecaseContent[j].type) + 'Action'](event)
+                            }
+                        })
                         // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
                         .build()
                         .connect()
@@ -323,7 +349,7 @@ class Home extends Component {
 
                 } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
                     let exploreId = usecaseContent[j].lookerContent[i].id
-                    console.log('exploreId', exploreId)
+                    // console.log('exploreId', exploreId)
                     LookerEmbedSDK.createExploreWithId(usecaseContent[j].lookerContent[i].id)
                         .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
                         .withClassName('iframe')
@@ -338,19 +364,20 @@ class Home extends Component {
                         .build()
                         .connect()
                         .then((explore) => {
-                            console.log('explore then callback')
-                            if (exploreId) {
-                                console.log('inside ifff')
-                                this.setState({
-                                    [validIdHelper(exploreId)]: explore
-                                })
-                            }
+                            // // console.log('explore then callback')
+                            // if (exploreId) {
+                            //     // console.log('inside ifff')
+                            //     this.setState({
+                            //         [validIdHelper(exploreId)]: explore
+                            //     })
+                            // }
                         })
                         .catch((error) => {
                             console.error('Connection error', error)
                         })
 
                 } else if (usecaseContent[j].lookerContent[i].type === 'folder') {
+                    // console.log('inside folder else ifff');
                     let lookerResponse = await fetch('/fetchfolder/' + usecaseContent[j].lookerContent[i].id, { //+ usecaseContent[j].type + '/'
                         method: 'GET',
                         headers: {
@@ -524,102 +551,21 @@ class Home extends Component {
     }
 
     //seemes to be non performant, need to think of a new solution...
-    //ollllldddd
-    /*reportBuilderAction = (contentId, stateName, secondaryActionName, clientId, thisId, otherId) => { //otherId
-        console.log('reportBuilderAction')
-        console.log('contentId', contentId)
-        console.log('stateName', stateName)
-        console.log('secondaryActionName', secondaryActionName)
-        console.log('clientId', clientId)
-        console.log('thisId', thisId)
-        console.log('otherId', otherId)
-
-        // const desiredContentId = event.target.getAttribute("contentid");
-        // console.log('desiredContentId', desiredContentId);
-
-        let iFrameArray = $(".embedContainer:visible > iframe")
-        // console.log('000 iFrameArray', iFrameArray)
-
-        for (let i = 0; i < iFrameArray.length; i++) {
-            if (iFrameArray[i].classList.contains(contentId)) {
-                iFrameArray[i].classList.remove('d-none')
-            } else {
-                iFrameArray[i].classList.add('d-none')
-            }
-        }
-
-        if (secondaryActionName === 'edit') {
-            console.log('inside this ifff');
-
-
-            // let exploreIframe = $("#embedContainer-reportbuilder-thelookadwordsevents");
-            // console.log('000 exploreIframe', exploreIframe);
-            console.log('000', $(`#${otherId}`).html(''))
-            $(`#${otherId}`).empty();
-            console.log('1111', $(`#${otherId}`).html(''))
-
-
-            LookerEmbedSDK.createExploreWithId(stateName)
-                .appendTo(`#${thisId}`)
-                .withClassName('iframe')
-                .on('explore:state:changed', (event) => {
-                    // console.log('explore:state:changed')
-                    // console.log('event', event)
-                })
-                .withParams({
-                    qid: clientId,
-                    toggle: 'dat,pik,vis'
-                })
-                .build()
-                .connect()
-                .then((explore) => {
-                    console.log('explore then callback')
-                    console.log(explore)
-                    // if (exploreId) {
-                    //     console.log('inside ifff')
-                    //     this.setState({
-                    //         [validIdHelper(exploreId)]: explore
-                    //     })
-                    // }
-                })
-                .catch((error) => {
-                    console.error('Connection error', error)
-                })
-
-            // console.log('validIdHelper(stateName)', validIdHelper(stateName))
-            // console.log('this.state[validIdHelper(stateName)]', this.state[validIdHelper(stateName)])
-
-            //doesn't work
-            // this.state[validIdHelper(stateName)].withParams({
-            //     qid: 'QBtnsUlBRDctxq5jSWmksJ',
-            //     toggle: 'dat,pik,vis'
-            // })
-            // this.state[validIdHelper(stateName)].sendAndReceive('test', { qid: clientId, toggle: 'vis' }).then((callback) => {
-            //     console.log('then callback');
-            //     console.log('callback', callback)
-            // })
-            // this.state[validIdHelper(stateName)].run();
-            // this.handleTabChange(1) //can assume one for now
-        }
-    }*/
-
-
-    //seemes to be non performant, need to think of a new solution...
-    reportBuilderAction = (lookId, secondaryAction, qid, exploreId, savedReportsEmbedContainerId, newReportEmbedContainer) => {
+    reportBuilderAction = async (lookId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
         // console.log('reportBuilderAction')
         // console.log('lookId', lookId)
         // console.log('secondaryAction', secondaryAction)
         // console.log('qid', qid)
         // console.log('exploreId', exploreId)
-        // console.log('savedReportsEmbedContainerId', savedReportsEmbedContainerId)
         // console.log('newReportEmbedContainer', newReportEmbedContainer)
 
         let iFrameArray = $(".embedContainer:visible > iframe")
-        // console.log('iFrameArray', iFrameArray)
 
+        let matchingIndex = 0;
         for (let i = 0; i < iFrameArray.length; i++) {
-            if (iFrameArray[i].classList.contains(lookId)) { //&& !secondaryAction
+            if (iFrameArray[i].classList.contains(lookId)) {
                 iFrameArray[i].classList.remove('d-none')
+                matchingIndex = i;
             } else {
                 iFrameArray[i].classList.add('d-none')
             }
@@ -643,14 +589,7 @@ class Home extends Component {
                 .build()
                 .connect()
                 .then((explore) => {
-                    console.log('explore then callback')
-                    // console.log(explore)
-                    // if (exploreId) {
-                    //     console.log('inside ifff')
-                    //     this.setState({
-                    //         [validIdHelper(exploreId)]: explore
-                    //     })
-                    // }
+                    // console.log('explore then callback')
                 })
                 .catch((error) => {
                     console.error('Connection error', error)
@@ -659,17 +598,64 @@ class Home extends Component {
 
             this.handleTabChange(1) //can assume one for now
         }
+        else if (secondaryAction === 'delete') {
+
+            let lookerResponse = await fetch('/deletelook/' + lookId, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (lookerResponse.status === 200) {
+                // console.log("inside 200 ifff")
+                let reportBuilderApiContentCopy = this.state.reportBuilderApiContent;
+                reportBuilderApiContentCopy.looks.splice(matchingIndex, 1)
+                this.setState({
+                    reportBuilderApiContent: reportBuilderApiContentCopy
+                }, () => {
+                    // console.log('callback this.state.reportBuilderApiContent', this.state.reportBuilderApiContent)
+                })
+            }
+        } else if (secondaryAction === 'explore') {
+            $(`#${newReportEmbedContainer}`).empty();
+
+            LookerEmbedSDK.createExploreWithId(exploreId)
+                .appendTo(`#${newReportEmbedContainer}`)
+                .withClassName('iframe')
+                .on('explore:state:changed', (event) => {
+                    // console.log('explore:state:changed')
+                    // console.log('event', event)
+                })
+                .withClassName("exploreIframe")
+                .withParams({
+                    qid: qid,
+                    // toggle: 'dat,pik,vis'
+                })
+                .build()
+                .connect()
+                .then((explore) => {
+                    // console.log('explore then callback')
+                })
+                .catch((error) => {
+                    console.error('Connection error', error)
+                })
+
+
+            this.handleTabChange(1) //can assume one for now
+
+        }
     }
 
 
 
     // drillClick(event) {
     dashboardOverviewDetailAction(event) {
-        // console.log('drillClick')
-        // console.log('dashboardOverviewDetailAction')
-        // console.log('event', event)
+        console.log('dashboardOverviewDetailAction')
+        console.log('event', event)
         const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
         if (isCampaignPerformanceDrill) {
+            console.log('isCampaignPerformanceDrill', isCampaignPerformanceDrill)
             // const parsedUrl = new URL(event.url)
             // const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
             // const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
@@ -684,9 +670,9 @@ class Home extends Component {
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
             //urls changed to relative, need slugs to work across instances?
 
-            // console.log('stateName', stateName)
-            // console.log('filterName', filterName)
-            // console.log('filterValue', filterValue)
+            console.log('stateName', stateName)
+            console.log('filterName', filterName)
+            console.log('filterValue', filterValue)
 
 
             this.setState({}, () => {

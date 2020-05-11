@@ -10,6 +10,8 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import ComboBox from '../Material/ComboBox';
 import Skeleton from '@material-ui/lab/Skeleton';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Card from '@material-ui/core/Card';
 import '../Home.css'
 import CodeFlyout from './CodeFlyout';
 const { validIdHelper } = require('../../tools');
@@ -92,6 +94,10 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 275,
         minHeight: 600,
     },
+    card: {
+        minWidth: 275,
+        minHeight: 600,
+    },
 }));
 
 export default function Dashboard(props) {
@@ -120,14 +126,18 @@ export default function Dashboard(props) {
     });
 
     return (
-        <div className={classes.root}>
+        <div className={`${classes.root} demoComponent`}>
             <Grid container
                 spacing={3}
                 key={validIdHelper(type)} >
                 <div className={classes.root}>
                     {iFrameExists ? '' :
                         <Grid item sm={12} >
-                            <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
+                            {/* <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> */}
+
+                            <Card className={`${classes.card} ${classes.flexCentered}`}>
+                                <CircularProgress className={classes.circularProgress} />
+                            </Card>
                         </Grid>
                     }
 
