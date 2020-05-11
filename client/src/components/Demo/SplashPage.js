@@ -148,10 +148,24 @@ export default function SplashPage(props) {
                                     </Typography>
                                 </CardContent>
                             </Card>
-                            :
-                            <Card className={`${classes.card} ${classes.flexCentered}`}>
-                                <CircularProgress className={classes.circularProgress} />
-                            </Card>}
+                            : apiContent[index] && apiContent[index].glance.queryResults.errors ?
+
+                                <Card className={`${classes.card} text-center`}
+                                >
+                                    <CardContent>
+                                        <Typography variant="h5" component="h2" color="error">
+                                            Error
+                                        </Typography>
+                                        <br />
+                                        <Typography variant="h6" component="h6" color="error">
+                                            {JSON.stringify(apiContent[index].glance.queryResults.errors[0].message.substring(0, 50))}...
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                :
+                                <Card className={`${classes.card} ${classes.flexCentered}`}>
+                                    <CircularProgress className={classes.circularProgress} />
+                                </Card>}
                     </Grid>
                 ))}
 

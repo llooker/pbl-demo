@@ -284,7 +284,7 @@ class Home extends Component {
         } else {
             embedContainerArray = document.getElementsByClassName("embedContainer")
         }
-        console.log('embedContainerArray', embedContainerArray)
+        // console.log('embedContainerArray', embedContainerArray)
 
         for (let h = 0; h < embedContainerArray.length; h++) {
             let thisEmbedContainerId = embedContainerArray[h].id
@@ -301,16 +301,7 @@ class Home extends Component {
                         .withClassName('iframe')
                         .withNext()
                         .withTheme('Looker')
-                        // .on('dashboard:run:start', (event) => console.log('event', event))
-                        // .on('drillmenu:click', (event) => this.drillClick(event))
-                        // .on('drillmenu:click', (event) => this[_.camelCase(usecaseContent[j].type) + 'Action'](event))
-                        .on('drillmenu:click', (event) => {
-                            console.log('inside drill menu click')
-                            if (typeof this[_.camelCase(usecaseContent[j].type) + 'Action'] === 'function') {
-                                this[_.camelCase(usecaseContent[j].type) + 'Action'](event)
-                            }
-                        })
-                        // .on('dashboard:filters:changed', (e) => this.filtersUpdates(e))
+                        .on('drillmenu:click', (event) => typeof this[_.camelCase(usecaseContent[j].type) + 'Action'] === 'function' ? this[_.camelCase(usecaseContent[j].type) + 'Action'](event) : '')
                         .build()
                         .connect()
                         .then((dashboard) => {
@@ -454,14 +445,15 @@ class Home extends Component {
                         }
                     })
                     let lookerResponseData = await lookerResposnse.json();
-                    // console.log('lookerResponseData', lookerResponseData)
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
                     // this gives better performance...
                     this.setState((prevState) => ({
                         [stateKey]: prevState[stateKey] ? [...prevState[stateKey], { 'glance': lookerResponseData }] : [{ 'glance': lookerResponseData }]
                     }), () => {
-                        if (lookerResponseData.queryResults.data[0]) //for now
+                        if (lookerResponseData.queryResults.errors) {
+                        } else if (lookerResponseData.queryResults.data[0]) //for now
                             this.splashPageDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
+
                     })
 
                     // use state for this for now for better loading experience
@@ -493,8 +485,8 @@ class Home extends Component {
     }
 
     splashPageDetail = async (sharedUrl, index) => {
-        // console.log('splashPageDetail')
-        // console.log('sharedUrl', sharedUrl)
+        console.log('splashPageDetail')
+        console.log('sharedUrl', sharedUrl)
         // console.log('index', index)
         let parsedUrl = new URL(`https://${this.props.lookerHost}.looker.com${sharedUrl}`);
         let splashPageApiContentCopy;
@@ -651,11 +643,10 @@ class Home extends Component {
 
     // drillClick(event) {
     dashboardOverviewDetailAction(event) {
-        console.log('dashboardOverviewDetailAction')
-        console.log('event', event)
-        const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false
+        // console.log('dashboardOverviewDetailAction')
+        // console.log('event', event)
+        const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false;
         if (isCampaignPerformanceDrill) {
-            console.log('isCampaignPerformanceDrill', isCampaignPerformanceDrill)
             // const parsedUrl = new URL(event.url)
             // const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
             // const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
@@ -670,9 +661,9 @@ class Home extends Component {
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
             //urls changed to relative, need slugs to work across instances?
 
-            console.log('stateName', stateName)
-            console.log('filterName', filterName)
-            console.log('filterValue', filterValue)
+            // console.log('stateName', stateName)
+            // console.log('filterName', filterName)
+            // console.log('filterValue', filterValue)
 
 
             this.setState({}, () => {
@@ -681,8 +672,8 @@ class Home extends Component {
             })
 
             this.handleTabChange(1) //can assume one for now
-
             return { cancel: (isCampaignPerformanceDrill) ? true : false }
+
         }
     }
 
