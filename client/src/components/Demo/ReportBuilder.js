@@ -104,10 +104,6 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 275,
         minHeight: 600,
     },
-    card: {
-        minWidth: 275,
-        minHeight: 600,
-    },
     ml24: {
         marginLeft: 24
     }

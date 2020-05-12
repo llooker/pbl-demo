@@ -116,9 +116,10 @@ module.exports.runInlineQuery = async (req, res, next) => {
     }
 }
 //og attempt
-module.exports.createQuery = async (req, res, next) => {
-    // console.log('lookerController createQuery');
+/*module.exports.createQuery = async (req, res, next) => {
+    console.log('lookerController createQuery');
     const { params } = req;
+    console.log('params', params);
     try {
         let create_query_response = await sdk.ok(sdk.create_query(params.query_body, ''));
         let query_response = await sdk.ok(sdk.run_query({
@@ -130,14 +131,14 @@ module.exports.createQuery = async (req, res, next) => {
         };
         res.status(200).send(resObj);
     } catch (err) {
-        // console.log('catch')
-        // console.log('err', err)
+        console.log('catch')
+        console.log('err', err)
         let errorObj = {
             errorMessage: 'Not working!'
         }
         res.status(404).send(errorObj);
     }
-}
+}*/
 
 module.exports.createQueryTask = async (req, res, next) => {
     // console.log('lookerController createQueryTask');
@@ -187,9 +188,9 @@ module.exports.checkQueryTask = async (req, res, next) => {
 }
 
 module.exports.deleteLook = async (req, res, next) => {
-    console.log('lookerController deleteLook');
+    // console.log('lookerController deleteLook');
     const { params } = req;
-    console.log('params', params)
+    // console.log('params', params)
 
     try {
         let delete_look = await sdk.ok(sdk.delete_look(params.look_id));

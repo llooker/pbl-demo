@@ -13,7 +13,7 @@
                 "icon": "fa-home",
                 "lookerContent": [
                     {
-                        "type": "api",
+                        "type": "runQuery",
                         "id": "607764",
                         "resultFormat": "json_detail",
                         "cardLabel": "Number of Active Campaigns",
@@ -22,7 +22,7 @@
                         "desiredProperty": "campaigns.campaign_name"
                     },
                     {
-                        "type": "api",
+                        "type": "runQuery",
                         "id": "585321",
                         "resultFormat": "json_detail",
                         "cardLabel": "Total Spend Last Quarter",
@@ -30,7 +30,7 @@
                         "desiredProperty": "adevents.total_cost"
                     },
                     {
-                        "type": "api",
+                        "type": "runQuery",
                         "id": "984096",
                         "resultFormat": "json_detail",
                         "cardLabel": "Total ROI",
@@ -99,7 +99,7 @@
                 "type": "report builder",
                 "label": "Saved Reports",
                 "description": "Give users the ability to explore existing reports as well as create new ones all from within your application",
-                "icon": "fa-hammer",
+                "icon": "fa-sticky-note",
                 "lookerContent": [
                     {
                         "type": "folder",
@@ -116,7 +116,7 @@
             {
                 "type": "query builder",
                 "label": "Query Builder",
-                "description": "Enable business users to self serve of data and answer their own questions",
+                "description": "Enable business users to self serve on data and answer their own questions",
                 "icon": "fa-search",
                 "lookerContent": [
                     {
@@ -154,6 +154,30 @@
                             "campaigns.is_active_now": "yesno",
                             "campaigns.created_date": "date"
                         }
+                    }
+                ]
+            },
+            {
+                "type": "cohort builder",
+                "label": "Cohort Builder",
+                "icon": "fa-hammer",
+                "lookerContent": [
+                    {
+                        "type": "createQuery",
+                        "id": "createQuery",
+                        "fields": [
+                            "adevents.event_type",
+                            "campaigns.campaign_name",
+                            "keywords.criterion_name",
+                            "users.age",
+                            "user_session_fact.count_with_purchase_tier"
+                        ],
+                        "queryBody": {
+                            "model": "thelook_adwords",
+                            "view": "events",
+                            "fields": []
+                        },
+                        "resultFormat": "json"
                     }
                 ]
             },

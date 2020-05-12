@@ -29,6 +29,7 @@ import ReportBuilder from './Demo/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
 import Dashboard from './Demo/Dashboard';
+import CohortBuilder from './Demo/CohortBuilder';
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
@@ -294,6 +295,7 @@ class Home extends Component {
         let objForState = {}
         for (let j = 0; j < usecaseContent.length; j++) {
             for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
+                // console.log('usecaseContent[j].lookerContent[i].type', usecaseContent[j].lookerContent[i].type)
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
                     let dashboardId = usecaseContent[j].lookerContent[i].id;
                     LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
@@ -348,20 +350,10 @@ class Home extends Component {
                             // console.log('explore:state:changed')
                             // console.log('event', event)
                         })
-                        // .withParams({
-                        //     qid: 'QBtnsUlBRDctxq5jSWmksJ',
-                        //     toggle: 'dat,pik,vis'
-                        // })
                         .build()
                         .connect()
                         .then((explore) => {
                             // // console.log('explore then callback')
-                            // if (exploreId) {
-                            //     // console.log('inside ifff')
-                            //     this.setState({
-                            //         [validIdHelper(exploreId)]: explore
-                            //     })
-                            // }
                         })
                         .catch((error) => {
                             console.error('Connection error', error)
@@ -434,8 +426,8 @@ class Home extends Component {
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
                     objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
 
-                } else if (usecaseContent[j].lookerContent[i].type === "api") {
-                    // console.log('inside elllse if for api')
+                } else if (usecaseContent[j].lookerContent[i].type === "runQuery") {
+                    // console.log('inside elllse if for runQuery')
                     // console.log('usecaseContent[j].lookerContent[i].id', usecaseContent[j].lookerContent[i].id)
                     let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
                         method: 'GET',
@@ -466,6 +458,9 @@ class Home extends Component {
                 } else if (usecaseContent[j].lookerContent[i].type === "explorelite") {
                     this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
 
+                } else if (usecaseContent[j].lookerContent[i].type === 'createQuery') {
+                    // console.log('inside elllse if for createQuery')
+                    // this.cohortBuilderAction(usecaseContent[j].lookerContent[i])
                 } else { console.log('catch all else') }
             }
 
@@ -485,8 +480,8 @@ class Home extends Component {
     }
 
     splashPageDetail = async (sharedUrl, index) => {
-        console.log('splashPageDetail')
-        console.log('sharedUrl', sharedUrl)
+        // console.log('splashPageDetail')
+        // console.log('sharedUrl', sharedUrl)
         // console.log('index', index)
         let parsedUrl = new URL(`https://${this.props.lookerHost}.looker.com${sharedUrl}`);
         let splashPageApiContentCopy;
@@ -722,6 +717,71 @@ class Home extends Component {
         }, 1000)
     }
 
+    cohortBuilderAction = async (lookerContent) => {
+        // console.log('cohortBuilderAction');
+        // console.log('lookerContent', lookerContent);
+
+
+        let cohortBuilderApiContentCopy = { ...this.state.cohortBuilderApiContent }
+        cohortBuilderApiContentCopy.status = 'running';
+        cohortBuilderApiContentCopy.filterContent = {};
+        this.setState({ 'cohortBuilderApiContent': cohortBuilderApiContentCopy })
+
+        for (let i = 0; i < lookerContent.fields.length; i++) {
+
+            let newQuery = lookerContent.queryBody;
+            newQuery.fields = [lookerContent.fields[i]];
+            console.log('newQuery', newQuery);
+
+
+            let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            let lookerCreateTaskResponseData = await lookerCreateTaskResposnse.json();
+            // console.log('lookerCreateTaskResponseData', lookerCreateTaskResponseData);
+
+            let taskInterval = setInterval(async () => {
+                let lookerCheckTaskResposnse = await fetch('/checkquerytask/' + lookerCreateTaskResponseData.queryTaskId, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                let lookerCheckTaskResponseData = await lookerCheckTaskResposnse.json();
+
+                if (lookerCheckTaskResponseData.queryResults.status === 'complete') {
+                    clearInterval(taskInterval)
+
+                    lookerCheckTaskResponseData.queryResults.options = []
+                    for (let j = 0; j < lookerCheckTaskResponseData.queryResults.data.length; j++) {
+                        let thisOption = {};
+                        thisOption.label = lookerCheckTaskResponseData.queryResults.data[j][lookerCheckTaskResponseData.queryResults.added_params.sorts[0]].value == null
+                            ? '' :
+                            lookerCheckTaskResponseData.queryResults.data[j][lookerCheckTaskResponseData.queryResults.added_params.sorts[0]].value
+                        lookerCheckTaskResponseData.queryResults.options.push(thisOption)
+                    }
+
+                    cohortBuilderApiContentCopy.filterContent[lookerCheckTaskResponseData.queryResults.id] = lookerCheckTaskResponseData.queryResults
+                    cohortBuilderApiContentCopy.status = Object.keys(cohortBuilderApiContentCopy.filterContent).length === lookerContent.fields.length ? "complete" : "running";
+                    this.setState((prevState) => ({
+                        'cohortBuilderApiContent': cohortBuilderApiContentCopy
+                    }))
+                }
+            }, 1000)
+
+        }
+        // console.log('cohortBuilderApiContentCopy', cohortBuilderApiContentCopy)
+        // this.setState({
+        //     cohortBuilderApiContent: cohortBuilderApiContentCopy
+        // })
+
+    }
+
     render() {
         // console.log('Home render');
         // console.log('this.state', this.state);
@@ -734,7 +794,8 @@ class Home extends Component {
             "report builder": ReportBuilder,
             "query builder": QueryBuilder,
             "custom viz": ComingSoon,
-            "simple dashboard": Dashboard
+            "simple dashboard": Dashboard,
+            "cohort builder": ComingSoon //CohortBuilder
         }
         const themeMap = {
             "ecomm": ecommTheme,

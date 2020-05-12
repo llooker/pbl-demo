@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     },
     card: {
         minWidth: 275,
-        minHeight: 600,
+        minHeight: 800,
     },
 }));
 
