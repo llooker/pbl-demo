@@ -106,7 +106,17 @@ const useStyles = makeStyles((theme) => ({
     },
     ml24: {
         marginLeft: 24
+    },
+    parentHoverVisibility: {
+        '&:hover $childHoverVisibility': {
+            visibility: 'visible'
+        }
+
+    },
+    childHoverVisibility: {
+        visibility: 'hidden'
     }
+
 }));
 
 export default function ReportBuilder(props) {
@@ -241,21 +251,21 @@ export default function ReportBuilder(props) {
                                                                                         nodeId={"" + (treeCounter += 1)}
                                                                                         treecounter={treeCounter}
                                                                                         selected={selected === treeCounter}
-                                                                                        className={selected === treeCounter ? "Mui-selected innerTreeItem" : "innerTreeItem"}
+                                                                                        className={selected === treeCounter ? `Mui-selected innerTreeItem` : `innerTreeItem`}
                                                                                         contentid={item.id}
                                                                                         label={item.folder_id === sharedFolderId ?
 
                                                                                             <div
                                                                                                 id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                                                                                                 key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                                                                                                className={classes.labelRoot}>
+                                                                                                className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
                                                                                                 {item.title}
 
                                                                                                 <Button
                                                                                                     id={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
                                                                                                     key={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
                                                                                                     size="small"
-                                                                                                    className={classes.ml24}
+                                                                                                    className={`${classes.ml24} ${classes.childHoverVisibility}`}
                                                                                                     onClick={(event) => {
                                                                                                         setSelected(treeCounter);
                                                                                                         action(
@@ -277,13 +287,13 @@ export default function ReportBuilder(props) {
                                                                                             <div
                                                                                                 id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                                                                                                 key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                                                                                                className={classes.labelRoot}>
+                                                                                                className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
                                                                                                 {item.title}
                                                                                                 <Button
                                                                                                     id={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
                                                                                                     key={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
                                                                                                     size="small"
-                                                                                                    className={classes.ml24}
+                                                                                                    className={`${classes.ml24} ${classes.childHoverVisibility}`} //
                                                                                                     onClick={(event) => {
                                                                                                         setSelected(treeCounter);
                                                                                                         action(
@@ -304,7 +314,7 @@ export default function ReportBuilder(props) {
                                                                                                     id={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
                                                                                                     key={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
                                                                                                     size="small"
-                                                                                                    className={classes.ml24}
+                                                                                                    className={`${classes.ml24} ${classes.childHoverVisibility}`} //
                                                                                                     onClick={(event) => {
                                                                                                         setSelected(treeCounter);
                                                                                                         action(

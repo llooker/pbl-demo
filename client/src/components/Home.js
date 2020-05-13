@@ -640,35 +640,31 @@ class Home extends Component {
     dashboardOverviewDetailAction(event) {
         // console.log('dashboardOverviewDetailAction')
         // console.log('event', event)
-        const isCampaignPerformanceDrill = (event.label === 'Campaign Performance Dashboard') ? true : false;
-        if (isCampaignPerformanceDrill) {
-            // const parsedUrl = new URL(event.url)
-            // const stateName = decodeURIComponent(parsedUrl.pathname.substring(parsedUrl.pathname.lastIndexOf('/') + 1, parsedUrl.pathname.length))
-            // const filterName = decodeURIComponent(parsedUrl.search.substring(1, parsedUrl.search.indexOf('=')))
-            // const filterValue = decodeURIComponent(parsedUrl.search.substring(parsedUrl.search.indexOf('=') + 1, parsedUrl.search.length))
-
+        if (event.label === 'Campaign Performance Dashboard') { //ecommm
             const url = event.url;
             let stateName = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
             const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
             const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
-
-
             if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
-            //urls changed to relative, need slugs to work across instances?
-
-            // console.log('stateName', stateName)
-            // console.log('filterName', filterName)
-            // console.log('filterValue', filterValue)
-
-
             this.setState({}, () => {
                 this.state[stateName].updateFilters({ [filterName]: filterValue })
                 this.state[stateName].run()
             })
 
             this.handleTabChange(1) //can assume one for now
-            return { cancel: (isCampaignPerformanceDrill) ? true : false }
-
+            return { cancel: true }
+        } else if (event.label === "Condition Lookup Dashboard") { //insurance
+            const url = event.url;
+            let stateName = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
+            const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
+            const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
+            if (stateName === 'TU4SBUVLvW1gDzfwCms2ji') stateName = 286; // hack for now...
+            this.setState({}, () => {
+                this.state[stateName].updateFilters({ [filterName]: filterValue })
+                this.state[stateName].run()
+            })
+            this.handleTabChange(1) //can assume one for now
+            return { cancel: true }
         }
     }
 

@@ -228,11 +228,22 @@
                 "lookerContent": []
             },
             {
-                "type": "custom viz",
-                "label": "Custom Visualization",
-                "description": "Build a custom visualization",
-                "icon": "fa-wrench",
-                "lookerContent": []
+                "type": "dashboard overview detail",
+                "label": "Dashboard Overview Detail",
+                "description": "Get an overview of all campaigns and drill down for campaign specific data",
+                "icon": "fa-link",
+                "lookerContent": [
+                    {
+                        "type": "dashboard",
+                        "id": "273",
+                        "label": "Healthcare Operations Overview"
+                    },
+                    {
+                        "type": "dashboard",
+                        "id": "286",
+                        "label": "Condition Lookup"
+                    }
+                ]
             }
         ]
     }
