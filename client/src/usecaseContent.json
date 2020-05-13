@@ -228,6 +228,19 @@
                 "lookerContent": []
             },
             {
+                "type": "simple dashboard",
+                "label": "Business Pulse Claims",
+                "description": "Keep a pulse on your business directly from your marketing application",
+                "icon": "fa-tachometer-alt",
+                "lookerContent": [
+                    {
+                        "type": "dashboard",
+                        "id": "60",
+                        "label": "Business Pulse Claims"
+                    }
+                ]
+            },
+            {
                 "type": "dashboard overview detail",
                 "label": "Dashboard Overview Detail",
                 "description": "Get an overview of all campaigns and drill down for campaign specific data",
