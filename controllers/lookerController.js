@@ -6,11 +6,31 @@ const settings = new NodeSettingsIniFile()
 const session = new NodeSession(settings)
 const sdk = new Looker40SDK(session)
 const sdk31 = new Looker31SDK(session)
+// const path = require('path');
 
-module.exports.auth = (req, res, next) => {
+
+module.exports.auth = async (req, res, next) => {
     // Authenticate the request is from a valid user here
     const src = req.query.src;
-    const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
+    //old method using auth_utils, requires embed secret
+    // console.log('src', src)
+    // const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
+    // console.log('url', url)
+
+    let body = req.session.lookerUser;
+    body.target_url = "https://" + process.env.LOOKER_HOST + src;
+
+    const url = await sdk.ok(sdk.create_sso_embed_url(body))
+        .then(response => {
+            // console.log('response', response)
+            // callback(null, response)
+            return response.url
+        })
+        .catch(err => {
+            console.log('err', err)
+            // callback(err)
+            return err;
+        })
     // console.log('url', url)
     res.json({ url });
 }

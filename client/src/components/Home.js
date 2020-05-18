@@ -182,6 +182,13 @@ const insuranceTheme = createMuiTheme({
         },
     },
 })
+const atomTheme = createMuiTheme({
+    palette: {
+        primary: {
+            main: green[500],
+        },
+    },
+})
 
 
 class Home extends Component {
@@ -302,6 +309,7 @@ class Home extends Component {
                         .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${dashboardId}`))
                         .withClassName('iframe')
                         .withNext()
+                        // .withNext(usecaseContent[j].lookerContent[i].isNext ? true : false)
                         .withTheme('Looker')
                         .on('drillmenu:click', (event) => typeof this[_.camelCase(usecaseContent[j].type) + 'Action'] === 'function' ? this[_.camelCase(usecaseContent[j].type) + 'Action'](event) : '')
                         .build()
@@ -721,13 +729,13 @@ class Home extends Component {
         let cohortBuilderApiContentCopy = { ...this.state.cohortBuilderApiContent }
         cohortBuilderApiContentCopy.status = 'running';
         cohortBuilderApiContentCopy.filterContent = {};
-        this.setState({ 'cohortBuilderApiContent': cohortBuilderApiContentCopy })
+        // this.setState({ 'cohortBuilderApiContent': cohortBuilderApiContentCopy })
 
         for (let i = 0; i < lookerContent.fields.length; i++) {
 
             let newQuery = lookerContent.queryBody;
             newQuery.fields = [lookerContent.fields[i]];
-            console.log('newQuery', newQuery);
+            // console.log('newQuery', newQuery);
 
 
             let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
@@ -796,7 +804,8 @@ class Home extends Component {
         const themeMap = {
             "ecomm": ecommTheme,
             "recruiting": recruitingTheme,
-            "insurance": insuranceTheme
+            "insurance": insuranceTheme,
+            "atom": atomTheme
         }
 
         const { drawerTabValue, drawerOpen, activeTabValue, sampleCode, activeUsecase } = this.state;

@@ -4,11 +4,8 @@
     "last_name": "",
     "session_length": 3600,
     "force_logout_login": true,
-    "external_group_id": "customerABC",
-    "group_ids": [
-        9,
-        1
-    ],
+    "external_group_id": "",
+    "group_ids": [],
     "permissions": [
         "access_data",
         "see_looks",
@@ -27,16 +24,11 @@
         "create_alerts"
     ],
     "models": [
-        "thelook",
-        "thelook_adwords",
-        "retail_block_model",
-        "gaming",
-        "healthcare",
-        "healthcare_claims",
-        "healthcare_cohort_discovery"
+        "atom_fashion"
     ],
     "user_attributes": {
         "locale": "en_US",
-        "country": "USA"
+        "country": "USA",
+        "brand": "Calvin Klein"
     }
 }

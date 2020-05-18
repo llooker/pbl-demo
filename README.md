@@ -1,4 +1,6 @@
-# Looker DemoEng WYSIWYG App
+# Looker PBL Demo Application
+
+This app is the new solution for PBL Demos.
 
 This is a react/node app featuring Looker's all new embed SDK to showcase PBL demos.
 
