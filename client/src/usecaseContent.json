@@ -5,6 +5,7 @@
             "name": "Atom Fashion",
             "logo": "https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png"
         },
+        "layout": "left-appbar",
         "demoComponents": [
             {
                 "type": "splash page",
@@ -190,94 +191,54 @@
             }
         ]
     },
-    "recruiting": {
-        "label": "Recruiting",
-        "vignette": {
-            "name": "HR Partners",
-            "logo": "https://static.vecteezy.com/system/resources/previews/000/424/228/non_2x/magnifying-glass-icon-vector-illustration.jpg"
-        },
-        "demoComponents": [
-            {
-                "type": "splash page",
-                "label": "Home",
-                "title": "Your recruiting efforts at a glance:",
-                "icon": "fa-home",
-                "lookerContent": []
-            },
-            {
-                "type": "custom viz",
-                "label": "Custom Visualization",
-                "description": "Build a custom visualization",
-                "icon": "fa-wrench",
-                "lookerContent": []
-            }
-        ]
-    },
-    "insurance": {
-        "label": "Insurance",
-        "vignette": {
-            "name": "Quality Insurance Co",
-            "logo": "https://images-na.ssl-images-amazon.com/images/I/61cKLDstV3L._AC_SX425_.jpg"
-        },
-        "demoComponents": [
-            {
-                "type": "splash page",
-                "label": "Home",
-                "title": "Your insurance efforts at a glance:",
-                "icon": "fa-home",
-                "lookerContent": []
-            },
-            {
-                "type": "simple dashboard",
-                "label": "Business Pulse Claims",
-                "description": "Keep a pulse on your business directly from your marketing application",
-                "icon": "fa-tachometer-alt",
-                "lookerContent": [
-                    {
-                        "type": "dashboard",
-                        "id": "60",
-                        "label": "Business Pulse Claims"
-                    }
-                ]
-            },
-            {
-                "type": "dashboard overview detail",
-                "label": "Dashboard Overview Detail",
-                "description": "Get an overview of all campaigns and drill down for campaign specific data",
-                "icon": "fa-link",
-                "lookerContent": [
-                    {
-                        "type": "dashboard",
-                        "id": "273",
-                        "label": "Healthcare Operations Overview"
-                    },
-                    {
-                        "type": "dashboard",
-                        "id": "286",
-                        "label": "Condition Lookup"
-                    }
-                ]
-            }
-        ]
-    },
     "atom": {
         "label": "Atom Fashion",
         "vignette": {
             "name": "Atom",
             "logo": ""
         },
+        "layout": "right-appbar",
         "demoComponents": [
             {
                 "type": "simple dashboard",
                 "label": "Sales Overview",
                 "description": "Overview of all your sales!",
-                "icon": "fa-tachometer-alt",
+                "icon": "fa-chart-line",
                 "lookerContent": [
                     {
                         "type": "dashboard",
                         "id": "131",
                         "label": "Sales Overview",
                         "isNext": false
+                    }
+                ]
+            },
+            {
+                "type": "custom filter",
+                "label": "Inventory Overview",
+                "description": "Overview of your inventory",
+                "icon": "fa-tshirt",
+                "lookerContent": [
+                    {
+                        "type": "dashboard",
+                        "id": "139",
+                        "label": "Inventory Overview",
+                        "isNext": false,
+                        "filter": {
+                            "label": "Select Product Name",
+                            "filterName": "Product Name",
+                            "inlineQuery": {
+                                "model": "atom_fashion",
+                                "view": "order_items",
+                                "fields": [
+                                    "products.item_name"
+                                ],
+                                "filters": {
+                                    "products.brand": "Calvin Klein"
+                                },
+                                "query_timezone": "America/Los_Angeles"
+                            }
+                        }
                     }
                 ]
             }

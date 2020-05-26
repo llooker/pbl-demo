@@ -160,28 +160,6 @@ const ecommTheme = createMuiTheme({
         }
     }
 })
-
-const recruitingTheme = createMuiTheme({
-    palette: {
-        primary: {
-            main: red[500],
-        },
-
-        typography: {
-            fontFamily: [
-                "Courier New", "Courier", "Monaco"
-            ]
-        }
-    },
-})
-
-const insuranceTheme = createMuiTheme({
-    palette: {
-        primary: {
-            main: orange[500],
-        },
-    },
-})
 const atomTheme = createMuiTheme({
     palette: {
         primary: {
@@ -201,6 +179,7 @@ class Home extends Component {
             activeTabValue: 0,
             sampleCode: {},
             activeUsecase: '',
+            appLayout: ''
         }
     }
 
@@ -268,12 +247,16 @@ class Home extends Component {
 
     componentDidMount(props) {
         // console.log('Home componentDidMount');
+        // console.log('props', props);
+
         let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
         this.setState({
-            activeUsecase: usecaseFromUrl
+            activeUsecase: usecaseFromUrl,
+            appLayout: UsecaseContent[usecaseFromUrl].layout || 'left-sidebar'
         }, () => {
             // console.log('callback')
             // console.log('this.state.activeUsecase', this.state.activeUsecase)
+            console.log('this.state.appLayout', this.state.appLayout)
             LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
             this.setupLookerContent(UsecaseContent[usecaseFromUrl].demoComponents);
         })
@@ -309,8 +292,8 @@ class Home extends Component {
                         .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${dashboardId}`))
                         .withClassName('iframe')
                         .withNext()
-                        // .withNext(usecaseContent[j].lookerContent[i].isNext ? true : false)
-                        .withTheme('Looker')
+                        // .withNext(usecaseContent[j].lookerContent[i].isNext || false) //how can I make this dynamic based on prop??
+                        .withTheme('Embedded')
                         .on('drillmenu:click', (event) => typeof this[_.camelCase(usecaseContent[j].type) + 'Action'] === 'function' ? this[_.camelCase(usecaseContent[j].type) + 'Action'](event) : '')
                         .build()
                         .connect()
@@ -437,14 +420,14 @@ class Home extends Component {
                 } else if (usecaseContent[j].lookerContent[i].type === "runQuery") {
                     // console.log('inside elllse if for runQuery')
                     // console.log('usecaseContent[j].lookerContent[i].id', usecaseContent[j].lookerContent[i].id)
-                    let lookerResposnse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
+                    let lookerResponse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
                         method: 'GET',
                         headers: {
                             Accept: 'application/json',
                             'Content-Type': 'application/json'
                         }
                     })
-                    let lookerResponseData = await lookerResposnse.json();
+                    let lookerResponseData = await lookerResponse.json();
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
                     // this gives better performance...
                     this.setState((prevState) => ({
@@ -533,7 +516,6 @@ class Home extends Component {
 
     customFilterAction = (newFilterValue, stateName, filterName) => {
         // console.log('customFilterAction')
-        // console.log('event', event)
         // console.log('newFilterValue', newFilterValue)
         // console.log('stateName', stateName)
         // console.log('filterName', filterName)
@@ -803,8 +785,6 @@ class Home extends Component {
         }
         const themeMap = {
             "ecomm": ecommTheme,
-            "recruiting": recruitingTheme,
-            "insurance": insuranceTheme,
             "atom": atomTheme
         }
 
