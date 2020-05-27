@@ -266,8 +266,8 @@ class Home extends Component {
     // think about refactor to make more efficient 
     // promise.all()
     async setupLookerContent(usecaseContent) {
-        console.log('setupLookerContent')
-        console.log('usecaseContent', usecaseContent)
+        // console.log('setupLookerContent')
+        // console.log('usecaseContent', usecaseContent)
 
         //delete old content
         let embedContainerArray = []
@@ -312,8 +312,8 @@ class Home extends Component {
                         })
 
                     if (usecaseContent[j].lookerContent[i].hasOwnProperty('filter')) {
-                        let stringifiedQuery = encodeURIComponent(JSON.stringify(usecaseContent[j].lookerContent[i].filter.inlineQuery))
-                        let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
+                        let desiredResultFormat = usecaseContent[j].lookerContent[i].filter.resultFormat || 'json_detail';
+                        let lookerResponse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].filter.queryId + '/' + desiredResultFormat, {
                             method: 'GET',
                             headers: {
                                 Accept: 'application/json',
@@ -322,14 +322,13 @@ class Home extends Component {
                         })
                         let lookerResponseData = await lookerResponse.json();
 
-                        let inlineQueryField = usecaseContent[j].lookerContent[i].filter.inlineQuery.fields[0]
+                        let queryResultsForDropdown = [];
+                        let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
                         for (i = 0; i < lookerResponseData.queryResults.length; i++) {
-                            lookerResponseData.queryResults[i].label = lookerResponseData.queryResults[i][inlineQueryField];
-                            delete lookerResponseData.queryResults[i][inlineQueryField];
+                            queryResultsForDropdown.push({ 'label': lookerResponseData.queryResults[i][desiredProperty] })
                         }
-
-                        const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent'; //customFilterApiContent
-                        objForState[stateKey] = lookerResponseData.queryResults;
+                        const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
+                        objForState[stateKey] = queryResultsForDropdown;
                     }
 
                 } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
@@ -419,8 +418,8 @@ class Home extends Component {
                     objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
 
                 } else if (usecaseContent[j].lookerContent[i].type === "runQuery") {
-                    console.log('inside elllse if for runQuery')
-                    console.log('usecaseContent[j].lookerContent[i].id', usecaseContent[j].lookerContent[i].id)
+                    // console.log('inside elllse if for runQuery')
+                    // console.log('usecaseContent[j].lookerContent[i].id', usecaseContent[j].lookerContent[i].id)
                     let desiredResultFormat = usecaseContent[j].lookerContent[i].resultFormat || 'json_detail';
                     let lookerResponse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + desiredResultFormat, {
                         method: 'GET',
@@ -439,7 +438,6 @@ class Home extends Component {
                         } else if (lookerResponseData.queryResults.data[0] && usecaseContent[j].type === "splash page") //for now
                             this.splashPageDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
                         // this.runQueryDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
-
                     })
 
                     // use state for this for now for better loading experience
@@ -452,13 +450,40 @@ class Home extends Component {
                 } else if (usecaseContent[j].lookerContent[i].type === "explorelite") {
                     this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
 
-                } else if (usecaseContent[j].lookerContent[i].type === 'createQuery') {
-                    // console.log('inside elllse if for createQuery')
-                    // this.cohortBuilderAction(usecaseContent[j].lookerContent[i])
                 }
-                // else if (usecaseContent[j].lookerContent[i].type === 'look') {
-                //     console.log('inside elllse if for customViz')
-                // }
+                else if (usecaseContent[j].lookerContent[i].type === 'custom vis') {
+                    let desiredResultFormat = usecaseContent[j].lookerContent[i].resultFormat || 'json_detail';
+                    let lookerResponse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].queryId + '/' + desiredResultFormat, {
+                        method: 'GET',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    let lookerResponseData = await lookerResponse.json();
+                    let queryResultsForCustomVis = { status: 'running', data: [[], []] }; //[[], []]; ////[[], []];
+                    let dateProperty = Object.keys(lookerResponseData.queryResults[0])[0];
+                    let salePriceProperty = Object.keys(lookerResponseData.queryResults[0])[1];
+                    let orderCountProperty = Object.keys(lookerResponseData.queryResults[0])[2];
+                    for (i = 0; i < lookerResponseData.queryResults.length; i++) {
+                        if (lookerResponseData.queryResults[i][dateProperty]) {
+                            queryResultsForCustomVis.data[0].push({
+                                'day': lookerResponseData.queryResults[i][dateProperty],
+                                value: lookerResponseData.queryResults[i][salePriceProperty]
+                            })
+                            queryResultsForCustomVis.data[1].push({
+                                'day': lookerResponseData.queryResults[i][dateProperty],
+                                value: lookerResponseData.queryResults[i][orderCountProperty]
+                            })
+                        }
+                    }
+                    queryResultsForCustomVis.status = "complete";
+                    // console.log('111 queryResultsForCustomVis', queryResultsForCustomVis)
+                    const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
+                    objForState[stateKey] = queryResultsForCustomVis;
+                } else if (usecaseContent[j].lookerContent[i].type === 'splash page') {
+                    console.log('inside iff for splash page')
+                }
                 else { console.log('catch all else') }
             }
 
@@ -937,7 +962,7 @@ class Home extends Component {
                                             <DemoComponent key={validIdHelper(`list-${item.type}`)}
                                                 staticContent={item}
                                                 handleDrawerTabChange={handleDrawerTabChange}
-                                                apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []}
+                                                apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []} //[]
                                                 action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
                                                 activeTabValue={activeTabValue}
                                                 handleTabChange={handleTabChange}

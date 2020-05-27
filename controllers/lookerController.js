@@ -95,9 +95,9 @@ module.exports.updateLookerUser = (req, res, next) => {
 
 //at a glance cards
 module.exports.runQuery = async (req, res, next) => {
-    console.log('lookerController runQuery');
+    // console.log('lookerController runQuery');
     const { params } = req;
-    console.log('params', params);
+    // console.log('params', params);
 
     try {
         let query = await sdk.ok(sdk.run_query({ query_id: params.query_id, result_format: params.result_format }));

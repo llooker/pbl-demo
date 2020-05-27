@@ -101,176 +101,14 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 275,
         minHeight: 800,
     },
+    height500: {
+        height: 500
+    }
 }));
 
-const data = [
-    {
-        "day": "2017-08-21",
-        "value": 361
-    },
-    {
-        "day": "2015-05-18",
-        "value": 68
-    },
-    {
-        "day": "2016-07-21",
-        "value": 114
-    },
-    {
-        "day": "2017-01-10",
-        "value": 310
-    },
-    {
-        "day": "2015-06-02",
-        "value": 149
-    },
-    {
-        "day": "2017-12-09",
-        "value": 32
-    },
-    {
-        "day": "2016-12-11",
-        "value": 33
-    },
-    {
-        "day": "2016-01-16",
-        "value": 78
-    },
-    {
-        "day": "2016-04-28",
-        "value": 281
-    },
-    {
-        "day": "2016-11-15",
-        "value": 255
-    },
-    {
-        "day": "2016-07-26",
-        "value": 57
-    },
-    {
-        "day": "2017-07-24",
-        "value": 199
-    },
-    {
-        "day": "2015-12-12",
-        "value": 239
-    },
-    {
-        "day": "2016-02-19",
-        "value": 90
-    },
-    {
-        "day": "2015-11-20",
-        "value": 266
-    },
-    {
-        "day": "2017-06-25",
-        "value": 227
-    },
-    {
-        "day": "2017-10-07",
-        "value": 155
-    },
-    {
-        "day": "2016-07-22",
-        "value": 120
-    },
-    {
-        "day": "2016-07-06",
-        "value": 44
-    },
-    {
-        "day": "2017-09-15",
-        "value": 362
-    },
-    {
-        "day": "2017-10-25",
-        "value": 169
-    },
-    {
-        "day": "2015-06-24",
-        "value": 52
-    },
-    {
-        "day": "2016-09-11",
-        "value": 296
-    },
-    {
-        "day": "2017-07-13",
-        "value": 185
-    },
-    {
-        "day": "2016-08-21",
-        "value": 99
-    },
-    {
-        "day": "2017-12-18",
-        "value": 312
-    },
-    {
-        "day": "2017-11-02",
-        "value": 116
-    },
-    {
-        "day": "2017-11-29",
-        "value": 377
-    },
-    {
-        "day": "2018-06-09",
-        "value": 56
-    },
-    {
-        "day": "2017-03-02",
-        "value": 363
-    },
-    {
-        "day": "2016-04-08",
-        "value": 362
-    },
-    {
-        "day": "2016-12-02",
-        "value": 389
-    },
-    {
-        "day": "2017-01-14",
-        "value": 112
-    },
-    {
-        "day": "2016-06-16",
-        "value": 329
-    },
-    {
-        "day": "2017-02-12",
-        "value": 111
-    },
-    {
-        "day": "2017-06-05",
-        "value": 93
-    },
-    {
-        "day": "2018-05-20",
-        "value": 165
-    },
-    {
-        "day": "2016-05-30",
-        "value": 287
-    },
-    {
-        "day": "2015-04-16",
-        "value": 25
-    }];
-
 export default function CustomVis(props) {
-    console.log('CustomVis')
-    console.log('props', props)
-    console.log('000 data', data)
-
-    // data.sort(function (a, b) {
-    //     return new Date(a.day) - new Date(b.day)
-    // });
-
-    // console.log('111 data', data)
+    // console.log('CustomVis')
+    // console.log('props', props)
 
     const classes = useStyles();
     const [value, setValue] = useState(0);
@@ -302,18 +140,7 @@ export default function CustomVis(props) {
                 spacing={3}
                 key={validIdHelper(type)} >
                 <div className={classes.root}>
-                    {apiContent.length ? '' :
-                        <Grid item sm={12} >
-                            {/* <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> */}
-
-                            <Card className={`${classes.card} ${classes.flexCentered}`}>
-                                <CircularProgress className={classes.circularProgress} />
-                            </Card>
-                        </Grid>
-                    }
-
-                    {/* additional loading logic, need embedContainer to exist but want it hidden until iFrame has content...*/}
-                    <Box className={apiContent.length ? `` : `${classes.hidden}`}>
+                    <Box>
                         <AppBar position="static">
                             <Tabs
                                 className={classes.tabs}
@@ -348,62 +175,85 @@ export default function CustomVis(props) {
                                                 <CodeFlyout code={tabContentItem.lookerUser} />
                                             </Grid>
                                             :
-                                            <Grid item sm={12}>
-                                                <React.Fragment
-                                                    key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
-                                                    <h1>ResponsiveCalendar????</h1>
-                                                    <ResponsiveCalendar
-                                                        data={data}
-                                                        from="2015-03-01"
-                                                        to="2016-03-01"
-                                                        // emptyColor="#eeeeee"
-                                                        colors={['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']}
-                                                        // margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
-                                                        // yearSpacing={40}
-                                                        monthBorderColor="#ffffff"
-                                                        dayBorderWidth={2}
-                                                        dayBorderColor="#ffffff"
-                                                        legends={[
-                                                            {
-                                                                anchor: 'bottom-right',
-                                                                direction: 'row',
-                                                                translateY: 36,
-                                                                itemCount: 4,
-                                                                itemWidth: 42,
-                                                                itemHeight: 36,
-                                                                itemsSpacing: 14,
-                                                                itemDirection: 'right-to-left'
-                                                            }
-                                                        ]}
-                                                        height={500}
-                                                    />
-                                                </React.Fragment>
-                                            </Grid>
+                                            <React.Fragment
+                                                key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
+                                                {/* <FilterBar {...props}
+                                                    classes={classes}
+                                                />
+                                                <Divider className={classes.divider} /> */}
+                                                <Box
+                                                    className={classes.w100}
+                                                    mt={2}>
+                                                    {apiContent.status === 'running' ?
+
+                                                        <Grid item sm={12} >
+                                                            {/* <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> */}
+                                                            <Card className={`${classes.card} ${classes.flexCentered}`}>
+                                                                <CircularProgress className={classes.circularProgress} />
+                                                            </Card>
+                                                        </Grid>
+
+                                                        : apiContent.data && apiContent.data.length ?
+                                                            <>
+                                                                <Grid item sm={12} className={classes.height500}>
+                                                                    <h1>Total Sale Price by Date</h1>
+                                                                    <ResponsiveCalendar
+                                                                        data={apiContent.data[0]}
+                                                                        from="2019-03-01"
+                                                                        to="2020-03-01"
+                                                                        colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
+                                                                        // yearSpacing={40}
+                                                                        monthBorderColor="#ffffff"
+                                                                        dayBorderWidth={2}
+                                                                        dayBorderColor="#ffffff"
+                                                                        legends={[
+                                                                            {
+                                                                                anchor: 'bottom-right',
+                                                                                direction: 'row',
+                                                                                translateY: 36,
+                                                                                itemCount: 4,
+                                                                                itemWidth: 42,
+                                                                                itemHeight: 36,
+                                                                                itemsSpacing: 14,
+                                                                                itemDirection: 'right-to-left'
+                                                                            }
+                                                                        ]}
+                                                                        height={500}
+                                                                        maxHeight={500}
+                                                                    />
+                                                                </Grid>
+
+                                                                <Grid item sm={12} className={classes.height500}>
+                                                                    <h1>Total Orders by Date</h1>
+                                                                    <ResponsiveCalendar
+                                                                        data={apiContent.data[1]}
+                                                                        from="2019-03-01"
+                                                                        to="2020-03-01"
+                                                                        colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
+                                                                        // yearSpacing={40}
+                                                                        monthBorderColor="#ffffff"
+                                                                        dayBorderWidth={2}
+                                                                        dayBorderColor="#ffffff"
+                                                                        legends={[
+                                                                            {
+                                                                                anchor: 'bottom-right',
+                                                                                direction: 'row',
+                                                                                translateY: 36,
+                                                                                itemCount: 4,
+                                                                                itemWidth: 42,
+                                                                                itemHeight: 36,
+                                                                                itemsSpacing: 14,
+                                                                                itemDirection: 'right-to-left'
+                                                                            }
+                                                                        ]}
+                                                                        height={500}
+                                                                        maxHeight={500}
+                                                                    />
+                                                                </Grid>
+                                                            </> : ''}
+                                                </Box>
+                                            </React.Fragment>
                                         }
-                                        <ResponsiveCalendar
-                                            data={data}
-                                            from="2015-03-01"
-                                            to="2016-03-01"
-                                            // emptyColor="#eeeeee"
-                                            colors={['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']}
-                                            // margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
-                                            // yearSpacing={40}
-                                            monthBorderColor="#ffffff"
-                                            dayBorderWidth={2}
-                                            dayBorderColor="#ffffff"
-                                            legends={[
-                                                {
-                                                    anchor: 'bottom-right',
-                                                    direction: 'row',
-                                                    translateY: 36,
-                                                    itemCount: 4,
-                                                    itemWidth: 42,
-                                                    itemHeight: 36,
-                                                    itemsSpacing: 14,
-                                                    itemDirection: 'right-to-left'
-                                                }
-                                            ]}
-                                        />
                                     </Grid>
                                 </TabPanel>
                             ))}
@@ -414,31 +264,4 @@ export default function CustomVis(props) {
         </div >
     )
 }
-
-// const MyResponsiveCalendar = ({ data /* see data tab */ }) => (
-//     <ResponsiveCalendar
-//         data={data}
-//         from="2015-03-01"
-//         to="2016-07-12"
-//         emptyColor="#eeeeee"
-//         colors={['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']}
-//         margin={{ top: 40, right: 40, bottom: 40, left: 40 }}
-//         yearSpacing={40}
-//         monthBorderColor="#ffffff"
-//         dayBorderWidth={2}
-//         dayBorderColor="#ffffff"
-//         legends={[
-//             {
-//                 anchor: 'bottom-right',
-//                 direction: 'row',
-//                 translateY: 36,
-//                 itemCount: 4,
-//                 itemWidth: 42,
-//                 itemHeight: 36,
-//                 itemsSpacing: 14,
-//                 itemDirection: 'right-to-left'
-//             }
-//         ]}
-//     />
-// )
 

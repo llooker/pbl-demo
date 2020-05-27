@@ -1,199 +1,4 @@
 {
-    "ecomm": {
-        "label": "Ecomm",
-        "vignette": {
-            "name": "Atom Fashion",
-            "logo": "https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png"
-        },
-        "layout": "left-appbar",
-        "demoComponents": [
-            {
-                "type": "splash page",
-                "label": "Home",
-                "title": "Your ecomm efforts at a glance:",
-                "icon": "fa-home",
-                "lookerContent": [
-                    {
-                        "type": "runQuery",
-                        "lookerMethod": "runQuery",
-                        "id": "607764",
-                        "resultFormat": "json_detail",
-                        "cardLabel": "Number of Active Campaigns",
-                        "modalLabel": "Active Campaigns Detail",
-                        "desiredMethod": "length",
-                        "desiredProperty": "campaigns.campaign_name"
-                    },
-                    {
-                        "type": "runQuery",
-                        "lookerMethod": "runQuery",
-                        "id": "585321",
-                        "resultFormat": "json_detail",
-                        "cardLabel": "Total Spend Last Quarter",
-                        "modalLabel": "Total Spend By Quarter Detail",
-                        "desiredProperty": "adevents.total_cost"
-                    },
-                    {
-                        "type": "runQuery",
-                        "lookerMethod": "runQuery",
-                        "id": "984096",
-                        "resultFormat": "json_detail",
-                        "cardLabel": "Total ROI",
-                        "modalLabel": "ROI Detail",
-                        "desiredProperty": "session_attribution.total_attribution"
-                    }
-                ]
-            },
-            {
-                "type": "simple dashboard",
-                "label": "Sales",
-                "description": "Keep a pulse on your business directly from your marketing application",
-                "icon": "fa-tachometer-alt",
-                "lookerContent": [
-                    {
-                        "type": "dashboard",
-                        "id": "4608",
-                        "label": "Business Pulse"
-                    }
-                ]
-            },
-            {
-                "type": "custom filter",
-                "label": "Custom Filter",
-                "description": "Filter by brands to better understand ad performance",
-                "icon": "fa-filter",
-                "lookerContent": [
-                    {
-                        "type": "dashboard",
-                        "id": "5280",
-                        "label": "Advertising Pulse",
-                        "filter": {
-                            "label": "Select Brand",
-                            "filterName": "Brand",
-                            "inlineQuery": {
-                                "model": "thelook",
-                                "view": "order_items",
-                                "fields": [
-                                    "products.brand"
-                                ],
-                                "query_timezone": "America/Los_Angeles"
-                            }
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "dashboard overview detail",
-                "label": "Dashboard Overview Detail",
-                "description": "Get an overview of all campaigns and drill down for campaign specific data",
-                "icon": "fa-link",
-                "lookerContent": [
-                    {
-                        "type": "dashboard",
-                        "id": "5277",
-                        "label": "Advertising Overview"
-                    },
-                    {
-                        "type": "dashboard",
-                        "id": "3106",
-                        "label": "Campaign Search"
-                    }
-                ]
-            },
-            {
-                "type": "report builder",
-                "label": "Saved Reports",
-                "description": "Give users the ability to explore existing reports as well as create new ones all from within your application",
-                "icon": "fa-sticky-note",
-                "lookerContent": [
-                    {
-                        "type": "folder",
-                        "id": "1827",
-                        "label": "Saved Reports"
-                    },
-                    {
-                        "type": "explore",
-                        "id": "thelook_adwords::events",
-                        "label": "Create New Report"
-                    }
-                ]
-            },
-            {
-                "type": "query builder",
-                "label": "Query Builder",
-                "description": "Enable business users to self serve on data and answer their own questions",
-                "icon": "fa-search",
-                "lookerContent": [
-                    {
-                        "type": "explorelite",
-                        "id": "explorelite",
-                        "label": "Build & Run Queries",
-                        "queryBody": {
-                            "model": "thelook_adwords",
-                            "view": "events",
-                            "fields": [
-                                "campaigns.campaign_id",
-                                "campaigns.campaign_name",
-                                "campaigns.campaign_type",
-                                "session_purchase_facts.ROI",
-                                "adevents.cost_per_click",
-                                "adevents.total_cost",
-                                "adevents.total_clicks"
-                            ],
-                            "filters": {
-                                "campaigns.is_active_now": "Yes",
-                                "campaigns.created_date": "1 year"
-                            }
-                        },
-                        "resultFormat": "json",
-                        "fieldType": {
-                            "campaigns.campaign_id": "dimension",
-                            "campaigns.campaign_name": "dimension",
-                            "campaigns.campaign_type": "dimension",
-                            "session_purchase_facts.ROI": "measure",
-                            "adevents.cost_per_click": "measure",
-                            "adevents.total_cost": "measure",
-                            "adevents.total_clicks": "measure"
-                        },
-                        "filterType": {
-                            "campaigns.is_active_now": "yesno",
-                            "campaigns.created_date": "date"
-                        }
-                    }
-                ]
-            },
-            {
-                "type": "cohort builder",
-                "label": "Cohort Builder",
-                "icon": "fa-hammer",
-                "lookerContent": [
-                    {
-                        "type": "createQuery",
-                        "id": "createQuery",
-                        "fields": [
-                            "adevents.event_type",
-                            "campaigns.campaign_name",
-                            "keywords.criterion_name",
-                            "users.age",
-                            "user_session_fact.count_with_purchase_tier"
-                        ],
-                        "queryBody": {
-                            "model": "thelook_adwords",
-                            "view": "events",
-                            "fields": []
-                        },
-                        "resultFormat": "json"
-                    }
-                ]
-            },
-            {
-                "type": "custom viz",
-                "label": "Custom Visualization",
-                "description": "Build a custom visualization",
-                "icon": "fa-wrench",
-                "lookerContent": []
-            }
-        ]
-    },
     "atom": {
         "label": "Atom Fashion",
         "vignette": {
@@ -210,6 +15,7 @@
                 "lookerContent": [
                     {
                         "type": "dashboard",
+                        "lookerMethod": "embedDashboard",
                         "id": "131",
                         "label": "Sales Overview",
                         "isNext": false
@@ -224,23 +30,16 @@
                 "lookerContent": [
                     {
                         "type": "dashboard",
+                        "lookerMethod": "embedDashboard",
                         "id": "139",
-                        "label": "Inventory Overview",
                         "isNext": false,
+                        "label": "Inventory Overview",
                         "filter": {
                             "label": "Select Product Name",
                             "filterName": "Product Name",
-                            "inlineQuery": {
-                                "model": "atom_fashion",
-                                "view": "order_items",
-                                "fields": [
-                                    "products.item_name"
-                                ],
-                                "filters": {
-                                    "products.brand": "Calvin Klein"
-                                },
-                                "query_timezone": "America/Los_Angeles"
-                            }
+                            "lookerMethod": "runQuery",
+                            "queryId": "28777",
+                            "resultFormat": "json"
                         }
                     }
                 ]
@@ -249,13 +48,13 @@
                 "type": "custom vis",
                 "label": "Custom vis",
                 "description": "Ayeeeeeee",
-                "icon": "fa-shark",
+                "icon": "fa-dog",
                 "lookerContent": [
                     {
-                        "type": "runQuery",
+                        "type": "custom vis",
                         "lookerMethod": "runQuery",
-                        "id": "28589",
-                        "resultFormat": "json_detail",
+                        "queryId": "28589",
+                        "resultFormat": "json",
                         "label": "Custom Viz"
                     }
                 ]
