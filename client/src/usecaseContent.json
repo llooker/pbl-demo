@@ -15,6 +15,7 @@
                 "lookerContent": [
                     {
                         "type": "runQuery",
+                        "lookerMethod": "runQuery",
                         "id": "607764",
                         "resultFormat": "json_detail",
                         "cardLabel": "Number of Active Campaigns",
@@ -24,6 +25,7 @@
                     },
                     {
                         "type": "runQuery",
+                        "lookerMethod": "runQuery",
                         "id": "585321",
                         "resultFormat": "json_detail",
                         "cardLabel": "Total Spend Last Quarter",
@@ -32,6 +34,7 @@
                     },
                     {
                         "type": "runQuery",
+                        "lookerMethod": "runQuery",
                         "id": "984096",
                         "resultFormat": "json_detail",
                         "cardLabel": "Total ROI",
@@ -239,6 +242,21 @@
                                 "query_timezone": "America/Los_Angeles"
                             }
                         }
+                    }
+                ]
+            },
+            {
+                "type": "custom vis",
+                "label": "Custom vis",
+                "description": "Ayeeeeeee",
+                "icon": "fa-shark",
+                "lookerContent": [
+                    {
+                        "type": "runQuery",
+                        "lookerMethod": "runQuery",
+                        "id": "28589",
+                        "resultFormat": "json_detail",
+                        "label": "Custom Viz"
                     }
                 ]
             }

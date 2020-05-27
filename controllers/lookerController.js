@@ -95,8 +95,9 @@ module.exports.updateLookerUser = (req, res, next) => {
 
 //at a glance cards
 module.exports.runQuery = async (req, res, next) => {
-    // console.log('lookerController runQuery');
+    console.log('lookerController runQuery');
     const { params } = req;
+    console.log('params', params);
 
     try {
         let query = await sdk.ok(sdk.run_query({ query_id: params.query_id, result_format: params.result_format }));
@@ -217,6 +218,29 @@ module.exports.deleteLook = async (req, res, next) => {
         console.log('delete_look', delete_look)
         let resObj = {
             message: delete_look
+        };
+        res.status(200).send(resObj);
+
+    } catch (err) {
+        // console.log('catch')
+        // console.log('err', err)
+        let errorObj = {
+            errorMessage: 'Not working!'
+        }
+        res.status(404).send(errorObj);
+    }
+}
+
+module.exports.getLook = async (req, res, next) => {
+    // console.log('lookerController getLook');
+    const { params } = req;
+    // console.log('params', params)
+
+    try {
+        let look = await sdk.ok(sdk.get_look(params.look_id));
+        console.log('look', look)
+        let resObj = {
+            message: look
         };
         res.status(200).send(resObj);
 

@@ -30,4 +30,6 @@ router.get('/createquerytask/:query_body', lookerCtrl.createQueryTask)
 router.get('/checkquerytask/:task_id', lookerCtrl.checkQueryTask)
 router.get('/deletelook/:look_id', lookerCtrl.deleteLook)
 
+router.get('/getlook/:look_id', lookerCtrl.getLook);
+
 module.exports = router

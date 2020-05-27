@@ -30,6 +30,7 @@ import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
 import Dashboard from './Demo/Dashboard';
 import CohortBuilder from './Demo/CohortBuilder';
+import CustomVis from './Demo/CustomVis';
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
@@ -265,8 +266,8 @@ class Home extends Component {
     // think about refactor to make more efficient 
     // promise.all()
     async setupLookerContent(usecaseContent) {
-        // console.log('setupLookerContent')
-        // console.log('usecaseContent', usecaseContent)
+        console.log('setupLookerContent')
+        console.log('usecaseContent', usecaseContent)
 
         //delete old content
         let embedContainerArray = []
@@ -418,9 +419,10 @@ class Home extends Component {
                     objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
 
                 } else if (usecaseContent[j].lookerContent[i].type === "runQuery") {
-                    // console.log('inside elllse if for runQuery')
-                    // console.log('usecaseContent[j].lookerContent[i].id', usecaseContent[j].lookerContent[i].id)
-                    let lookerResponse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + usecaseContent[j].lookerContent[i].resultFormat, {
+                    console.log('inside elllse if for runQuery')
+                    console.log('usecaseContent[j].lookerContent[i].id', usecaseContent[j].lookerContent[i].id)
+                    let desiredResultFormat = usecaseContent[j].lookerContent[i].resultFormat || 'json_detail';
+                    let lookerResponse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + desiredResultFormat, {
                         method: 'GET',
                         headers: {
                             Accept: 'application/json',
@@ -434,8 +436,9 @@ class Home extends Component {
                         [stateKey]: prevState[stateKey] ? [...prevState[stateKey], { 'glance': lookerResponseData }] : [{ 'glance': lookerResponseData }]
                     }), () => {
                         if (lookerResponseData.queryResults.errors) {
-                        } else if (lookerResponseData.queryResults.data[0]) //for now
+                        } else if (lookerResponseData.queryResults.data[0] && usecaseContent[j].type === "splash page") //for now
                             this.splashPageDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
+                        // this.runQueryDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
 
                     })
 
@@ -452,7 +455,11 @@ class Home extends Component {
                 } else if (usecaseContent[j].lookerContent[i].type === 'createQuery') {
                     // console.log('inside elllse if for createQuery')
                     // this.cohortBuilderAction(usecaseContent[j].lookerContent[i])
-                } else { console.log('catch all else') }
+                }
+                // else if (usecaseContent[j].lookerContent[i].type === 'look') {
+                //     console.log('inside elllse if for customViz')
+                // }
+                else { console.log('catch all else') }
             }
 
         }
@@ -513,6 +520,50 @@ class Home extends Component {
         })
 
     }
+
+    /*runQueryDetail = async (sharedUrl, index) => {
+        // console.log('runQueryDetail')
+        console.log('sharedUrl', sharedUrl)
+        console.log('index', index)
+        let parsedUrl = new URL(`https://${this.props.lookerHost}.looker.com${sharedUrl}`);
+        let splashPageApiContentCopy;
+        if (parsedUrl.pathname.split('/')[1] === "explore") {
+            let filters = parsedUrl.search.match(/(?<=&f\[).+?(?=\])/g);
+            let filtersObj = {}
+            filters.forEach(item => {
+                filtersObj[item] = parsedUrl.searchParams.get(`f[${item}]`)
+            })
+            let newQueryParams = {
+                model: parsedUrl.pathname.split('/')[2],
+                view: parsedUrl.pathname.split('/')[3],
+                fields: parsedUrl.searchParams.get("fields").split(","),
+                filters: filtersObj,
+                total: true,
+                limit: "25"
+            }
+
+            // console.log('newQueryParams', newQueryParams)
+
+            let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(newQueryParams) + '/json', {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            let lookerResponseData = await lookerResponse.json();
+            splashPageApiContentCopy = [...this.state.splashPageApiContent]
+            splashPageApiContentCopy[index].detail = lookerResponseData.queryResults;
+
+        } else {
+            splashPageApiContentCopy = [...this.state.splashPageApiContent]
+            splashPageApiContentCopy[index].detail = [];
+        }
+        this.setState({
+            splashPageApiContent: splashPageApiContentCopy
+        })
+
+    }*/
 
     customFilterAction = (newFilterValue, stateName, filterName) => {
         // console.log('customFilterAction')
@@ -779,7 +830,7 @@ class Home extends Component {
             "dashboard overview detail": Dashboard,
             "report builder": ReportBuilder,
             "query builder": QueryBuilder,
-            "custom viz": ComingSoon,
+            "custom vis": CustomVis,
             "simple dashboard": Dashboard,
             "cohort builder": ComingSoon //CohortBuilder
         }
