@@ -454,7 +454,7 @@ class Home extends Component {
                 else if (usecaseContent[j].lookerContent[i].type === 'custom vis') {
                     let jsonQuery = usecaseContent[j].lookerContent[i].inlineQuery;
                     jsonQuery.filters = { [usecaseContent[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand };
-                    this.customVisAction(jsonQuery)
+                    this.customVisHelper(jsonQuery)
                 } else if (usecaseContent[j].lookerContent[i].type === 'splash page') {
                     console.log('inside iff for splash page')
                 }
@@ -818,19 +818,13 @@ class Home extends Component {
 
     }
 
-    customVisAction = async (inlineQuery, filterBarData) => {
-        // console.log('customVisAction')
+    customVisHelper = async (inlineQuery) => {
+        // console.log('customVisHelper')
         // console.log('000 inlineQuery', inlineQuery)
-        // console.log('filterBarData', filterBarData)
 
         let customVisApiContent = { ...this.state.customVisApiContent }
         customVisApiContent.status = 'running';
         this.setState({ customVisApiContent })
-
-        if (filterBarData) {
-            inlineQuery.filters[inlineQuery.fields[0]] = `${filterBarData.fromDate} to ${filterBarData.toDate}`
-        }
-        // console.log('111 inlineQuery', inlineQuery)
 
         let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
         let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
@@ -841,43 +835,53 @@ class Home extends Component {
             }
         })
         let lookerResponseData = await lookerResponse.json();
-        // console.log('111 lookerResponseData', lookerResponseData)
-
+        console.log('111 lookerResponseData', lookerResponseData)
         //this could be improved
-        let queryResultsForCustomVis = { status: 'running', data: [[], []] };
+        let queryResultsForCustomVis = { status: 'running', originalData: [[], []], data: [[], []] };
         let dateProperty = Object.keys(lookerResponseData.queryResults[0])[0];
-        // let categoryProperty = Object.keys(lookerResponseData.queryResults[0])[1];
-        let orderCountProperty = Object.keys(lookerResponseData.queryResults[0])[1];
-        let salePriceProperty = Object.keys(lookerResponseData.queryResults[0])[2];
-        // let uniqueCategories = ['All']
+        let categoryProperty = Object.keys(lookerResponseData.queryResults[0])[1];
+        let orderCountProperty = Object.keys(lookerResponseData.queryResults[0])[2];
+        let salePriceProperty = Object.keys(lookerResponseData.queryResults[0])[3];
+        let uniqueCategories = ['All']
         for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
             if (lookerResponseData.queryResults[i][dateProperty]) {
-                // queryResultsForCustomVis.data[0].push({
-                //     'day': lookerResponseData.queryResults[i][dateProperty],
-                //     'value': lookerResponseData.queryResults[i][categoryProperty]
-                // })
+                queryResultsForCustomVis.originalData[0].push({
+                    'day': lookerResponseData.queryResults[i][dateProperty],
+                    'value': lookerResponseData.queryResults[i][salePriceProperty],
+                    'category': lookerResponseData.queryResults[i][categoryProperty]
+                })
                 queryResultsForCustomVis.data[0].push({
                     'day': lookerResponseData.queryResults[i][dateProperty],
-                    'value': lookerResponseData.queryResults[i][salePriceProperty]
+                    'value': lookerResponseData.queryResults[i][salePriceProperty],
+                    'category': lookerResponseData.queryResults[i][categoryProperty]
+                })
+                queryResultsForCustomVis.originalData[1].push({
+                    'day': lookerResponseData.queryResults[i][dateProperty],
+                    'value': lookerResponseData.queryResults[i][orderCountProperty],
+                    'category': lookerResponseData.queryResults[i][categoryProperty]
                 })
                 queryResultsForCustomVis.data[1].push({
                     'day': lookerResponseData.queryResults[i][dateProperty],
-                    'value': lookerResponseData.queryResults[i][orderCountProperty]
+                    'value': lookerResponseData.queryResults[i][orderCountProperty],
+                    'category': lookerResponseData.queryResults[i][categoryProperty]
                 })
 
-                // if (uniqueCategories.indexOf(lookerResponseData.queryResults[i][categoryProperty]) == -1) {
-                //     uniqueCategories.push(lookerResponseData.queryResults[i][categoryProperty])
-                // }
+                if (uniqueCategories.indexOf(lookerResponseData.queryResults[i][categoryProperty]) == -1) {
+                    uniqueCategories.push(lookerResponseData.queryResults[i][categoryProperty])
+                }
             }
         }
         queryResultsForCustomVis.status = "complete";
         queryResultsForCustomVis.inlineQuery = inlineQuery;
-        // queryResultsForCustomVis.uniqueCategories = uniqueCategories;
+        queryResultsForCustomVis.uniqueCategories = uniqueCategories;
         // console.log('111 queryResultsForCustomVis', queryResultsForCustomVis)
         const stateKey = 'customVisApiContent';
         this.setState({
             [stateKey]: queryResultsForCustomVis
         })
+        //}
+
+
     }
 
     render() {

@@ -24,13 +24,12 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
+import _ from 'lodash'
 import '../Home.css'
 import CodeFlyout from './CodeFlyout';
 import { ResponsiveCalendar } from '@nivo/calendar'
 var moment = require('moment'); // require
 const { validIdHelper } = require('../../tools');
-
-// console.log('ResponsiveCalendar', ResponsiveCalendar)
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -66,45 +65,15 @@ function FilterBar(props) {
     // console.log('FilterBar');
     // console.log('props', props);
     const { staticContent, staticContent: { lookerContent }, classes, action, apiContent,
-        // fromDate, toDate, category, handleFromDate, handleToDate, handleCategory 
+        fromDate, toDate, category, handleFromDate, handleToDate, handleCategory
     } = props;
-    const [expanded, setExpanded] = useState(true);
 
-    const [fromDate, setFromDate] = useState(apiContent.data ? apiContent.data[0][apiContent.data[0].length - 1].day : '');
-    const [toDate, setToDate] = useState(apiContent.data ? apiContent.data[0][0].day : '');
-    const [queryModified, setQueryModified] = useState(false);
-    // const [category, setCategory] = useState('All')
+    const [expanded, setExpanded] = useState(true);
 
     //handlers
     const handleExpansionPanel = (event, newValue) => {
         setExpanded(expanded ? false : true);
     };
-    const handleFromDate = newValue => {
-        console.log('handleFromDate')
-        setFromDate(newValue)
-        setQueryModified(true)
-    }
-    const handleToDate = newValue => {
-        console.log('handleToDate')
-        setToDate(newValue)
-        setQueryModified(true)
-    }
-
-    // const handleCategory = (event) => {
-    //     setCategory(event.target.value);
-    // };
-
-    const handleQuerySubmit = (event) => {
-        if (queryModified) {
-            action(apiContent.inlineQuery, { fromDate, toDate })
-        }
-    }
-
-
-    useEffect(() => {
-        handleQuerySubmit()
-    }, [fromDate, toDate]);
-
 
     return (
         <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} className={classes.w100}>
@@ -159,7 +128,7 @@ function FilterBar(props) {
                                 </form>
                             </Grid>
 
-                            {/* <Grid item sm={12}>
+                            <Grid item sm={12}>
                                 <Typography variant="subtitle1">
                                     Filter by Product Category:
                     </Typography>
@@ -172,7 +141,7 @@ function FilterBar(props) {
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
                                         value={category}
-                                        onChange={handleCategory}
+                                        onChange={(event) => handleCategory(event.target.value)}
                                     >
                                         {apiContent.uniqueCategories.map((item, index) => (
 
@@ -183,7 +152,7 @@ function FilterBar(props) {
                                         ))}
                                     </Select>
                                 </FormControl>
-                            </Grid> */}
+                            </Grid>
                         </>
                         : ''}
                 </Grid>
@@ -277,11 +246,9 @@ export default function CustomVis(props) {
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab]
-
-    // const [data, setData] = useState([]);
-    // const [fromDate, setFromDate] = useState('');
-    // const [toDate, setToDate] = useState('');
-    // const [category, setCategory] = useState('All')
+    const [fromDate, setFromDate] = useState(apiContent.data ? apiContent.data[0][apiContent.data[0].length - 1].day : '');
+    const [toDate, setToDate] = useState(apiContent.data ? apiContent.data[0][0].day : '');
+    const [category, setCategory] = useState('All')
 
     let demoComponentType = type || 'sample code';
 
@@ -289,6 +256,86 @@ export default function CustomVis(props) {
         handleTabChange(0);
         setValue(newValue);
     };
+
+    const handleFromDate = newValue => {
+        setFromDate(newValue)
+    }
+    const handleToDate = newValue => {
+        setToDate(newValue)
+    }
+    const handleCategory = newValue => {
+        setCategory(newValue)
+    }
+
+    let filterData = [[], []]
+    if (apiContent && apiContent.originalData && apiContent.originalData[0]) {
+        filterData[0] = _.filter(apiContent.originalData[0], (row) => {
+            return (row.day > fromDate
+                && row.day < toDate
+                && (category === 'All' ? true : row.category === category))
+        })
+
+        if (category === 'All') {
+            //create array of all unique dates
+            const uniqueDates = [...new Set(filterData[0].map(item => item.day))];
+            let filteredAndReducedForAll = []
+            //iterate over unique date
+            uniqueDates.map(uniqueDate => {
+                //filter filterData for current unique date
+                let value = _.filter(filterData[0], row => {
+                    return row.day === uniqueDate
+                }).reduce((acc, { value }) => acc + value, 0)
+                //create object with desired format 
+                let thisObj = {
+                    day: uniqueDate,
+                    value: value,
+                    category: 'All'
+                }
+                filteredAndReducedForAll.push(thisObj)
+
+            })
+            // console.log('filteredAndReducedForAll', filteredAndReducedForAll)
+            filterData[0] = filteredAndReducedForAll;
+        }
+    }
+    if (apiContent && apiContent.originalData && apiContent.originalData[1]) {
+        filterData[1] = _.filter(apiContent.originalData[1], (row) => {
+            return (row.day > fromDate
+                && row.day < toDate
+                && (category === 'All' ? true : row.category === category))
+        })
+
+        if (category === 'All') {
+            //create array of all unique dates
+            const uniqueDates = [...new Set(filterData[1].map(item => item.day))];
+            let filteredAndReducedForAll = []
+            //iterate over unique date
+            uniqueDates.map(uniqueDate => {
+                //filter filterData for current unique date
+                let value = _.filter(filterData[1], row => {
+                    return row.day === uniqueDate
+                }).reduce((acc, { value }) => acc + value, 0)
+                //create object with desired format 
+                let thisObj = {
+                    day: uniqueDate,
+                    value: value,
+                    category: 'All'
+                }
+                filteredAndReducedForAll.push(thisObj)
+
+            })
+            // console.log('filteredAndReducedForAll', filteredAndReducedForAll)
+            filterData[1] = filteredAndReducedForAll;
+        }
+    }
+
+
+    useEffect(() => {
+        if (apiContent.originalData) {
+            setFromDate(apiContent.data[0][apiContent.data[0].length - 1].day)
+            setToDate(apiContent.data[0][0].day)
+        }
+    }, [apiContent.originalData]);
 
     return (
         <div className={`${classes.root} demoComponent`}>
@@ -340,6 +387,13 @@ export default function CustomVis(props) {
                                                     :
                                                     <FilterBar {...props}
                                                         classes={classes}
+                                                        action={filterData}
+                                                        fromDate={fromDate}
+                                                        toDate={toDate}
+                                                        category={category}
+                                                        handleFromDate={handleFromDate}
+                                                        handleToDate={handleToDate}
+                                                        handleCategory={handleCategory}
                                                     />
                                                 }
                                                 <Divider className={classes.divider} />
@@ -357,41 +411,12 @@ export default function CustomVis(props) {
 
                                                         : apiContent.data && apiContent.data.length ?
                                                             <>
-
-                                                                {/* <Grid item sm={12} className={classes.height500}>
-                                                                    <h1>Total Orders by Category</h1>
-                                                                    <ResponsiveCalendar
-                                                                        // data={apiContent.data[0]}
-                                                                        data={data[0]}
-                                                                        from="2019-03-01"
-                                                                        to="2020-03-01"
-                                                                        colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
-                                                                        // yearSpacing={40}
-                                                                        monthBorderColor="#ffffff"
-                                                                        dayBorderWidth={2}
-                                                                        dayBorderColor="#ffffff"
-                                                                        legends={[
-                                                                            {
-                                                                                anchor: 'bottom-right',
-                                                                                direction: 'row',
-                                                                                translateY: 36,
-                                                                                itemCount: 4,
-                                                                                itemWidth: 42,
-                                                                                itemHeight: 36,
-                                                                                itemsSpacing: 14,
-                                                                                itemDirection: 'right-to-left'
-                                                                            }
-                                                                        ]}
-                                                                        height={500}
-                                                                        maxHeight={500}
-                                                                    />
-                                                                </Grid> */}
                                                                 <Grid item sm={12} className={classes.height700}>
                                                                     <h1>Total Sale Price by Date</h1>
                                                                     <ResponsiveCalendar
-                                                                        data={apiContent.data[0]}
-                                                                        from={apiContent.data[0][apiContent.data[0].length - 1].day}
-                                                                        to={apiContent.data[0][0].day}
+                                                                        data={filterData[0]}
+                                                                        from={fromDate}
+                                                                        to={toDate}
                                                                         colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
                                                                         yearSpacing={40}
                                                                         monthBorderColor="#ffffff"
@@ -417,9 +442,9 @@ export default function CustomVis(props) {
                                                                 <Grid item sm={12} className={classes.height700}>
                                                                     <h1>Total Orders by Date</h1>
                                                                     <ResponsiveCalendar
-                                                                        data={apiContent.data[1]}
-                                                                        from={apiContent.data[1][apiContent.data[1].length - 1].day}
-                                                                        to={apiContent.data[1][0].day}
+                                                                        data={filterData[1]}
+                                                                        from={fromDate}
+                                                                        to={toDate}
                                                                         colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
                                                                         yearSpacing={40}
                                                                         monthBorderColor="#ffffff"
