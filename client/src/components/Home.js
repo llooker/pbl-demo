@@ -257,7 +257,7 @@ class Home extends Component {
         }, () => {
             // console.log('callback')
             // console.log('this.state.activeUsecase', this.state.activeUsecase)
-            console.log('this.state.appLayout', this.state.appLayout)
+            // console.log('this.state.appLayout', this.state.appLayout)
             LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
             this.setupLookerContent(UsecaseContent[usecaseFromUrl].demoComponents);
         })
@@ -452,7 +452,10 @@ class Home extends Component {
 
                 }
                 else if (usecaseContent[j].lookerContent[i].type === 'custom vis') {
-                    let desiredResultFormat = usecaseContent[j].lookerContent[i].resultFormat || 'json_detail';
+                    console.log('inside custom ellse ifff');
+                    console.log('usecaseContent[j].lookerContent[i]', usecaseContent[j].lookerContent[i])
+
+                    /*let desiredResultFormat = usecaseContent[j].lookerContent[i].resultFormat || 'json_detail';
                     let lookerResponse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].queryId + '/' + desiredResultFormat, {
                         method: 'GET',
                         headers: {
@@ -480,7 +483,53 @@ class Home extends Component {
                     queryResultsForCustomVis.status = "complete";
                     // console.log('111 queryResultsForCustomVis', queryResultsForCustomVis)
                     const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
+                    objForState[stateKey] = queryResultsForCustomVis;*/
+
+                    let jsonQuery = usecaseContent[j].lookerContent[i].inlineQuery;
+                    jsonQuery.filters = { [usecaseContent[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand };
+                    let stringifiedQuery = encodeURIComponent(JSON.stringify(usecaseContent[j].lookerContent[i].inlineQuery))
+                    let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
+                        method: 'GET',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    let lookerResponseData = await lookerResponse.json();
+                    // console.log('111 lookerResponseData', lookerResponseData)
+
+                    let queryResultsForCustomVis = { status: 'running', data: [[], [], []] };
+                    let dateProperty = Object.keys(lookerResponseData.queryResults[0])[0];
+                    let categoryProperty = Object.keys(lookerResponseData.queryResults[0])[1];
+                    let salePriceProperty = Object.keys(lookerResponseData.queryResults[0])[2];
+                    let orderCountProperty = Object.keys(lookerResponseData.queryResults[0])[3];
+                    let uniqueCategories = ['All']
+                    for (i = 0; i < lookerResponseData.queryResults.length; i++) {
+                        if (lookerResponseData.queryResults[i][dateProperty]) {
+                            queryResultsForCustomVis.data[0].push({
+                                'day': lookerResponseData.queryResults[i][dateProperty],
+                                'value': lookerResponseData.queryResults[i][categoryProperty]
+                            })
+                            queryResultsForCustomVis.data[1].push({
+                                'day': lookerResponseData.queryResults[i][dateProperty],
+                                'value': lookerResponseData.queryResults[i][salePriceProperty]
+                            })
+                            queryResultsForCustomVis.data[2].push({
+                                'day': lookerResponseData.queryResults[i][dateProperty],
+                                'value': lookerResponseData.queryResults[i][orderCountProperty]
+                            })
+
+                            if (uniqueCategories.indexOf(lookerResponseData.queryResults[i][categoryProperty]) == -1) {
+                                uniqueCategories.push(lookerResponseData.queryResults[i][categoryProperty])
+                            }
+                        }
+                    }
+                    queryResultsForCustomVis.status = "complete";
+                    queryResultsForCustomVis.uniqueCategories = uniqueCategories;
+                    // console.log('111 queryResultsForCustomVis', queryResultsForCustomVis)
+                    const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
                     objForState[stateKey] = queryResultsForCustomVis;
+
                 } else if (usecaseContent[j].lookerContent[i].type === 'splash page') {
                     console.log('inside iff for splash page')
                 }

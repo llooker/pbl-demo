@@ -52,10 +52,20 @@
                 "lookerContent": [
                     {
                         "type": "custom vis",
-                        "lookerMethod": "runQuery",
-                        "queryId": "28589",
-                        "resultFormat": "json",
-                        "label": "Custom Viz"
+                        "lookerMethod": "runInlineQuery",
+                        "label": "Custom Viz",
+                        "inlineQuery": {
+                            "model": "atom_fashion",
+                            "view": "order_items",
+                            "fields": [
+                                "order_items.created_date",
+                                "products.category_type",
+                                "order_items.order_count",
+                                "order_items.total_sale_price"
+                            ],
+                            "query_timezone": "America/Los_Angeles"
+                        },
+                        "desiredFilterName": "products.brand"
                     }
                 ]
             }
