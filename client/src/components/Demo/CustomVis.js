@@ -63,48 +63,47 @@ function a11yProps(index) {
 }
 
 function FilterBar(props) {
-    console.log('FilterBar');
-    console.log('props', props);
-    const { staticContent, staticContent: { lookerContent }, classes, action, apiContent } = props;
+    // console.log('FilterBar');
+    // console.log('props', props);
+    const { staticContent, staticContent: { lookerContent }, classes, action, apiContent,
+        // fromDate, toDate, category, handleFromDate, handleToDate, handleCategory 
+    } = props;
     const [expanded, setExpanded] = useState(true);
-    const [fromDate, setFromDate] = useState(apiContent.data[0][apiContent.data[0].length - 1].day || '');
-    const [toDate, setToDate] = useState(apiContent.data[0][0].day || '');
-    const [category, setCategory] = useState('All')
+
+    const [fromDate, setFromDate] = useState(apiContent.data ? apiContent.data[0][apiContent.data[0].length - 1].day : '');
+    const [toDate, setToDate] = useState(apiContent.data ? apiContent.data[0][0].day : '');
+    const [queryModified, setQueryModified] = useState(false);
+    // const [category, setCategory] = useState('All')
 
     //handlers
     const handleExpansionPanel = (event, newValue) => {
         setExpanded(expanded ? false : true);
     };
     const handleFromDate = newValue => {
+        console.log('handleFromDate')
         setFromDate(newValue)
-        action(fromDate, toDate, category)
+        setQueryModified(true)
     }
     const handleToDate = newValue => {
+        console.log('handleToDate')
         setToDate(newValue)
-        action(fromDate, toDate, category)
+        setQueryModified(true)
     }
-    const handleSetCategory = (event) => {
-        setCategory(event.target.value);
-        action(fromDate, toDate, category)
-    };
 
+    // const handleCategory = (event) => {
+    //     setCategory(event.target.value);
+    // };
+
+    const handleQuerySubmit = (event) => {
+        if (queryModified) {
+            action(apiContent.inlineQuery, { fromDate, toDate })
+        }
+    }
 
 
     useEffect(() => {
-        // handleQuerySubmit()
-        console.log('useEffect');
-        console.log('fromDate', fromDate);
-        console.log('toDate', toDate);
-        console.log('category', category);
-        // if (apiContent.data && !(fromDate.length || toDate.length)) { //hack
-        //     setFromDate(apiContent.data[0][apiContent.data[0].length - 1].day)
-        //     setToDate(apiContent.data[0][0].day)
-        // }
-        // console.log('111 fromDate', fromDate);
-        // console.log('111 toDate', toDate);
-        action(fromDate, toDate, category)
-    }, [toDate, fromDate, category]
-    );
+        handleQuerySubmit()
+    }, [fromDate, toDate]);
 
 
     return (
@@ -160,7 +159,7 @@ function FilterBar(props) {
                                 </form>
                             </Grid>
 
-                            <Grid item sm={12}>
+                            {/* <Grid item sm={12}>
                                 <Typography variant="subtitle1">
                                     Filter by Product Category:
                     </Typography>
@@ -173,7 +172,7 @@ function FilterBar(props) {
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
                                         value={category}
-                                        onChange={handleSetCategory}
+                                        onChange={handleCategory}
                                     >
                                         {apiContent.uniqueCategories.map((item, index) => (
 
@@ -184,7 +183,7 @@ function FilterBar(props) {
                                         ))}
                                     </Select>
                                 </FormControl>
-                            </Grid>
+                            </Grid> */}
                         </>
                         : ''}
                 </Grid>
@@ -248,6 +247,9 @@ const useStyles = makeStyles((theme) => ({
     height500: {
         height: 500
     },
+    height700: {
+        height: 700
+    },
     textField: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
@@ -259,6 +261,10 @@ const useStyles = makeStyles((theme) => ({
     },
     selectEmpty: {
         marginTop: theme.spacing(2),
+    },
+    skeleton: {
+        height: 200,
+        width: '100%'
     }
 }));
 
@@ -271,7 +277,11 @@ export default function CustomVis(props) {
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab]
-    const [data, setData] = useState([]);
+
+    // const [data, setData] = useState([]);
+    // const [fromDate, setFromDate] = useState('');
+    // const [toDate, setToDate] = useState('');
+    // const [category, setCategory] = useState('All')
 
     let demoComponentType = type || 'sample code';
 
@@ -279,25 +289,6 @@ export default function CustomVis(props) {
         handleTabChange(0);
         setValue(newValue);
     };
-
-    const filterData = (fromDate, toDate, category) => {
-        console.log('filterData????')
-        console.log('fromDate', fromDate)
-        console.log('toDate', toDate)
-        console.log('category', category)
-
-    }
-
-    useEffect(() => {
-        // console.log('useEffect')
-        //change from drill click
-        if (activeTabValue > value) {
-            setValue(activeTabValue)
-        }
-        if (apiContent.data) {
-            setData(apiContent.data)
-        }
-    });
 
     return (
         <div className={`${classes.root} demoComponent`}>
@@ -342,19 +333,20 @@ export default function CustomVis(props) {
                                             :
                                             <React.Fragment
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
+
                                                 {!apiContent.status || apiContent.status === 'running' ?
-                                                    ''
+                                                    <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
+
                                                     :
                                                     <FilterBar {...props}
                                                         classes={classes}
-                                                        action={filterData}
                                                     />
                                                 }
                                                 <Divider className={classes.divider} />
                                                 <Box
                                                     className={classes.w100}
                                                     mt={2}>
-                                                    {apiContent.status === 'running' ?
+                                                    {!apiContent.status || apiContent.status === 'running' ?
 
                                                         <Grid item sm={12} >
                                                             {/* <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> */}
@@ -394,13 +386,12 @@ export default function CustomVis(props) {
                                                                         maxHeight={500}
                                                                     />
                                                                 </Grid> */}
-                                                                <Grid item sm={12} className={classes.height500}>
+                                                                <Grid item sm={12} className={classes.height700}>
                                                                     <h1>Total Sale Price by Date</h1>
                                                                     <ResponsiveCalendar
-                                                                        // data={apiContent.data[1]}
-                                                                        data={data[1]}
-                                                                        from="2019-03-01"
-                                                                        to="2020-03-01"
+                                                                        data={apiContent.data[0]}
+                                                                        from={apiContent.data[0][apiContent.data[0].length - 1].day}
+                                                                        to={apiContent.data[0][0].day}
                                                                         colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
                                                                         yearSpacing={40}
                                                                         monthBorderColor="#ffffff"
@@ -418,18 +409,17 @@ export default function CustomVis(props) {
                                                                                 itemDirection: 'right-to-left'
                                                                             }
                                                                         ]}
-                                                                        height={500}
+                                                                        height={700}
                                                                         maxHeight={500}
                                                                     />
                                                                 </Grid>
 
-                                                                <Grid item sm={12} className={classes.height500}>
+                                                                <Grid item sm={12} className={classes.height700}>
                                                                     <h1>Total Orders by Date</h1>
                                                                     <ResponsiveCalendar
-                                                                        // data={apiContent.data[2]}
-                                                                        data={data[2]}
-                                                                        from="2019-03-01"
-                                                                        to="2020-03-01"
+                                                                        data={apiContent.data[1]}
+                                                                        from={apiContent.data[1][apiContent.data[1].length - 1].day}
+                                                                        to={apiContent.data[1][0].day}
                                                                         colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
                                                                         yearSpacing={40}
                                                                         monthBorderColor="#ffffff"
@@ -447,11 +437,13 @@ export default function CustomVis(props) {
                                                                                 itemDirection: 'right-to-left'
                                                                             }
                                                                         ]}
-                                                                        height={500}
+                                                                        height={700}
                                                                         maxHeight={500}
                                                                     />
                                                                 </Grid>
-                                                            </> : ''}
+                                                            </> :
+                                                            ''
+                                                    }
                                                 </Box>
                                             </React.Fragment>
                                         }
