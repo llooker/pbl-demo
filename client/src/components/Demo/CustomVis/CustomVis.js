@@ -8,7 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import ComboBox from '../Material/ComboBox';
+import ComboBox from '../../Material/ComboBox';
 import Skeleton from '@material-ui/lab/Skeleton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
@@ -25,11 +25,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import _ from 'lodash'
-import '../Home.css'
-import CodeFlyout from './CodeFlyout';
+import '../../Home.css'
+import CodeFlyout from '../CodeFlyout';
 import { ResponsiveCalendar } from '@nivo/calendar'
 var moment = require('moment'); // require
-const { validIdHelper } = require('../../tools');
+const { validIdHelper } = require('../../../tools');
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;

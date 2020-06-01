@@ -30,7 +30,7 @@ import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
 import Dashboard from './Demo/Dashboard';
 import CohortBuilder from './Demo/CohortBuilder';
-import CustomVis from './Demo/CustomVis';
+import CustomVis from './Demo/CustomVis/CustomVis';
 import CustomVisHelper from './Demo/CustomVis/Helper'
 
 const drawerWidth = 240;
