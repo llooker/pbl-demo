@@ -46,14 +46,14 @@
             },
             {
                 "type": "custom vis",
-                "label": "Custom vis",
+                "label": "Sales Calendar",
                 "description": "Ayeeeeeee",
-                "icon": "fa-dog",
+                "icon": "fa-calendar",
                 "lookerContent": [
                     {
                         "type": "custom vis",
                         "lookerMethod": "runInlineQuery",
-                        "label": "Custom Viz",
+                        "label": "Sales Calendar",
                         "inlineQuery": {
                             "model": "atom_fashion",
                             "view": "order_items",
@@ -70,5 +70,14 @@
                 ]
             }
         ]
+    },
+    "vidly": {
+        "label": "Vidly Media",
+        "vignette": {
+            "name": "Vidly",
+            "logo": ""
+        },
+        "layout": "right-appbar",
+        "demoComponents": []
     }
 }

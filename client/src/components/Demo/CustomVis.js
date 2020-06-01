@@ -82,7 +82,7 @@ function FilterBar(props) {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                <Typography className={classes.heading}>Filter Data</Typography>
+                {/* <Typography className={classes.heading}>Filter Data</Typography> */}
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
                 <Grid container spacing={3}>

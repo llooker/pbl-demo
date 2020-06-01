@@ -31,6 +31,7 @@ import ComingSoon from './Demo/ComingSoon';
 import Dashboard from './Demo/Dashboard';
 import CohortBuilder from './Demo/CohortBuilder';
 import CustomVis from './Demo/CustomVis';
+import CustomVisHelper from './Demo/CustomVis/Helper'
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
@@ -182,6 +183,9 @@ class Home extends Component {
             activeUsecase: '',
             appLayout: ''
         }
+
+
+        this.CustomVisHelper = CustomVisHelper.bind(this); //does this help???
     }
 
     //material  methods for layout
@@ -452,9 +456,15 @@ class Home extends Component {
 
                 }
                 else if (usecaseContent[j].lookerContent[i].type === 'custom vis') {
+                    let customVisApiContent = { ...this.state.customVisApiContent }
+                    customVisApiContent.status = 'running';
+                    this.setState({ customVisApiContent })
                     let jsonQuery = usecaseContent[j].lookerContent[i].inlineQuery;
                     jsonQuery.filters = { [usecaseContent[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand };
-                    this.customVisHelper(jsonQuery)
+                    // this.customVisHelper(jsonQuery)
+                    let stateObj = await CustomVisHelper(jsonQuery)
+                    // console.log('stateObj', stateObj)
+                    objForState[stateObj.stateKey] = stateObj.stateValue
                 } else if (usecaseContent[j].lookerContent[i].type === 'splash page') {
                     console.log('inside iff for splash page')
                 }
@@ -818,11 +828,12 @@ class Home extends Component {
 
     }
 
-    customVisHelper = async (inlineQuery) => {
-        // console.log('customVisHelper')
-        // console.log('000 inlineQuery', inlineQuery)
+    /*customVisHelper = async (inlineQuery) => {
+        console.log('customVisHelper')
+        console.log('000 inlineQuery', inlineQuery)
 
         let customVisApiContent = { ...this.state.customVisApiContent }
+        console.log('000 customVisApiContent', customVisApiContent)
         customVisApiContent.status = 'running';
         this.setState({ customVisApiContent })
 
@@ -882,7 +893,7 @@ class Home extends Component {
         //}
 
 
-    }
+    }*/
 
     render() {
         // console.log('Home render');
@@ -972,6 +983,7 @@ class Home extends Component {
                         >
                             {activeUsecase ? UsecaseContent[activeUsecase].demoComponents.map((item, index) => (
                                 <Tab label={item.label}
+                                    id={`homeVerticalTabs${index}`}
                                     key={`homeVerticalTabs${index}`}
                                     icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
                                     {...a11yProps(index)}

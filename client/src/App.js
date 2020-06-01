@@ -31,16 +31,21 @@ class Login extends React.Component {
   render() {
     // console.log("Login render")
 
-    let usecaseFromUrl = this.props.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
-    let includesHome = this.props.location.pathname.includes('home');
-    let pathnameToUse;
-    if (UsecaseContent.hasOwnProperty(usecaseFromUrl) && includesHome) {
-      pathnameToUse = this.props.location.pathname
-    } else {
-      pathnameToUse = '/ecomm/home';
-    }
+    // let usecaseFromUrl = this.props.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
+    // let includesHome = this.props.location.pathname.includes('home');
+    // let pathnameToUse;
+    // if (UsecaseContent.hasOwnProperty(usecaseFromUrl) && includesHome) {
+    //   pathnameToUse = this.props.location.pathname
+    // } else {
+    //   pathnameToUse = '/atom/home';
+    // }
+    // const { from } = this.props.location.state || { from: { pathname: pathnameToUse } }
+    // const { activeCustomization } = this.props
+    // const { userProfile } = this.props
 
-    const { from } = this.props.location.state || { from: { pathname: pathnameToUse } }
+
+    const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
+    const { pathname } = this.props.location
     const { activeCustomization } = this.props
     const { userProfile } = this.props
 
@@ -372,10 +377,17 @@ class App extends React.Component {
     // const { activeIndustry } = this.state;
     // console.log('activeCustomization', activeCustomization);
     // console.log('lookerUser', lookerUser);
+
+    let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
+    if (!usecaseFromUrl.length) {     //no usecase
+      window.location.href = window.location.href + 'atom'
+    } else if (!UsecaseContent.hasOwnProperty(usecaseFromUrl)) {     //usecase param isn't in JSON file
+      window.location.href = window.location.href.replace(usecaseFromUrl, 'atom')
+    }
     return (
-      <Router>
+      <Router basename={usecaseFromUrl}>
         <div>
-          <Route path='/' render={(props) => <Login
+          <Route path='' render={(props) => <Login
             {...props}
             applySession={this.applySession}
             userProfile={userProfile}
