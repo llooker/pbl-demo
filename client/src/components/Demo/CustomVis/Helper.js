@@ -1,5 +1,6 @@
 export default async function customVisHelper(inlineQuery) {
-
+    // console.log('customVisHelper')
+    // console.log('inlineQuery', inlineQuery)
     let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
     let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
         method: 'GET',
@@ -9,46 +10,19 @@ export default async function customVisHelper(inlineQuery) {
         }
     })
     let lookerResponseData = await lookerResponse.json();
-
-    //this could be improved
-    let queryResultsForCustomVis = { status: 'running', originalData: [[], []], data: [[], []] };
-    let dateProperty = Object.keys(lookerResponseData.queryResults[0])[0];
-    let categoryProperty = Object.keys(lookerResponseData.queryResults[0])[1];
-    let orderCountProperty = Object.keys(lookerResponseData.queryResults[0])[2];
-    let salePriceProperty = Object.keys(lookerResponseData.queryResults[0])[3];
-    let uniqueCategories = ['All']
+    //filter for null dates
+    lookerResponseData.queryResults = lookerResponseData.queryResults.filter((queryResult) => {
+        return queryResult[inlineQuery.fields[0]]
+    });
+    //create unique category array
+    let uniqueCategories = ['All'];
     for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
-        if (lookerResponseData.queryResults[i][dateProperty]) {
-            queryResultsForCustomVis.originalData[0].push({
-                'day': lookerResponseData.queryResults[i][dateProperty],
-                'value': lookerResponseData.queryResults[i][salePriceProperty],
-                'category': lookerResponseData.queryResults[i][categoryProperty]
-            })
-            queryResultsForCustomVis.data[0].push({
-                'day': lookerResponseData.queryResults[i][dateProperty],
-                'value': lookerResponseData.queryResults[i][salePriceProperty],
-                'category': lookerResponseData.queryResults[i][categoryProperty]
-            })
-            queryResultsForCustomVis.originalData[1].push({
-                'day': lookerResponseData.queryResults[i][dateProperty],
-                'value': lookerResponseData.queryResults[i][orderCountProperty],
-                'category': lookerResponseData.queryResults[i][categoryProperty]
-            })
-            queryResultsForCustomVis.data[1].push({
-                'day': lookerResponseData.queryResults[i][dateProperty],
-                'value': lookerResponseData.queryResults[i][orderCountProperty],
-                'category': lookerResponseData.queryResults[i][categoryProperty]
-            })
-
-            if (uniqueCategories.indexOf(lookerResponseData.queryResults[i][categoryProperty]) == -1) {
-                uniqueCategories.push(lookerResponseData.queryResults[i][categoryProperty])
-            }
+        if (uniqueCategories.indexOf(lookerResponseData.queryResults[i][inlineQuery.fields[1]]) == -1) {
+            uniqueCategories.push(lookerResponseData.queryResults[i][inlineQuery.fields[1]])
         }
     }
-    queryResultsForCustomVis.status = "complete";
-    queryResultsForCustomVis.inlineQuery = inlineQuery;
-    queryResultsForCustomVis.uniqueCategories = uniqueCategories;
-    // console.log('111 queryResultsForCustomVis', queryResultsForCustomVis)
-    const stateKey = 'customVisApiContent';
-    return { stateKey: stateKey, stateValue: queryResultsForCustomVis }
+    lookerResponseData.uniqueCategories = uniqueCategories;
+    lookerResponseData.inlineQuery = inlineQuery;
+    // console.log('1111 lookerResponseData', lookerResponseData)
+    return { stateKey: 'customVisApiContent', stateValue: lookerResponseData }
 }

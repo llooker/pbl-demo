@@ -65,7 +65,11 @@
                             ],
                             "query_timezone": "America/Los_Angeles"
                         },
-                        "desiredFilterName": "products.brand"
+                        "desiredFilterName": "products.brand",
+                        "desiredFields": [
+                            "order_items.order_count",
+                            "order_items.total_sale_price"
+                        ]
                     }
                 ]
             }

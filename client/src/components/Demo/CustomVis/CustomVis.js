@@ -28,7 +28,6 @@ import _ from 'lodash'
 import '../../Home.css'
 import CodeFlyout from '../CodeFlyout';
 import { ResponsiveCalendar } from '@nivo/calendar'
-var moment = require('moment'); // require
 const { validIdHelper } = require('../../../tools');
 
 function TabPanel(props) {
@@ -64,8 +63,8 @@ function a11yProps(index) {
 function FilterBar(props) {
     // console.log('FilterBar');
     // console.log('props', props);
-    const { staticContent, staticContent: { lookerContent }, classes, action, apiContent,
-        fromDate, toDate, category, handleFromDate, handleToDate, handleCategory
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes, action, apiContent,
+        fromDate, toDate, category, desiredField, handleFromDate, handleToDate, handleCategory, handleDesiredField
     } = props;
 
     const [expanded, setExpanded] = useState(true);
@@ -83,34 +82,61 @@ function FilterBar(props) {
                 id="panel1a-header"
             >
                 {/* <Typography className={classes.heading}>Filter Data</Typography> */}
+
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                    {apiContent.data ?
+                    {apiContent.queryResults ?
                         <>
-                            <Grid item sm={12}>
+                            <Grid item sm={3}>
+                                <Typography variant="subtitle1">
+                                    Filter by Field:
+                                </Typography>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel
+                                        id={`${validIdHelper(type + '-FilterBar-DataPropery-SelectLabel')}`}
+                                    >
+                                        Category</InputLabel>
+                                    <Select
+                                        labelId={`${validIdHelper(type + '-FilterBar-DataPropery-SelectLabel')}`}
+                                        id={`${validIdHelper(type + '-FilterBar-DataPropery-Select')}`}
+                                        value={desiredField}
+                                        onChange={(event) => handleDesiredField(event.target.value)}
+                                    >
+                                        {lookerContent[0].desiredFields.map((item, index) => (
+
+                                            <MenuItem
+                                                id={validIdHelper(`${item}-${index}`)}
+                                                key={validIdHelper(`${item}-${index}`)}
+                                                value={item}
+                                            >{item.substring(item.lastIndexOf(".") + 1, item.length).split("_").map(item => item.charAt(0).toUpperCase() + item.substring(1)).join(" ")}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+
+                            <Grid item sm={3}>
                                 <Typography variant="subtitle1">
                                     Filter by Date:
-                    </Typography>
-                            </Grid>
-                            <Grid item sm={3}>
+                            </Typography>
                                 <form className={classes.container} noValidate>
                                     <TextField
                                         id="fromDate"
                                         label="From date"
                                         type="date"
-                                        // defaultValue={fromDate}
                                         value={fromDate}
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
                                         onChange={(event) => handleFromDate(event.target.value)}
-                                    // formatDate={(date) => moment(new Date()).format('MM-DD-YY')}
                                     />
                                 </form>
                             </Grid>
                             <Grid item sm={3}>
+                                <Typography variant="subtitle1" className={classes.hidden}>
+                                    Filter by Date:
+                            </Typography>
                                 <form className={classes.container} noValidate>
                                     <TextField
                                         id="toDate"
@@ -127,19 +153,18 @@ function FilterBar(props) {
                                     />
                                 </form>
                             </Grid>
-
-                            <Grid item sm={12}>
+                            <Grid item sm={3}>
                                 <Typography variant="subtitle1">
                                     Filter by Product Category:
-                    </Typography>
-                            </Grid>
-                            <Grid item sm={12}>
-
+                                </Typography>
                                 <FormControl className={classes.formControl}>
-                                    <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                                    <InputLabel
+                                        id={`${validIdHelper(type + '-FilterBar-Category-SelectLabel')}`}
+                                    >
+                                        Category</InputLabel>
                                     <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
+                                        labelId={`${validIdHelper(type + '-FilterBar-Category-SelectLabel')}`}
+                                        id={`${validIdHelper(type + '-FilterBar-Category-Select')}`}
                                         value={category}
                                         onChange={(event) => handleCategory(event.target.value)}
                                     >
@@ -173,7 +198,7 @@ const useStyles = makeStyles((theme) => ({
     },
     hidden: {
         visibility: 'hidden',
-        position: 'absolute', //hack for obscuring other elements within Box
+        // position: 'absolute', //hack for obscuring other elements within Box
         zIndex: -1
     },
     tabs: {
@@ -219,6 +244,9 @@ const useStyles = makeStyles((theme) => ({
     height700: {
         height: 700
     },
+    height800: {
+        height: 800
+    },
     textField: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
@@ -240,7 +268,6 @@ const useStyles = makeStyles((theme) => ({
 export default function CustomVis(props) {
     // console.log('CustomVis')
     // console.log('props', props)
-
     const classes = useStyles();
     const [value, setValue] = useState(0);
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
@@ -249,7 +276,7 @@ export default function CustomVis(props) {
     const [fromDate, setFromDate] = useState(apiContent.data ? apiContent.data[0][apiContent.data[0].length - 1].day : '');
     const [toDate, setToDate] = useState(apiContent.data ? apiContent.data[0][0].day : '');
     const [category, setCategory] = useState('All')
-
+    const [desiredField, setDesiredField] = useState(lookerContent ? lookerContent[0].desiredFields[0] : '')
     let demoComponentType = type || 'sample code';
 
     const handleChange = (event, newValue) => {
@@ -266,26 +293,39 @@ export default function CustomVis(props) {
     const handleCategory = newValue => {
         setCategory(newValue)
     }
+    const handleDesiredField = newValue => {
+        setDesiredField(newValue)
+    }
 
-    let filterData = [[], []]
-    if (apiContent && apiContent.originalData && apiContent.originalData[0]) {
-        filterData[0] = _.filter(apiContent.originalData[0], (row) => {
-            return (row.day > fromDate
-                && row.day < toDate
-                && (category === 'All' ? true : row.category === category))
+    let filterData = [];
+    if (apiContent && apiContent.queryResults) {
+        //filtering for fromDate, toDate and category
+        filterData = _.filter(apiContent.queryResults, (row) => {
+            return (row[apiContent.inlineQuery.fields[0]] > fromDate
+                && row[apiContent.inlineQuery.fields[0]] < toDate
+                && (category === 'All' ? true : row[apiContent.inlineQuery.fields[1]] === category))
         })
-
+        //converting filterDAta to desired format for vis
+        filterData = filterData.map(item => {
+            return {
+                'day': item[apiContent.inlineQuery.fields[0]],
+                'category': item[apiContent.inlineQuery.fields[1]],
+                'value': item[desiredField]
+            }
+        })
+        //special exception for category all
+        //need to reduce array by day across categories
+        //destructuing in reduce of value would not work for dynamic var
         if (category === 'All') {
             //create array of all unique dates
-            const uniqueDates = [...new Set(filterData[0].map(item => item.day))];
+            const uniqueDates = [...new Set(filterData.map(item => item.day))];
             let filteredAndReducedForAll = []
             //iterate over unique date
             uniqueDates.map(uniqueDate => {
                 //filter filterData for current unique date
-                let value = _.filter(filterData[0], row => {
+                let value = _.filter(filterData, row => {
                     return row.day === uniqueDate
                 }).reduce((acc, { value }) => acc + value, 0)
-                //create object with desired format 
                 let thisObj = {
                     day: uniqueDate,
                     value: value,
@@ -294,48 +334,21 @@ export default function CustomVis(props) {
                 filteredAndReducedForAll.push(thisObj)
 
             })
-            // console.log('filteredAndReducedForAll', filteredAndReducedForAll)
-            filterData[0] = filteredAndReducedForAll;
+            filterData = filteredAndReducedForAll;
         }
     }
-    if (apiContent && apiContent.originalData && apiContent.originalData[1]) {
-        filterData[1] = _.filter(apiContent.originalData[1], (row) => {
-            return (row.day > fromDate
-                && row.day < toDate
-                && (category === 'All' ? true : row.category === category))
-        })
-
-        if (category === 'All') {
-            //create array of all unique dates
-            const uniqueDates = [...new Set(filterData[1].map(item => item.day))];
-            let filteredAndReducedForAll = []
-            //iterate over unique date
-            uniqueDates.map(uniqueDate => {
-                //filter filterData for current unique date
-                let value = _.filter(filterData[1], row => {
-                    return row.day === uniqueDate
-                }).reduce((acc, { value }) => acc + value, 0)
-                //create object with desired format 
-                let thisObj = {
-                    day: uniqueDate,
-                    value: value,
-                    category: 'All'
-                }
-                filteredAndReducedForAll.push(thisObj)
-
-            })
-            // console.log('filteredAndReducedForAll', filteredAndReducedForAll)
-            filterData[1] = filteredAndReducedForAll;
-        }
-    }
-
 
     useEffect(() => {
-        if (apiContent.originalData) {
-            setFromDate(apiContent.data[0][apiContent.data[0].length - 1].day)
-            setToDate(apiContent.data[0][0].day)
+        // console.log('useEffect')
+        if (apiContent.queryResults) {
+            setFromDate(apiContent.queryResults[apiContent.queryResults.length - 1][apiContent.inlineQuery.fields[0]]);
+            setToDate(apiContent.queryResults[0][apiContent.inlineQuery.fields[0]]);
         }
-    }, [apiContent.originalData]);
+    }, [apiContent.queryResults]
+    );
+
+    let redToBlueColorScale = ['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']
+    let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B']
 
     return (
         <div className={`${classes.root} demoComponent`}>
@@ -381,9 +394,8 @@ export default function CustomVis(props) {
                                             <React.Fragment
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
 
-                                                {!apiContent.status || apiContent.status === 'running' ?
+                                                {!apiContent.queryResults ?
                                                     <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
-
                                                     :
                                                     <FilterBar {...props}
                                                         classes={classes}
@@ -391,61 +403,35 @@ export default function CustomVis(props) {
                                                         fromDate={fromDate}
                                                         toDate={toDate}
                                                         category={category}
+                                                        desiredField={desiredField}
                                                         handleFromDate={handleFromDate}
                                                         handleToDate={handleToDate}
                                                         handleCategory={handleCategory}
+                                                        handleDesiredField={handleDesiredField}
                                                     />
                                                 }
                                                 <Divider className={classes.divider} />
                                                 <Box
                                                     className={classes.w100}
                                                     mt={2}>
-                                                    {!apiContent.status || apiContent.status === 'running' ?
+                                                    {!apiContent.queryResults ?
 
                                                         <Grid item sm={12} >
-                                                            {/* <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> */}
                                                             <Card className={`${classes.card} ${classes.flexCentered}`}>
                                                                 <CircularProgress className={classes.circularProgress} />
                                                             </Card>
                                                         </Grid>
 
-                                                        : apiContent.data && apiContent.data.length ?
+                                                        : apiContent.queryResults && apiContent.queryResults.length ?
                                                             <>
-                                                                <Grid item sm={12} className={classes.height700}>
-                                                                    <h1>Total Sale Price by Date</h1>
+                                                                <Grid item sm={12} className={classes.height800}>
+                                                                    <h1>{desiredField.substring(desiredField.lastIndexOf(".") + 1, desiredField.length).split("_").map(item => item.charAt(0).toUpperCase() + item.substring(1)).join(" ")}</h1>
                                                                     <ResponsiveCalendar
-                                                                        data={filterData[0]}
+                                                                        data={filterData}
                                                                         from={fromDate}
                                                                         to={toDate}
-                                                                        colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
-                                                                        yearSpacing={40}
-                                                                        monthBorderColor="#ffffff"
-                                                                        dayBorderWidth={2}
-                                                                        dayBorderColor="#ffffff"
-                                                                        legends={[
-                                                                            {
-                                                                                anchor: 'bottom-right',
-                                                                                direction: 'row',
-                                                                                translateY: 36,
-                                                                                itemCount: 4,
-                                                                                itemWidth: 42,
-                                                                                itemHeight: 36,
-                                                                                itemsSpacing: 14,
-                                                                                itemDirection: 'right-to-left'
-                                                                            }
-                                                                        ]}
-                                                                        height={700}
-                                                                        maxHeight={500}
-                                                                    />
-                                                                </Grid>
-
-                                                                <Grid item sm={12} className={classes.height700}>
-                                                                    <h1>Total Orders by Date</h1>
-                                                                    <ResponsiveCalendar
-                                                                        data={filterData[1]}
-                                                                        from={fromDate}
-                                                                        to={toDate}
-                                                                        colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
+                                                                        // colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
+                                                                        colors={desiredField === lookerContent[0].desiredFields[0] ? redToBlueColorScale : yellowToGreenColorScale}
                                                                         yearSpacing={40}
                                                                         monthBorderColor="#ffffff"
                                                                         dayBorderWidth={2}
@@ -482,4 +468,3 @@ export default function CustomVis(props) {
         </div >
     )
 }
-

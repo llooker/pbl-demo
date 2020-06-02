@@ -456,15 +456,19 @@ class Home extends Component {
 
                 }
                 else if (usecaseContent[j].lookerContent[i].type === 'custom vis') {
+                    //copy existing state and set status to running
                     let customVisApiContent = { ...this.state.customVisApiContent }
                     customVisApiContent.status = 'running';
                     this.setState({ customVisApiContent })
+                    //get inline query from usecase file & set user attribute dynamically
                     let jsonQuery = usecaseContent[j].lookerContent[i].inlineQuery;
-                    jsonQuery.filters = { [usecaseContent[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand };
-                    // this.customVisHelper(jsonQuery)
-                    let stateObj = await CustomVisHelper(jsonQuery)
-                    // console.log('stateObj', stateObj)
-                    objForState[stateObj.stateKey] = stateObj.stateValue
+                    jsonQuery.filters = {
+                        [usecaseContent[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand
+                    };
+
+                    let stateObj = await CustomVisHelper(jsonQuery);
+                    objForState[stateObj.stateKey] = stateObj.stateValue;
+
                 } else if (usecaseContent[j].lookerContent[i].type === 'splash page') {
                     console.log('inside iff for splash page')
                 }
