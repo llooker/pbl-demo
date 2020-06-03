@@ -28,10 +28,11 @@ import SplashPage from './Demo/SplashPage';
 import ReportBuilder from './Demo/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
-import Dashboard from './Demo/Dashboard';
+import Dashboard from './Demo/Dashboard/Dashboard';
 import CohortBuilder from './Demo/CohortBuilder';
 import CustomVis from './Demo/CustomVis/CustomVis';
 import CustomVisHelper from './Demo/CustomVis/Helper'
+// import DashboardHelper from './Demo/Dashboard/Helper'
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
@@ -325,6 +326,7 @@ class Home extends Component {
                             }
                         })
                         let lookerResponseData = await lookerResponse.json();
+                        console.log('lookerResponseData', lookerResponseData)
 
                         let queryResultsForDropdown = [];
                         let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
@@ -334,6 +336,11 @@ class Home extends Component {
                         const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
                         objForState[stateKey] = queryResultsForDropdown;
                     }
+
+                    // new implementation
+                    // let stateObj = await DashboardHelper(usecaseContent[j].lookerContent[i]);
+                    // console.log('stateObj', stateObj)
+                    // objForState = { ...objForState, stateObj }
 
                 } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
                     let exploreId = usecaseContent[j].lookerContent[i].id

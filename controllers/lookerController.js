@@ -5,7 +5,8 @@ const { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
 const settings = new NodeSettingsIniFile()
 const session = new NodeSession(settings)
 const sdk = new Looker40SDK(session)
-const sdk31 = new Looker31SDK(session)
+// const sdk = new Looker31SDK(session)
+console.log('sdk', sdk);
 // const path = require('path');
 
 
@@ -14,24 +15,24 @@ module.exports.auth = async (req, res, next) => {
     const src = req.query.src;
     //old method using auth_utils, requires embed secret
     // console.log('src', src)
-    // const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
+    const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
     // console.log('url', url)
 
-    let body = req.session.lookerUser;
-    body.target_url = "https://" + process.env.LOOKER_HOST + src;
+    // let body = req.session.lookerUser;
+    // body.target_url = "https://" + process.env.LOOKER_HOST + src;
 
-    const url = await sdk.ok(sdk.create_sso_embed_url(body))
-        .then(response => {
-            // console.log('response', response)
-            // callback(null, response)
-            return response.url
-        })
-        .catch(err => {
-            console.log('err', err)
-            // callback(err)
-            return err;
-        })
-    // console.log('url', url)
+    // const url = await sdk.ok(sdk.create_sso_embed_url(body))
+    //     .then(response => {
+    //         // console.log('response', response)
+    //         // callback(null, response)
+    //         return response.url
+    //     })
+    //     .catch(err => {
+    //         console.log('err', err)
+    //         // callback(err)
+    //         return err;
+    //     })
+    // // console.log('url', url)
     res.json({ url });
 }
 

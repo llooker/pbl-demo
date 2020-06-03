@@ -16,7 +16,7 @@
                     {
                         "type": "dashboard",
                         "lookerMethod": "embedDashboard",
-                        "id": "131",
+                        "id": "5",
                         "label": "Sales Overview",
                         "isNext": false
                     }
@@ -31,14 +31,14 @@
                     {
                         "type": "dashboard",
                         "lookerMethod": "embedDashboard",
-                        "id": "139",
+                        "id": "1",
                         "isNext": false,
                         "label": "Inventory Overview",
                         "filter": {
                             "label": "Select Product Name",
                             "filterName": "Product Name",
                             "lookerMethod": "runQuery",
-                            "queryId": "28777",
+                            "queryId": "22",
                             "resultFormat": "json"
                         }
                     }
