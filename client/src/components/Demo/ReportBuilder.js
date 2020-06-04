@@ -120,13 +120,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ReportBuilder(props) {
-    // console.log('ReportBuilder')
-    // console.log('props', props)
+    console.log('ReportBuilder')
+    console.log('props', props)
 
     const classes = useStyles();
     const [value, setValue] = useState(0);
     const [selected, setSelected] = useState(2)
-    const [expanded, setExpanded] = useState(["1"]);
+    const [expanded, setExpanded] = useState(["1"]); //
     const { staticContent,
         staticContent: { lookerContent },
         staticContent: { type },
@@ -269,6 +269,7 @@ export default function ReportBuilder(props) {
                                                                                                     onClick={(event) => {
                                                                                                         setSelected(treeCounter);
                                                                                                         action(
+                                                                                                            key.substring(0, key.length - 1),
                                                                                                             item.id,
                                                                                                             'explore',
                                                                                                             item.client_id,
@@ -297,6 +298,7 @@ export default function ReportBuilder(props) {
                                                                                                     onClick={(event) => {
                                                                                                         setSelected(treeCounter);
                                                                                                         action(
+                                                                                                            key.substring(0, key.length - 1),
                                                                                                             item.id,
                                                                                                             'edit',
                                                                                                             item.client_id,
@@ -318,6 +320,7 @@ export default function ReportBuilder(props) {
                                                                                                     onClick={(event) => {
                                                                                                         setSelected(treeCounter);
                                                                                                         action(
+                                                                                                            key.substring(0, key.length - 1),
                                                                                                             item.id,
                                                                                                             'delete',
                                                                                                             item.client_id,
@@ -335,7 +338,8 @@ export default function ReportBuilder(props) {
                                                                                         }
                                                                                         onClick={() => {
                                                                                             setSelected(treeCounter)
-                                                                                            action(item.id)
+                                                                                            action(
+                                                                                                key.substring(0, key.length - 1), item.id)
                                                                                         }} />
 
                                                                                 ))

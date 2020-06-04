@@ -6,7 +6,7 @@ const settings = new NodeSettingsIniFile()
 const session = new NodeSession(settings)
 const sdk = new Looker40SDK(session)
 // const sdk = new Looker31SDK(session)
-console.log('sdk', sdk);
+// console.log('sdk', sdk);
 // const path = require('path');
 
 

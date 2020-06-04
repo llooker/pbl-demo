@@ -1,31 +1,41 @@
 import _ from 'lodash'
+const { validIdHelper } = require('../../../tools');
 
-export default async function dashboardHelper(lookerContent) {
-    console.log('dashboardHelper');
-    console.log('lookerContent', lookerContent);
-    let objForState = {}
+export default async function dashboardHelper(LookerEmbedSDK, demoComponent, lookerContent) {
+
     let dashboardId = lookerContent.id;
-    LookerEmbedSDK.createDashboardWithId(lookerContent.id)
-        .appendTo(validIdHelper(`#embedContainer-${lookerContent.type}-${dashboardId}`))
+    let objForState = {}
+    //await here is crucial
+    let dashboardForState = await LookerEmbedSDK.createDashboardWithId(dashboardId)
+        .appendTo(validIdHelper(`#embedContainer-${demoComponent.type}-${dashboardId}`))
         .withClassName('iframe')
         .withNext()
-        // .withNext(usecaseContent[j].lookerContent[i].isNext || false) //how can I make this dynamic based on prop??
+        // .withNext(lookerContent.isNext || false) //how can I make this dynamic based on prop??
         .withTheme('Embedded')
-        .on('drillmenu:click', (event) => typeof this[_.camelCase(lookerContent.type) + 'Action'] === 'function' ? this[_.camelCase(usecaseContent[j].type) + 'Action'](event) : '')
+        .on('drillmenu:click', (event) => typeof this[_.camelCase(demoComponent.type) + 'Action'] === 'function' ? this[_.camelCase(demoComponent.type) + 'Action'](event) : '')
         .build()
         .connect()
         .then((dashboard) => {
-            // console.log('then callback dashboardId', dashboardId)
-            if (dashboardId) objForState[dashboardId] = dashboard; //not working
+            ///ooollllllddddd
+            // if (dashboardId) {
+            //     console.log('inside this ifff???');
+            //     objForState[dashboardId] = dashboard; //not working
+            // }
             // if (dashboardId) {
             //     this.setState({
             //         [dashboardId]: dashboard
             //     })
             // }
+            return { status: 'success', dashboardId, dashboard }
         })
         .catch((error) => {
-            console.error('Connection error', error)
+            // console.error('Connection error', error)
+            return { status: 'error', error }
         })
+
+    if (dashboardForState.status === 'success') {
+        objForState[dashboardForState.dashboardId] = dashboardForState.dashboard
+    }
 
     if (lookerContent.hasOwnProperty('filter')) {
         let desiredResultFormat = lookerContent.filter.resultFormat || 'json_detail';
@@ -36,15 +46,16 @@ export default async function dashboardHelper(lookerContent) {
                 'Content-Type': 'application/json'
             }
         })
+
         let lookerResponseData = await lookerResponse.json();
 
         let queryResultsForDropdown = [];
         let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
-        for (i = 0; i < lookerResponseData.queryResults.length; i++) {
+        for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
             queryResultsForDropdown.push({ 'label': lookerResponseData.queryResults[i][desiredProperty] })
         }
-        const stateKey = _.camelCase(lookerContent.type) + 'ApiContent';
+        const stateKey = _.camelCase(demoComponent.type) + 'ApiContent';
         objForState[stateKey] = queryResultsForDropdown;
-        return objForState;
     }
+    return objForState
 }

@@ -32,7 +32,7 @@ import Dashboard from './Demo/Dashboard/Dashboard';
 import CohortBuilder from './Demo/CohortBuilder';
 import CustomVis from './Demo/CustomVis/CustomVis';
 import CustomVisHelper from './Demo/CustomVis/Helper'
-// import DashboardHelper from './Demo/Dashboard/Helper'
+import DashboardHelper from './Demo/Dashboard/Helper'
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
@@ -291,56 +291,12 @@ class Home extends Component {
         let objForState = {}
         for (let j = 0; j < usecaseContent.length; j++) {
             for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
-                // console.log('usecaseContent[j].lookerContent[i].type', usecaseContent[j].lookerContent[i].type)
                 if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
-                    let dashboardId = usecaseContent[j].lookerContent[i].id;
-                    LookerEmbedSDK.createDashboardWithId(usecaseContent[j].lookerContent[i].id)
-                        .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${dashboardId}`))
-                        .withClassName('iframe')
-                        .withNext()
-                        // .withNext(usecaseContent[j].lookerContent[i].isNext || false) //how can I make this dynamic based on prop??
-                        .withTheme('Embedded')
-                        .on('drillmenu:click', (event) => typeof this[_.camelCase(usecaseContent[j].type) + 'Action'] === 'function' ? this[_.camelCase(usecaseContent[j].type) + 'Action'](event) : '')
-                        .build()
-                        .connect()
-                        .then((dashboard) => {
-                            // console.log('then callback dashboardId', dashboardId)
-                            // if (dashboardId) objForState[dashboardId] = dashboard; //not working
-                            if (dashboardId) {
-                                this.setState({
-                                    [dashboardId]: dashboard
-                                })
-                            }
-                        })
-                        .catch((error) => {
-                            console.error('Connection error', error)
-                        })
+                    let stateObj = await DashboardHelper(LookerEmbedSDK,
+                        usecaseContent[j],
+                        usecaseContent[j].lookerContent[i]);
 
-                    if (usecaseContent[j].lookerContent[i].hasOwnProperty('filter')) {
-                        let desiredResultFormat = usecaseContent[j].lookerContent[i].filter.resultFormat || 'json_detail';
-                        let lookerResponse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].filter.queryId + '/' + desiredResultFormat, {
-                            method: 'GET',
-                            headers: {
-                                Accept: 'application/json',
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                        let lookerResponseData = await lookerResponse.json();
-                        console.log('lookerResponseData', lookerResponseData)
-
-                        let queryResultsForDropdown = [];
-                        let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
-                        for (i = 0; i < lookerResponseData.queryResults.length; i++) {
-                            queryResultsForDropdown.push({ 'label': lookerResponseData.queryResults[i][desiredProperty] })
-                        }
-                        const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
-                        objForState[stateKey] = queryResultsForDropdown;
-                    }
-
-                    // new implementation
-                    // let stateObj = await DashboardHelper(usecaseContent[j].lookerContent[i]);
-                    // console.log('stateObj', stateObj)
-                    // objForState = { ...objForState, stateObj }
+                    objForState = { ...objForState, ...stateObj }
 
                 } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
                     let exploreId = usecaseContent[j].lookerContent[i].id
@@ -400,7 +356,7 @@ class Home extends Component {
                                 // })
                                 .build()
                                 .connect()
-                                .then(this.setupLook)
+                                // .then(this.setupLook)
                                 .catch((error) => {
                                     console.error('Connection error', error)
                                 })
@@ -409,16 +365,18 @@ class Home extends Component {
 
                     if (objToUse.dashboards.length) {
                         objToUse.dashboards.map((item, index) => {
+                            console.log('item', item)
                             let dashboardId = item.id
                             LookerEmbedSDK.createDashboardWithId(dashboardId)
                                 .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
                                 .withClassName('iframe')
                                 .withClassName('dashboard')
-                                .withClassName(lookerResponseData.sharedFolder.dashboard.indexOf(item) > -1 ? "shared" : "personal")
+                                .withClassName(lookerResponseData.sharedFolder.dashboards.indexOf(item) > -1 ? "shared" : "personal")
+                                .withClassName(dashboardId)
                                 // .on('drillmenu:click', (e) => this.drillClick(e))
                                 .build()
                                 .connect()
-                                .then(this.setupLook)
+                                // .then(this.setupLook)
                                 .catch((error) => {
                                     console.error('Connection error', error)
                                 })
@@ -487,7 +445,7 @@ class Home extends Component {
         // set state once after loop to reduce renders
         //not working, or is it???
         setTimeout(() => {
-            // console.log('objForState', objForState)
+            // console.log('222 objForState', objForState)
             this.setState((prevState) => ({
                 ...prevState,
                 ...objForState
@@ -599,19 +557,22 @@ class Home extends Component {
     }
 
     //seemes to be non performant, need to think of a new solution...
-    reportBuilderAction = async (lookId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
-        // console.log('reportBuilderAction')
-        // console.log('lookId', lookId)
-        // console.log('secondaryAction', secondaryAction)
-        // console.log('qid', qid)
-        // console.log('exploreId', exploreId)
-        // console.log('newReportEmbedContainer', newReportEmbedContainer)
+    reportBuilderAction = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
+        console.log('reportBuilderAction')
+        console.log('contentType', contentType)
+        console.log('contentId', contentId)
+        console.log('secondaryAction', secondaryAction)
+        console.log('qid', qid)
+        console.log('exploreId', exploreId)
+        console.log('newReportEmbedContainer', newReportEmbedContainer)
 
         let iFrameArray = $(".embedContainer:visible > iframe")
+        console.log('iFrameArray', iFrameArray)
 
         let matchingIndex = 0;
         for (let i = 0; i < iFrameArray.length; i++) {
-            if (iFrameArray[i].classList.contains(lookId)) {
+            if (iFrameArray[i].classList.contains(contentType) && iFrameArray[i].classList.contains(contentId)) {
+                console.log('inside this ifff')
                 iFrameArray[i].classList.remove('d-none')
                 matchingIndex = i;
             } else {
@@ -648,7 +609,7 @@ class Home extends Component {
         }
         else if (secondaryAction === 'delete') {
 
-            let lookerResponse = await fetch('/deletelook/' + lookId, {
+            let lookerResponse = await fetch('/deletelook/' + contentId, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
