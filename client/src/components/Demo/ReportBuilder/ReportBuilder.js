@@ -16,11 +16,11 @@ import Icon from '@material-ui/core/Icon';
 import Skeleton from '@material-ui/lab/Skeleton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
-import CodeFlyout from './CodeFlyout'
-import '../Home.css'
+import CodeFlyout from '../CodeFlyout'
+import '../../Home.css'
 import Button from '@material-ui/core/Button';
 
-const { validIdHelper } = require('../../tools');
+const { validIdHelper } = require('../../../tools');
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -120,8 +120,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ReportBuilder(props) {
-    console.log('ReportBuilder')
-    console.log('props', props)
+    // console.log('ReportBuilder')
+    // console.log('props', props)
 
     const classes = useStyles();
     const [value, setValue] = useState(0);
@@ -253,9 +253,9 @@ export default function ReportBuilder(props) {
                                                                                         selected={selected === treeCounter}
                                                                                         className={selected === treeCounter ? `Mui-selected innerTreeItem` : `innerTreeItem`}
                                                                                         contentid={item.id}
-                                                                                        label={item.folder_id === sharedFolderId ?
+                                                                                        label={item.folder_id === sharedFolderId && key === 'looks' ?
 
-                                                                                            <div
+                                                                                            < div
                                                                                                 id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                                                                                                 key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                                                                                                 className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
@@ -284,57 +284,58 @@ export default function ReportBuilder(props) {
                                                                                                     Explore
                                                                                             </Button>
                                                                                             </div>
-                                                                                            :
-                                                                                            <div
-                                                                                                id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                                                                                                key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                                                                                                className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
-                                                                                                {item.title}
-                                                                                                <Button
-                                                                                                    id={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
-                                                                                                    key={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
-                                                                                                    size="small"
-                                                                                                    className={`${classes.ml24} ${classes.childHoverVisibility}`} //
-                                                                                                    onClick={(event) => {
-                                                                                                        setSelected(treeCounter);
-                                                                                                        action(
-                                                                                                            key.substring(0, key.length - 1),
-                                                                                                            item.id,
-                                                                                                            'edit',
-                                                                                                            item.client_id,
-                                                                                                            tabContent[tabContentItemIndex + 1].id,
-                                                                                                            validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                                                                                                        );
-                                                                                                        event.stopPropagation();
-                                                                                                    }
-                                                                                                    }
-                                                                                                    color="primary"
-                                                                                                >
-                                                                                                    Edit
+                                                                                            : key === 'looks' ?
+                                                                                                <div
+                                                                                                    id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                                                                                                    key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                                                                                                    className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
+                                                                                                    {item.title}
+                                                                                                    <Button
+                                                                                                        id={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
+                                                                                                        key={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
+                                                                                                        size="small"
+                                                                                                        className={`${classes.ml24} ${classes.childHoverVisibility}`} //
+                                                                                                        onClick={(event) => {
+                                                                                                            setSelected(treeCounter);
+                                                                                                            action(
+                                                                                                                key.substring(0, key.length - 1),
+                                                                                                                item.id,
+                                                                                                                'edit',
+                                                                                                                item.client_id,
+                                                                                                                tabContent[tabContentItemIndex + 1].id,
+                                                                                                                validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                                                                                                            );
+                                                                                                            event.stopPropagation();
+                                                                                                        }
+                                                                                                        }
+                                                                                                        color="primary"
+                                                                                                    >
+                                                                                                        Edit
                                                                                             </Button>
-                                                                                                <Button
-                                                                                                    id={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
-                                                                                                    key={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
-                                                                                                    size="small"
-                                                                                                    className={`${classes.ml24} ${classes.childHoverVisibility}`} //
-                                                                                                    onClick={(event) => {
-                                                                                                        setSelected(treeCounter);
-                                                                                                        action(
-                                                                                                            key.substring(0, key.length - 1),
-                                                                                                            item.id,
-                                                                                                            'delete',
-                                                                                                            item.client_id,
-                                                                                                            tabContent[tabContentItemIndex + 1].id,
-                                                                                                            validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                                                                                                        );
-                                                                                                        event.stopPropagation();
-                                                                                                    }
-                                                                                                    }
-                                                                                                    color="secondary"
-                                                                                                >
-                                                                                                    Delete
+                                                                                                    <Button
+                                                                                                        id={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
+                                                                                                        key={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
+                                                                                                        size="small"
+                                                                                                        className={`${classes.ml24} ${classes.childHoverVisibility}`} //
+                                                                                                        onClick={(event) => {
+                                                                                                            setSelected(treeCounter);
+                                                                                                            action(
+                                                                                                                key.substring(0, key.length - 1),
+                                                                                                                item.id,
+                                                                                                                'delete',
+                                                                                                                item.client_id,
+                                                                                                                tabContent[tabContentItemIndex + 1].id,
+                                                                                                                validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                                                                                                            );
+                                                                                                            event.stopPropagation();
+                                                                                                        }
+                                                                                                        }
+                                                                                                        color="secondary"
+                                                                                                    >
+                                                                                                        Delete
                                                                                             </Button>
-                                                                                            </div>
+                                                                                                </div>
+                                                                                                : item.title
                                                                                         }
                                                                                         onClick={() => {
                                                                                             setSelected(treeCounter)

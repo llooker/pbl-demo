@@ -37,10 +37,17 @@
                         "filter": {
                             "label": "Select Product Name",
                             "filterName": "Product Name",
-                            "lookerMethod": "runQuery",
-                            "queryId": "22",
-                            "resultFormat": "json"
-                        }
+                            "lookerMethod": "runInlineQuery"
+                        },
+                        "inlineQuery": {
+                            "model": "atom_fashion",
+                            "view": "order_items",
+                            "fields": [
+                                "products.item_name"
+                            ],
+                            "query_timezone": "America/Los_Angeles"
+                        },
+                        "desiredFilterName": "products.brand"
                     }
                 ]
             },

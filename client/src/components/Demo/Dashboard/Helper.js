@@ -3,8 +3,12 @@ const { validIdHelper } = require('../../../tools');
 
 export default async function dashboardHelper(LookerEmbedSDK, demoComponent, lookerContent) {
 
-    let dashboardId = lookerContent.id;
+    // console.log('dashboardHelper')
+    // console.log('demoComponent', demoComponent)
+    // console.log('lookerContent', lookerContent)
+
     let objForState = {}
+    let dashboardId = lookerContent.id;
     //await here is crucial
     let dashboardForState = await LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponent.type}-${dashboardId}`))
@@ -16,16 +20,6 @@ export default async function dashboardHelper(LookerEmbedSDK, demoComponent, loo
         .build()
         .connect()
         .then((dashboard) => {
-            ///ooollllllddddd
-            // if (dashboardId) {
-            //     console.log('inside this ifff???');
-            //     objForState[dashboardId] = dashboard; //not working
-            // }
-            // if (dashboardId) {
-            //     this.setState({
-            //         [dashboardId]: dashboard
-            //     })
-            // }
             return { status: 'success', dashboardId, dashboard }
         })
         .catch((error) => {
@@ -38,17 +32,15 @@ export default async function dashboardHelper(LookerEmbedSDK, demoComponent, loo
     }
 
     if (lookerContent.hasOwnProperty('filter')) {
-        let desiredResultFormat = lookerContent.filter.resultFormat || 'json_detail';
-        let lookerResponse = await fetch('/runquery/' + lookerContent.filter.queryId + '/' + desiredResultFormat, {
+        let stringifiedQuery = encodeURIComponent(JSON.stringify(lookerContent.inlineQuery))
+        let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             }
         })
-
         let lookerResponseData = await lookerResponse.json();
-
         let queryResultsForDropdown = [];
         let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
         for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
@@ -58,4 +50,17 @@ export default async function dashboardHelper(LookerEmbedSDK, demoComponent, loo
         objForState[stateKey] = queryResultsForDropdown;
     }
     return objForState
+}
+
+export function customFilterAction(newFilterValue, stateName, filterName) {
+    // console.log('customFilterAction')
+    // console.log('newFilterValue', newFilterValue)
+    // console.log('stateName', stateName)
+    // console.log('filterName', filterName)
+
+    this.setState({}, () => {
+        this.state[stateName].updateFilters({ [filterName]: newFilterValue })
+        this.state[stateName].run()
+    })
+
 }

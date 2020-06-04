@@ -25,14 +25,21 @@ import UserMenu from './Material/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
 import SplashPage from './Demo/SplashPage';
-import ReportBuilder from './Demo/ReportBuilder';
+import ReportBuilder from './Demo/ReportBuilder/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
 import Dashboard from './Demo/Dashboard/Dashboard';
-import CohortBuilder from './Demo/CohortBuilder';
+// import CohortBuilder from './Demo/CohortBuilder';
 import CustomVis from './Demo/CustomVis/CustomVis';
-import CustomVisHelper from './Demo/CustomVis/Helper'
-import DashboardHelper from './Demo/Dashboard/Helper'
+
+//helpers
+import CustomVisHelper from './Demo/CustomVis/Helper';
+import DashboardHelper from './Demo/Dashboard/Helper';
+import ReportBuilderHelper from './Demo/ReportBuilder/Helper';
+//actions???
+import customFilterAction from './Demo/ReportBuilder/Helper';
+
+console.log('customFilterAction', customFilterAction)
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
@@ -231,7 +238,7 @@ class Home extends Component {
 
         if (newValue === 0
             && this.state.activeTabValue !== newValue
-            && this.state.drawerTabValue === 4) {
+            && this.state.drawerTabValue === 3) { //needs to be more robust
             let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
             this.setupLookerContent([UsecaseContent[usecaseFromUrl].demoComponents[this.state.drawerTabValue]]);
 
@@ -247,9 +254,6 @@ class Home extends Component {
             drawerOpen: open
         })
     }
-
-
-
 
     componentDidMount(props) {
         // console.log('Home componentDidMount');
@@ -270,18 +274,17 @@ class Home extends Component {
 
     // think about refactor to make more efficient 
     // promise.all()
-    async setupLookerContent(usecaseContent) {
+    async setupLookerContent(demoComponents) {
         // console.log('setupLookerContent')
-        // console.log('usecaseContent', usecaseContent)
+        // console.log('demoComponents', demoComponents)
 
         //delete old content
         let embedContainerArray = []
-        if (usecaseContent.length > 1) {
+        if (demoComponents.length > 1) {
             embedContainerArray = document.getElementsByClassName("embedContainer:visble");
         } else {
             embedContainerArray = document.getElementsByClassName("embedContainer")
         }
-        // console.log('embedContainerArray', embedContainerArray)
 
         for (let h = 0; h < embedContainerArray.length; h++) {
             let thisEmbedContainerId = embedContainerArray[h].id
@@ -289,163 +292,59 @@ class Home extends Component {
         }
 
         let objForState = {}
-        for (let j = 0; j < usecaseContent.length; j++) {
-            for (let i = 0; i < usecaseContent[j].lookerContent.length; i++) {
-                if (usecaseContent[j].lookerContent[i].type === 'dashboard') {
+        for (let j = 0; j < demoComponents.length; j++) {
+            if (demoComponents[j].type === 'simple dashboard') {
+                for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
                     let stateObj = await DashboardHelper(LookerEmbedSDK,
-                        usecaseContent[j],
-                        usecaseContent[j].lookerContent[i]);
-
+                        demoComponents[j],
+                        demoComponents[j].lookerContent[i]
+                    );
                     objForState = { ...objForState, ...stateObj }
-
-                } else if (usecaseContent[j].lookerContent[i].type === 'explore') {
-                    let exploreId = usecaseContent[j].lookerContent[i].id
-                    // console.log('exploreId', exploreId)
-                    LookerEmbedSDK.createExploreWithId(usecaseContent[j].lookerContent[i].id)
-                        .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
-                        .withClassName('iframe')
-                        .on('explore:state:changed', (event) => {
-                            // console.log('explore:state:changed')
-                            // console.log('event', event)
-                        })
-                        .build()
-                        .connect()
-                        .then((explore) => {
-                            // // console.log('explore then callback')
-                        })
-                        .catch((error) => {
-                            console.error('Connection error', error)
-                        })
-
-                } else if (usecaseContent[j].lookerContent[i].type === 'folder') {
-                    // console.log('inside folder else ifff');
-                    let lookerResponse = await fetch('/fetchfolder/' + usecaseContent[j].lookerContent[i].id, { //+ usecaseContent[j].type + '/'
-                        method: 'GET',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json'
-                        }
-                    })
-
-                    let lookerResponseData = await lookerResponse.json();
-                    let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
-                    let dashboardsToUse = [...lookerResponseData.sharedFolder.dashboards]
-                    let objToUse = {
-                        looks: looksToUse,
-                        dashboards: dashboardsToUse
-                    }
-
-                    if (objToUse.looks.length) {
-                        objToUse.looks.map((item, index) => {
-                            let lookId = item.id
-                            LookerEmbedSDK.createLookWithId(lookId)
-                                .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
-                                .withClassName('iframe')
-                                .withClassName('look')
-                                .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
-                                .withClassName(index > 0 ? 'd-none' : 'oops')
-                                .withClassName(lookId)
-                                // .on('drillmenu:click', (e) => this.drillClick(e))
-                                // .on('drillmodal:look', (event) => {
-                                //     console.log('drillmodal:look')
-                                //     console.log('event', event)
-                                // })
-                                // .on('drillmodal:explore', (event) => {
-                                //     console.log('drillmodal:explore')
-                                //     console.log('event', event)
-                                // })
-                                .build()
-                                .connect()
-                                // .then(this.setupLook)
-                                .catch((error) => {
-                                    console.error('Connection error', error)
-                                })
-                        })
-                    }
-
-                    if (objToUse.dashboards.length) {
-                        objToUse.dashboards.map((item, index) => {
-                            console.log('item', item)
-                            let dashboardId = item.id
-                            LookerEmbedSDK.createDashboardWithId(dashboardId)
-                                .appendTo(validIdHelper(`#embedContainer-${usecaseContent[j].type}-${usecaseContent[j].lookerContent[i].id}`))
-                                .withClassName('iframe')
-                                .withClassName('dashboard')
-                                .withClassName(lookerResponseData.sharedFolder.dashboards.indexOf(item) > -1 ? "shared" : "personal")
-                                .withClassName(dashboardId)
-                                // .on('drillmenu:click', (e) => this.drillClick(e))
-                                .build()
-                                .connect()
-                                // .then(this.setupLook)
-                                .catch((error) => {
-                                    console.error('Connection error', error)
-                                })
-                        })
-                    }
-
-                    const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
-                    objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
-
-                } else if (usecaseContent[j].lookerContent[i].type === "runQuery") {
-                    // console.log('inside elllse if for runQuery')
-                    // console.log('usecaseContent[j].lookerContent[i].id', usecaseContent[j].lookerContent[i].id)
-                    let desiredResultFormat = usecaseContent[j].lookerContent[i].resultFormat || 'json_detail';
-                    let lookerResponse = await fetch('/runquery/' + usecaseContent[j].lookerContent[i].id + '/' + desiredResultFormat, {
-                        method: 'GET',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    let lookerResponseData = await lookerResponse.json();
-                    const stateKey = _.camelCase(usecaseContent[j].type) + 'ApiContent';
-                    // this gives better performance...
-                    this.setState((prevState) => ({
-                        [stateKey]: prevState[stateKey] ? [...prevState[stateKey], { 'glance': lookerResponseData }] : [{ 'glance': lookerResponseData }]
-                    }), () => {
-                        if (lookerResponseData.queryResults.errors) {
-                        } else if (lookerResponseData.queryResults.data[0] && usecaseContent[j].type === "splash page") //for now
-                            this.splashPageDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
-                        // this.runQueryDetail(lookerResponseData.queryResults.data[0][usecaseContent[j].lookerContent[i].desiredProperty].links[0].url, i)
-                    })
-
-                    // use state for this for now for better loading experience
-                    // if (objForState.hasOwnProperty(stateKey)) {
-                    //     objForState[stateKey].push({ 'glance': lookerResponseData })
-                    // } else {
-                    //     objForState[stateKey] = [{ 'glance': lookerResponseData }]
-                    // }
-
-                } else if (usecaseContent[j].lookerContent[i].type === "explorelite") {
-                    this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
-
                 }
-                else if (usecaseContent[j].lookerContent[i].type === 'custom vis') {
-                    //copy existing state and set status to running
-                    let customVisApiContent = { ...this.state.customVisApiContent }
-                    customVisApiContent.status = 'running';
-                    this.setState({ customVisApiContent })
+            } else if (demoComponents[j].type === 'custom filter') {
+                for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
                     //get inline query from usecase file & set user attribute dynamically
-                    let jsonQuery = usecaseContent[j].lookerContent[i].inlineQuery;
+                    let jsonQuery = demoComponents[j].lookerContent[i].inlineQuery;
                     jsonQuery.filters = {
-                        [usecaseContent[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand
+                        [demoComponents[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand
+                    };
+                    demoComponents[j].lookerContent[i].inlineQuery = jsonQuery;
+                    let stateObj = await DashboardHelper(LookerEmbedSDK,
+                        demoComponents[j],
+                        demoComponents[j].lookerContent[i]
+                    );
+                    objForState = { ...objForState, ...stateObj }
+                }
+            }
+            else if (demoComponents[j].type === 'custom vis') {
+                let customVisApiContent = { ...this.state.customVisApiContent }
+                customVisApiContent.status = 'running';
+                this.setState({ customVisApiContent })
+                for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
+                    //get inline query from usecase file & set user attribute dynamically
+                    let jsonQuery = demoComponents[j].lookerContent[i].inlineQuery;
+                    jsonQuery.filters = {
+                        [demoComponents[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand
                     };
 
                     let stateObj = await CustomVisHelper(jsonQuery);
                     objForState[stateObj.stateKey] = stateObj.stateValue;
-
-                } else if (usecaseContent[j].lookerContent[i].type === 'splash page') {
-                    console.log('inside iff for splash page')
                 }
-                else { console.log('catch all else') }
-            }
-
+            } else if (demoComponents[j].type === 'report builder') {
+                for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
+                    let stateObj = await ReportBuilderHelper(LookerEmbedSDK,
+                        demoComponents[j],
+                        demoComponents[j].lookerContent[i]
+                    );
+                    objForState = { ...objForState, ...stateObj }
+                }
+            } else { console.log('catch all else') }
         }
 
         // set state once after loop to reduce renders
         //not working, or is it???
         setTimeout(() => {
-            // console.log('222 objForState', objForState)
+            console.log('222 objForState', objForState)
             this.setState((prevState) => ({
                 ...prevState,
                 ...objForState
@@ -519,9 +418,9 @@ class Home extends Component {
                 total: true,
                 limit: "25"
             }
-
+    
             // console.log('newQueryParams', newQueryParams)
-
+    
             let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(newQueryParams) + '/json', {
                 method: 'GET',
                 headers: {
@@ -532,7 +431,7 @@ class Home extends Component {
             let lookerResponseData = await lookerResponse.json();
             splashPageApiContentCopy = [...this.state.splashPageApiContent]
             splashPageApiContentCopy[index].detail = lookerResponseData.queryResults;
-
+    
         } else {
             splashPageApiContentCopy = [...this.state.splashPageApiContent]
             splashPageApiContentCopy[index].detail = [];
@@ -540,39 +439,37 @@ class Home extends Component {
         this.setState({
             splashPageApiContent: splashPageApiContentCopy
         })
-
+    
     }*/
 
+    //how can I abstract this to helper function???
     customFilterAction = (newFilterValue, stateName, filterName) => {
-        // console.log('customFilterAction')
-        // console.log('newFilterValue', newFilterValue)
-        // console.log('stateName', stateName)
-        // console.log('filterName', filterName)
+        console.log('customFilterAction')
+        console.log('newFilterValue', newFilterValue)
+        console.log('stateName', stateName)
+        console.log('filterName', filterName)
 
         this.setState({}, () => {
             this.state[stateName].updateFilters({ [filterName]: newFilterValue })
             this.state[stateName].run()
         })
-
     }
 
     //seemes to be non performant, need to think of a new solution...
     reportBuilderAction = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
-        console.log('reportBuilderAction')
-        console.log('contentType', contentType)
-        console.log('contentId', contentId)
-        console.log('secondaryAction', secondaryAction)
-        console.log('qid', qid)
-        console.log('exploreId', exploreId)
-        console.log('newReportEmbedContainer', newReportEmbedContainer)
+        // console.log('reportBuilderAction')
+        // console.log('contentType', contentType)
+        // console.log('contentId', contentId)
+        // console.log('secondaryAction', secondaryAction)
+        // console.log('qid', qid)
+        // console.log('exploreId', exploreId)
+        // console.log('newReportEmbedContainer', newReportEmbedContainer)
 
         let iFrameArray = $(".embedContainer:visible > iframe")
-        console.log('iFrameArray', iFrameArray)
 
         let matchingIndex = 0;
         for (let i = 0; i < iFrameArray.length; i++) {
             if (iFrameArray[i].classList.contains(contentType) && iFrameArray[i].classList.contains(contentId)) {
-                console.log('inside this ifff')
                 iFrameArray[i].classList.remove('d-none')
                 matchingIndex = i;
             } else {
@@ -616,14 +513,14 @@ class Home extends Component {
                     'Content-Type': 'application/json'
                 }
             });
+            console.log('lookerResponse', lookerResponse)
             if (lookerResponse.status === 200) {
-                // console.log("inside 200 ifff")
                 let reportBuilderApiContentCopy = this.state.reportBuilderApiContent;
                 reportBuilderApiContentCopy.looks.splice(matchingIndex, 1)
                 this.setState({
                     reportBuilderApiContent: reportBuilderApiContentCopy
                 }, () => {
-                    // console.log('callback this.state.reportBuilderApiContent', this.state.reportBuilderApiContent)
+                    console.log('callback this.state.reportBuilderApiContent', this.state.reportBuilderApiContent)
                 })
             }
         } else if (secondaryAction === 'explore') {
@@ -735,7 +632,7 @@ class Home extends Component {
         }, 1000)
     }
 
-    cohortBuilderAction = async (lookerContent) => {
+    /*cohortBuilderAction = async (lookerContent) => {
         // console.log('cohortBuilderAction');
         // console.log('lookerContent', lookerContent);
 
@@ -797,73 +694,6 @@ class Home extends Component {
         // this.setState({
         //     cohortBuilderApiContent: cohortBuilderApiContentCopy
         // })
-
-    }
-
-    /*customVisHelper = async (inlineQuery) => {
-        console.log('customVisHelper')
-        console.log('000 inlineQuery', inlineQuery)
-
-        let customVisApiContent = { ...this.state.customVisApiContent }
-        console.log('000 customVisApiContent', customVisApiContent)
-        customVisApiContent.status = 'running';
-        this.setState({ customVisApiContent })
-
-        let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
-        let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        let lookerResponseData = await lookerResponse.json();
-        console.log('111 lookerResponseData', lookerResponseData)
-        //this could be improved
-        let queryResultsForCustomVis = { status: 'running', originalData: [[], []], data: [[], []] };
-        let dateProperty = Object.keys(lookerResponseData.queryResults[0])[0];
-        let categoryProperty = Object.keys(lookerResponseData.queryResults[0])[1];
-        let orderCountProperty = Object.keys(lookerResponseData.queryResults[0])[2];
-        let salePriceProperty = Object.keys(lookerResponseData.queryResults[0])[3];
-        let uniqueCategories = ['All']
-        for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
-            if (lookerResponseData.queryResults[i][dateProperty]) {
-                queryResultsForCustomVis.originalData[0].push({
-                    'day': lookerResponseData.queryResults[i][dateProperty],
-                    'value': lookerResponseData.queryResults[i][salePriceProperty],
-                    'category': lookerResponseData.queryResults[i][categoryProperty]
-                })
-                queryResultsForCustomVis.data[0].push({
-                    'day': lookerResponseData.queryResults[i][dateProperty],
-                    'value': lookerResponseData.queryResults[i][salePriceProperty],
-                    'category': lookerResponseData.queryResults[i][categoryProperty]
-                })
-                queryResultsForCustomVis.originalData[1].push({
-                    'day': lookerResponseData.queryResults[i][dateProperty],
-                    'value': lookerResponseData.queryResults[i][orderCountProperty],
-                    'category': lookerResponseData.queryResults[i][categoryProperty]
-                })
-                queryResultsForCustomVis.data[1].push({
-                    'day': lookerResponseData.queryResults[i][dateProperty],
-                    'value': lookerResponseData.queryResults[i][orderCountProperty],
-                    'category': lookerResponseData.queryResults[i][categoryProperty]
-                })
-
-                if (uniqueCategories.indexOf(lookerResponseData.queryResults[i][categoryProperty]) == -1) {
-                    uniqueCategories.push(lookerResponseData.queryResults[i][categoryProperty])
-                }
-            }
-        }
-        queryResultsForCustomVis.status = "complete";
-        queryResultsForCustomVis.inlineQuery = inlineQuery;
-        queryResultsForCustomVis.uniqueCategories = uniqueCategories;
-        // console.log('111 queryResultsForCustomVis', queryResultsForCustomVis)
-        const stateKey = 'customVisApiContent';
-        this.setState({
-            [stateKey]: queryResultsForCustomVis
-        })
-        //}
-
 
     }*/
 
