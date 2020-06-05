@@ -10,7 +10,7 @@ export default function ComboBox(props) {
 
 
     const handleChange = (event) => {
-        action(event.target.innerText || '', correspondingContentId, filterName)
+        action(correspondingContentId, filterName, event.target.innerText || '')
     }
 
     return (
@@ -19,7 +19,6 @@ export default function ComboBox(props) {
             options={options}
             getOptionLabel={(option) => option.label}
             style={{ width: 300 }}
-            // onChange={() => action(event, correspondingContentId, filterName)}
             onChange={handleChange}
             renderInput={(params) => <TextField {...params} label={filterName} variant="outlined" />}
         />

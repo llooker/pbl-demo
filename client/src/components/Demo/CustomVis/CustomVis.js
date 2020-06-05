@@ -63,7 +63,9 @@ function a11yProps(index) {
 function FilterBar(props) {
     // console.log('FilterBar');
     // console.log('props', props);
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes, action, apiContent,
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
+        //action, apiContent,
+        helperContent,
         fromDate, toDate, category, desiredField, handleFromDate, handleToDate, handleCategory, handleDesiredField
     } = props;
 
@@ -86,7 +88,7 @@ function FilterBar(props) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                    {apiContent.queryResults ?
+                    {helperContent && helperContent.apiContent ?
                         <>
                             <Grid item sm={3}>
                                 <Typography variant="subtitle1">
@@ -168,7 +170,7 @@ function FilterBar(props) {
                                         value={category}
                                         onChange={(event) => handleCategory(event.target.value)}
                                     >
-                                        {apiContent.uniqueCategories.map((item, index) => (
+                                        {helperContent.apiContent.uniqueCategories.map((item, index) => (
 
                                             <MenuItem
                                                 id={validIdHelper(`${item}-${index}`)}
@@ -264,17 +266,17 @@ const useStyles = makeStyles((theme) => ({
         width: '100%'
     }
 }));
-
-export default function CustomVis(props) {
-    // console.log('CustomVis')
-    // console.log('props', props)
+//working
+/*export default function CustomVis(props) {
+    console.log('CustomVis')
+    console.log('props', props)
     const classes = useStyles();
     const [value, setValue] = useState(0);
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab]
-    const [fromDate, setFromDate] = useState(apiContent.data ? apiContent.data[0][apiContent.data[0].length - 1].day : '');
-    const [toDate, setToDate] = useState(apiContent.data ? apiContent.data[0][0].day : '');
+    const [fromDate, setFromDate] = useState('');
+    const [toDate, setToDate] = useState('');
     const [category, setCategory] = useState('All')
     const [desiredField, setDesiredField] = useState(lookerContent ? lookerContent[0].desiredFields[0] : '')
     let demoComponentType = type || 'sample code';
@@ -339,7 +341,7 @@ export default function CustomVis(props) {
     }
 
     useEffect(() => {
-        // console.log('useEffect')
+        console.log('useEffect')
         if (apiContent.queryResults) {
             setFromDate(apiContent.queryResults[apiContent.queryResults.length - 1][apiContent.inlineQuery.fields[0]]);
             setToDate(apiContent.queryResults[0][apiContent.inlineQuery.fields[0]]);
@@ -423,6 +425,213 @@ export default function CustomVis(props) {
                                                         </Grid>
 
                                                         : apiContent.queryResults && apiContent.queryResults.length ?
+                                                            <>
+                                                                <Grid item sm={12} className={classes.height800}>
+                                                                    <h1>{desiredField.substring(desiredField.lastIndexOf(".") + 1, desiredField.length).split("_").map(item => item.charAt(0).toUpperCase() + item.substring(1)).join(" ")}</h1>
+                                                                    <ResponsiveCalendar
+                                                                        data={filterData}
+                                                                        from={fromDate}
+                                                                        to={toDate}
+                                                                        // colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
+                                                                        colors={desiredField === lookerContent[0].desiredFields[0] ? redToBlueColorScale : yellowToGreenColorScale}
+                                                                        yearSpacing={40}
+                                                                        monthBorderColor="#ffffff"
+                                                                        dayBorderWidth={2}
+                                                                        dayBorderColor="#ffffff"
+                                                                        legends={[
+                                                                            {
+                                                                                anchor: 'bottom-right',
+                                                                                direction: 'row',
+                                                                                translateY: 36,
+                                                                                itemCount: 4,
+                                                                                itemWidth: 42,
+                                                                                itemHeight: 36,
+                                                                                itemsSpacing: 14,
+                                                                                itemDirection: 'right-to-left'
+                                                                            }
+                                                                        ]}
+                                                                        height={700}
+                                                                        maxHeight={500}
+                                                                    />
+                                                                </Grid>
+                                                            </> :
+                                                            ''
+                                                    }
+                                                </Box>
+                                            </React.Fragment>
+                                        }
+                                    </Grid>
+                                </TabPanel>
+                            ))}
+                        </Box>
+                    </Box >
+                </div>
+            </Grid >
+        </div >
+    )
+}*/
+
+export default function CustomVis(props) {
+    console.log('CustomVis')
+    console.log('props', props)
+    const classes = useStyles();
+    const [value, setValue] = useState(0);
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type },
+        helperContent,
+        // apiContent, action, 
+        activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
+    const tabContent = [...lookerContent, sampleCodeTab]
+    const [fromDate, setFromDate] = useState('');
+    const [toDate, setToDate] = useState('');
+    const [category, setCategory] = useState('All')
+    const [desiredField, setDesiredField] = useState(lookerContent ? lookerContent[0].desiredFields[0] : '')
+    let demoComponentType = type || 'sample code';
+
+    const handleChange = (event, newValue) => {
+        handleTabChange(0);
+        setValue(newValue);
+    };
+
+    const handleFromDate = newValue => {
+        setFromDate(newValue)
+    }
+    const handleToDate = newValue => {
+        setToDate(newValue)
+    }
+    const handleCategory = newValue => {
+        setCategory(newValue)
+    }
+    const handleDesiredField = newValue => {
+        setDesiredField(newValue)
+    }
+
+    let filterData = [];
+    if (helperContent && helperContent.apiContent) {
+        //filtering for fromDate, toDate and category
+        filterData = _.filter(helperContent.apiContent.queryResults, (row) => {
+            return (row[helperContent.apiContent.inlineQuery.fields[0]] > fromDate
+                && row[helperContent.apiContent.inlineQuery.fields[0]] < toDate
+                && (category === 'All' ? true : row[helperContent.apiContent.inlineQuery.fields[1]] === category))
+        })
+        //converting filterDAta to desired format for vis
+        filterData = filterData.map(item => {
+            return {
+                'day': item[helperContent.apiContent.inlineQuery.fields[0]],
+                'category': item[helperContent.apiContent.inlineQuery.fields[1]],
+                'value': item[desiredField]
+            }
+        })
+        //special exception for category all
+        //need to reduce array by day across categories
+        //destructuing in reduce of value would not work for dynamic var
+        if (category === 'All') {
+            //create array of all unique dates
+            const uniqueDates = [...new Set(filterData.map(item => item.day))];
+            let filteredAndReducedForAll = []
+            //iterate over unique date
+            uniqueDates.map(uniqueDate => {
+                //filter filterData for current unique date
+                let value = _.filter(filterData, row => {
+                    return row.day === uniqueDate
+                }).reduce((acc, { value }) => acc + value, 0)
+                let thisObj = {
+                    day: uniqueDate,
+                    value: value,
+                    category: 'All'
+                }
+                filteredAndReducedForAll.push(thisObj)
+
+            })
+            filterData = filteredAndReducedForAll;
+        }
+    }
+
+    useEffect(() => {
+        console.log('useEffect')
+        if (helperContent.apiContent) {
+            setFromDate(helperContent.apiContent.queryResults[helperContent.apiContent.queryResults.length - 1][helperContent.apiContent.inlineQuery.fields[0]]);
+            setToDate(helperContent.apiContent.queryResults[0][helperContent.apiContent.inlineQuery.fields[0]]);
+        }
+    }, [helperContent.apiContent]
+    );
+
+    let redToBlueColorScale = ['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']
+    let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B']
+
+    return (
+        <div className={`${classes.root} demoComponent`}>
+            <Grid container
+                spacing={3}
+                key={validIdHelper(type)} >
+                <div className={classes.root}>
+                    <Box>
+                        <AppBar position="static">
+                            <Tabs
+                                className={classes.tabs}
+                                value={value}
+                                onChange={handleChange}
+                                aria-label="simple tabs example">
+                                {tabContent.map((item, index) => (
+                                    <Tab
+                                        key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
+                                        label={item.label}
+                                        className={item.type === 'sample code' ? `${classes.mlAuto}` : ``}
+                                        {...a11yProps(index)} />
+                                ))}
+                            </Tabs>
+                        </AppBar>
+                        <Box className="tabPanelContainer">
+                            {tabContent.map((tabContentItem, index) => (
+                                <TabPanel
+                                    key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
+                                    value={value}
+                                    index={index}>
+                                    <Grid container>
+                                        {tabContentItem.type === 'sample code' ?
+                                            <Grid item sm={12} >
+                                                <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                                                    Sample Code<br />
+                                                </Typography>
+                                                <CodeFlyout code={tabContentItem.sampleCode} />
+                                                <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                                                    Looker User<br />
+                                                </Typography>
+                                                <CodeFlyout code={tabContentItem.lookerUser} />
+                                            </Grid>
+                                            :
+                                            <React.Fragment
+                                                key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
+
+                                                {!helperContent.apiContent ?
+                                                    <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
+                                                    :
+                                                    <FilterBar {...props}
+                                                        classes={classes}
+                                                        action={filterData}
+                                                        fromDate={fromDate}
+                                                        toDate={toDate}
+                                                        category={category}
+                                                        desiredField={desiredField}
+                                                        handleFromDate={handleFromDate}
+                                                        handleToDate={handleToDate}
+                                                        handleCategory={handleCategory}
+                                                        handleDesiredField={handleDesiredField}
+                                                    />
+                                                }
+                                                <Divider className={classes.divider} />
+                                                <Box
+                                                    className={classes.w100}
+                                                    mt={2}>
+                                                    {!helperContent.apiContent ?
+
+                                                        <Grid item sm={12} >
+                                                            <Card className={`${classes.card} ${classes.flexCentered}`}>
+                                                                <CircularProgress className={classes.circularProgress} />
+                                                            </Card>
+                                                        </Grid>
+
+                                                        : helperContent.apiContent.queryResults && helperContent.apiContent.queryResults.length ?
                                                             <>
                                                                 <Grid item sm={12} className={classes.height800}>
                                                                     <h1>{desiredField.substring(desiredField.lastIndexOf(".") + 1, desiredField.length).split("_").map(item => item.charAt(0).toUpperCase() + item.substring(1)).join(" ")}</h1>

@@ -1,6 +1,7 @@
 export default async function customVisHelper(inlineQuery) {
     // console.log('customVisHelper')
     // console.log('inlineQuery', inlineQuery)
+    let propsForComponent = {}
     let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
     let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
         method: 'GET',
@@ -24,5 +25,7 @@ export default async function customVisHelper(inlineQuery) {
     lookerResponseData.uniqueCategories = uniqueCategories;
     lookerResponseData.inlineQuery = inlineQuery;
     // console.log('1111 lookerResponseData', lookerResponseData)
-    return { stateKey: 'customVisApiContent', stateValue: lookerResponseData }
+    // return { stateKey: 'customVisApiContent', stateValue: lookerResponseData }
+    propsForComponent.apiContent = lookerResponseData
+    return propsForComponent;
 }

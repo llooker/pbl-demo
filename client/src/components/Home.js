@@ -33,13 +33,12 @@ import Dashboard from './Demo/Dashboard/Dashboard';
 import CustomVis from './Demo/CustomVis/CustomVis';
 
 //helpers
-import CustomVisHelper from './Demo/CustomVis/Helper';
 import DashboardHelper from './Demo/Dashboard/Helper';
+import CustomVisHelper from './Demo/CustomVis/Helper';
 import ReportBuilderHelper from './Demo/ReportBuilder/Helper';
 //actions???
-import customFilterAction from './Demo/ReportBuilder/Helper';
+// import customFilterAction from './Demo/ReportBuilder/Helper';
 
-console.log('customFilterAction', customFilterAction)
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
@@ -179,6 +178,7 @@ const atomTheme = createMuiTheme({
 })
 
 
+const ComponentContext = React.createContext({});
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -192,8 +192,9 @@ class Home extends Component {
             appLayout: ''
         }
 
+        // let propsForComponents = {};
 
-        this.CustomVisHelper = CustomVisHelper.bind(this); //does this help???
+        // this.CustomVisHelper = CustomVisHelper.bind(this); //does this help???
     }
 
     //material  methods for layout
@@ -292,16 +293,23 @@ class Home extends Component {
         }
 
         let objForState = {}
+        // let propsForComponents = {};
         for (let j = 0; j < demoComponents.length; j++) {
             if (demoComponents[j].type === 'simple dashboard') {
+                // console.log('simple dashboard')
                 for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
-                    let stateObj = await DashboardHelper(LookerEmbedSDK,
+                    let helperObj = await DashboardHelper(LookerEmbedSDK,
                         demoComponents[j],
                         demoComponents[j].lookerContent[i]
                     );
-                    objForState = { ...objForState, ...stateObj }
+
+                    ComponentContext[validIdHelper(demoComponents[j].type)] = {
+                        ...ComponentContext[validIdHelper(demoComponents[j].type)],
+                        ...helperObj
+                    }
                 }
             } else if (demoComponents[j].type === 'custom filter') {
+                // console.log('custom filter')
                 for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
                     //get inline query from usecase file & set user attribute dynamically
                     let jsonQuery = demoComponents[j].lookerContent[i].inlineQuery;
@@ -309,17 +317,20 @@ class Home extends Component {
                         [demoComponents[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand
                     };
                     demoComponents[j].lookerContent[i].inlineQuery = jsonQuery;
-                    let stateObj = await DashboardHelper(LookerEmbedSDK,
+                    let helperObj = await DashboardHelper(LookerEmbedSDK,
                         demoComponents[j],
                         demoComponents[j].lookerContent[i]
                     );
-                    objForState = { ...objForState, ...stateObj }
+                    ComponentContext[validIdHelper(demoComponents[j].type)] = {
+                        ...ComponentContext[validIdHelper(demoComponents[j].type)],
+                        ...helperObj
+                    }
                 }
             }
             else if (demoComponents[j].type === 'custom vis') {
-                let customVisApiContent = { ...this.state.customVisApiContent }
-                customVisApiContent.status = 'running';
-                this.setState({ customVisApiContent })
+                // let customVisApiContent = { ...this.state.customVisApiContent }
+                // customVisApiContent.status = 'running';
+                // this.setState({ customVisApiContent })
                 for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
                     //get inline query from usecase file & set user attribute dynamically
                     let jsonQuery = demoComponents[j].lookerContent[i].inlineQuery;
@@ -327,8 +338,14 @@ class Home extends Component {
                         [demoComponents[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand
                     };
 
-                    let stateObj = await CustomVisHelper(jsonQuery);
-                    objForState[stateObj.stateKey] = stateObj.stateValue;
+                    let helperObj = await CustomVisHelper(jsonQuery);
+                    console.log('helperObj', helperObj)
+                    //objForState['customVisApiContent'] = helperObj.apiContent;
+
+                    ComponentContext[validIdHelper(demoComponents[j].type)] = {
+                        ...ComponentContext[validIdHelper(demoComponents[j].type)],
+                        ...helperObj
+                    }
                 }
             } else if (demoComponents[j].type === 'report builder') {
                 for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
@@ -336,7 +353,7 @@ class Home extends Component {
                         demoComponents[j],
                         demoComponents[j].lookerContent[i]
                     );
-                    objForState = { ...objForState, ...stateObj }
+                    // objForState = { ...objForState, ...stateObj }
                 }
             } else { console.log('catch all else') }
         }
@@ -345,6 +362,7 @@ class Home extends Component {
         //not working, or is it???
         setTimeout(() => {
             console.log('222 objForState', objForState)
+            console.log('222 ComponentContext', ComponentContext)
             this.setState((prevState) => ({
                 ...prevState,
                 ...objForState
@@ -442,19 +460,6 @@ class Home extends Component {
     
     }*/
 
-    //how can I abstract this to helper function???
-    customFilterAction = (newFilterValue, stateName, filterName) => {
-        console.log('customFilterAction')
-        console.log('newFilterValue', newFilterValue)
-        console.log('stateName', stateName)
-        console.log('filterName', filterName)
-
-        this.setState({}, () => {
-            this.state[stateName].updateFilters({ [filterName]: newFilterValue })
-            this.state[stateName].run()
-        })
-    }
-
     //seemes to be non performant, need to think of a new solution...
     reportBuilderAction = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
         // console.log('reportBuilderAction')
@@ -513,7 +518,6 @@ class Home extends Component {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log('lookerResponse', lookerResponse)
             if (lookerResponse.status === 200) {
                 let reportBuilderApiContentCopy = this.state.reportBuilderApiContent;
                 reportBuilderApiContentCopy.looks.splice(matchingIndex, 1)
@@ -698,9 +702,10 @@ class Home extends Component {
     }*/
 
     render() {
-        // console.log('Home render');
-        // console.log('this.state', this.state);
-        // console.log('this.props', this.props);
+        console.log('Home render');
+        console.log('this.state', this.state);
+        console.log('this.props', this.props);
+        console.log('ComponentContext', ComponentContext);
 
         const demoComponentMap = {
             "splash page": SplashPage,
@@ -817,12 +822,14 @@ class Home extends Component {
                                                 staticContent={item}
                                                 handleDrawerTabChange={handleDrawerTabChange}
                                                 apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []} //[]
-                                                action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
+                                                // action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
+                                                // action={''}
                                                 activeTabValue={activeTabValue}
                                                 handleTabChange={handleTabChange}
                                                 lookerUser={lookerUser}
                                                 sampleCode={sampleCode}
                                                 activeUsecase={activeUsecase}
+                                                helperContent={ComponentContext[validIdHelper(item.type)] || {}}
                                             /> :
                                             item.label
                                         }

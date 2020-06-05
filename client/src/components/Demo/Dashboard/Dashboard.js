@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import $ from 'jquery';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -14,7 +15,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import '../../Home.css'
 import CodeFlyout from '../CodeFlyout';
+
+import DashboardHelper from './Helper';
 const { validIdHelper } = require('../../../tools');
+
+console.log('DashboardHelper', DashboardHelper)
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -106,7 +111,9 @@ export default function Dashboard(props) {
 
     const classes = useStyles();
     const [value, setValue] = useState(0);
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type },
+        helperContent,
+        activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab]
 
@@ -118,13 +125,23 @@ export default function Dashboard(props) {
         setValue(newValue);
     };
 
+    const action = (dashboardId, filterName, newFilterValue) => {
+
+        // console.log('action')
+        // console.log('dashboardId', dashboardId)
+        // console.log('filterName', filterName)
+        // console.log('newFilterValue', newFilterValue)
+
+        helperContent[dashboardId].updateFilters({ [filterName]: newFilterValue })
+        helperContent[dashboardId].run()
+    }
+
     useEffect(() => {
         //change from drill click
         if (activeTabValue > value) {
             setValue(activeTabValue)
         }
     });
-
     return (
         <div className={`${classes.root} demoComponent`}>
             <Grid container
@@ -133,8 +150,6 @@ export default function Dashboard(props) {
                 <div className={classes.root}>
                     {iFrameExists ? '' :
                         <Grid item sm={12} >
-                            {/* <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> */}
-
                             <Card className={`${classes.card} ${classes.flexCentered}`}>
                                 <CircularProgress className={classes.circularProgress} />
                             </Card>
@@ -182,12 +197,13 @@ export default function Dashboard(props) {
                                                 {tabContentItem.filter ?
                                                     <Grid item sm={12}>
                                                         <ComboBox
-                                                            options={apiContent}
+                                                            options={helperContent && helperContent.apiContent ?
+                                                                helperContent.apiContent :
+                                                                []}
                                                             action={action}
                                                             correspondingContentId={tabContentItem.id}
                                                             filterName={tabContentItem.filter.filterName} />
                                                     </Grid> : ''
-
                                                 }
                                                 <Box className={classes.w100} mt={2}>
                                                     <Grid item sm={12}>

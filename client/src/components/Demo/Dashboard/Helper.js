@@ -1,16 +1,16 @@
 import _ from 'lodash'
 const { validIdHelper } = require('../../../tools');
 
-export default async function dashboardHelper(LookerEmbedSDK, demoComponent, lookerContent) {
+export default async function dashboardInit(LookerEmbedSDK, demoComponent, lookerContent) {
 
     // console.log('dashboardHelper')
     // console.log('demoComponent', demoComponent)
     // console.log('lookerContent', lookerContent)
 
-    let objForState = {}
+    let propsForComponent = {}
     let dashboardId = lookerContent.id;
     //await here is crucial
-    let dashboardForState = await LookerEmbedSDK.createDashboardWithId(dashboardId)
+    let dashboardObj = await LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponent.type}-${dashboardId}`))
         .withClassName('iframe')
         .withNext()
@@ -27,8 +27,8 @@ export default async function dashboardHelper(LookerEmbedSDK, demoComponent, loo
             return { status: 'error', error }
         })
 
-    if (dashboardForState.status === 'success') {
-        objForState[dashboardForState.dashboardId] = dashboardForState.dashboard
+    if (dashboardObj.status === 'success') {
+        propsForComponent[dashboardObj.dashboardId] = dashboardObj.dashboard
     }
 
     if (lookerContent.hasOwnProperty('filter')) {
@@ -46,21 +46,8 @@ export default async function dashboardHelper(LookerEmbedSDK, demoComponent, loo
         for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
             queryResultsForDropdown.push({ 'label': lookerResponseData.queryResults[i][desiredProperty] })
         }
-        const stateKey = _.camelCase(demoComponent.type) + 'ApiContent';
-        objForState[stateKey] = queryResultsForDropdown;
+
+        propsForComponent.apiContent = queryResultsForDropdown;
     }
-    return objForState
-}
-
-export function customFilterAction(newFilterValue, stateName, filterName) {
-    // console.log('customFilterAction')
-    // console.log('newFilterValue', newFilterValue)
-    // console.log('stateName', stateName)
-    // console.log('filterName', filterName)
-
-    this.setState({}, () => {
-        this.state[stateName].updateFilters({ [filterName]: newFilterValue })
-        this.state[stateName].run()
-    })
-
+    return propsForComponent;
 }
