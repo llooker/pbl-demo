@@ -158,7 +158,7 @@ class App extends React.Component {
   //called on componentDidMount
   //get request so should only check info, never update
   checkSession = async () => {
-    console.log('checkSession')
+    // console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -173,7 +173,7 @@ class App extends React.Component {
     const activeCustomization = sessionResponseData.session.activeCustomization ? sessionResponseData.session.activeCustomization : 0;
     const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
     const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-    console.log('lookerUser', lookerUser)
+    // console.log('lookerUser', lookerUser)
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
       this.setState((prevState) => ({
@@ -186,7 +186,7 @@ class App extends React.Component {
           last_name: userProfile.familyName,
           permissions: LookerUserPermissions[lookerUser.permission_level] || LookerUserPermissions['good'], //assume good initially,
           permission_level: lookerUser.permission_level || 'good',
-          user_attributes: { ...lookerUser.user_attributes }
+          user_attributes: { ...lookerUser.user_attributes || 'Calvin Klein' }
         },
         lookerHost
       }), () => {
@@ -382,9 +382,7 @@ class App extends React.Component {
     console.log('newAttribute', newAttribute)
 
     let userAttributeCopy = { ...this.state.lookerUser.user_attributes }
-    console.log('000 userAttributeCopy', userAttributeCopy)
     userAttributeCopy.brand = newAttribute;
-    console.log('111 userAttributeCopy', userAttributeCopy)
 
     this.setState(prevState => ({
       lookerUser: {
@@ -403,7 +401,6 @@ class App extends React.Component {
       })
 
       let lookerUserResponseData = await lookerUserResponse.json();
-      // console.log('lookerUserResponseData', lookerUserResponseData)
       // reload necessary to effect permissions
       window.location.reload();
 
@@ -411,12 +408,11 @@ class App extends React.Component {
   }
 
   render() {
-    console.log('App render');
+    // console.log('App render');
     // console.log('this.props', this.props);
     const { userProfile, customizations, activeCustomization, indexOfCustomizationToEdit, lookerContent, lookerUser, lookerHost } = this.state
     // const { activeIndustry } = this.state;
     // console.log('activeCustomization', activeCustomization);
-    // console.log('lookerUser', lookerUser);
 
     let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
     if (!usecaseFromUrl.length) {     //no usecase

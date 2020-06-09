@@ -9,6 +9,21 @@
         "demoComponents": [
             {
                 "type": "simple dashboard",
+                "label": "Web Analytics",
+                "description": "Overview of all your web traffic",
+                "icon": "fa-chart-line",
+                "lookerContent": [
+                    {
+                        "type": "dashboard",
+                        "lookerMethod": "embedDashboard",
+                        "id": "9",
+                        "label": "Web Analytics",
+                        "isNext": false
+                    }
+                ]
+            },
+            {
+                "type": "simple dashboard",
                 "label": "Sales Overview",
                 "description": "Overview of all your sales!",
                 "icon": "fa-chart-line",

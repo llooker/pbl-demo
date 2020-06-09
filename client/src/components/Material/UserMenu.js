@@ -6,7 +6,9 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Typography from '@material-ui/core/Typography';
-import ComboBox from './ComboBox';
+import Divider from '@material-ui/core/Divider';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const { validIdHelper } = require('../../tools');
 
@@ -17,34 +19,29 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function UserMenu(props) {
-    console.log('UserMenu')
-    console.log('props', props)
+    // console.log('UserMenu')
+    // console.log('props', props)
+
+    const { lookerUser, switchLookerUser, onLogoutSuccess, lookerUserAttributeBrandOptions, switchUserAttributeBrand } = props
+    const classes = useStyles();
+
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [selectedBrand, setSelectedBrand] = React.useState(lookerUser.user_attributes.brand || '');
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
     const handleClose = (newValue) => {
-        console.log('handleClose')
-        console.log('newValue', newValue)
         setAnchorEl(null);
         if (newValue == null) {
-            // console.log('inside this ifff')
             onLogoutSuccess({})
-        }
-        // else if (typeof newUser === 'string') switchLookerUser(newUser)
-        else if (newValue === 'good' || newValue === 'better' || newValue === 'best') {
+        } else if (newValue === 'good' || newValue === 'better' || newValue === 'best') {
             switchLookerUser(newValue)
-        }
-        else {
-            // console.log('inside elllse')
+        } else if (typeof newValue === 'string') {
             switchUserAttributeBrand(newValue)
         }
     };
-
-    const { lookerUser, switchLookerUser, onLogoutSuccess, lookerUserAttributeBrandOptions, switchUserAttributeBrand } = props
-    const classes = useStyles();
 
     return (
         <div>
@@ -72,12 +69,18 @@ export default function UserMenu(props) {
                 {lookerUser.permission_level === 'better' ? '' : <MenuItem onClick={() => handleClose('better')}>Better</MenuItem>}
                 {lookerUser.permission_level === 'best' ? '' : <MenuItem onClick={() => handleClose('best')}>Best</MenuItem>}
                 <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
+                <Divider className={classes.divider} />
                 <MenuItem>
-                    <ComboBox
+
+                    <Autocomplete
+                        id="combo-box-usermenu"
                         options={lookerUserAttributeBrandOptions}
-                        action={handleClose}
-                        filterName="Sudo as brand"
-                        value={lookerUser.user_attributes.brand}
+                        getOptionLabel={(option) => option.label}
+                        style={{ width: 300 }}
+                        onChange={(event) => handleClose(event.target.innerText || '')}
+                        renderInput={(params) => <TextField {...params} label="Sudo as brand" variant="outlined" />}
+                        inputValue={selectedBrand}
+                        loadingText="Loading..."
                     />
                 </MenuItem>
             </Menu>

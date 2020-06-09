@@ -9,14 +9,16 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import ComboBox from '../../Material/ComboBox';
-// import Skeleton from '@material-ui/lab/Skeleton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
 import '../../Home.css'
 import CodeFlyout from '../CodeFlyout';
 
-import DashboardHelper from './Helper';
+// import DashboardHelper from './Helper';
+
 const { validIdHelper } = require('../../../tools');
 
 function TabPanel(props) {
@@ -196,13 +198,19 @@ export default function Dashboard(props) {
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
                                                 {tabContentItem.filter ?
                                                     <Grid item sm={12}>
-                                                        <ComboBox
+                                                        <Autocomplete
+                                                            id={`combo-box-dashboard-${lookerContent.id}`}
                                                             options={helperContent && helperContent.apiContent ?
                                                                 helperContent.apiContent :
                                                                 []}
-                                                            action={customFilterAction}
-                                                            correspondingContentId={tabContentItem.id}
-                                                            filterName={tabContentItem.filter.filterName} />
+                                                            getOptionLabel={(option) => option.label}
+                                                            style={{ width: 300 }}
+                                                            onChange={(event) => customFilterAction(tabContentItem.id, tabContentItem.filter.filterName, event.target.innerText || '')}
+                                                            renderInput={(params) => <TextField {...params} label={tabContentItem.filter.filterName} variant="outlined" />}
+                                                            // value={value || ''}
+                                                            loadingText="Loading..."
+                                                        />
+
                                                     </Grid> : ''
                                                 }
                                                 <Box className={classes.w100} mt={2}>
