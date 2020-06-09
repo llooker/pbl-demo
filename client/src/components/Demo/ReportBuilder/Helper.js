@@ -7,7 +7,7 @@ export default async function reportBuilderHelper(LookerEmbedSDK, demoComponent,
     // console.log('demoComponent', demoComponent)
     // console.log('lookerContent', lookerContent)
 
-    let objForState = {}
+    let propsForComponent = {};
     if (lookerContent.type === 'folder') {
         let lookerResponse = await fetch('/fetchfolder/' + lookerContent.id, {
             method: 'GET',
@@ -73,10 +73,10 @@ export default async function reportBuilderHelper(LookerEmbedSDK, demoComponent,
             })
         }
 
-        const stateKey = _.camelCase(demoComponent.type) + 'ApiContent';
-        objForState[stateKey] = objToUse; //[...looksToUse, ...dashboardsToUse]; //objToUse;
+        propsForComponent.apiContent = objToUse;
     } else if (lookerContent.type === 'explore') {
-        LookerEmbedSDK.createExploreWithId(lookerContent.id)
+        let exploreId = lookerContent.id;
+        let exploreObj = await LookerEmbedSDK.createExploreWithId(exploreId)
             .appendTo(validIdHelper(`#embedContainer-${demoComponent.type}-${lookerContent.id}`))
             .withClassName('iframe')
             .on('explore:state:changed', (event) => {
@@ -87,13 +87,20 @@ export default async function reportBuilderHelper(LookerEmbedSDK, demoComponent,
             .connect()
             .then((explore) => {
                 // // console.log('explore then callback')
+                return { status: 'success', exploreId, explore }
             })
             .catch((error) => {
                 console.error('Connection error', error)
+                return { status: 'error', error }
             })
+
+
+        if (exploreObj.status === 'success') {
+            propsForComponent[exploreObj.exploreId] = exploreObj.explore
+        }
 
     }
 
-    return objForState
+    return propsForComponent
 
 }

@@ -6,11 +6,12 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 export default function ComboBox(props) {
     // console.log('ComboBox');
     // console.log('props', props);
-    const { options, action, correspondingContentId, filterName } = props
+    const { options, action, correspondingContentId, filterName, value } = props
 
 
     const handleChange = (event) => {
-        action(correspondingContentId, filterName, event.target.innerText || '')
+        if (correspondingContentId) action(correspondingContentId, filterName, event.target.innerText || '')
+        else action(event.target.innerText || '')
     }
 
     return (
@@ -21,6 +22,7 @@ export default function ComboBox(props) {
             style={{ width: 300 }}
             onChange={handleChange}
             renderInput={(params) => <TextField {...params} label={filterName} variant="outlined" />}
+            value={value || ''}
         />
     );
 }

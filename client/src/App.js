@@ -8,11 +8,12 @@ import Home from './components/Home'
 // import Footer from './components/Footer'
 import Customizations from './components/Customizations'
 import EditCustomization from './components/EditCustomization'
-import DefaultLookerContent from './lookerIndustriesByInstance.json';
 //make looker user dynamic
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
 import UsecaseContent from './usecaseContent.json';
+import LookerUserAttributeBrandOptions from './lookerUserAttributeBrandOptions.json';
+// console.log('lookerUserAttributeBrandOptions', lookerUserAttributeBrandOptions)
 
 class Login extends React.Component {
   constructor(props) {
@@ -100,8 +101,10 @@ const PrivateRoute = ({
   userProfile,
   lookerUser,
   lookerHost,
-  switchLookerUser, //added
-  applySession, //added
+  switchLookerUser,
+  applySession,
+  lookerUserAttributeBrandOptions,
+  switchUserAttributeBrand,
   ...rest }) => (
     < Route {...rest} render={(props) => (
       Object.keys(userProfile).length ?
@@ -118,8 +121,10 @@ const PrivateRoute = ({
           userProfile={userProfile}
           lookerUser={lookerUser}
           lookerHost={lookerHost}
-          switchLookerUser={switchLookerUser} //added
-          applySession={applySession} //added
+          switchLookerUser={switchLookerUser}
+          applySession={applySession}
+          lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
+          switchUserAttributeBrand={switchUserAttributeBrand}
         />
         : <Redirect to={{
           pathname: '/',
@@ -153,7 +158,7 @@ class App extends React.Component {
   //called on componentDidMount
   //get request so should only check info, never update
   checkSession = async () => {
-    // console.log('checkSession')
+    console.log('checkSession')
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -168,7 +173,7 @@ class App extends React.Component {
     const activeCustomization = sessionResponseData.session.activeCustomization ? sessionResponseData.session.activeCustomization : 0;
     const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
     const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-
+    console.log('lookerUser', lookerUser)
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
       this.setState((prevState) => ({
@@ -180,7 +185,8 @@ class App extends React.Component {
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
           permissions: LookerUserPermissions[lookerUser.permission_level] || LookerUserPermissions['good'], //assume good initially,
-          permission_level: lookerUser.permission_level || 'good'
+          permission_level: lookerUser.permission_level || 'good',
+          user_attributes: { ...lookerUser.user_attributes }
         },
         lookerHost
       }), () => {
@@ -261,11 +267,11 @@ class App extends React.Component {
     let lookerContentToUse = [];
     //check industry first, insert to array
     if (this.state.customizations[customizationIndex].industry) {
-      lookerContentToUse = [...DefaultLookerContent[this.state.lookerHost][this.state.customizations[customizationIndex].industry]]
+      // lookerContentToUse = [...DefaultLookerContent[this.state.lookerHost][this.state.customizations[customizationIndex].industry]]
     }
     //then check custom content, insert to array
     if (this.state.customizations[customizationIndex].lookerContent) {
-      lookerContentToUse = [...lookerContentToUse, ...this.state.customizations[customizationIndex].lookerContent]
+      // lookerContentToUse = [...lookerContentToUse, ...this.state.customizations[customizationIndex].lookerContent]
     }
 
     this.setState({
@@ -365,13 +371,47 @@ class App extends React.Component {
       })
 
       let lookerUserResponseData = await lookerUserResponse.json();
-      window.location.reload(); //reload to effect permissions
+      // reload necessary to effect permissions
+      window.location.reload();
+
+    });
+  }
+
+  switchUserAttributeBrand = (newAttribute) => {
+    console.log('switchUserAttributeBrand')
+    console.log('newAttribute', newAttribute)
+
+    let userAttributeCopy = { ...this.state.lookerUser.user_attributes }
+    console.log('000 userAttributeCopy', userAttributeCopy)
+    userAttributeCopy.brand = newAttribute;
+    console.log('111 userAttributeCopy', userAttributeCopy)
+
+    this.setState(prevState => ({
+      lookerUser: {
+        ...prevState.lookerUser,
+        user_attributes: userAttributeCopy
+      }
+    }), async () => {
+
+      let lookerUserResponse = await fetch('/updatelookeruser', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.lookerUser)
+      })
+
+      let lookerUserResponseData = await lookerUserResponse.json();
+      // console.log('lookerUserResponseData', lookerUserResponseData)
+      // reload necessary to effect permissions
+      window.location.reload();
 
     });
   }
 
   render() {
-    // console.log('App render');
+    console.log('App render');
     // console.log('this.props', this.props);
     const { userProfile, customizations, activeCustomization, indexOfCustomizationToEdit, lookerContent, lookerUser, lookerHost } = this.state
     // const { activeIndustry } = this.state;
@@ -406,8 +446,10 @@ class App extends React.Component {
             applySession={this.applySession}
             lookerHost={lookerHost}
             switchLookerUser={this.switchLookerUser}
+            lookerUserAttributeBrandOptions={LookerUserAttributeBrandOptions}
+            switchUserAttributeBrand={this.switchUserAttributeBrand}
           />
-          <PrivateRoute exact path='/customize'
+          {/* <PrivateRoute exact path='/customize'
             component={Customizations}
             customizations={customizations}
             activeCustomization={activeCustomization}
@@ -424,7 +466,7 @@ class App extends React.Component {
             cancelIndexOfCustomizationToEdit={this.cancelIndexOfCustomizationToEdit}
             userProfile={userProfile}
             lookerHost={lookerHost}
-          />
+          /> */}
         </div>
       </Router>
     )

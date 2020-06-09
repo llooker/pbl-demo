@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import ComboBox from '../../Material/ComboBox';
-import Skeleton from '@material-ui/lab/Skeleton';
+// import Skeleton from '@material-ui/lab/Skeleton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import '../../Home.css'
@@ -18,8 +18,6 @@ import CodeFlyout from '../CodeFlyout';
 
 import DashboardHelper from './Helper';
 const { validIdHelper } = require('../../../tools');
-
-console.log('DashboardHelper', DashboardHelper)
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -106,6 +104,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard(props) {
+
     // console.log('Dashboard')
     // console.log('props', props)
 
@@ -116,6 +115,7 @@ export default function Dashboard(props) {
         activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab]
+    // const helperContent = context;
 
     let iFrameExists = $(".tabPanelContainer:visible iframe").length;
     let demoComponentType = type || 'sample code';
@@ -125,7 +125,7 @@ export default function Dashboard(props) {
         setValue(newValue);
     };
 
-    const action = (dashboardId, filterName, newFilterValue) => {
+    const customFilterAction = (dashboardId, filterName, newFilterValue) => {
 
         // console.log('action')
         // console.log('dashboardId', dashboardId)
@@ -200,7 +200,7 @@ export default function Dashboard(props) {
                                                             options={helperContent && helperContent.apiContent ?
                                                                 helperContent.apiContent :
                                                                 []}
-                                                            action={action}
+                                                            action={customFilterAction}
                                                             correspondingContentId={tabContentItem.id}
                                                             filterName={tabContentItem.filter.filterName} />
                                                     </Grid> : ''

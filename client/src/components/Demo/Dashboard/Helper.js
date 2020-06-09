@@ -1,7 +1,7 @@
 import _ from 'lodash'
 const { validIdHelper } = require('../../../tools');
 
-export default async function dashboardInit(LookerEmbedSDK, demoComponent, lookerContent) {
+export default async function dashboardHelper(LookerEmbedSDK, demoComponent, lookerContent) {
 
     // console.log('dashboardHelper')
     // console.log('demoComponent', demoComponent)

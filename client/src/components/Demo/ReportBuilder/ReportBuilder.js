@@ -120,6 +120,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ReportBuilder(props) {
+
     // console.log('ReportBuilder')
     // console.log('props', props)
 
@@ -130,8 +131,10 @@ export default function ReportBuilder(props) {
     const { staticContent,
         staticContent: { lookerContent },
         staticContent: { type },
-        apiContent,
-        action,
+        // apiContent,
+        // action,
+        helperContent,
+        LookerEmbedSDK,
         activeTabValue,
         handleTabChange,
         lookerUser,
@@ -156,6 +159,102 @@ export default function ReportBuilder(props) {
     const handleSelect = (event, nodeIds) => {
         setSelected(nodeIds);
     };
+
+    const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
+        console.log('reportBuilderAction')
+        console.log('contentType', contentType)
+        console.log('contentId', contentId)
+        console.log('secondaryAction', secondaryAction)
+        console.log('qid', qid)
+        console.log('exploreId', exploreId)
+        console.log('newReportEmbedContainer', newReportEmbedContainer)
+
+        let iFrameArray = $(".embedContainer:visible > iframe")
+
+        let matchingIndex = 0;
+        for (let i = 0; i < iFrameArray.length; i++) {
+            if (iFrameArray[i].classList.contains(contentType) && iFrameArray[i].classList.contains(contentId)) {
+                iFrameArray[i].classList.remove('d-none')
+                matchingIndex = i;
+            } else {
+                iFrameArray[i].classList.add('d-none')
+            }
+        }
+
+        if (secondaryAction === 'edit') {
+            $(`#${newReportEmbedContainer}`).empty();
+
+            LookerEmbedSDK.createExploreWithId(exploreId)
+                .appendTo(`#${newReportEmbedContainer}`)
+                .withClassName('iframe')
+                .on('explore:state:changed', (event) => {
+                    // console.log('explore:state:changed')
+                    // console.log('event', event)
+                })
+                .withClassName("exploreIframe")
+                .withParams({
+                    qid: qid,
+                    // toggle: 'dat,pik,vis'
+                })
+                .build()
+                .connect()
+                .then((explore) => {
+                    // console.log('explore then callback')
+                })
+                .catch((error) => {
+                    console.error('Connection error', error)
+                })
+
+
+            this.handleTabChange(1) //can assume one for now
+        }
+        else if (secondaryAction === 'delete') {
+
+            let lookerResponse = await fetch('/deletelook/' + contentId, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (lookerResponse.status === 200) {
+                let reportBuilderApiContentCopy = this.state.reportBuilderApiContent;
+                reportBuilderApiContentCopy.looks.splice(matchingIndex, 1)
+                this.setState({
+                    reportBuilderApiContent: reportBuilderApiContentCopy
+                }, () => {
+                    console.log('callback this.state.reportBuilderApiContent', this.state.reportBuilderApiContent)
+                })
+            }
+        } else if (secondaryAction === 'explore') {
+            $(`#${newReportEmbedContainer}`).empty();
+
+            LookerEmbedSDK.createExploreWithId(exploreId)
+                .appendTo(`#${newReportEmbedContainer}`)
+                .withClassName('iframe')
+                .on('explore:state:changed', (event) => {
+                    // console.log('explore:state:changed')
+                    // console.log('event', event)
+                })
+                .withClassName("exploreIframe")
+                .withParams({
+                    qid: qid,
+                    // toggle: 'dat,pik,vis'
+                })
+                .build()
+                .connect()
+                .then((explore) => {
+                    // console.log('explore then callback')
+                })
+                .catch((error) => {
+                    console.error('Connection error', error)
+                })
+
+
+            handleTabChange(1) //can assume one for now
+
+        }
+    }
 
 
     useEffect(() => {
@@ -223,7 +322,6 @@ export default function ReportBuilder(props) {
                                                 <React.Fragment
                                                     key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
                                                     <Grid item sm={4} >
-
                                                         <TreeView
                                                             className={classes.tree}
                                                             defaultCollapseIcon={<ExpandMoreIcon />}
@@ -232,7 +330,7 @@ export default function ReportBuilder(props) {
                                                             onNodeToggle={handleToggle}
                                                             onNodeSelect={handleSelect}
                                                         >
-                                                            {Object.keys(apiContent).length ? Object.keys(apiContent).map((key, outerIndex) => (
+                                                            {helperContent ? Object.keys(helperContent.apiContent).map((key, outerIndex) => (
                                                                 <React.Fragment
                                                                     key={`${validIdHelper(demoComponentType + '-innerFragment-' + outerIndex)}`}>
                                                                     <TreeItem
@@ -241,11 +339,11 @@ export default function ReportBuilder(props) {
                                                                         treecounter={treeCounter}
                                                                         label={key.charAt(0).toUpperCase() + key.substring(1)}
                                                                         icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
-                                                                        disabled={apiContent[key].length ? false : true}
+                                                                        disabled={helperContent.apiContent[key].length ? false : true}
                                                                     >
                                                                         {
-                                                                            apiContent[key].length ?
-                                                                                apiContent[key].map((item, index) => (
+                                                                            helperContent.apiContent[key].length ?
+                                                                                helperContent.apiContent[key].map((item, index) => (
                                                                                     <TreeItem
                                                                                         key={`${validIdHelper(demoComponentType + '-innerTreeItem-' + treeCounter)}`}
                                                                                         nodeId={"" + (treeCounter += 1)}
