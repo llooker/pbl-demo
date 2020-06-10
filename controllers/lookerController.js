@@ -168,12 +168,14 @@ module.exports.createQueryTask = async (req, res, next) => {
 
     try {
         let create_query_response = await sdk.ok(sdk.create_query(params.query_body, ''));
+        // console.log('create_query_response', create_query_response);
         let query_task = await sdk.ok(sdk.create_query_task({
             body: {
                 query_id: create_query_response.id,
                 result_format: params.result_format,
             }
         }));
+        // console.log('query_task', query_task)
         let resObj = {
             queryTaskId: query_task.id
         };
@@ -191,6 +193,7 @@ module.exports.createQueryTask = async (req, res, next) => {
 module.exports.checkQueryTask = async (req, res, next) => {
     // console.log('lookerController checkQueryTask');
     const { params } = req;
+    // console.log('params', params)
 
     try {
         let async_query_results = await sdk.ok(sdk.query_task_results(params.task_id));

@@ -38,9 +38,9 @@ import indigo from '@material-ui/core/colors/indigo';
 import teal from '@material-ui/core/colors/teal';
 // import HUE from '@material-ui/core/colors/HUE';
 
-import '../Home.css'
-import CodeFlyout from './CodeFlyout';
-const { makeid, validIdHelper, prettifyString } = require('../../tools');
+import '../../Home.css'
+import CodeFlyout from '../CodeFlyout';
+const { makeid, validIdHelper, prettifyString } = require('../../../tools');
 
 
 function TabPanel(props) {
@@ -481,11 +481,13 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function QueryBuilder(props) {
-    // console.log('QueryBuilder')
-    // console.log('props', props)
+    console.log('QueryBuilder')
+    console.log('props', props)
 
     const classes = useStyles();
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, apiContent, apiContent: { sql }, action, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type },
+        apiContent, apiContent: { sql }, action,
+        activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode, sql }
     const tabContent = [...lookerContent, sampleCodeTab];
     const demoComponentType = type || 'sample code';

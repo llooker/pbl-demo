@@ -68,8 +68,9 @@ export default function UserMenu(props) {
                 {lookerUser.permission_level === 'good' ? '' : <MenuItem onClick={() => handleClose('good')}>Good</MenuItem>}
                 {lookerUser.permission_level === 'better' ? '' : <MenuItem onClick={() => handleClose('better')}>Better</MenuItem>}
                 {lookerUser.permission_level === 'best' ? '' : <MenuItem onClick={() => handleClose('best')}>Best</MenuItem>}
-                <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
+                {/* <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem> */}
                 <Divider className={classes.divider} />
+                <MenuItem>Current brand: {selectedBrand}</MenuItem>
                 <MenuItem>
 
                     <Autocomplete
@@ -79,7 +80,7 @@ export default function UserMenu(props) {
                         style={{ width: 300 }}
                         onChange={(event) => handleClose(event.target.innerText || '')}
                         renderInput={(params) => <TextField {...params} label="Sudo as brand" variant="outlined" />}
-                        inputValue={selectedBrand}
+                        // inputValue={selectedBrand}
                         loadingText="Loading..."
                     />
                 </MenuItem>

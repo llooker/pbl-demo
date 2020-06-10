@@ -1,14 +1,16 @@
 import _ from 'lodash'
 const { validIdHelper } = require('../../../tools');
 
-export default async function dashboardHelper(LookerEmbedSDK, demoComponent, lookerContent) {
+export default async function dashboardHelper(LookerEmbedSDK, demoComponent) {
 
-    // console.log('dashboardHelper')
-    // console.log('demoComponent', demoComponent)
-    // console.log('lookerContent', lookerContent)
+    console.log('dashboardHelper')
+    console.log('demoComponent', demoComponent)
 
     let propsForComponent = {}
-    let dashboardId = lookerContent.id;
+    demoComponent.lookerContent.map(lookerContent => {
+
+    })
+    /*let dashboardId = lookerContent.id;
     //await here is crucial
     let dashboardObj = await LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponent.type}-${dashboardId}`))
@@ -48,6 +50,6 @@ export default async function dashboardHelper(LookerEmbedSDK, demoComponent, loo
         }
 
         propsForComponent.apiContent = queryResultsForDropdown;
-    }
+    }*/
     return propsForComponent;
 }

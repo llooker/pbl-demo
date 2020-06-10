@@ -26,7 +26,7 @@ import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
 import SplashPage from './Demo/SplashPage';
 import ReportBuilder from './Demo/ReportBuilder/ReportBuilder';
-import QueryBuilder from './Demo/QueryBuilder';
+import QueryBuilder from './Demo/QueryBuilder/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
 import Dashboard from './Demo/Dashboard/Dashboard';
 // import CohortBuilder from './Demo/CohortBuilder';
@@ -36,6 +36,7 @@ import CustomVis from './Demo/CustomVis/CustomVis';
 import DashboardHelper from './Demo/Dashboard/Helper';
 import CustomVisHelper from './Demo/CustomVis/Helper';
 import ReportBuilderHelper from './Demo/ReportBuilder/Helper';
+import QueryBuilderHelper from './Demo/QueryBuilder/Helper';
 //actions???
 // import customFilterAction from './Demo/ReportBuilder/Helper';
 
@@ -176,6 +177,13 @@ const atomTheme = createMuiTheme({
         },
     },
 })
+const vidlyTheme = createMuiTheme({
+    palette: {
+        primary: {
+            main: blue[500],
+        },
+    },
+})
 
 
 const ComponentContext = React.createContext({});
@@ -296,7 +304,8 @@ class Home extends Component {
         }
 
         let objForState = {}
-        for (let j = 0; j < demoComponents.length; j++) {
+        // Elliot's implementation
+        /*for (let j = 0; j < demoComponents.length; j++) {
             if (demoComponents[j].type === 'simple dashboard') {
                 for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
                     let helperObj = await DashboardHelper(LookerEmbedSDK,
@@ -351,24 +360,71 @@ class Home extends Component {
                         ...helperObj
                     }
                 }
-            } else { console.log('catch all else') }
+            } else if (demoComponents[j].type === 'query builder') {
+                console.log('inside query builder else if...')
+                console.log('demoComponents[j].lookerContent.length', demoComponents[j].lookerContent.length)
+                // console.log('demoComponents[j]', demoComponents[j]);                    
+                // this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
+
+                // for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
+                // this.queryBuilderAction(demoComponents[j].lookerContent[i].queryBody, demoComponents[j].lookerContent[i].resultFormat)
+
+                //     //helper isn't working here...
+                //     let helperObj = await QueryBuilderHelper(
+                //         demoComponents[j].lookerContent[i].queryBody,
+                //         demoComponents[j].lookerContent[i].resultFormat
+                //     );
+                //     console.log('helperObj', helperObj)
+                //     ComponentContext[validIdHelper(demoComponents[j].type)] = {
+                //         ...ComponentContext[validIdHelper(demoComponents[j].type)],
+                //         ...helperObj
+                //     }
+
+                //     // ComponentContext[validIdHelper(demoComponents[j].type)] = {}
+                // }
+                this.queryBuilderAction(demoComponents[j].lookerContent[0].queryBody, demoComponents[j].lookerContent[0].resultFormat)
+
+            }
+
+            else { console.log('catch all else') }
 
             // console.log('ComponentContext', ComponentContext)
+        }*/
+
+
+        const demoComponentHelperMap = {
+            // "splash page": SplashPage,
+            "simple dashboard": DashboardHelper,
+            "custom filter": DashboardHelper,
+            // "custom vis": CustomVisHelper,
+            // "report builder": ReportBuilderHelper,
+            // "query builder": QueryBuilderHelper,
+            // "dashboard overview detail": Dashboard,
+            // "cohort builder": ComingSoon //CohortBuilder
         }
+
+        //fabios imlementation
+        let helperDataPromises = demoComponents.map(componentConfig => {
+            return (demoComponentHelperMap[componentConfig.type](
+                LookerEmbedSDK,
+                componentConfig)
+            )
+        }
+        )
 
         // set state once after loop to reduce renders
         //not working, or is it???
         //cheat since context isn't working
-        setTimeout(() => {
-            // console.log('222 objForState', objForState)
-            // console.log('222 ComponentContext', ComponentContext)
-            this.setState((prevState) => ({
-                ...prevState,
-                ...objForState
-            }), () => {
-                // console.log('setState callback', this.state)
-            })
-        }, 1000)
+        // setTimeout(() => {
+        //     console.log('222 objForState', objForState)
+        //     console.log('222 ComponentContext', ComponentContext)
+        //     this.setState((prevState) => ({
+        //         ...prevState,
+        //         ...objForState
+        //     }), () => {
+        //         // console.log('setState callback', this.state)
+        //     })
+        // }, 1000)
     }
 
     splashPageDetail = async (sharedUrl, index) => {
@@ -435,9 +491,9 @@ class Home extends Component {
                 total: true,
                 limit: "25"
             }
-    
+     
             // console.log('newQueryParams', newQueryParams)
-    
+     
             let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(newQueryParams) + '/json', {
                 method: 'GET',
                 headers: {
@@ -448,7 +504,7 @@ class Home extends Component {
             let lookerResponseData = await lookerResponse.json();
             splashPageApiContentCopy = [...this.state.splashPageApiContent]
             splashPageApiContentCopy[index].detail = lookerResponseData.queryResults;
-    
+     
         } else {
             splashPageApiContentCopy = [...this.state.splashPageApiContent]
             splashPageApiContentCopy[index].detail = [];
@@ -456,9 +512,8 @@ class Home extends Component {
         this.setState({
             splashPageApiContent: splashPageApiContentCopy
         })
-    
+     
     }*/
-
 
     // drillClick(event) {
     dashboardOverviewDetailAction(event) {
@@ -493,13 +548,10 @@ class Home extends Component {
     }
 
     queryBuilderAction = async (newQuery, resultFormat) => {
-        // console.log('queryBuilderAction');
-        // console.log('newQuery', newQuery);
-        // console.log('resultFormat', resultFormat);
+        console.log('queryBuilderAction');
+        console.log('newQuery', newQuery);
+        console.log('resultFormat', resultFormat);
 
-        /*this.setState({
-            'queryBuilderApiContent': 0
-        })*/
 
         let queryBuilderApiContent = { ...this.state.queryBuilderApiContent }
         queryBuilderApiContent.status = 'running';
@@ -527,33 +579,35 @@ class Home extends Component {
             // console.log('lookerCheckTaskResponseData', lookerCheckTaskResponseData)
             // console.log('lookerCheckTaskResponseData.queryResults.data', lookerCheckTaskResponseData.queryResults.data)
 
+            console.log('lookerCheckTaskResponseData.queryResults.status', lookerCheckTaskResponseData.queryResults.status)
+
             if (lookerCheckTaskResponseData.queryResults.status === 'complete') {
-                // console.log('inside ifff')
+                console.log('inside ifff')
                 clearInterval(taskInterval)
                 this.setState({
                     'queryBuilderApiContent': lookerCheckTaskResponseData.queryResults
                 })
             }
-        }, 1000)
-    }
+        }, 5000)
+    }//*/
 
     /*cohortBuilderAction = async (lookerContent) => {
         // console.log('cohortBuilderAction');
         // console.log('lookerContent', lookerContent);
-
-
+    
+    
         let cohortBuilderApiContentCopy = { ...this.state.cohortBuilderApiContent }
         cohortBuilderApiContentCopy.status = 'running';
         cohortBuilderApiContentCopy.filterContent = {};
         // this.setState({ 'cohortBuilderApiContent': cohortBuilderApiContentCopy })
-
+    
         for (let i = 0; i < lookerContent.fields.length; i++) {
-
+    
             let newQuery = lookerContent.queryBody;
             newQuery.fields = [lookerContent.fields[i]];
             // console.log('newQuery', newQuery);
-
-
+    
+    
             let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
                 method: 'GET',
                 headers: {
@@ -563,7 +617,7 @@ class Home extends Component {
             })
             let lookerCreateTaskResponseData = await lookerCreateTaskResposnse.json();
             // console.log('lookerCreateTaskResponseData', lookerCreateTaskResponseData);
-
+    
             let taskInterval = setInterval(async () => {
                 let lookerCheckTaskResposnse = await fetch('/checkquerytask/' + lookerCreateTaskResponseData.queryTaskId, {
                     method: 'GET',
@@ -573,10 +627,10 @@ class Home extends Component {
                     }
                 })
                 let lookerCheckTaskResponseData = await lookerCheckTaskResposnse.json();
-
+    
                 if (lookerCheckTaskResponseData.queryResults.status === 'complete') {
                     clearInterval(taskInterval)
-
+    
                     lookerCheckTaskResponseData.queryResults.options = []
                     for (let j = 0; j < lookerCheckTaskResponseData.queryResults.data.length; j++) {
                         let thisOption = {};
@@ -585,7 +639,7 @@ class Home extends Component {
                             lookerCheckTaskResponseData.queryResults.data[j][lookerCheckTaskResponseData.queryResults.added_params.sorts[0]].value
                         lookerCheckTaskResponseData.queryResults.options.push(thisOption)
                     }
-
+    
                     cohortBuilderApiContentCopy.filterContent[lookerCheckTaskResponseData.queryResults.id] = lookerCheckTaskResponseData.queryResults
                     cohortBuilderApiContentCopy.status = Object.keys(cohortBuilderApiContentCopy.filterContent).length === lookerContent.fields.length ? "complete" : "running";
                     this.setState((prevState) => ({
@@ -593,13 +647,13 @@ class Home extends Component {
                     }))
                 }
             }, 1000)
-
+    
         }
         // console.log('cohortBuilderApiContentCopy', cohortBuilderApiContentCopy)
         // this.setState({
         //     cohortBuilderApiContent: cohortBuilderApiContentCopy
         // })
-
+    
     }*/
 
     render() {
@@ -614,13 +668,14 @@ class Home extends Component {
             "custom filter": Dashboard,
             "custom vis": CustomVis,
             "report builder": ReportBuilder,
+            "query builder": QueryBuilder,
             // "dashboard overview detail": Dashboard,
-            // "query builder": QueryBuilder,
             // "cohort builder": ComingSoon //CohortBuilder
         }
         const themeMap = {
             "ecomm": ecommTheme,
-            "atom": atomTheme
+            "atom": atomTheme,
+            "vidly": vidlyTheme
         }
 
         const { drawerTabValue, drawerOpen, activeTabValue, sampleCode, activeUsecase } = this.state;
@@ -729,7 +784,7 @@ class Home extends Component {
                                                 <DemoComponent key={validIdHelper(`list-${item.type}`)}
                                                     staticContent={item}
                                                     handleDrawerTabChange={handleDrawerTabChange}
-                                                    // apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []} //[]
+                                                    apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []} //[]
                                                     // action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
                                                     // action={''}
                                                     activeTabValue={activeTabValue}

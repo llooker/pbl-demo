@@ -65,53 +65,6 @@
                         "desiredFilterName": "products.brand"
                     }
                 ]
-            },
-            {
-                "type": "custom vis",
-                "label": "Sales Calendar",
-                "description": "Ayeeeeeee",
-                "icon": "fa-calendar",
-                "lookerContent": [
-                    {
-                        "type": "custom vis",
-                        "lookerMethod": "runInlineQuery",
-                        "label": "Sales Calendar",
-                        "inlineQuery": {
-                            "model": "atom_fashion",
-                            "view": "order_items",
-                            "fields": [
-                                "order_items.created_date",
-                                "products.category",
-                                "order_items.order_count",
-                                "order_items.total_sale_price"
-                            ],
-                            "query_timezone": "America/Los_Angeles"
-                        },
-                        "desiredFilterName": "products.brand",
-                        "desiredFields": [
-                            "order_items.order_count",
-                            "order_items.total_sale_price"
-                        ]
-                    }
-                ]
-            },
-            {
-                "type": "report builder",
-                "label": "Saved Reports",
-                "description": "Give users the ability to explore existing reports as well as create new ones all from within your application",
-                "icon": "fa-sticky-note",
-                "lookerContent": [
-                    {
-                        "type": "folder",
-                        "id": "14",
-                        "label": "Saved Reports"
-                    },
-                    {
-                        "type": "explore",
-                        "id": "atom_fashion::order_items",
-                        "label": "Create New Report"
-                    }
-                ]
             }
         ]
     },

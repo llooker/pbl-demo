@@ -13,6 +13,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { LookerEmbedSDK } from '@looker/embed-sdk'
 
 import '../../Home.css'
 import CodeFlyout from '../CodeFlyout';
@@ -113,13 +114,16 @@ export default function Dashboard(props) {
     const classes = useStyles();
     const [value, setValue] = useState(0);
     const { staticContent, staticContent: { lookerContent }, staticContent: { type },
-        helperContent,
+        // helperContent,
         activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab]
     // const helperContent = context;
+    const [iFrameExists, setIFrame] = useState(0);
+    const [apiContent, setApiContent] = useState([]);
+    const [dashboardObj, setDashboardObj] = useState({});
 
-    let iFrameExists = $(".tabPanelContainer:visible iframe").length;
+    // let iFrameExists = $(".tabPanelContainer:visible iframe").length;
     let demoComponentType = type || 'sample code';
 
     const handleChange = (event, newValue) => {
@@ -127,23 +131,89 @@ export default function Dashboard(props) {
         setValue(newValue);
     };
 
-    const customFilterAction = (dashboardId, filterName, newFilterValue) => {
-
-        // console.log('action')
-        // console.log('dashboardId', dashboardId)
-        // console.log('filterName', filterName)
-        // console.log('newFilterValue', newFilterValue)
-
-        helperContent[dashboardId].updateFilters({ [filterName]: newFilterValue })
-        helperContent[dashboardId].run()
-    }
-
     useEffect(() => {
+        console.log('useEffect');
         //change from drill click
         if (activeTabValue > value) {
             setValue(activeTabValue)
         }
-    });
+
+
+        lookerContent.map(async lookerContent => {
+            console.log('lookerContent', lookerContent);
+            let dashboardId = lookerContent.id;
+            console.log('dashboardId', dashboardId);
+            //let dashboardObj = await 
+            LookerEmbedSDK.createDashboardWithId(dashboardId)
+                .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
+                .withClassName('iframe')
+                .withNext()
+                // .withNext(lookerContent.isNext || false) //how can I make this dynamic based on prop??
+                .withTheme('Embedded')
+                .on('drillmenu:click', (event) => typeof this[_.camelCase(demoComponentType) + 'Action'] === 'function' ? this[_.camelCase(demoComponentType) + 'Action'](event) : '')
+                .build()
+                .connect()
+                .then((dashboard) => {
+                    setIFrame(1)
+                    // return { status: 'success', dashboardId, dashboard }
+                    setDashboardObj(dashboard)
+                })
+                .catch((error) => {
+                    // console.error('Connection error', error)
+                })
+
+
+            // if (dashboardObj.status === 'success') {
+            //     // propsForComponent[dashboardObj.dashboardId] = dashboardObj.dashboard
+            //     setDashboardObj(dashboardObj.dashboard)
+            // }
+
+            if (lookerContent.hasOwnProperty('filter')) {
+
+                //get inline query from usecase file & set user attribute dynamically
+                let jsonQuery = lookerContent.inlineQuery;
+                jsonQuery.filters = {
+                    [lookerContent.desiredFilterName]: lookerUser.user_attributes.brand
+                };
+                lookerContent.inlineQuery = jsonQuery;
+
+                let stringifiedQuery = encodeURIComponent(JSON.stringify(lookerContent.inlineQuery))
+                let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                let lookerResponseData = await lookerResponse.json();
+                let queryResultsForDropdown = [];
+                let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
+                for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
+                    queryResultsForDropdown.push({ 'label': lookerResponseData.queryResults[i][desiredProperty] })
+                }
+
+                // propsForComponent.apiContent = queryResultsForDropdown;
+                console.log('queryResultsForDropdown', queryResultsForDropdown)
+                setApiContent(queryResultsForDropdown);
+            }
+        })
+    }, [lookerContent]);
+
+
+
+    const customFilterAction = (dashboardId, filterName, newFilterValue) => {
+
+        console.log('customFilterAction')
+        console.log('dashboardId', dashboardId)
+        console.log('filterName', filterName)
+        console.log('newFilterValue', newFilterValue)
+
+        if (Object.keys(dashboardObj).length) {
+            dashboardObj.updateFilters({ [filterName]: newFilterValue })
+            dashboardObj.run()
+        }
+    }
+
     return (
         <div className={`${classes.root} demoComponent`}>
             <Grid container
@@ -200,17 +270,15 @@ export default function Dashboard(props) {
                                                     <Grid item sm={12}>
                                                         <Autocomplete
                                                             id={`combo-box-dashboard-${lookerContent.id}`}
-                                                            options={helperContent && helperContent.apiContent ?
-                                                                helperContent.apiContent :
+                                                            options={Array.isArray(apiContent) ?
+                                                                apiContent :
                                                                 []}
                                                             getOptionLabel={(option) => option.label}
                                                             style={{ width: 300 }}
                                                             onChange={(event) => customFilterAction(tabContentItem.id, tabContentItem.filter.filterName, event.target.innerText || '')}
                                                             renderInput={(params) => <TextField {...params} label={tabContentItem.filter.filterName} variant="outlined" />}
-                                                            // value={value || ''}
                                                             loadingText="Loading..."
                                                         />
-
                                                     </Grid> : ''
                                                 }
                                                 <Box className={classes.w100} mt={2}>
