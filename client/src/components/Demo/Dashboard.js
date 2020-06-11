@@ -14,13 +14,10 @@ import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
+import '../Home.css'
+import CodeFlyout from './CodeFlyout';
 
-import '../../Home.css'
-import CodeFlyout from '../CodeFlyout';
-
-// import DashboardHelper from './Helper';
-
-const { validIdHelper } = require('../../../tools');
+const { validIdHelper } = require('../../tools');
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -112,19 +109,15 @@ export default function Dashboard(props) {
     // console.log('props', props)
 
     const classes = useStyles();
-    const [value, setValue] = useState(0);
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type },
-        // helperContent,
-        activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
-    const tabContent = [...lookerContent, sampleCodeTab]
-    // const helperContent = context;
+    const tabContent = [...lookerContent, sampleCodeTab];
+    const demoComponentType = type || 'sample code';
+
+    const [value, setValue] = useState(0);
     const [iFrameExists, setIFrame] = useState(0);
     const [apiContent, setApiContent] = useState([]);
     const [dashboardObj, setDashboardObj] = useState({});
-
-    // let iFrameExists = $(".tabPanelContainer:visible iframe").length;
-    let demoComponentType = type || 'sample code';
 
     const handleChange = (event, newValue) => {
         handleTabChange(0);
@@ -132,18 +125,13 @@ export default function Dashboard(props) {
     };
 
     useEffect(() => {
-        console.log('useEffect');
         //change from drill click
         if (activeTabValue > value) {
             setValue(activeTabValue)
         }
 
-
         lookerContent.map(async lookerContent => {
-            console.log('lookerContent', lookerContent);
             let dashboardId = lookerContent.id;
-            console.log('dashboardId', dashboardId);
-            //let dashboardObj = await 
             LookerEmbedSDK.createDashboardWithId(dashboardId)
                 .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
                 .withClassName('iframe')
@@ -155,18 +143,11 @@ export default function Dashboard(props) {
                 .connect()
                 .then((dashboard) => {
                     setIFrame(1)
-                    // return { status: 'success', dashboardId, dashboard }
                     setDashboardObj(dashboard)
                 })
                 .catch((error) => {
                     // console.error('Connection error', error)
                 })
-
-
-            // if (dashboardObj.status === 'success') {
-            //     // propsForComponent[dashboardObj.dashboardId] = dashboardObj.dashboard
-            //     setDashboardObj(dashboardObj.dashboard)
-            // }
 
             if (lookerContent.hasOwnProperty('filter')) {
 
@@ -191,9 +172,6 @@ export default function Dashboard(props) {
                 for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
                     queryResultsForDropdown.push({ 'label': lookerResponseData.queryResults[i][desiredProperty] })
                 }
-
-                // propsForComponent.apiContent = queryResultsForDropdown;
-                console.log('queryResultsForDropdown', queryResultsForDropdown)
                 setApiContent(queryResultsForDropdown);
             }
         })
@@ -202,11 +180,10 @@ export default function Dashboard(props) {
 
 
     const customFilterAction = (dashboardId, filterName, newFilterValue) => {
-
-        console.log('customFilterAction')
-        console.log('dashboardId', dashboardId)
-        console.log('filterName', filterName)
-        console.log('newFilterValue', newFilterValue)
+        // console.log('customFilterAction')
+        // console.log('dashboardId', dashboardId)
+        // console.log('filterName', filterName)
+        // console.log('newFilterValue', newFilterValue)
 
         if (Object.keys(dashboardObj).length) {
             dashboardObj.updateFilters({ [filterName]: newFilterValue })

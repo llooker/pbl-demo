@@ -25,10 +25,10 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import _ from 'lodash'
-import '../../Home.css'
-import CodeFlyout from '../CodeFlyout';
+import '../Home.css'
+import CodeFlyout from './CodeFlyout';
 import { ResponsiveCalendar } from '@nivo/calendar'
-const { validIdHelper } = require('../../../tools');
+const { validIdHelper } = require('../../tools');
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -64,10 +64,7 @@ function FilterBar(props) {
     // console.log('FilterBar');
     // console.log('props', props);
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
-        //action, apiContent,
-        helperContent,
-        fromDate, toDate, category, desiredField, handleFromDate, handleToDate, handleCategory, handleDesiredField
-    } = props;
+        apiContent, fromDate, toDate, category, desiredField, handleFromDate, handleToDate, handleCategory, handleDesiredField } = props;
 
     const [expanded, setExpanded] = useState(true);
 
@@ -88,12 +85,12 @@ function FilterBar(props) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
                 <Grid container spacing={3}>
-                    {helperContent && helperContent.apiContent ?
+                    {apiContent.queryResults ?
                         <>
                             <Grid item sm={3}>
-                                {/* <Typography variant="subtitle1">
+                                <Typography variant="subtitle1">
                                     Filter by Field:
-                                </Typography> */}
+                                </Typography>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel
                                         id={`${validIdHelper(type + '-FilterBar-DataPropery-SelectLabel')}`}
@@ -118,9 +115,6 @@ function FilterBar(props) {
                             </Grid>
 
                             <Grid item sm={3}>
-                                {/* <Typography variant="subtitle1">
-                                    Filter by Date:
-                            </Typography> */}
                                 <form className={classes.container} noValidate>
                                     <TextField
                                         id="fromDate"
@@ -136,29 +130,21 @@ function FilterBar(props) {
                                 </form>
                             </Grid>
                             <Grid item sm={3}>
-                                {/* <Typography variant="subtitle1" className={classes.hidden}>
-                                    Filter by Date:
-                            </Typography> */}
                                 <form className={classes.container} noValidate>
                                     <TextField
                                         id="toDate"
                                         label="To date"
                                         type="date"
-                                        // defaultValue={toDate}
                                         value={toDate}
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
                                         onChange={(event) => handleToDate(event.target.value)}
-                                    // formatDate={(date) => moment(new Date()).format('MM-DD-YY')}
                                     />
                                 </form>
                             </Grid>
                             <Grid item sm={3}>
-                                {/* <Typography variant="subtitle1">
-                                    Filter by Product Category:
-                                </Typography> */}
                                 <FormControl className={classes.formControl}>
                                     <InputLabel
                                         id={`${validIdHelper(type + '-FilterBar-Category-SelectLabel')}`}
@@ -170,7 +156,7 @@ function FilterBar(props) {
                                         value={category}
                                         onChange={(event) => handleCategory(event.target.value)}
                                     >
-                                        {helperContent.apiContent.uniqueCategories.map((item, index) => (
+                                        {apiContent.uniqueCategories.map((item, index) => (
 
                                             <MenuItem
                                                 id={validIdHelper(`${item}-${index}`)}
@@ -273,18 +259,17 @@ export default function CustomVis(props) {
     // console.log('props', props)
 
     const classes = useStyles();
-    const [value, setValue] = useState(0);
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type },
-        helperContent,
-        // apiContent, action, 
-        activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab]
+    const demoComponentType = type || 'sample code';
+
+    const [value, setValue] = useState(0);
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [category, setCategory] = useState('All')
     const [desiredField, setDesiredField] = useState(lookerContent ? lookerContent[0].desiredFields[0] : '')
-    let demoComponentType = type || 'sample code';
+    const [apiContent, setApiContent] = useState([]);
 
     const handleChange = (event, newValue) => {
         handleTabChange(0);
@@ -305,18 +290,18 @@ export default function CustomVis(props) {
     }
 
     let filterData = [];
-    if (helperContent && helperContent.apiContent) {
+    if (apiContent.queryResults) {
         //filtering for fromDate, toDate and category
-        filterData = _.filter(helperContent.apiContent.queryResults, (row) => {
-            return (row[helperContent.apiContent.inlineQuery.fields[0]] > fromDate
-                && row[helperContent.apiContent.inlineQuery.fields[0]] < toDate
-                && (category === 'All' ? true : row[helperContent.apiContent.inlineQuery.fields[1]] === category))
+        filterData = _.filter(apiContent.queryResults, (row) => {
+            return (row[apiContent.inlineQuery.fields[0]] > fromDate
+                && row[apiContent.inlineQuery.fields[0]] < toDate
+                && (category === 'All' ? true : row[apiContent.inlineQuery.fields[1]] === category))
         })
         //converting filterDAta to desired format for vis
         filterData = filterData.map(item => {
             return {
-                'day': item[helperContent.apiContent.inlineQuery.fields[0]],
-                'category': item[helperContent.apiContent.inlineQuery.fields[1]],
+                'day': item[apiContent.inlineQuery.fields[0]],
+                'category': item[apiContent.inlineQuery.fields[1]],
                 'value': item[desiredField]
             }
         })
@@ -346,13 +331,39 @@ export default function CustomVis(props) {
     }
 
     useEffect(() => {
-        // console.log('useEffect')
-        if (helperContent && helperContent.apiContent) {
-            setFromDate(helperContent.apiContent.queryResults[helperContent.apiContent.queryResults.length - 1][helperContent.apiContent.inlineQuery.fields[0]]);
-            setToDate(helperContent.apiContent.queryResults[0][helperContent.apiContent.inlineQuery.fields[0]]);
-        }
-    }, [helperContent && helperContent.apiContent]
-    );
+        lookerContent.map(async lookerContent => {
+            let inlineQuery = lookerContent.inlineQuery;
+            inlineQuery.filters = {
+                [lookerContent.desiredFilterName]: lookerUser.user_attributes.brand
+            };
+
+            let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
+            let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            let lookerResponseData = await lookerResponse.json();
+            //filter for null dates
+            lookerResponseData.queryResults = lookerResponseData.queryResults.filter((queryResult) => {
+                return queryResult[inlineQuery.fields[0]]
+            });
+            //create unique category array
+            let uniqueCategories = ['All'];
+            for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
+                if (uniqueCategories.indexOf(lookerResponseData.queryResults[i][inlineQuery.fields[1]]) === -1) {
+                    uniqueCategories.push(lookerResponseData.queryResults[i][inlineQuery.fields[1]])
+                }
+            }
+            lookerResponseData.uniqueCategories = uniqueCategories;
+            lookerResponseData.inlineQuery = inlineQuery;
+            setApiContent(lookerResponseData)
+            setFromDate(lookerResponseData.queryResults[lookerResponseData.queryResults.length - 1][lookerResponseData.inlineQuery.fields[0]]);
+            setToDate(lookerResponseData.queryResults[0][lookerResponseData.inlineQuery.fields[0]]);
+        })
+    }, [lookerContent])
 
     let redToBlueColorScale = ['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']
     let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B']
@@ -401,12 +412,13 @@ export default function CustomVis(props) {
                                             <React.Fragment
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
 
-                                                {!helperContent ?
+                                                {!apiContent.queryResults ?
                                                     <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
                                                     :
                                                     <FilterBar {...props}
                                                         classes={classes}
-                                                        action={filterData}
+                                                        // action={filterData}
+                                                        apiContent={apiContent}
                                                         fromDate={fromDate}
                                                         toDate={toDate}
                                                         category={category}
@@ -421,7 +433,7 @@ export default function CustomVis(props) {
                                                 <Box
                                                     className={classes.w100}
                                                     mt={2}>
-                                                    {!helperContent ?
+                                                    {!apiContent.queryResults ?
 
                                                         <Grid item sm={12} >
                                                             <Card className={`${classes.card} ${classes.flexCentered}`}>
@@ -429,7 +441,7 @@ export default function CustomVis(props) {
                                                             </Card>
                                                         </Grid>
 
-                                                        : helperContent.apiContent.queryResults && helperContent.apiContent.queryResults.length ?
+                                                        : apiContent.queryResults && apiContent.queryResults.length ?
                                                             <>
                                                                 <Grid item sm={12} className={classes.height800}>
                                                                     <h1>{desiredField.substring(desiredField.lastIndexOf(".") + 1, desiredField.length).split("_").map(item => item.charAt(0).toUpperCase() + item.substring(1)).join(" ")}</h1>

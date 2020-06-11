@@ -68,7 +68,7 @@ export default function UserMenu(props) {
                 {lookerUser.permission_level === 'good' ? '' : <MenuItem onClick={() => handleClose('good')}>Good</MenuItem>}
                 {lookerUser.permission_level === 'better' ? '' : <MenuItem onClick={() => handleClose('better')}>Better</MenuItem>}
                 {lookerUser.permission_level === 'best' ? '' : <MenuItem onClick={() => handleClose('best')}>Best</MenuItem>}
-                {/* <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem> */}
+                <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
                 <Divider className={classes.divider} />
                 <MenuItem>Current brand: {selectedBrand}</MenuItem>
                 <MenuItem>
@@ -82,6 +82,7 @@ export default function UserMenu(props) {
                         renderInput={(params) => <TextField {...params} label="Sudo as brand" variant="outlined" />}
                         // inputValue={selectedBrand}
                         loadingText="Loading..."
+                        disableautofocus={true}
                     />
                 </MenuItem>
             </Menu>

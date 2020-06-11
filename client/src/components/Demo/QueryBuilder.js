@@ -38,9 +38,9 @@ import indigo from '@material-ui/core/colors/indigo';
 import teal from '@material-ui/core/colors/teal';
 // import HUE from '@material-ui/core/colors/HUE';
 
-import '../../Home.css'
-import CodeFlyout from '../CodeFlyout';
-const { makeid, validIdHelper, prettifyString } = require('../../../tools');
+import '../Home.css'
+import CodeFlyout from './CodeFlyout';
+const { makeid, validIdHelper, prettifyString } = require('../../tools');
 
 
 function TabPanel(props) {
@@ -485,23 +485,54 @@ export default function QueryBuilder(props) {
     console.log('props', props)
 
     const classes = useStyles();
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type },
-        apiContent, apiContent: { sql }, action,
-        activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
-    const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode, sql }
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode, }
     const tabContent = [...lookerContent, sampleCodeTab];
     const demoComponentType = type || 'sample code';
 
-    // console.log('apiContent', apiContent)
-
-    //state
     const [value, setValue] = useState(0);
+    const [apiContent, setApiContent] = useState({});
 
-    //handlers
     const handleChange = (event, newValue) => {
         handleTabChange(0);
         setValue(newValue);
     };
+
+    useEffect(() => {
+        lookerContent.map(lookerContent => {
+            action(lookerContent.queryBody, lookerContent.resultFormat)
+        })
+    }, [lookerContent])
+
+    const action = async (newQuery, resultFormat) => {
+        let apiContentCopy = { ...apiContent }
+        apiContentCopy.status = 'running';
+        setApiContent(apiContentCopy)
+
+        let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        let lookerCreateTaskResponseData = await lookerCreateTaskResposnse.json();
+
+        let taskInterval = setInterval(async () => {
+            let lookerCheckTaskResposnse = await fetch('/checkquerytask/' + lookerCreateTaskResponseData.queryTaskId, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            let lookerCheckTaskResponseData = await lookerCheckTaskResposnse.json();
+            if (lookerCheckTaskResponseData.queryResults.status === 'complete') {
+                clearInterval(taskInterval);
+                setApiContent(lookerCheckTaskResponseData.queryResults)
+            }
+        }, 5000)
+    }
 
     return (
         <div className={`${classes.root} demoComponent`}>
@@ -542,19 +573,13 @@ export default function QueryBuilder(props) {
                                                     Looker User:<br />
                                                 </Typography>
                                                 <CodeFlyout code={tabContentItem.lookerUser} />
-                                                {tabContentItem.sql ?
-                                                    <>
-                                                        <Typography variant="h6" component="h6" className={classes.gridTitle}>
-                                                            SQL:<br />
-                                                        </Typography>
-                                                        <CodeFlyout code={tabContentItem.sql} />
-                                                    </> : ''}
                                             </Grid>
                                             :
                                             <React.Fragment
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
                                                 <FilterBar {...props}
                                                     classes={classes}
+                                                    action={action}
                                                 />
                                                 <Divider className={classes.divider} />
                                                 <Box

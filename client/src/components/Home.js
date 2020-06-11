@@ -25,18 +25,18 @@ import UserMenu from './Material/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
 import SplashPage from './Demo/SplashPage';
-import ReportBuilder from './Demo/ReportBuilder/ReportBuilder';
-import QueryBuilder from './Demo/QueryBuilder/QueryBuilder';
+import ReportBuilder from './Demo/ReportBuilder';
+import QueryBuilder from './Demo/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
-import Dashboard from './Demo/Dashboard/Dashboard';
+import Dashboard from './Demo/Dashboard';
 // import CohortBuilder from './Demo/CohortBuilder';
-import CustomVis from './Demo/CustomVis/CustomVis';
+import CustomVis from './Demo/CustomVis';
 
 //helpers
-import DashboardHelper from './Demo/Dashboard/Helper';
-import CustomVisHelper from './Demo/CustomVis/Helper';
-import ReportBuilderHelper from './Demo/ReportBuilder/Helper';
-import QueryBuilderHelper from './Demo/QueryBuilder/Helper';
+// import DashboardHelper from './Demo/Dashboard/Helper';
+// import CustomVisHelper from './Demo/CustomVis/Helper';
+// import ReportBuilderHelper from './Demo/ReportBuilder/Helper';
+// import QueryBuilderHelper from './Demo/QueryBuilder/Helper';
 //actions???
 // import customFilterAction from './Demo/ReportBuilder/Helper';
 
@@ -280,7 +280,7 @@ class Home extends Component {
             // console.log('this.state.activeUsecase', this.state.activeUsecase)
             // console.log('this.state.appLayout', this.state.appLayout)
             LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
-            this.setupLookerContent(UsecaseContent[usecaseFromUrl].demoComponents);
+            // this.setupLookerContent(UsecaseContent[usecaseFromUrl].demoComponents);
         })
     }
 
@@ -394,8 +394,8 @@ class Home extends Component {
 
         const demoComponentHelperMap = {
             // "splash page": SplashPage,
-            "simple dashboard": DashboardHelper,
-            "custom filter": DashboardHelper,
+            // "simple dashboard": DashboardHelper,
+            // "custom filter": DashboardHelper,
             // "custom vis": CustomVisHelper,
             // "report builder": ReportBuilderHelper,
             // "query builder": QueryBuilderHelper,
@@ -404,13 +404,13 @@ class Home extends Component {
         }
 
         //fabios imlementation
-        let helperDataPromises = demoComponents.map(componentConfig => {
-            return (demoComponentHelperMap[componentConfig.type](
-                LookerEmbedSDK,
-                componentConfig)
-            )
-        }
-        )
+        // let helperDataPromises = demoComponents.map(componentConfig => {
+        //     return (demoComponentHelperMap[componentConfig.type](
+        //         LookerEmbedSDK,
+        //         componentConfig)
+        //     )
+        // }
+        // )
 
         // set state once after loop to reduce renders
         //not working, or is it???
@@ -784,7 +784,7 @@ class Home extends Component {
                                                 <DemoComponent key={validIdHelper(`list-${item.type}`)}
                                                     staticContent={item}
                                                     handleDrawerTabChange={handleDrawerTabChange}
-                                                    apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []} //[]
+                                                    // apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []} //[]
                                                     // action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
                                                     // action={''}
                                                     activeTabValue={activeTabValue}

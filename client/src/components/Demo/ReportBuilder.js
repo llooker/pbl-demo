@@ -16,11 +16,11 @@ import Icon from '@material-ui/core/Icon';
 import Skeleton from '@material-ui/lab/Skeleton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
-import CodeFlyout from '../CodeFlyout'
-import '../../Home.css'
+import CodeFlyout from './CodeFlyout'
+import '../Home.css'
 import Button from '@material-ui/core/Button';
 
-const { validIdHelper } = require('../../../tools');
+const { validIdHelper } = require('../../tools');
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -128,24 +128,17 @@ export default function ReportBuilder(props) {
     const [value, setValue] = useState(0);
     const [selected, setSelected] = useState(2)
     const [expanded, setExpanded] = useState(["1"]); //
-    const { staticContent,
-        staticContent: { lookerContent },
-        staticContent: { type },
-        // apiContent,
-        // action,
-        helperContent,
-        LookerEmbedSDK,
-        activeTabValue,
-        handleTabChange,
-        lookerUser,
-        sampleCode } = props;
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, LookerEmbedSDK, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab];
     const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
-
-    let iFrameExists = $(".tabPanelContainer:visible iframe").length;
-    let demoComponentType = type || 'sample code';
+    const demoComponentType = type || 'sample code';
     let treeCounter = 0;
+
+    const [iFrameExists, setIFrame] = useState(0);
+    const [apiContent, setApiContent] = useState([]);
+    const [exploreObj, setExploreObj] = useState({});
+
 
     const handleChange = (event, newValue) => {
         handleTabChange(newValue);
@@ -161,13 +154,6 @@ export default function ReportBuilder(props) {
     };
 
     const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
-        console.log('reportBuilderAction')
-        console.log('contentType', contentType)
-        console.log('contentId', contentId)
-        console.log('secondaryAction', secondaryAction)
-        console.log('qid', qid)
-        console.log('exploreId', exploreId)
-        console.log('newReportEmbedContainer', newReportEmbedContainer)
 
         let iFrameArray = $(".embedContainer:visible > iframe")
 
@@ -181,20 +167,39 @@ export default function ReportBuilder(props) {
             }
         }
 
-        if (secondaryAction === 'edit') {
+        if (secondaryAction === 'edit' || secondaryAction === 'explore') {
             $(`#${newReportEmbedContainer}`).empty();
 
             LookerEmbedSDK.createExploreWithId(exploreId)
                 .appendTo(`#${newReportEmbedContainer}`)
                 .withClassName('iframe')
                 .on('explore:state:changed', (event) => {
-                    // console.log('explore:state:changed')
-                    // console.log('event', event)
                 })
                 .withClassName("exploreIframe")
                 .withParams({
-                    qid: qid,
-                    // toggle: 'dat,pik,vis'
+                    qid: qid
+                })
+                .build()
+                .connect()
+                .then((explore) => {
+                    setIFrame(1)
+                    setExploreObj(explore)
+                })
+                .catch((error) => {
+                    console.error('Connection error', error)
+                })
+            handleChange('edit', 1)
+        } /*else if (secondaryAction === 'explore') {
+            $(`#${newReportEmbedContainer}`).empty();
+
+            LookerEmbedSDK.createExploreWithId(exploreId)
+                .appendTo(`#${newReportEmbedContainer}`)
+                .withClassName('iframe')
+                .on('explore:state:changed', (event) => {
+                })
+                .withClassName("exploreIframe")
+                .withParams({
+                    qid: qid
                 })
                 .build()
                 .connect()
@@ -206,9 +211,10 @@ export default function ReportBuilder(props) {
                 })
 
 
-            this.handleTabChange(1) //can assume one for now
-        }
-        else if (secondaryAction === 'delete') {
+            // handleTabChange(1) //can assume one for now
+            handleChange('explore', 1)
+
+        }*/ else if (secondaryAction === 'delete') {
 
             let lookerResponse = await fetch('/deletelook/' + contentId, {
                 method: 'GET',
@@ -218,51 +224,95 @@ export default function ReportBuilder(props) {
                 }
             });
             if (lookerResponse.status === 200) {
-                let reportBuilderApiContentCopy = this.state.reportBuilderApiContent;
+                let reportBuilderApiContentCopy = apiContent;
                 reportBuilderApiContentCopy.looks.splice(matchingIndex, 1)
-                this.setState({
-                    reportBuilderApiContent: reportBuilderApiContentCopy
-                }, () => {
-                    console.log('callback this.state.reportBuilderApiContent', this.state.reportBuilderApiContent)
-                })
+                setApiContent(reportBuilderApiContentCopy)
             }
-        } else if (secondaryAction === 'explore') {
-            $(`#${newReportEmbedContainer}`).empty();
-
-            LookerEmbedSDK.createExploreWithId(exploreId)
-                .appendTo(`#${newReportEmbedContainer}`)
-                .withClassName('iframe')
-                .on('explore:state:changed', (event) => {
-                    // console.log('explore:state:changed')
-                    // console.log('event', event)
-                })
-                .withClassName("exploreIframe")
-                .withParams({
-                    qid: qid,
-                    // toggle: 'dat,pik,vis'
-                })
-                .build()
-                .connect()
-                .then((explore) => {
-                    // console.log('explore then callback')
-                })
-                .catch((error) => {
-                    console.error('Connection error', error)
-                })
-
-
-            handleTabChange(1) //can assume one for now
-
         }
     }
-
 
     useEffect(() => {
         //change from drill click
         if (activeTabValue > value) {
             setValue(activeTabValue)
         }
-    });
+
+        lookerContent.map(async lookerContent => {
+            if (lookerContent.type === 'folder') {
+                let lookerResponse = await fetch('/fetchfolder/' + lookerContent.id, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+                let lookerResponseData = await lookerResponse.json();
+                let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
+                let dashboardsToUse = [...lookerResponseData.sharedFolder.dashboards]
+                let objToUse = {
+                    looks: looksToUse,
+                    dashboards: dashboardsToUse
+                }
+
+                if (objToUse.looks.length) {
+                    objToUse.looks.map((item, index) => {
+                        let lookId = item.id
+                        LookerEmbedSDK.createLookWithId(lookId)
+                            .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+                            .withClassName('iframe')
+                            .withClassName('look')
+                            .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
+                            .withClassName(index > 0 ? 'd-none' : 'oops')
+                            .withClassName(lookId)
+                            .build()
+                            .connect()
+                            .catch((error) => {
+                                // console.error('Connection error', error)
+                            })
+                    })
+                }
+
+                if (objToUse.dashboards.length) {
+                    objToUse.dashboards.map((item, index) => {
+                        let dashboardId = item.id
+                        LookerEmbedSDK.createDashboardWithId(dashboardId)
+                            .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+                            .withClassName('iframe')
+                            .withClassName('dashboard')
+                            .withClassName(lookerResponseData.sharedFolder.dashboards.indexOf(item) > -1 ? "shared" : "personal")
+                            .withClassName('d-none')
+                            .withClassName(dashboardId)
+                            .build()
+                            .connect()
+                            .catch((error) => {
+                                console.error('Connection error', error)
+                            })
+                    })
+                }
+                setApiContent(objToUse)
+            } else if (lookerContent.type === 'explore') {
+                let exploreId = lookerContent.id;
+                //let exploreObj = await 
+                LookerEmbedSDK.createExploreWithId(exploreId)
+                    .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+                    .withClassName('iframe')
+                    .on('explore:state:changed', (event) => {
+                    })
+                    .build()
+                    .connect()
+                    .then((explore) => {
+                        setIFrame(1)
+                        setExploreObj(exploreObj)
+                    })
+                    .catch((error) => {
+                        console.error('Connection error', error)
+                    })
+            }
+        })
+
+
+    }, [lookerContent]);
 
     return (
         <div className={`${classes.root} demoComponent`}>
@@ -273,7 +323,6 @@ export default function ReportBuilder(props) {
                 <div className={classes.root}>
                     {iFrameExists ? '' :
                         <Grid item sm={12} >
-                            {/* <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> */}
                             <Card className={`${classes.card} ${classes.flexCentered}`}>
                                 <CircularProgress className={classes.circularProgress} />
                             </Card>
@@ -330,7 +379,7 @@ export default function ReportBuilder(props) {
                                                             onNodeToggle={handleToggle}
                                                             onNodeSelect={handleSelect}
                                                         >
-                                                            {helperContent ? Object.keys(helperContent.apiContent).map((key, outerIndex) => (
+                                                            {apiContent ? Object.keys(apiContent).map((key, outerIndex) => (
                                                                 <React.Fragment
                                                                     key={`${validIdHelper(demoComponentType + '-innerFragment-' + outerIndex)}`}>
                                                                     <TreeItem
@@ -339,11 +388,11 @@ export default function ReportBuilder(props) {
                                                                         treecounter={treeCounter}
                                                                         label={key.charAt(0).toUpperCase() + key.substring(1)}
                                                                         icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
-                                                                        disabled={helperContent.apiContent[key].length ? false : true}
+                                                                        disabled={apiContent[key].length ? false : true}
                                                                     >
                                                                         {
-                                                                            helperContent.apiContent[key].length ?
-                                                                                helperContent.apiContent[key].map((item, index) => (
+                                                                            apiContent[key].length ?
+                                                                                apiContent[key].map((item, index) => (
                                                                                     <TreeItem
                                                                                         key={`${validIdHelper(demoComponentType + '-innerTreeItem-' + treeCounter)}`}
                                                                                         nodeId={"" + (treeCounter += 1)}
