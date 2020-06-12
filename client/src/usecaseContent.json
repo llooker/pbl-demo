@@ -8,6 +8,19 @@
         "layout": "right-appbar",
         "demoComponents": [
             {
+                "type": "splash page",
+                "label": "Home",
+                "description": "We're thrilled to have you on Atom Fashion - the premiere third party fashion marketplace for today's leading brands. Throughout this portal you will find a series of analtic content designed to help you maximize your performance on the site.",
+                "icon": "fa-home",
+                "lookerContent": [
+                    {
+                        "id": "19",
+                        "type": "look",
+                        "label": "At a Glance"
+                    }
+                ]
+            },
+            {
                 "type": "simple dashboard",
                 "label": "Web Analytics",
                 "description": "Overview of all your web traffic",
@@ -26,7 +39,7 @@
                 "type": "simple dashboard",
                 "label": "Sales Overview",
                 "description": "Overview of all your sales!",
-                "icon": "fa-chart-line",
+                "icon": "fa-tachometer-alt",
                 "lookerContent": [
                     {
                         "type": "dashboard",

@@ -1,107 +1,14 @@
 import _ from 'lodash'
-import $ from 'jquery';
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Card from '@material-ui/core/Card';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField } from '@material-ui/core'
+import { Autocomplete } from '@material-ui/lab'
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import '../Home.css'
-import CodeFlyout from './CodeFlyout';
+import CodeFlyout from '../CodeFlyout';
+import useStyles from './styles.js';
+// import '../../Home.css';
+import { TabPanel, a11yProps } from './tabHelpers.js';
 
-const { validIdHelper } = require('../../tools');
-
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <Typography
-            component="div"
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            <Box p={3}>{children}</Box>
-        </Typography>
-    );
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.paper,
-    },
-    flexCentered: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    hidden: {
-        visibility: 'hidden',
-        position: 'absolute', //hack for obscuring other elements within Box
-        zIndex: -1
-    },
-    tabs: {
-        backgroundColor: 'white',
-        color: '#6c757d'
-    },
-    dNone: {
-        display: 'none'
-    },
-    dBlock: {
-        display: 'block'
-    },
-    tree: {
-        height: 240,
-        flexGrow: 1,
-        maxWidth: 400,
-    },
-    icon: {
-        marginRight: 12,
-        fontSize: '1rem',
-        overflow: 'visible'
-    },
-    mt12: {
-        marginTop: 12
-    },
-    w100: {
-        width: '100%'
-    },
-    mlAuto: {
-        marginLeft: 'auto'
-    },
-    skeleton: {
-        minWidth: 275,
-        minHeight: 600,
-    },
-    card: {
-        minWidth: 275,
-        minHeight: 800,
-    },
-}));
+const { validIdHelper } = require('../../../tools');
 
 export default function Dashboard(props) {
 
@@ -109,7 +16,7 @@ export default function Dashboard(props) {
     // console.log('props', props)
 
     const classes = useStyles();
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const { staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab];
     const demoComponentType = type || 'sample code';
@@ -125,7 +32,6 @@ export default function Dashboard(props) {
     };
 
     useEffect(() => {
-        //change from drill click
         if (activeTabValue > value) {
             setValue(activeTabValue)
         }
@@ -177,14 +83,7 @@ export default function Dashboard(props) {
         })
     }, [lookerContent]);
 
-
-
     const customFilterAction = (dashboardId, filterName, newFilterValue) => {
-        // console.log('customFilterAction')
-        // console.log('dashboardId', dashboardId)
-        // console.log('filterName', filterName)
-        // console.log('newFilterValue', newFilterValue)
-
         if (Object.keys(dashboardObj).length) {
             dashboardObj.updateFilters({ [filterName]: newFilterValue })
             dashboardObj.run()

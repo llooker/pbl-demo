@@ -1,210 +1,235 @@
+import _ from 'lodash'
+import $ from 'jquery';
 import React, { useState, useEffect } from 'react';
-
-//material
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Paper from '@material-ui/core/Paper';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-// import Modal from '@material-ui/core/Modal';
-// import Table from '@material-ui/core/Table';
-// import TableBody from '@material-ui/core/TableBody';
-// import TableCell from '@material-ui/core/TableCell';
-// import TableContainer from '@material-ui/core/TableContainer';
-// import TableHead from '@material-ui/core/TableHead';
-// import TableRow from '@material-ui/core/TableRow';
-import ModalTable from '../Material/ModalTable';
-import Icon from '@material-ui/core/Icon';
-import UsecaseContent from '../../usecaseContent.json'; // still necessary to map over demo components
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { LookerEmbedSDK } from '@looker/embed-sdk'
 import '../Home.css'
+import CodeFlyout from './CodeFlyout';
 
-const { validIdHelper, prettifyString } = require('../../tools');
+const { validIdHelper } = require('../../tools');
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <Typography
+            component="div"
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            <Box p={3}>{children}</Box>
+        </Typography>
+    );
+}
+
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-    },
-    card: {
-        minWidth: 275,
-        minHeight: '10rem',
+        backgroundColor: theme.palette.background.paper,
     },
     flexCentered: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
     },
-    gridTitle: {
-        marginBottom: 12,
+    hidden: {
+        visibility: 'hidden',
+        position: 'absolute', //hack for obscuring other elements within Box
+        zIndex: -1
     },
-    body: {
-        marginLeft: 12
+    tabs: {
+        backgroundColor: 'white',
+        color: '#6c757d'
     },
-    pos: {
-        marginBottom: 12,
+    dNone: {
+        display: 'none'
     },
-    divider: {
-        marginTop: 24,
-        marginBottom: 24
+    dBlock: {
+        display: 'block'
+    },
+    tree: {
+        height: 240,
+        flexGrow: 1,
+        maxWidth: 400,
     },
     icon: {
-        marginLeft: 12
+        marginRight: 12,
+        fontSize: '1rem',
+        overflow: 'visible'
     },
-    paper: {
-        position: 'absolute',
-        width: 800,
-        maxHeight: 400,
-        overflow: 'scroll',
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-    }
+    mt12: {
+        marginTop: 12
+    },
+    w100: {
+        width: '100%'
+    },
+    mlAuto: {
+        marginLeft: 'auto'
+    },
+    skeleton: {
+        minWidth: 275,
+        minHeight: 600,
+    },
+    card: {
+        minWidth: 275,
+        minHeight: 800,
+    },
 }));
 
-function rand() {
-    return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-    const top = 64; //+ rand();
-    const left = 50; // + rand();
-
-    return {
-        top: top,
-        left: `${left}%`,
-        transform: `translateX(-${left}%)`,
-    };
-}
-
-//https://demo.looker.com/explore/thelook_adwords/sessions?qid=GsGOKU9FHlQ3cHoqaw57l5
-//option 1 create iframe using url from links response in api call
-//option 2 taking fields from URL
-
 export default function SplashPage(props) {
+
     // console.log('SplashPage')
     // console.log('props', props)
 
     const classes = useStyles();
-    const { staticContent, staticContent: { lookerContent }, apiContent, handleDrawerTabChange, activeUsecase, action } = props;
-    const [open, setOpen] = useState(false);
-    const [modalContent, setModalContent] = useState({});
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
+    const tabContent = [...lookerContent, sampleCodeTab];
+    const demoComponentType = type || 'sample code';
 
-    // console.log('apiContent', apiContent)
+    const [value, setValue] = useState(0);
+    const [iFrameExists, setIFrame] = useState(1);
+    const [apiContent, setApiContent] = useState([]);
+    const [dashboardObj, setDashboardObj] = useState({});
 
-    const handleModalOpen = (title, data) => {
-        let updatedModalContent = { ...modalContent }
-        updatedModalContent.title = title;
-        updatedModalContent.body = data;
-        setOpen(true);
-        setModalContent(updatedModalContent)
-    };
-
-    const handleModalClose = () => {
-        setOpen(false);
+    const handleChange = (event, newValue) => {
+        handleTabChange(0);
+        setValue(newValue);
     };
 
     useEffect(() => {
-        // console.log('useEffect')
-    }, [modalContent, apiContent]);
+        //change from drill click
+        if (activeTabValue > value) {
+            setValue(activeTabValue)
+        }
 
+        lookerContent.map(lookerContent => {
+            if (lookerContent.type === 'query') {
+                // console.log('inside iff for query');
+            } else if (lookerContent.type === 'look') {
+                // console.log('inside else iff for look');
+                LookerEmbedSDK.createLookWithId(lookerContent.id)
+                    .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+                    .withClassName('iframe')
+                    .withClassName('look')
+                    .withClassName(lookerContent.id)
+                    .build()
+                    .connect()
+                    .catch((error) => {
+                        console.error('Connection error', error)
+                    })
+            }
+        })
+
+
+    }, [lookerContent]);
 
 
     return (
         <div className={`${classes.root} demoComponent`}>
-
-            <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                {staticContent.title}
-                <br />
-            </Typography>
             <Grid container
-                spacing={3} >
-                {lookerContent.map((item, index) => (
-                    <Grid item xs={12} sm={4} key={`atAGlance${index}`}>
-                        {apiContent[index] && apiContent[index].detail ?
-                            <Card className={`${classes.card} text-center`}
-                                onClick={() => {
-                                    setOpen(true);
-                                    handleModalOpen(lookerContent[index].modalLabel,
-                                        apiContent[index].detail.length ? apiContent[index].detail : apiContent[index].glance.queryResults.data
-                                    )
-                                }
-                                }
-                            >
-                                <CardContent>
-                                    <Typography variant="h5" component="h2">
-                                        {lookerContent[index].cardLabel}
-                                    </Typography>
-                                    <br />
-                                    <Typography variant="h6" component="h6">
-                                        {
-                                            lookerContent[index].desiredMethod
-                                                ?
-                                                (apiContent[index].glance.queryResults.data[lookerContent[index].desiredMethod]).toLocaleString() //value
-                                                : (apiContent[index].glance.queryResults.data[0][lookerContent[index].desiredProperty].rendered).toLocaleString()
-                                        }
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                            : apiContent[index] && apiContent[index].glance.queryResults.errors ?
-
-                                <Card className={`${classes.card} text-center`}
-                                >
-                                    <CardContent>
-                                        <Typography variant="h5" component="h2" color="error">
-                                            Error
-                                        </Typography>
-                                        <br />
-                                        <Typography variant="h6" component="h6" color="error">
-                                            {JSON.stringify(apiContent[index].glance.queryResults.errors[0].message.substring(0, 50))}...
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                                :
-                                <Card className={`${classes.card} ${classes.flexCentered}`}>
-                                    <CircularProgress className={classes.circularProgress} />
-                                </Card>}
-                    </Grid>
-                ))}
-
-                {open ? <ModalTable
-                    {...props}
-                    open={open}
-                    onClose={handleModalClose}
-                    classes={classes}
-                    modalContent={modalContent}
-                /> : ''}
-
-            </Grid >
-
-            <Divider className={classes.divider} />
-
-            <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                Take actions on your data:
-            <br />
-            </Typography>
-            <Grid container
-                spacing={3} >
-                {UsecaseContent[activeUsecase].demoComponents.map((item, index) => (
-                    index > 0 ?
-                        <Grid item xs={12} sm={4} className="pointer" key={`demoComponentLink${index}`} onClick={(e) => handleDrawerTabChange(e, index)}>
-                            <Card className={`${classes.card} text-center`}>
-                                <CardContent>
-                                    <Typography variant="h5" component="h2">
-                                        {item.label}
-                                        <Icon className={`fa ${item.icon} ${classes.icon}`} />
-                                    </Typography>
-                                    <br />
-                                    <Typography className={classes.body} variant="body2" component="p">
-                                        {item.description}
-                                    </Typography>
-                                </CardContent>
+                spacing={3}
+                key={validIdHelper(type)} >
+                <div className={classes.root}>
+                    {iFrameExists ? '' :
+                        <Grid item sm={12} >
+                            <Card className={`${classes.card} ${classes.flexCentered}`}>
+                                <CircularProgress className={classes.circularProgress} />
                             </Card>
                         </Grid>
-                        : ''
-                ))}
+                    }
+
+                    {/* additional loading logic, need embedContainer to exist but want it hidden until iFrame has content...*/}
+                    <Box className={iFrameExists ? `` : `${classes.hidden}`}>
+                        <AppBar position="static">
+                            <Tabs
+                                className={classes.tabs}
+                                value={value}
+                                onChange={handleChange}
+                                aria-label="simple tabs example">
+                                {tabContent.map((item, index) => (
+                                    <Tab
+                                        key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
+                                        label={item.label}
+                                        className={item.type === 'sample code' ? `${classes.mlAuto}` : ``}
+                                        {...a11yProps(index)} />
+                                ))}
+                            </Tabs>
+                        </AppBar>
+                        <Box className="tabPanelContainer">
+                            {tabContent.map((tabContentItem, index) => (
+                                <TabPanel
+                                    key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
+                                    value={value}
+                                    index={index}>
+                                    <Grid container>
+                                        {tabContentItem.type === 'sample code' ?
+                                            <Grid item sm={12} >
+                                                <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                                                    Sample Code<br />
+                                                </Typography>
+                                                <CodeFlyout code={tabContentItem.sampleCode} />
+                                                <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                                                    Looker User<br />
+                                                </Typography>
+                                                <CodeFlyout code={tabContentItem.lookerUser} />
+                                            </Grid>
+                                            :
+                                            <React.Fragment
+                                                key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
+                                                <Grid item sm={4}>
+
+                                                    <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                                                        Welcome {lookerUser.user_attributes.brand}!<br />
+                                                    </Typography>
+                                                    <br />
+                                                    <Typography variant="h5" component="h5" className={classes.gridTitle}>
+                                                        {staticContent.description}<br />
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item sm={6}>
+                                                    <div
+                                                        className="embedContainer"
+                                                        id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                                        key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                                    >
+                                                    </div>
+                                                </Grid>
+                                            </React.Fragment>
+                                        }
+                                    </Grid>
+                                </TabPanel>
+                            ))}
+                        </Box>
+                    </Box >
+                </div>
             </Grid >
         </div >
     )

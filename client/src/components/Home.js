@@ -21,12 +21,17 @@ import Avatar from '@material-ui/core/Avatar'
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { blue, green, orange, indigo, red, grey } from '@material-ui/core/colors';
 
+//fabio suggestion 6/12
+//look at dynamic importing + code splitting to further optimize load
+//https://github.com/fabio-looker/cs-app-internal/blob/master/extension/src/index.js lines ~34
+//https://github.com/fabio-looker/cs-app-internal/blob/master/extension/src/main.jsx lines 11, 54
+//https://github.com/fabio-looker/cs-app-internal/blob/master/extension/webpack.config.js output line
 import UserMenu from './Material/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
 import ReportBuilder from './Demo/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder';
-import Dashboard from './Demo/Dashboard';
+import Dashboard from './Demo/Dashboard/Dashboard';
 import CustomVis from './Demo/CustomVis';
 import ComingSoon from './Demo/ComingSoon';
 import SplashPage from './Demo/SplashPage';
@@ -156,6 +161,9 @@ const atomTheme = createMuiTheme({
     palette: {
         primary: {
             main: grey[900],
+        },
+        secondary: {
+            main: grey[400],
         },
     },
 })
@@ -418,8 +426,9 @@ class Home extends Component {
     }*/
 
     render() {
-
+        //why are these different?
         const demoComponentMap = {
+            "splash page": SplashPage,
             "simple dashboard": Dashboard,
             "custom filter": Dashboard,
             "custom vis": CustomVis,
@@ -540,7 +549,7 @@ class Home extends Component {
                                                 activeUsecase={activeUsecase}
                                                 LookerEmbedSDK={LookerEmbedSDK}
                                             /> :
-                                            item.label
+                                            "Coming Soon"
                                         }
                                     </TabPanel>)
                             }) : ''

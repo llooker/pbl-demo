@@ -83,7 +83,7 @@ export default function UserMenu(props) {
                         onChange={(event) => handleClose(event.target.innerText || '')}
                         renderInput={(params) => <TextField {...params} label="Change merchant brand" variant="outlined" />}
                         loadingText="Loading..."
-                        disableautofocus={true}
+                        disableautofocus="true"
                     />
                 </MenuItem>
             </Menu>
