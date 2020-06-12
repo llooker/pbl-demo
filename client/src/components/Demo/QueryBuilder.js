@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,7 +6,6 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Skeleton from '@material-ui/lab/Skeleton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -17,7 +15,6 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Table from '@material-ui/core/Table';
@@ -25,20 +22,16 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Paper from '@material-ui/core/Paper';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import Chip from '@material-ui/core/Chip';
-import Button from '@material-ui/core/Button';
 import DoneIcon from '@material-ui/icons/Done';
 import Divider from '@material-ui/core/Divider';
-import { palette } from '@material-ui/system';
 import grey from '@material-ui/core/colors/grey';
-import indigo from '@material-ui/core/colors/indigo';
-import teal from '@material-ui/core/colors/teal';
 import orange from '@material-ui/core/colors/orange';
-// import HUE from '@material-ui/core/colors/HUE';
-
 import '../Home.css'
 import CodeFlyout from './CodeFlyout';
 const { makeid, validIdHelper, prettifyString } = require('../../tools');
@@ -76,10 +69,10 @@ function a11yProps(index) {
 
 
 function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
+    if (a[orderBy] && b[orderBy] && b[orderBy].value < a[orderBy].value) {
         return -1;
     }
-    if (b[orderBy] > a[orderBy]) {
+    if (a[orderBy] && b[orderBy] && b[orderBy].value > a[orderBy].value) {
         return 1;
     }
     return 0;
@@ -101,22 +94,11 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-const useFilterBarStyles = makeStyles((theme) => ({
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        fontWeight: theme.typography.fontWeightRegular,
-    },
-    ml12: {
-        marginLeft: 12
-    }
-}));
-
 function FilterBar(props) {
     const { staticContent, staticContent: { lookerContent }, classes, action } = props;
     let measureCounter = 0;
     let dimensionCounter = 0;
 
-    //state
     const [expanded, setExpanded] = useState(true);
     const [fieldsChipData, setFieldsChipData] = useState(lookerContent[0].queryBody.fields.map((item, index) => {
         return {
@@ -137,7 +119,6 @@ function FilterBar(props) {
         }
     }))
 
-    //handlers
     const handleExpansionPanel = (event, newValue) => {
         setExpanded(expanded ? false : true);
     };
@@ -182,7 +163,7 @@ function FilterBar(props) {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                {/* <Typography className={classes.heading}>Build Query</Typography> */}
+                <Typography className={classes.heading}>Build Query</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
                 <Grid container spacing={3}>
@@ -282,7 +263,7 @@ function FilterBar(props) {
 }
 
 function EnhancedTableHead(props) {
-    const { tableData, classes, order, orderBy, onRequestSort } = props;
+    const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, rows } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -290,27 +271,26 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                {Object.keys(tableData[0]).map((key, index) => (
+                {Object.keys(rows[0]).map((key, index) => (
                     <TableCell
                         key={validIdHelper(key + '-TableHead-TableCell-' + index)}
                         id={validIdHelper(key + '-TableHead-TableCell-' + index)}
-                        align='right'
+                        align={key.numeric ? 'right' : 'left'}
                         padding={key.disablePadding ? 'none' : 'default'}
-                        sortDirection={orderBy === key ? order : false}>
+                        sortDirection={orderBy === key ? order : false}
+                    >
                         <TableSortLabel
                             active={orderBy === key}
                             direction={orderBy === key ? order : 'asc'}
                             onClick={createSortHandler(key)}
                         >
-                            {key}
-                            {/* {prettifyString(key.substring(key.lastIndexOf('.') + 1, key.length))} */}
+                            {prettifyString(key.substring(key.lastIndexOf('.') + 1, key.length))}
                             {orderBy === key ? (
                                 <span className={classes.visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                 </span>
                             ) : null}
                         </TableSortLabel>
-
                     </TableCell>
                 ))}
             </TableRow>
@@ -320,65 +300,106 @@ function EnhancedTableHead(props) {
 
 EnhancedTableHead.propTypes = {
     classes: PropTypes.object.isRequired,
+    numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
-    // order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    // orderBy: PropTypes.string.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
 };
 
-
 function EnhancedTable(props) {
-    const { tableData, classes, lookerContent } = props;
-    const [order, setOrder] = React.useState(''); //'asc'
-    const [orderBy, setOrderBy] = React.useState(''); //'lookerContent[0].queryBody.fields[0]'
+    const { rows, classes, lookerContent } = props;
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState(Object.keys(rows[0])[0]);
+    const [page, setPage] = React.useState(0);
+    const [dense, setDense] = React.useState(true);
+    const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
-    //handlers
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
 
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const handleChangeDense = (event) => {
+        setDense(event.target.checked);
+    };
+
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
     return (
-        <TableContainer component={Paper} className={classes.tableContainer}>
-            <Table stickyHeader className={classes.table} size="small" aria-label="a dense table">
-                <EnhancedTableHead
-                    {...props}
-                    classes={classes}
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleRequestSort}
-                />
-                <TableBody>
-                    {stableSort(tableData, getComparator(order, orderBy))
-                        .map((item, index) => (
-                            <TableRow
-                                key={validIdHelper('TableRow-' + index)}
-                                id={validIdHelper('TableRow-' + index)}>
-                                {Object.keys(item).map((key, index) => (
-                                    <TableCell
-                                        key={validIdHelper(key + '-TableBody-TableCell-' + index)}
-                                        id={validIdHelper(key + '-TableBody-TableCell-' + index)}
-                                        //this has a bug
-                                        className={lookerContent[0].fieldType[key] === 'dimension' ? classes.greySecondary : classes.orangeSecondary}
-                                        align="right">
-                                        {item[key].rendered ? item[key].rendered : item[key].value}
-                                        {/* {typeof item[key].value === 'number' ? Math.round(item[key].value * 100) / 100 : item[key].value}</TableCell> */}
-                                    </TableCell>
-                                ))}
+        <div className={classes.root}>
+            <TableContainer>
+                <Table
+                    className={classes.table}
+                    aria-labelledby="tableTitle"
+                    size={dense ? 'small' : 'medium'}
+                    aria-label="enhanced table"
+                >
+                    <EnhancedTableHead
+                        {...props}
+                        classes={classes}
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={handleRequestSort}
+                        rowCount={rows.length}
+                    />
+                    <TableBody>
+                        {stableSort(rows, getComparator(order, orderBy))
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((row, index) => {
+                                return (
+                                    <TableRow
+                                        hover
+                                        key={validIdHelper('TableRow-' + index)}
+                                        id={validIdHelper('TableRow-' + index)}>
+                                        {Object.keys(row).map((key, index) => (
+                                            <TableCell
+                                                key={validIdHelper(key + '-TableBody-TableCell-' + index)}
+                                                id={validIdHelper(key + '-TableBody-TableCell-' + index)}
+                                                className={lookerContent[0].fieldType[key] === 'dimension' ? classes.greySecondary : classes.orangeSecondary}
+                                                align="right">
+                                                {row[key].rendered ? row[key].rendered : row[key].value}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                );
+                            })}
+                        {emptyRows > 0 && (
+                            <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                                <TableCell colSpan={6} />
                             </TableRow>
-                        ))}
-                </TableBody>
-            </Table>
-        </TableContainer>)
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25, 50]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+            <FormControlLabel
+                control={<Switch checked={dense} onChange={handleChangeDense} />}
+                label="Dense padding"
+            />
+        </div>
+    );
 }
 
-
-// const lightBackground = grey[100];
-// const color = HUE[SHADE];
-// const indigoPrimary = indigo[400];
-// const indigoSecondary = indigo[100];
-// const tealPrimary = teal[400];
-// const tealSecondary = teal[100];
 const greyPrimary = grey[400];
 const greySecondary = grey[100];
 const orangePrimary = orange[400];
@@ -452,18 +473,6 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
-    // indigoPrimary: {
-    //     backgroundColor: indigoPrimary
-    // },
-    // indigoSecondary: {
-    //     backgroundColor: indigoSecondary
-    // },
-    // tealPrimary: {
-    //     backgroundColor: tealPrimary
-    // },
-    // tealSecondary: {
-    //     backgroundColor: tealSecondary
-    // },
     greyPrimary: {
         backgroundColor: greyPrimary
     },
@@ -598,27 +607,19 @@ export default function QueryBuilder(props) {
                                                     className={classes.w100}
                                                     mt={2}>
                                                     {apiContent.status === 'running' ?
-
                                                         <Grid item sm={12} >
-                                                            {/* <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> */}
                                                             <Card className={`${classes.card} ${classes.flexCentered}`}>
                                                                 <CircularProgress className={classes.circularProgress} />
                                                             </Card>
-                                                        </Grid>
-
+                                                        </Grid >
                                                         : apiContent.data && apiContent.data.length ?
-
-
                                                             <Grid item sm={12}>
-
                                                                 <EnhancedTable
                                                                     {...props}
                                                                     classes={classes}
-                                                                    tableData={apiContent.data}
+                                                                    rows={apiContent.data}
                                                                     lookerContent={lookerContent}
-                                                                >
-                                                                </EnhancedTable>
-
+                                                                />
                                                             </Grid>
                                                             :
                                                             <Grid item sm={12} >
@@ -627,15 +628,15 @@ export default function QueryBuilder(props) {
                                                                 </Typography>
                                                             </Grid>
                                                     }
-                                                </Box>
-                                            </React.Fragment>
+                                                </Box >
+                                            </React.Fragment >
                                         }
-                                    </Grid>
-                                </TabPanel>
+                                    </Grid >
+                                </TabPanel >
                             ))}
-                        </Box>
+                        </Box >
                     </Box >
-                </div>
+                </div >
             </Grid >
         </div >
     )
