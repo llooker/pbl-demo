@@ -88,9 +88,6 @@ function FilterBar(props) {
                     {apiContent.queryResults ?
                         <>
                             <Grid item sm={3}>
-                                <Typography variant="subtitle1">
-                                    Filter by Field:
-                                </Typography>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel
                                         id={`${validIdHelper(type + '-FilterBar-DataPropery-SelectLabel')}`}

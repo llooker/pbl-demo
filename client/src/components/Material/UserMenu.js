@@ -65,9 +65,11 @@ export default function UserMenu(props) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
+                <MenuItem>Select User Level</MenuItem>
                 {lookerUser.permission_level === 'good' ? '' : <MenuItem onClick={() => handleClose('good')}>Good</MenuItem>}
                 {lookerUser.permission_level === 'better' ? '' : <MenuItem onClick={() => handleClose('better')}>Better</MenuItem>}
                 {lookerUser.permission_level === 'best' ? '' : <MenuItem onClick={() => handleClose('best')}>Best</MenuItem>}
+                <Divider className={classes.divider} />
                 <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
                 <Divider className={classes.divider} />
                 <MenuItem>Current brand: {selectedBrand}</MenuItem>
@@ -79,8 +81,7 @@ export default function UserMenu(props) {
                         getOptionLabel={(option) => option.label}
                         style={{ width: 300 }}
                         onChange={(event) => handleClose(event.target.innerText || '')}
-                        renderInput={(params) => <TextField {...params} label="Sudo as brand" variant="outlined" />}
-                        // inputValue={selectedBrand}
+                        renderInput={(params) => <TextField {...params} label="Change merchant brand" variant="outlined" />}
                         loadingText="Loading..."
                         disableautofocus={true}
                     />

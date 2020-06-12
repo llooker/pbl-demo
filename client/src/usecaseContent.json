@@ -3,7 +3,7 @@
         "label": "Atom Fashion",
         "vignette": {
             "name": "Atom",
-            "logo": ""
+            "logo_url": "../images/atom_logo.png"
         },
         "layout": "right-appbar",
         "demoComponents": [
@@ -143,7 +143,7 @@
                                 "users.state": "",
                                 "users.city": "",
                                 "users.country": "",
-                                "order_items.created_date": "last 90 days"
+                                "order_items.created_date": "3 months"
                             },
                             "limit": 500
                         },
@@ -165,7 +165,7 @@
                             "users.state": "string",
                             "users.city": "string",
                             "users.country": "string",
-                            "campaigns.created_date": "date"
+                            "order_items.created_date": "date"
                         }
                     }
                 ]

@@ -36,6 +36,7 @@ import { palette } from '@material-ui/system';
 import grey from '@material-ui/core/colors/grey';
 import indigo from '@material-ui/core/colors/indigo';
 import teal from '@material-ui/core/colors/teal';
+import orange from '@material-ui/core/colors/orange';
 // import HUE from '@material-ui/core/colors/HUE';
 
 import '../Home.css'
@@ -111,9 +112,6 @@ const useFilterBarStyles = makeStyles((theme) => ({
 }));
 
 function FilterBar(props) {
-    // console.log('FilterBar')
-    // console.log('props', props)
-    // const classes = useFilterBarStyles();
     const { staticContent, staticContent: { lookerContent }, classes, action } = props;
     let measureCounter = 0;
     let dimensionCounter = 0;
@@ -199,7 +197,7 @@ function FilterBar(props) {
                                                 key={item.label}
                                                 // key={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
                                                 measurecounter={measureCounter += 1}
-                                                className={item.selected ? `${classes.tealPrimary}` : ``}
+                                                className={item.selected ? `${classes.orangePrimary}` : ``}
                                                 label={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
                                                 datalabel={item.label}
                                                 onClick={() => handleFieldChipClick(item, index)}
@@ -220,7 +218,7 @@ function FilterBar(props) {
                                             <Chip
                                                 key={item.label}
                                                 dimensioncounter={dimensionCounter += 1}
-                                                className={item.selected ? `${classes.indigoPrimary}` : ``}
+                                                className={item.selected ? `${classes.greyPrimary}` : ``}
                                                 label={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
                                                 datalabel={item.label}
                                                 onClick={() => handleFieldChipClick(item, index)}
@@ -238,7 +236,7 @@ function FilterBar(props) {
                         </Typography>
                         {filtersData.map((item, index) => {
                             return (
-                                <FormControl className={classes.formControl} key={validIdHelper(`${item.label}FormControl`)}>
+                                <FormControl className={item.value.length ? classes.formControl : classes.hidden} key={validIdHelper(`${item.label}FormControl`)}>
                                     {
                                         item.type === 'yesno' ?
                                             <>
@@ -304,7 +302,8 @@ function EnhancedTableHead(props) {
                             direction={orderBy === key ? order : 'asc'}
                             onClick={createSortHandler(key)}
                         >
-                            {prettifyString(key.substring(key.lastIndexOf('.') + 1, key.length))}
+                            {key}
+                            {/* {prettifyString(key.substring(key.lastIndexOf('.') + 1, key.length))} */}
                             {orderBy === key ? (
                                 <span className={classes.visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -328,7 +327,6 @@ EnhancedTableHead.propTypes = {
 
 
 function EnhancedTable(props) {
-    // console.log('EnhancedTable')
     const { tableData, classes, lookerContent } = props;
     const [order, setOrder] = React.useState(''); //'asc'
     const [orderBy, setOrderBy] = React.useState(''); //'lookerContent[0].queryBody.fields[0]'
@@ -361,7 +359,7 @@ function EnhancedTable(props) {
                                         key={validIdHelper(key + '-TableBody-TableCell-' + index)}
                                         id={validIdHelper(key + '-TableBody-TableCell-' + index)}
                                         //this has a bug
-                                        className={lookerContent[0].fieldType[key] === 'dimension' ? classes.indigoSecondary : classes.tealSecondary}
+                                        className={lookerContent[0].fieldType[key] === 'dimension' ? classes.greySecondary : classes.orangeSecondary}
                                         align="right">
                                         {item[key].rendered ? item[key].rendered : item[key].value}
                                         {/* {typeof item[key].value === 'number' ? Math.round(item[key].value * 100) / 100 : item[key].value}</TableCell> */}
@@ -377,10 +375,14 @@ function EnhancedTable(props) {
 
 // const lightBackground = grey[100];
 // const color = HUE[SHADE];
-const indigoPrimary = indigo[400];
-const indigoSecondary = indigo[100];
-const tealPrimary = teal[400];
-const tealSecondary = teal[100];
+// const indigoPrimary = indigo[400];
+// const indigoSecondary = indigo[100];
+// const tealPrimary = teal[400];
+// const tealSecondary = teal[100];
+const greyPrimary = grey[400];
+const greySecondary = grey[100];
+const orangePrimary = orange[400];
+const orangeSecondary = orange[100];
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -450,17 +452,29 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
-    indigoPrimary: {
-        backgroundColor: indigoPrimary
+    // indigoPrimary: {
+    //     backgroundColor: indigoPrimary
+    // },
+    // indigoSecondary: {
+    //     backgroundColor: indigoSecondary
+    // },
+    // tealPrimary: {
+    //     backgroundColor: tealPrimary
+    // },
+    // tealSecondary: {
+    //     backgroundColor: tealSecondary
+    // },
+    greyPrimary: {
+        backgroundColor: greyPrimary
     },
-    indigoSecondary: {
-        backgroundColor: indigoSecondary
+    greySecondary: {
+        backgroundColor: greySecondary
     },
-    tealPrimary: {
-        backgroundColor: tealPrimary
+    orangePrimary: {
+        backgroundColor: orangePrimary
     },
-    tealSecondary: {
-        backgroundColor: tealSecondary
+    orangeSecondary: {
+        backgroundColor: orangeSecondary
     },
     formControl: {
         margin: theme.spacing(1),
@@ -481,8 +495,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function QueryBuilder(props) {
-    console.log('QueryBuilder')
-    console.log('props', props)
 
     const classes = useStyles();
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;

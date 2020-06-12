@@ -19,26 +19,19 @@ import Icon from '@material-ui/core/Icon';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar'
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import { blue, green, orange, indigo, red } from '@material-ui/core/colors';
+import { blue, green, orange, indigo, red, grey } from '@material-ui/core/colors';
 
 import UserMenu from './Material/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
-import SplashPage from './Demo/SplashPage';
 import ReportBuilder from './Demo/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder';
-import ComingSoon from './Demo/ComingSoon';
 import Dashboard from './Demo/Dashboard';
-// import CohortBuilder from './Demo/CohortBuilder';
 import CustomVis from './Demo/CustomVis';
+import ComingSoon from './Demo/ComingSoon';
+import SplashPage from './Demo/SplashPage';
+// import CohortBuilder from './Demo/CohortBuilder';
 
-//helpers
-// import DashboardHelper from './Demo/Dashboard/Helper';
-// import CustomVisHelper from './Demo/CustomVis/Helper';
-// import ReportBuilderHelper from './Demo/ReportBuilder/Helper';
-// import QueryBuilderHelper from './Demo/QueryBuilder/Helper';
-//actions???
-// import customFilterAction from './Demo/ReportBuilder/Helper';
 
 
 const drawerWidth = 240;
@@ -159,24 +152,14 @@ const styles = theme => ({
 });
 
 const defaultTheme = createMuiTheme({})
-const ecommTheme = createMuiTheme({
-    palette: {
-        primary: {
-            main: indigo[500],
-        },
-        typography: {
-            fontFamily: "\"Roboto\", \"Helvetica\", \"Arial\", sans-serif",
-            fontSize: 14,
-        }
-    }
-})
 const atomTheme = createMuiTheme({
     palette: {
         primary: {
-            main: green[500],
+            main: grey[900],
         },
     },
 })
+
 const vidlyTheme = createMuiTheme({
     palette: {
         primary: {
@@ -185,15 +168,9 @@ const vidlyTheme = createMuiTheme({
     },
 })
 
-
-const ComponentContext = React.createContext({});
 class Home extends Component {
     constructor(props) {
         super(props);
-
-        // console.log('home constructor');
-        // console.log('props', props);
-
         this.state = {
             drawerOpen: true,
             drawerTabValue: 0,
@@ -202,19 +179,11 @@ class Home extends Component {
             activeUsecase: '',
             appLayout: ''
         }
-
-        // let propsForComponents = {};
-
-        // this.CustomVisHelper = CustomVisHelper.bind(this); //does this help???
     }
 
-    //material  methods for layout
     handleDrawerTabChange = (event, newValue) => {
-
         this.handleDrawerChange(true);
-
         if (newValue > 0) {
-
             const contenttype = $("#drawerTabs button")[newValue].getAttribute('contenttype')
             const sampleCodeFilePath = require(`../sample-code/${contenttype}.sample.txt`);
             fetch(sampleCodeFilePath)
@@ -243,19 +212,6 @@ class Home extends Component {
     };
 
     handleTabChange = newValue => {
-        // console.log('handleTabChange')
-        // console.log('newValue', newValue)
-        // console.log('this.state.activeTabValue', this.state.activeTabValue)
-        // console.log('this.state.drawerTabValue', this.state.drawerTabValue)
-
-        if (newValue === 0
-            && this.state.activeTabValue !== newValue
-            && this.state.drawerTabValue === 3) { //needs to be more robust
-            let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
-            this.setupLookerContent([UsecaseContent[usecaseFromUrl].demoComponents[this.state.drawerTabValue]]);
-
-        }
-
         this.setState({
             activeTabValue: newValue
         })
@@ -268,166 +224,17 @@ class Home extends Component {
     }
 
     componentDidMount(props) {
-        // console.log('Home componentDidMount');
-        // console.log('props', props);
-
         let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
         this.setState({
             activeUsecase: usecaseFromUrl,
             appLayout: UsecaseContent[usecaseFromUrl].layout || 'left-sidebar'
         }, () => {
-            // console.log('callback')
-            // console.log('this.state.activeUsecase', this.state.activeUsecase)
-            // console.log('this.state.appLayout', this.state.appLayout)
             LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
-            // this.setupLookerContent(UsecaseContent[usecaseFromUrl].demoComponents);
         })
     }
 
-    // think about refactor to make more efficient 
-    // promise.all()
-    async setupLookerContent(demoComponents) {
-        // console.log('setupLookerContent')
-        // console.log('demoComponents', demoComponents)
-
-        //delete old content
-        let embedContainerArray = []
-        if (demoComponents.length > 1) {
-            embedContainerArray = document.getElementsByClassName("embedContainer:visble");
-        } else {
-            embedContainerArray = document.getElementsByClassName("embedContainer")
-        }
-
-        for (let h = 0; h < embedContainerArray.length; h++) {
-            let thisEmbedContainerId = embedContainerArray[h].id
-            document.getElementById(thisEmbedContainerId).innerHTML = ''
-        }
-
-        let objForState = {}
-        // Elliot's implementation
-        /*for (let j = 0; j < demoComponents.length; j++) {
-            if (demoComponents[j].type === 'simple dashboard') {
-                for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
-                    let helperObj = await DashboardHelper(LookerEmbedSDK,
-                        demoComponents[j],
-                        demoComponents[j].lookerContent[i]
-                    );
-
-                    ComponentContext[validIdHelper(demoComponents[j].type)] = {
-                        ...ComponentContext[validIdHelper(demoComponents[j].type)],
-                        ...helperObj
-                    }
-                }
-            } else if (demoComponents[j].type === 'custom filter') {
-                for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
-                    //get inline query from usecase file & set user attribute dynamically
-                    let jsonQuery = demoComponents[j].lookerContent[i].inlineQuery;
-                    jsonQuery.filters = {
-                        [demoComponents[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand
-                    };
-                    demoComponents[j].lookerContent[i].inlineQuery = jsonQuery;
-                    let helperObj = await DashboardHelper(LookerEmbedSDK,
-                        demoComponents[j],
-                        demoComponents[j].lookerContent[i]
-                    );
-                    ComponentContext[validIdHelper(demoComponents[j].type)] = {
-                        ...ComponentContext[validIdHelper(demoComponents[j].type)],
-                        ...helperObj
-                    }
-                }
-            } else if (demoComponents[j].type === 'custom vis') {
-                for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
-                    //get inline query from usecase file & set user attribute dynamically
-                    let jsonQuery = demoComponents[j].lookerContent[i].inlineQuery;
-                    jsonQuery.filters = {
-                        [demoComponents[j].lookerContent[i].desiredFilterName]: this.props.lookerUser.user_attributes.brand
-                    };
-
-                    let helperObj = await CustomVisHelper(jsonQuery);
-                    ComponentContext[validIdHelper(demoComponents[j].type)] = {
-                        ...ComponentContext[validIdHelper(demoComponents[j].type)],
-                        ...helperObj
-                    }
-                }
-            } else if (demoComponents[j].type === 'report builder') {
-                for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
-                    let helperObj = await ReportBuilderHelper(LookerEmbedSDK,
-                        demoComponents[j],
-                        demoComponents[j].lookerContent[i]
-                    );
-                    ComponentContext[validIdHelper(demoComponents[j].type)] = {
-                        ...ComponentContext[validIdHelper(demoComponents[j].type)],
-                        ...helperObj
-                    }
-                }
-            } else if (demoComponents[j].type === 'query builder') {
-                console.log('inside query builder else if...')
-                console.log('demoComponents[j].lookerContent.length', demoComponents[j].lookerContent.length)
-                // console.log('demoComponents[j]', demoComponents[j]);                    
-                // this.queryBuilderAction(usecaseContent[j].lookerContent[i].queryBody, usecaseContent[j].lookerContent[i].resultFormat)
-
-                // for (let i = 0; i < demoComponents[j].lookerContent.length; i++) {
-                // this.queryBuilderAction(demoComponents[j].lookerContent[i].queryBody, demoComponents[j].lookerContent[i].resultFormat)
-
-                //     //helper isn't working here...
-                //     let helperObj = await QueryBuilderHelper(
-                //         demoComponents[j].lookerContent[i].queryBody,
-                //         demoComponents[j].lookerContent[i].resultFormat
-                //     );
-                //     console.log('helperObj', helperObj)
-                //     ComponentContext[validIdHelper(demoComponents[j].type)] = {
-                //         ...ComponentContext[validIdHelper(demoComponents[j].type)],
-                //         ...helperObj
-                //     }
-
-                //     // ComponentContext[validIdHelper(demoComponents[j].type)] = {}
-                // }
-                this.queryBuilderAction(demoComponents[j].lookerContent[0].queryBody, demoComponents[j].lookerContent[0].resultFormat)
-
-            }
-
-            else { console.log('catch all else') }
-
-            // console.log('ComponentContext', ComponentContext)
-        }*/
-
-
-        const demoComponentHelperMap = {
-            // "splash page": SplashPage,
-            // "simple dashboard": DashboardHelper,
-            // "custom filter": DashboardHelper,
-            // "custom vis": CustomVisHelper,
-            // "report builder": ReportBuilderHelper,
-            // "query builder": QueryBuilderHelper,
-            // "dashboard overview detail": Dashboard,
-            // "cohort builder": ComingSoon //CohortBuilder
-        }
-
-        //fabios imlementation
-        // let helperDataPromises = demoComponents.map(componentConfig => {
-        //     return (demoComponentHelperMap[componentConfig.type](
-        //         LookerEmbedSDK,
-        //         componentConfig)
-        //     )
-        // }
-        // )
-
-        // set state once after loop to reduce renders
-        //not working, or is it???
-        //cheat since context isn't working
-        // setTimeout(() => {
-        //     console.log('222 objForState', objForState)
-        //     console.log('222 ComponentContext', ComponentContext)
-        //     this.setState((prevState) => ({
-        //         ...prevState,
-        //         ...objForState
-        //     }), () => {
-        //         // console.log('setState callback', this.state)
-        //     })
-        // }, 1000)
-    }
-
-    splashPageDetail = async (sharedUrl, index) => {
+    //needs to be rebuilt
+    /*splashPageDetail = async (sharedUrl, index) => {
         // console.log('splashPageDetail')
         // console.log('sharedUrl', sharedUrl)
         // console.log('index', index)
@@ -468,8 +275,7 @@ class Home extends Component {
         this.setState({
             splashPageApiContent: splashPageApiContentCopy
         })
-
-    }
+    }*/
 
     /*runQueryDetail = async (sharedUrl, index) => {
         // console.log('runQueryDetail')
@@ -515,8 +321,7 @@ class Home extends Component {
      
     }*/
 
-    // drillClick(event) {
-    dashboardOverviewDetailAction(event) {
+    /*dashboardOverviewDetailAction(event) {
         // console.log('dashboardOverviewDetailAction')
         // console.log('event', event)
         if (event.label === 'Campaign Performance Dashboard') { //ecommm
@@ -545,51 +350,7 @@ class Home extends Component {
             this.handleTabChange(1) //can assume one for now
             return { cancel: true }
         }
-    }
-
-    queryBuilderAction = async (newQuery, resultFormat) => {
-        console.log('queryBuilderAction');
-        console.log('newQuery', newQuery);
-        console.log('resultFormat', resultFormat);
-
-
-        let queryBuilderApiContent = { ...this.state.queryBuilderApiContent }
-        queryBuilderApiContent.status = 'running';
-        this.setState({ queryBuilderApiContent })
-
-        let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-        let lookerCreateTaskResponseData = await lookerCreateTaskResposnse.json();
-        // console.log('lookerCreateTaskResponseData', lookerCreateTaskResponseData)
-
-        let taskInterval = setInterval(async () => {
-            let lookerCheckTaskResposnse = await fetch('/checkquerytask/' + lookerCreateTaskResponseData.queryTaskId, {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            let lookerCheckTaskResponseData = await lookerCheckTaskResposnse.json();
-            // console.log('lookerCheckTaskResponseData', lookerCheckTaskResponseData)
-            // console.log('lookerCheckTaskResponseData.queryResults.data', lookerCheckTaskResponseData.queryResults.data)
-
-            console.log('lookerCheckTaskResponseData.queryResults.status', lookerCheckTaskResponseData.queryResults.status)
-
-            if (lookerCheckTaskResponseData.queryResults.status === 'complete') {
-                console.log('inside ifff')
-                clearInterval(taskInterval)
-                this.setState({
-                    'queryBuilderApiContent': lookerCheckTaskResponseData.queryResults
-                })
-            }
-        }, 5000)
-    }//*/
+    }*/
 
     /*cohortBuilderAction = async (lookerContent) => {
         // console.log('cohortBuilderAction');
@@ -657,23 +418,16 @@ class Home extends Component {
     }*/
 
     render() {
-        // console.log('Home render');
-        // console.log('this.state', this.state);
-        // console.log('this.props', this.props);
-        // console.log('ComponentContext', ComponentContext);
 
         const demoComponentMap = {
-            // "splash page": SplashPage,
             "simple dashboard": Dashboard,
             "custom filter": Dashboard,
             "custom vis": CustomVis,
             "report builder": ReportBuilder,
-            "query builder": QueryBuilder,
-            // "dashboard overview detail": Dashboard,
-            // "cohort builder": ComingSoon //CohortBuilder
+            "query builder": QueryBuilder
         }
+
         const themeMap = {
-            "ecomm": ecommTheme,
             "atom": atomTheme,
             "vidly": vidlyTheme
         }
@@ -683,15 +437,9 @@ class Home extends Component {
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand } = this.props
 
         // console.log('activeUsecase', activeUsecase)
-        // console.log('themeMap[activeUsecase]', activeUsecase ? themeMap[activeUsecase] : '')
-
-        // console.log('drawerTabValue', drawerTabValue);
-        // console.log('sampleCode', sampleCode);
-        // console.log('activeUsecase', activeUsecase);
 
         return (
             <div className={classes.root}>
-
                 <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
                     <CssBaseline />
                     <AppBar
@@ -711,10 +459,12 @@ class Home extends Component {
                                 <MenuIcon />
                             </IconButton>
 
-                            {activeUsecase ? <Avatar alt="Icon" src={UsecaseContent[activeUsecase].vignette.logo} /> : ''}
+                            {activeUsecase ?
+                                <Avatar alt="Icon"
+                                    src={require(`../images/${activeUsecase}_logo.png`)}
+                                /> : ''}
 
                             <Typography variant="h6" noWrap className={`${classes.title} ${classes.ml12}`}>
-
                                 {activeUsecase ? UsecaseContent[activeUsecase].vignette.name : ''}
                             </Typography>
                             <UserMenu
@@ -780,21 +530,16 @@ class Home extends Component {
                                         className={classes.relative}
                                     >
                                         {DemoComponent ?
-                                            <ComponentContext.Provider value={ComponentContext[validIdHelper(item.type)]}>
-                                                <DemoComponent key={validIdHelper(`list-${item.type}`)}
-                                                    staticContent={item}
-                                                    handleDrawerTabChange={handleDrawerTabChange}
-                                                    // apiContent={this.state[_.camelCase(item.type) + 'ApiContent'] || []} //[]
-                                                    // action={typeof this[_.camelCase(item.type) + 'Action'] === 'function' ? this[_.camelCase(item.type) + 'Action'] : ''}
-                                                    // action={''}
-                                                    activeTabValue={activeTabValue}
-                                                    handleTabChange={handleTabChange}
-                                                    lookerUser={lookerUser}
-                                                    sampleCode={sampleCode}
-                                                    activeUsecase={activeUsecase}
-                                                    helperContent={ComponentContext[validIdHelper(item.type) || {}]}
-                                                    LookerEmbedSDK={LookerEmbedSDK} //hack for report builder content now
-                                                /></ComponentContext.Provider> :
+                                            <DemoComponent key={validIdHelper(`list-${item.type}`)}
+                                                staticContent={item}
+                                                handleDrawerTabChange={handleDrawerTabChange}
+                                                activeTabValue={activeTabValue}
+                                                handleTabChange={handleTabChange}
+                                                lookerUser={lookerUser}
+                                                sampleCode={sampleCode}
+                                                activeUsecase={activeUsecase}
+                                                LookerEmbedSDK={LookerEmbedSDK}
+                                            /> :
                                             item.label
                                         }
                                     </TabPanel>)
