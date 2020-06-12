@@ -143,6 +143,8 @@ export default function ReportBuilder(props) {
     const handleChange = (event, newValue) => {
         handleTabChange(newValue);
         setValue(newValue);
+
+        if (newValue === 0) performLookerApiCalls(lookerContent)
     };
 
     const handleToggle = (event, nodeIds) => {
@@ -224,19 +226,12 @@ export default function ReportBuilder(props) {
                 }
             });
             if (lookerResponse.status === 200) {
-                let reportBuilderApiContentCopy = apiContent;
-                reportBuilderApiContentCopy.looks.splice(matchingIndex, 1)
-                setApiContent(reportBuilderApiContentCopy)
+                performLookerApiCalls(lookerContent)
             }
         }
     }
 
-    useEffect(() => {
-        //change from drill click
-        if (activeTabValue > value) {
-            setValue(activeTabValue)
-        }
-
+    const performLookerApiCalls = function (lookerContent) {
         lookerContent.map(async lookerContent => {
             if (lookerContent.type === 'folder') {
                 let lookerResponse = await fetch('/fetchfolder/' + lookerContent.id, {
@@ -310,9 +305,18 @@ export default function ReportBuilder(props) {
                     })
             }
         })
+    }
 
+    useEffect(() => {
+        //change from drill click
+        if (activeTabValue > value) {
+            setValue(activeTabValue)
+        }
+
+        performLookerApiCalls(lookerContent)
 
     }, [lookerContent]);
+
 
     return (
         <div className={`${classes.root} demoComponent`}>
