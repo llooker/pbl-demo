@@ -29,13 +29,12 @@ import { blue, green, orange, indigo, red, grey } from '@material-ui/core/colors
 import UserMenu from './Material/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
-import ReportBuilder from './Demo/ReportBuilder';
-import QueryBuilder from './Demo/QueryBuilder';
+import SplashPage from './Demo/SplashPage';
 import Dashboard from './Demo/Dashboard/Dashboard';
 import CustomVis from './Demo/CustomVis/CustomVis';
+import ReportBuilder from './Demo/ReportBuilder/ReportBuilder';
+import QueryBuilder from './Demo/QueryBuilder/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
-import SplashPage from './Demo/SplashPage';
-// import CohortBuilder from './Demo/CohortBuilder';
 
 
 

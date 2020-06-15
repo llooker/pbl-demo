@@ -7,10 +7,10 @@ import {
 } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { ResponsiveCalendar } from '@nivo/calendar'
 import CodeFlyout from '../CodeFlyout';
 import useStyles from './styles.js';
-import { TabPanel, a11yProps } from './tabHelpers.js';
-import { ResponsiveCalendar } from '@nivo/calendar'
+import { TabPanel, a11yProps } from './helpers.js';
 const { validIdHelper } = require('../../../tools');
 
 function FilterBar(props) {
@@ -286,7 +286,6 @@ export default function CustomVis(props) {
                                                     :
                                                     <FilterBar {...props}
                                                         classes={classes}
-                                                        // action={filterData}
                                                         apiContent={apiContent}
                                                         fromDate={fromDate}
                                                         toDate={toDate}

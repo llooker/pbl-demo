@@ -5,9 +5,7 @@ import { Autocomplete } from '@material-ui/lab'
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
 import useStyles from './styles.js';
-// import '../../Home.css';
-import { TabPanel, a11yProps } from './tabHelpers.js';
-
+import { TabPanel, a11yProps } from './helpers.js';
 const { validIdHelper } = require('../../../tools');
 
 export default function Dashboard(props) {
