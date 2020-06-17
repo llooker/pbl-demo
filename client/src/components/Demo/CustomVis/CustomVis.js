@@ -3,17 +3,20 @@ import React, { useState, useEffect } from 'react';
 import {
     AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField,
     ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Divider, InputLabel, MenuItem,
-    FormControl, Select
+    FormControl, Select, Modal
 } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+// import SimpleModal from '../../Material/SimpleModal';
 import { ResponsiveCalendar } from '@nivo/calendar'
 import CodeFlyout from '../CodeFlyout';
 import useStyles from './styles.js';
-import { TabPanel, a11yProps } from './helpers.js';
+import { TabPanel, a11yProps, rand, getModalStyle } from './helpers.js';
 const { validIdHelper } = require('../../../tools');
 
 function FilterBar(props) {
+    // console.log('FilterBar')
+    // console.log('props', props)
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
         apiContent, fromDate, toDate, category, desiredField, handleFromDate, handleToDate, handleCategory, handleDesiredField } = props;
 
@@ -121,6 +124,37 @@ function FilterBar(props) {
     )
 }
 
+function SimpleModal(props) {
+    // console.log('SimpleModal')
+    // console.log('props', props)
+    const { open, handleModalClose, classes, getModalStyle } = props;
+    const [modalStyle] = React.useState(getModalStyle);
+    console.log('modalStyle', modalStyle)
+
+    const body = (
+        <div style={modalStyle} className={classes.paper}>
+            <h2 id="simple-modal-title">Text in a modal</h2>
+            <p id="simple-modal-description">
+                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+      </p>
+            {/* <SimpleModal /> */}
+        </div>
+    );
+
+    return (
+        <div>
+            <Modal
+                open={open}
+                onClose={handleModalClose}
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+            >
+                {body}
+            </Modal>
+        </div >
+    );
+}
+
 
 export default function CustomVis(props) {
 
@@ -139,6 +173,19 @@ export default function CustomVis(props) {
     const [category, setCategory] = useState('All')
     const [desiredField, setDesiredField] = useState(lookerContent ? lookerContent[0].desiredFields[0] : '')
     const [apiContent, setApiContent] = useState([]);
+    const [open, setOpen] = React.useState(false);
+
+    const handleModalOpen = () => {
+        console.log('handleModallOpen')
+        console.log('000 open', open)
+        setOpen(true);
+        console.log('111 open', open)
+    };
+
+    const handleModalClose = () => {
+        console.log('handleModalClose')
+        setOpen(false);
+    };
 
     const handleChange = (event, newValue) => {
         handleTabChange(0);
@@ -215,6 +262,9 @@ export default function CustomVis(props) {
                 }
             })
             let lookerResponseData = await lookerResponse.json();
+
+            // console.log('lookerResponseData', lookerResponseData);
+
             //filter for null dates
             lookerResponseData.queryResults = lookerResponseData.queryResults.filter((queryResult) => {
                 return queryResult[inlineQuery.fields[0]]
@@ -234,8 +284,17 @@ export default function CustomVis(props) {
         })
     }, [lookerContent])
 
-    let redToBlueColorScale = ['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']
-    let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B']
+    let redToBlueColorScale = ['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002'];
+    let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B'];
+
+    // const body = (
+    //     <div style={modalStyle} className={classes.paper}>
+    //       <h2 id="simple-modal-title">Text in a modal</h2>
+    //       <p id="simple-modal-description">
+    //         Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+    //       </p>
+    //     </div>
+    //   );
 
     return (
         <div className={`${classes.root} demoComponent`}>
@@ -337,6 +396,10 @@ export default function CustomVis(props) {
                                                                         ]}
                                                                         height={700}
                                                                         maxHeight={500}
+                                                                        onClick={lookerUser.permission_level !== 'basic' ? (day, event) => {
+                                                                            handleModalOpen()
+                                                                            event.stopPropagation()
+                                                                        } : undefined}
                                                                     />
                                                                 </Grid>
                                                             </> :
@@ -348,10 +411,17 @@ export default function CustomVis(props) {
                                     </Grid>
                                 </TabPanel>
                             ))}
+
                         </Box>
                     </Box >
                 </div>
             </Grid >
+            {open ?
+                <SimpleModal {...props}
+                    classes={classes}
+                    open={open}
+                    handleModalClose={handleModalClose}
+                    getModalStyle={getModalStyle} /> : ''}
         </div >
     )
 }

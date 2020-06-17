@@ -14,7 +14,7 @@ function TreeSideBar(props) {
 
 
 
-    const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent } = props
+    const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser } = props
     const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
     let treeCounter = 0;
 
@@ -59,7 +59,9 @@ function TreeSideBar(props) {
                                         selected={selected === treeCounter}
                                         className={selected === treeCounter ? `Mui-selected innerTreeItem` : `innerTreeItem`}
                                         contentid={item.id}
-                                        label={item.folder_id === sharedFolderId && key === 'looks' ?
+                                        label={item.folder_id === sharedFolderId &&
+                                            key === 'looks' &&
+                                            lookerUser.permission_level === 'premium' ?
 
                                             < div
                                                 id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
@@ -90,7 +92,7 @@ function TreeSideBar(props) {
                                                     Explore
                                                                                             </Button>
                                             </div>
-                                            : key === 'looks' ?
+                                            : key === 'looks' && lookerUser.permission_level === 'premium' ?
                                                 <div
                                                     id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                                                     key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
@@ -170,8 +172,11 @@ export default function ReportBuilder(props) {
     const [value, setValue] = useState(0);
     const { staticContent, staticContent: { lookerContent }, staticContent: { type }, LookerEmbedSDK, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
-    const tabContent = [...lookerContent, sampleCodeTab];
     const demoComponentType = type || 'sample code';
+    // const tabContent = [...lookerContent, sampleCodeTab]
+    const tabContent = lookerUser.permission_level === 'premium' ?
+        [...lookerContent, sampleCodeTab] :
+        [lookerContent[0], sampleCodeTab];
 
     const [iFrameExists, setIFrame] = useState(0);
     const [apiContent, setApiContent] = useState([]);

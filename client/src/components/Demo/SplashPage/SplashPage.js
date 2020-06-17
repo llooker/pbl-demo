@@ -80,10 +80,7 @@ export default function SplashPage(props) {
         }
 
         performLookerApiCalls(lookerContent[0])
-        console.log('apiContent.length', apiContent.length)
-
-
-
+        // console.log('apiContent.length', apiContent.length)
 
     }, [lookerContent]);
 
@@ -140,7 +137,7 @@ export default function SplashPage(props) {
                                             </Grid>
                                             :
                                             <React.Fragment
-                                                key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
+                                                key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
                                                 <Grid item sm={6}>
 
                                                     <Typography variant="h5" component="h2" className={classes.gridTitle}>
@@ -152,14 +149,20 @@ export default function SplashPage(props) {
                                                     </Typography>
                                                 </Grid>
                                                 {tabContentItem.map((lookerContent, innerIndex) => (
-                                                    <>
+                                                    <React.Fragment
+                                                        key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}>
                                                         {innerIndex === 1 ? <Grid item sm={12}><Divider className={`${classes.mt30} ${classes.mb30}`} /></Grid> : ''}
-                                                        <Grid item sm={lookerContent.gridWidth}>
+                                                        <Grid
+                                                            item
+                                                            sm={parseInt(lookerContent.gridWidth)}
+                                                            id={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
+                                                            key={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
+                                                        >
                                                             <div
                                                                 className={`embedContainer ${classes.maxHeight200} ${classes.textCenter} ${classes.cursor}`}
                                                                 id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
                                                                 key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
-                                                                onClick={innerIndex > 0 ? (e) => handleDrawerTabChange(e, innerIndex) : ''}
+                                                                onClick={innerIndex > 0 ? (e) => handleDrawerTabChange(e, innerIndex) : undefined}
                                                             >
 
                                                                 <Typography variant="h5" component="h5" className={classes.gridTitle} align="center">
@@ -168,8 +171,7 @@ export default function SplashPage(props) {
                                                                 <br />
                                                             </div>
                                                         </Grid>
-                                                    </>
-
+                                                    </React.Fragment>
                                                 )
                                                 )}
                                             </React.Fragment>
