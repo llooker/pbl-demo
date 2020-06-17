@@ -29,6 +29,7 @@ export default function UserMenu(props) {
     const [selectedBrand, setSelectedBrand] = React.useState(lookerUser.user_attributes.brand || '');
 
     const handleClick = (event) => {
+        console.log('handleClick')
         setAnchorEl(event.currentTarget);
     };
 
@@ -36,7 +37,7 @@ export default function UserMenu(props) {
         setAnchorEl(null);
         if (newValue == null) {
             onLogoutSuccess({})
-        } else if (newValue === 'good' || newValue === 'better' || newValue === 'best') {
+        } else if (newValue === 'basic' || newValue === 'advanced' || newValue === 'premium') {
             switchLookerUser(newValue)
         } else if (typeof newValue === 'string') {
             switchUserAttributeBrand(newValue)
@@ -65,10 +66,10 @@ export default function UserMenu(props) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <MenuItem>Select User Level</MenuItem>
-                {lookerUser.permission_level === 'good' ? '' : <MenuItem onClick={() => handleClose('good')}>Good</MenuItem>}
-                {lookerUser.permission_level === 'better' ? '' : <MenuItem onClick={() => handleClose('better')}>Better</MenuItem>}
-                {lookerUser.permission_level === 'best' ? '' : <MenuItem onClick={() => handleClose('best')}>Best</MenuItem>}
+                <MenuItem autoFocus={false}>Select User Level</MenuItem>
+                {lookerUser.permission_level === 'basic' ? '' : <MenuItem autoFocus={false} onClick={() => handleClose('basic')}>Basic</MenuItem>}
+                {lookerUser.permission_level === 'advanced' ? '' : <MenuItem autoFocus={false} onClick={() => handleClose('advanced')}>Advanced</MenuItem>}
+                {lookerUser.permission_level === 'premium' ? '' : <MenuItem autoFocus={false} onClick={() => handleClose('premium')}>Premium</MenuItem>}
                 <Divider className={classes.divider} />
                 <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
                 <Divider className={classes.divider} />
@@ -81,9 +82,13 @@ export default function UserMenu(props) {
                         getOptionLabel={(option) => option.label}
                         style={{ width: 300 }}
                         onChange={(event) => handleClose(event.target.innerText || '')}
-                        renderInput={(params) => <TextField {...params} label="Change merchant brand" variant="outlined" />}
+                        renderInput={(params) => <TextField {...params}
+                            label="Change merchant brand"
+                            variant="outlined"
+                        />}
                         loadingText="Loading..."
                         disableautofocus="true"
+                        onKeyDown={(event) => event.stopPropagation()}
                     />
                 </MenuItem>
             </Menu>

@@ -257,3 +257,26 @@ module.exports.getLook = async (req, res, next) => {
         res.status(404).send(errorObj);
     }
 }
+
+module.exports.getThumbnail = async (req, res, next) => {
+    // console.log('lookerController getThumbnail');
+    const { params } = req;
+    // console.log('params', params)
+
+    try {
+        // console.log('await sdk.ok(sdk.vector_thumbnail.toString())', await sdk.ok(sdk.vector_thumbnail.toString()))
+        let thumbnail = await sdk.ok(sdk.get(`/vector_thumbnail/${params.type}/${params.id}`));
+        // console.log('thumbnail', thumbnail)
+        let resObj = {
+            svg: thumbnail
+        };
+        res.status(200).send(resObj);
+
+    } catch (err) {
+        // console.log('catch')
+        // console.log('err', err)
+        let errorObj = {
+            errorMessage: 'Not working!'
+        }
+    }
+}

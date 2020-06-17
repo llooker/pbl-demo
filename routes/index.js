@@ -31,5 +31,6 @@ router.get('/checkquerytask/:task_id', lookerCtrl.checkQueryTask)
 router.get('/deletelook/:look_id', lookerCtrl.deleteLook)
 
 router.get('/getlook/:look_id', lookerCtrl.getLook);
+router.get('/getthumbnail/:type/:id', lookerCtrl.getThumbnail);
 
 module.exports = router

@@ -1,5 +1,5 @@
 {
-    "good": [
+    "basic": [
         "access_data",
         "see_looks",
         "see_user_dashboards",
@@ -16,7 +16,7 @@
         "send_to_integration",
         "create_alerts"
     ],
-    "better": [
+    "advanced": [
         "access_data",
         "see_looks",
         "see_user_dashboards",
@@ -35,7 +35,7 @@
         "see_drill_overlay",
         "download_with_limit"
     ],
-    "best": [
+    "premium": [
         "access_data",
         "see_looks",
         "see_user_dashboards",

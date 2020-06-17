@@ -184,9 +184,15 @@ class App extends React.Component {
           external_user_id: userProfile.googleId,
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
-          permissions: LookerUserPermissions[lookerUser.permission_level] || LookerUserPermissions['good'], //assume good initially,
-          permission_level: lookerUser.permission_level || 'good',
-          user_attributes: { ...lookerUser.user_attributes || 'Calvin Klein' }
+          permissions: LookerUserPermissions[lookerUser.permission_level] || LookerUserPermissions['basic'],
+          permission_level: lookerUser.permission_level || 'basic',
+          user_attributes: {
+            ...lookerUser.user_attributes || {
+              "locale": "en_US",
+              "country": "USA",
+              "brand": "Calvin Klein"
+            }
+          }
         },
         lookerHost
       }), () => {
@@ -212,7 +218,8 @@ class App extends React.Component {
         }
       })
       this.setState({
-        userProfile: {} //for now
+        userProfile: {},
+        lookerUser: { ...InitialLookerUser }
       })
     } else {
       // console.log('inside else')
@@ -225,9 +232,12 @@ class App extends React.Component {
         body: JSON.stringify({ userProfile, lookerUser: this.state.lookerUser })
       })
       const sessionResponseData = await sessionData.json();
+      console.log('sessionResponseData', sessionResponseData)
       const { customizations } = sessionResponseData.session
       const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
       const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
+
+      console.log('lookerUser', lookerUser);
 
       this.setState(prevState => ({
         userProfile,
@@ -237,12 +247,19 @@ class App extends React.Component {
           external_user_id: userProfile.googleId,
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
-          permissions: LookerUserPermissions[lookerUser.permission_level] || LookerUserPermissions['good'], //assume good initially,
-          permission_level: lookerUser.permission_level || 'good'
+          permissions: LookerUserPermissions[lookerUser.permission_level] || LookerUserPermissions['basic'], //assume good initially,
+          permission_level: lookerUser.permission_level || 'basic',
+          user_attributes: {
+            ...lookerUser.user_attributes || {
+              "locale": "en_US",
+              "country": "USA",
+              "brand": "Calvin Klein"
+            }
+          }
         },
         lookerHost
       }), () => {
-        // console.log('applySession callback this.state.lookerUser', this.state.lookerUser)
+        console.log('applySession callback this.state.lookerUser', this.state.lookerUser)
         this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
       });
     }
@@ -378,8 +395,8 @@ class App extends React.Component {
   }
 
   switchUserAttributeBrand = (newAttribute) => {
-    console.log('switchUserAttributeBrand')
-    console.log('newAttribute', newAttribute)
+    // console.log('switchUserAttributeBrand')
+    // console.log('newAttribute', newAttribute)
 
     let userAttributeCopy = { ...this.state.lookerUser.user_attributes }
     userAttributeCopy.brand = newAttribute;
@@ -415,6 +432,7 @@ class App extends React.Component {
     // console.log('activeCustomization', activeCustomization);
 
     let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
+    // console.log('usecaseFromUrl', usecaseFromUrl)
     if (!usecaseFromUrl.length) {     //no usecase
       window.location.href = window.location.href + 'atom'
     } else if (!UsecaseContent.hasOwnProperty(usecaseFromUrl)) {     //usecase param isn't in JSON file

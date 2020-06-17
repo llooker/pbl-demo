@@ -1,107 +1,14 @@
-import _ from 'lodash'
 import $ from 'jquery';
+import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Card from '@material-ui/core/Card';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField, Divider } from '@material-ui/core'
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import '../Home.css'
-import CodeFlyout from './CodeFlyout';
+import CodeFlyout from '../CodeFlyout';
+import useStyles from './styles.js';
+import { TabPanel, a11yProps } from './helpers.js';
+const { validIdHelper } = require('../../../tools');
 
-const { validIdHelper } = require('../../tools');
 
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <Typography
-            component="div"
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            <Box p={3}>{children}</Box>
-        </Typography>
-    );
-}
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        backgroundColor: theme.palette.background.paper,
-    },
-    flexCentered: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    hidden: {
-        visibility: 'hidden',
-        position: 'absolute', //hack for obscuring other elements within Box
-        zIndex: -1
-    },
-    tabs: {
-        backgroundColor: 'white',
-        color: '#6c757d'
-    },
-    dNone: {
-        display: 'none'
-    },
-    dBlock: {
-        display: 'block'
-    },
-    tree: {
-        height: 240,
-        flexGrow: 1,
-        maxWidth: 400,
-    },
-    icon: {
-        marginRight: 12,
-        fontSize: '1rem',
-        overflow: 'visible'
-    },
-    mt12: {
-        marginTop: 12
-    },
-    w100: {
-        width: '100%'
-    },
-    mlAuto: {
-        marginLeft: 'auto'
-    },
-    skeleton: {
-        minWidth: 275,
-        minHeight: 600,
-    },
-    card: {
-        minWidth: 275,
-        minHeight: 800,
-    },
-}));
 
 export default function SplashPage(props) {
 
@@ -109,10 +16,11 @@ export default function SplashPage(props) {
     // console.log('props', props)
 
     const classes = useStyles();
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode, handleDrawerTabChange } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab];
     const demoComponentType = type || 'sample code';
+
 
     const [value, setValue] = useState(0);
     const [iFrameExists, setIFrame] = useState(1);
@@ -124,20 +32,23 @@ export default function SplashPage(props) {
         setValue(newValue);
     };
 
-    useEffect(() => {
-        //change from drill click
-        if (activeTabValue > value) {
-            setValue(activeTabValue)
-        }
 
-        lookerContent.map(lookerContent => {
+    const performLookerApiCalls = function (lookerContent) {
+
+        // console.log('performLookerApiCalls')
+        // console.log('lookerContent', lookerContent)
+
+
+        let apiContentCopy = [...apiContent];
+
+        lookerContent.map(async lookerContent => {
             if (lookerContent.type === 'query') {
                 // console.log('inside iff for query');
             } else if (lookerContent.type === 'look') {
                 // console.log('inside else iff for look');
                 LookerEmbedSDK.createLookWithId(lookerContent.id)
                     .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
-                    .withClassName('iframe')
+                    // .withClassName('iframe')
                     .withClassName('look')
                     .withClassName(lookerContent.id)
                     .build()
@@ -145,8 +56,33 @@ export default function SplashPage(props) {
                     .catch((error) => {
                         console.error('Connection error', error)
                     })
+            } else if (lookerContent.type === 'thumbnail') {
+                let lookerResponse = await fetch(`/getthumbnail/${lookerContent.resourceType}/${lookerContent.id}`, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+
+                let lookerResponseData = await lookerResponse.json();
+                $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).append(lookerResponseData.svg)
+                // setApiContent([...apiContent, lookerResponseData.svg])
             }
         })
+
+    }
+
+    useEffect(() => {
+        //change from drill click
+        if (activeTabValue > value) {
+            setValue(activeTabValue)
+        }
+
+        performLookerApiCalls(lookerContent[0])
+        console.log('apiContent.length', apiContent.length)
+
+
 
 
     }, [lookerContent]);
@@ -177,7 +113,8 @@ export default function SplashPage(props) {
                                 {tabContent.map((item, index) => (
                                     <Tab
                                         key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
-                                        label={item.label}
+                                        // label="At a glance"
+                                        label={item.label ? item.label : 'At a glance'}
                                         className={item.type === 'sample code' ? `${classes.mlAuto}` : ``}
                                         {...a11yProps(index)} />
                                 ))}
@@ -204,7 +141,7 @@ export default function SplashPage(props) {
                                             :
                                             <React.Fragment
                                                 key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
-                                                <Grid item sm={4}>
+                                                <Grid item sm={6}>
 
                                                     <Typography variant="h5" component="h2" className={classes.gridTitle}>
                                                         Welcome {lookerUser.user_attributes.brand}!<br />
@@ -214,14 +151,27 @@ export default function SplashPage(props) {
                                                         {staticContent.description}<br />
                                                     </Typography>
                                                 </Grid>
-                                                <Grid item sm={6}>
-                                                    <div
-                                                        className="embedContainer"
-                                                        id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                                                        key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                                                    >
-                                                    </div>
-                                                </Grid>
+                                                {tabContentItem.map((lookerContent, innerIndex) => (
+                                                    <>
+                                                        {innerIndex === 1 ? <Grid item sm={12}><Divider className={`${classes.mt30} ${classes.mb30}`} /></Grid> : ''}
+                                                        <Grid item sm={lookerContent.gridWidth}>
+                                                            <div
+                                                                className={`embedContainer ${classes.maxHeight200} ${classes.textCenter} ${classes.cursor}`}
+                                                                id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                                                                key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                                                                onClick={innerIndex > 0 ? (e) => handleDrawerTabChange(e, innerIndex) : ''}
+                                                            >
+
+                                                                <Typography variant="h5" component="h5" className={classes.gridTitle} align="center">
+                                                                    {lookerContent.label}<br />
+                                                                </Typography>
+                                                                <br />
+                                                            </div>
+                                                        </Grid>
+                                                    </>
+
+                                                )
+                                                )}
                                             </React.Fragment>
                                         }
                                     </Grid>

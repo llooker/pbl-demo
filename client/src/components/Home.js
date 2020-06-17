@@ -20,6 +20,7 @@ import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar'
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { blue, green, orange, indigo, red, grey } from '@material-ui/core/colors';
+import './Home.css'; //needed for iframe height
 
 //fabio suggestion 6/12
 //look at dynamic importing + code splitting to further optimize load
@@ -29,7 +30,7 @@ import { blue, green, orange, indigo, red, grey } from '@material-ui/core/colors
 import UserMenu from './Material/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
-import SplashPage from './Demo/SplashPage';
+import SplashPage from './Demo/SplashPage/SplashPage';
 import Dashboard from './Demo/Dashboard/Dashboard';
 import CustomVis from './Demo/CustomVis/CustomVis';
 import ReportBuilder from './Demo/ReportBuilder/ReportBuilder';
