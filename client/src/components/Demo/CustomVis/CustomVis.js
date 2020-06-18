@@ -175,11 +175,30 @@ export default function CustomVis(props) {
     const [apiContent, setApiContent] = useState([]);
     const [open, setOpen] = React.useState(false);
 
-    const handleModalOpen = () => {
+    const handleModalOpen = ({ day }) => {
         console.log('handleModallOpen')
         console.log('000 open', open)
+        console.log('000 day', day)
+        console.log('000 apiContent', apiContent)
+
+        /*let modalData = _.filter(apiContent.queryResults, (row) => {
+            return (row[apiContent.inlineQuery.fields[0]] >= day
+                && row[apiContent.inlineQuery.fields[0]] <= day)
+        })
+        //converting modalData to desired format for vis
+
+        console.log('0000 modalData', modalData)
+
+        modalData = modalData.map(item => {
+            return {
+                'day': item[apiContent.inlineQuery.fields[0]],
+                'category': item[apiContent.inlineQuery.fields[1]],
+                'value': item[desiredField]
+            }
+        })*/
+
+
         setOpen(true);
-        console.log('111 open', open)
     };
 
     const handleModalClose = () => {
@@ -208,19 +227,21 @@ export default function CustomVis(props) {
     let filterData = [];
     if (apiContent.queryResults) {
         //filtering for fromDate, toDate and category
-        filterData = _.filter(apiContent.queryResults, (row) => {
-            return (row[apiContent.inlineQuery.fields[0]] > fromDate
-                && row[apiContent.inlineQuery.fields[0]] < toDate
-                && (category === 'All' ? true : row[apiContent.inlineQuery.fields[1]] === category))
+        filterData = _.filter(apiContent.queryResults.data, (row) => {
+            // console.log('row', row)
+            return (row[apiContent.inlineQuery.fields[0]].value > fromDate
+                && row[apiContent.inlineQuery.fields[0]].value < toDate
+                && (category === 'All' ? true : row[apiContent.inlineQuery.fields[1]].value === category))
         })
         //converting filterDAta to desired format for vis
         filterData = filterData.map(item => {
             return {
-                'day': item[apiContent.inlineQuery.fields[0]],
-                'category': item[apiContent.inlineQuery.fields[1]],
-                'value': item[desiredField]
+                'day': item[apiContent.inlineQuery.fields[0]].value,
+                'category': item[apiContent.inlineQuery.fields[1]].value,
+                'value': item[desiredField].value
             }
         })
+
         //special exception for category all
         //need to reduce array by day across categories
         //destructuing in reduce of value would not work for dynamic var
@@ -254,7 +275,14 @@ export default function CustomVis(props) {
             };
 
             let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
-            let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
+
+            //20200618 w/ russ
+            //intial call needs to be json_detail then mapped to format required by nivo
+            //onclick, within json_detail look at data, then look at measure default for url
+            //construct query based on url, then render as table
+
+            // let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/' + lookerContent.resultFormat, {
+            let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
@@ -262,39 +290,26 @@ export default function CustomVis(props) {
                 }
             })
             let lookerResponseData = await lookerResponse.json();
+            lookerResponseData.queryResults.data = lookerResponseData.queryResults.data.filter(item => {
+                return item[inlineQuery.fields[0]].value
+            })
 
-            // console.log('lookerResponseData', lookerResponseData);
-
-            //filter for null dates
-            lookerResponseData.queryResults = lookerResponseData.queryResults.filter((queryResult) => {
-                return queryResult[inlineQuery.fields[0]]
-            });
-            //create unique category array
             let uniqueCategories = ['All'];
-            for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
-                if (uniqueCategories.indexOf(lookerResponseData.queryResults[i][inlineQuery.fields[1]]) === -1) {
-                    uniqueCategories.push(lookerResponseData.queryResults[i][inlineQuery.fields[1]])
+            for (let i = 0; i < lookerResponseData.queryResults.data.length; i++) {
+                if (uniqueCategories.indexOf(lookerResponseData.queryResults.data[i][inlineQuery.fields[1]].value) === -1) {
+                    uniqueCategories.push(lookerResponseData.queryResults.data[i][inlineQuery.fields[1]].value)
                 }
             }
-            lookerResponseData.uniqueCategories = uniqueCategories;
             lookerResponseData.inlineQuery = inlineQuery;
+            lookerResponseData.uniqueCategories = uniqueCategories;
             setApiContent(lookerResponseData)
-            setFromDate(lookerResponseData.queryResults[lookerResponseData.queryResults.length - 1][lookerResponseData.inlineQuery.fields[0]]);
-            setToDate(lookerResponseData.queryResults[0][lookerResponseData.inlineQuery.fields[0]]);
+            setFromDate(lookerResponseData.queryResults.data[lookerResponseData.queryResults.data.length - 1][lookerResponseData.inlineQuery.fields[0]].value);
+            setToDate(lookerResponseData.queryResults.data[0][lookerResponseData.inlineQuery.fields[0]].value);
         })
     }, [lookerContent])
 
     let redToBlueColorScale = ['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002'];
     let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B'];
-
-    // const body = (
-    //     <div style={modalStyle} className={classes.paper}>
-    //       <h2 id="simple-modal-title">Text in a modal</h2>
-    //       <p id="simple-modal-description">
-    //         Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-    //       </p>
-    //     </div>
-    //   );
 
     return (
         <div className={`${classes.root} demoComponent`}>
@@ -368,7 +383,7 @@ export default function CustomVis(props) {
                                                             </Card>
                                                         </Grid>
 
-                                                        : apiContent.queryResults && apiContent.queryResults.length ?
+                                                        : apiContent.queryResults.data && apiContent.queryResults.data.length ?
                                                             <>
                                                                 <Grid item sm={12} className={classes.height800}>
                                                                     <h1>{desiredField.substring(desiredField.lastIndexOf(".") + 1, desiredField.length).split("_").map(item => item.charAt(0).toUpperCase() + item.substring(1)).join(" ")}</h1>
@@ -397,7 +412,7 @@ export default function CustomVis(props) {
                                                                         height={700}
                                                                         maxHeight={500}
                                                                         onClick={lookerUser.permission_level !== 'basic' ? (day, event) => {
-                                                                            handleModalOpen()
+                                                                            handleModalOpen(day)
                                                                             event.stopPropagation()
                                                                         } : undefined}
                                                                     />

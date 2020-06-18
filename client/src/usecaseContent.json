@@ -130,7 +130,8 @@
                         "desiredFields": [
                             "order_items.order_count",
                             "order_items.total_sale_price"
-                        ]
+                        ],
+                        "resultFormat": "json_detail"
                     }
                 ]
             },

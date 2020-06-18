@@ -232,12 +232,9 @@ class App extends React.Component {
         body: JSON.stringify({ userProfile, lookerUser: this.state.lookerUser })
       })
       const sessionResponseData = await sessionData.json();
-      console.log('sessionResponseData', sessionResponseData)
       const { customizations } = sessionResponseData.session
       const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
       const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-
-      console.log('lookerUser', lookerUser);
 
       this.setState(prevState => ({
         userProfile,

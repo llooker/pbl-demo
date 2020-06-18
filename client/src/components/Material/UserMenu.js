@@ -67,9 +67,9 @@ export default function UserMenu(props) {
                 onClose={handleClose}
             >
                 <MenuItem autoFocus={false}>Select User Level</MenuItem>
-                {lookerUser.permission_level === 'basic' ? '' : <MenuItem autoFocus={false} onClick={() => handleClose('basic')}>Basic</MenuItem>}
-                {lookerUser.permission_level === 'advanced' ? '' : <MenuItem autoFocus={false} onClick={() => handleClose('advanced')}>Advanced</MenuItem>}
-                {lookerUser.permission_level === 'premium' ? '' : <MenuItem autoFocus={false} onClick={() => handleClose('premium')}>Premium</MenuItem>}
+                <MenuItem autoFocus={false} onClick={() => handleClose('basic')}>Basic</MenuItem>
+                <MenuItem autoFocus={false} onClick={() => handleClose('advanced')}>Advanced</MenuItem>
+                <MenuItem autoFocus={false} onClick={() => handleClose('premium')}>Premium</MenuItem>
                 <Divider className={classes.divider} />
                 <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
                 <Divider className={classes.divider} />
