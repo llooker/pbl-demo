@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         position: 'absolute',
         width: 800,
-        maxHeight: 400,
+        maxHeight: 450,
         overflow: 'scroll',
         backgroundColor: theme.palette.background.paper,
         border: '2px solid #000',
@@ -44,13 +44,13 @@ function rand() {
 }
 
 function getModalStyle() {
-    const top = 64; //+ rand();
-    const left = 50; // + rand();
+    const top = 50 //+ rand();
+    const left = 50 //+ rand();
 
     return {
-        top: top,
+        top: `${top}%`,
         left: `${left}%`,
-        transform: `translateX(-${left}%)`,
+        transform: `translate(-${top}%, -${left}%)`,
     };
 }
 
@@ -84,8 +84,6 @@ export default function ModalTable(props) {
                                             id={validIdHelper(key + '-TableHead-TableCell-' + index)}>
                                             {prettifyString(key.substring(key.lastIndexOf('.') + 1, key.length))}</TableCell>
 
-                                        //<TableCell>{key}</TableCell>
-                                        // console.log('key', key)
 
                                     ))}
                                 </TableRow>
@@ -108,8 +106,10 @@ export default function ModalTable(props) {
                                                                 modalContent.body[index][key].value ?
                                                                     modalContent.body[index][key].value :
                                                                     typeof modalContent.body[index][key] === 'number' ?
-                                                                        (Math.round(modalContent.body[index][key] * 100) / 100).toLocaleString() :
-                                                                        modalContent.body[index][key].toLocaleString() :
+                                                                        (Math.round(modalContent.body[index][key] * 100) / 100)//.toLocaleString()
+                                                                        :
+                                                                        modalContent.body[index][key] //.toLocaleString() 
+                                                            :
                                                             ''
                                                     }
                                                 </TableCell>

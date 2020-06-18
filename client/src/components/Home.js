@@ -443,7 +443,7 @@ class Home extends Component {
 
         const { drawerTabValue, drawerOpen, activeTabValue, sampleCode, activeUsecase } = this.state;
         const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
-        const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand } = this.props
+        const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost } = this.props
 
         // console.log('activeUsecase', activeUsecase)
 
@@ -548,6 +548,7 @@ class Home extends Component {
                                                 sampleCode={sampleCode}
                                                 activeUsecase={activeUsecase}
                                                 LookerEmbedSDK={LookerEmbedSDK}
+                                                lookerHost={lookerHost}
                                             /> :
                                             "Coming Soon"
                                         }

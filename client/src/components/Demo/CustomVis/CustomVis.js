@@ -7,11 +7,11 @@ import {
 } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-// import SimpleModal from '../../Material/SimpleModal';
+import ModalTable from '../../Material/ModalTable';
 import { ResponsiveCalendar } from '@nivo/calendar'
 import CodeFlyout from '../CodeFlyout';
 import useStyles from './styles.js';
-import { TabPanel, a11yProps, rand, getModalStyle } from './helpers.js';
+import { TabPanel, a11yProps } from './helpers.js';
 const { validIdHelper } = require('../../../tools');
 
 function FilterBar(props) {
@@ -124,37 +124,6 @@ function FilterBar(props) {
     )
 }
 
-function SimpleModal(props) {
-    // console.log('SimpleModal')
-    // console.log('props', props)
-    const { open, handleModalClose, classes, getModalStyle } = props;
-    const [modalStyle] = React.useState(getModalStyle);
-    console.log('modalStyle', modalStyle)
-
-    const body = (
-        <div style={modalStyle} className={classes.paper}>
-            <h2 id="simple-modal-title">Text in a modal</h2>
-            <p id="simple-modal-description">
-                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </p>
-            {/* <SimpleModal /> */}
-        </div>
-    );
-
-    return (
-        <div>
-            <Modal
-                open={open}
-                onClose={handleModalClose}
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
-            >
-                {body}
-            </Modal>
-        </div >
-    );
-}
-
 
 export default function CustomVis(props) {
 
@@ -162,7 +131,7 @@ export default function CustomVis(props) {
     // console.log('props', props)
 
     const classes = useStyles();
-    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
+    const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, sampleCode, lookerHost } = props;
     const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
     const tabContent = [...lookerContent, sampleCodeTab]
     const demoComponentType = type || 'sample code';
@@ -174,35 +143,65 @@ export default function CustomVis(props) {
     const [desiredField, setDesiredField] = useState(lookerContent ? lookerContent[0].desiredFields[0] : '')
     const [apiContent, setApiContent] = useState([]);
     const [open, setOpen] = React.useState(false);
+    const [modalContent, setModalContent] = useState({});
 
-    const handleModalOpen = ({ day }) => {
-        console.log('handleModallOpen')
-        console.log('000 open', open)
-        console.log('000 day', day)
-        console.log('000 apiContent', apiContent)
 
-        /*let modalData = _.filter(apiContent.queryResults, (row) => {
-            return (row[apiContent.inlineQuery.fields[0]] >= day
-                && row[apiContent.inlineQuery.fields[0]] <= day)
-        })
-        //converting modalData to desired format for vis
+    const handleModalOpen = async ({ day }) => {
 
-        console.log('0000 modalData', modalData)
-
-        modalData = modalData.map(item => {
-            return {
-                'day': item[apiContent.inlineQuery.fields[0]],
-                'category': item[apiContent.inlineQuery.fields[1]],
-                'value': item[desiredField]
-            }
-        })*/
-
+        // console.log('handleModallOpen')
+        // console.log('000 open', open)
+        // console.log('000 day', day)
 
         setOpen(true);
+
+        let modalData = _.filter(apiContent.queryResults.data, (row) => {
+            return (row[apiContent.inlineQuery.fields[0]].value >= day
+                && row[apiContent.inlineQuery.fields[0]].value <= day)
+        })
+
+        let sharedUrl = modalData[0][desiredField].links[0].url;
+        let parsedUrl = new URL(`https://${lookerHost}.looker.com${sharedUrl}`);
+        if (parsedUrl.pathname.split('/')[1] === "explore") {
+            let filters = parsedUrl.search.match(/(?<=&f\[).+?(?=\])/g);
+            let filtersObj = {}
+            let categoryField = ''
+            filters.forEach(item => {
+                if (item.indexOf('category') > -1) categoryField = item;
+                else filtersObj[item] = parsedUrl.searchParams.get(`f[${item}]`)
+            })
+            let fieldsArr = parsedUrl.searchParams.get("fields").split(",");
+            fieldsArr.push(categoryField)
+            let newQueryParams = {
+                model: parsedUrl.pathname.split('/')[2],
+                view: parsedUrl.pathname.split('/')[3],
+                fields: fieldsArr,
+                filters: filtersObj,
+                total: true,
+                limit: "25"
+            }
+
+            // console.log('newQueryParams', newQueryParams)
+
+            let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(newQueryParams) + '/json', {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            let lookerResponseData = await lookerResponse.json();
+            let modalObj = {
+                "title": `Detail View for ${day}`,
+                "body": lookerResponseData.queryResults
+            }
+            setModalContent(modalObj)
+        }
+
+
     };
 
     const handleModalClose = () => {
-        console.log('handleModalClose')
+        setModalContent({})
         setOpen(false);
     };
 
@@ -432,11 +431,21 @@ export default function CustomVis(props) {
                 </div>
             </Grid >
             {open ?
-                <SimpleModal {...props}
-                    classes={classes}
+                // <SimpleModal {...props}
+                //     classes={classes}
+                //     open={open}
+                //     handleModalClose={handleModalClose}
+                //     getModalStyle={getModalStyle}
+                //     modalContent={modalContent} /> 
+                <ModalTable
+                    {...props}
                     open={open}
-                    handleModalClose={handleModalClose}
-                    getModalStyle={getModalStyle} /> : ''}
+                    onClose={handleModalClose}
+                    classes={classes}
+                    modalContent={modalContent}
+                />
+
+                : ''}
         </div >
     )
 }
