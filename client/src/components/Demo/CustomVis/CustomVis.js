@@ -159,6 +159,8 @@ export default function CustomVis(props) {
                 && row[apiContent.inlineQuery.fields[0]].value <= day)
         })
 
+        // console.log('modalData', modalData)
+
         let sharedUrl = modalData[0][desiredField].links[0].url;
         let parsedUrl = new URL(`https://${lookerHost}.looker.com${sharedUrl}`);
         if (parsedUrl.pathname.split('/')[1] === "explore") {
@@ -166,8 +168,10 @@ export default function CustomVis(props) {
             let filtersObj = {}
             let categoryField = ''
             filters.forEach(item => {
-                if (item.indexOf('category') > -1) categoryField = item;
-                else filtersObj[item] = parsedUrl.searchParams.get(`f[${item}]`)
+                if (category === "All" && item.indexOf('category') > -1) {
+                    //add category as field always
+                    categoryField = item;
+                } else filtersObj[item] = parsedUrl.searchParams.get(`f[${item}]`)
             })
             let fieldsArr = parsedUrl.searchParams.get("fields").split(",");
             fieldsArr.push(categoryField)
@@ -196,8 +200,6 @@ export default function CustomVis(props) {
             }
             setModalContent(modalObj)
         }
-
-
     };
 
     const handleModalClose = () => {
