@@ -127,3 +127,9 @@ iframe{
 .pointer{
   cursor: pointer;
 }
+
+.sign-in-background-img {
+  background: url('../images/atom_logo.png');
+  height: 100%;
+  width: 100%;
+}

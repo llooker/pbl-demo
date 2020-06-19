@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
@@ -7,7 +8,29 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 // import CodeFlyout from '../CodeFlyout';
 // import useStyles from './styles.js';
 // import { TabPanel, a11yProps } from './helpers.js';
-// const { validIdHelper } = require('../../../tools');
+import './Home.css';
+const { validIdHelper } = require('../tools');
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.paper
+    },
+    flexCentered: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    card: {
+        minWidth: '100%',
+        minHeight: '100%',
+    },
+    h100: {
+        height: '100%'
+    },
+}));
+
 
 export default function SignIn(props) {
 
@@ -16,30 +39,28 @@ export default function SignIn(props) {
 
     const { googleClientId, onSuccess, onFailure } = props;
 
+    const classes = useStyles();
+
 
     return (
-        <div className="App h-100">
-            <div className="home container p-5 position-relative h-100">
-                <div className="row pt-3 h-25"></div>
-                <div className="row pt-3 h-50">
-                    <div className="col-sm-4">
-                    </div>
-                    <div className="col-sm-4 bg-light h-100 v-center border rounded p-5">
-                        <div>
-                            <h2>PBL App</h2>
-                            <p>Login with Google to get started</p>
-                        </div>
-                        <div className="pt-1">
-                            <GoogleLogin
-                                clientId={googleClientId}
-                                buttonText="Login"
-                                onSuccess={onSuccess}
-                                onFailure={onSuccess}
-                                cookiePolicy={'single_host_origin'}
-                            /></div>
-                    </div>
-                </div>
-            </div>
-        </div >
+        <div className={`${classes.root} demoComponent ${classes.h100}`}>
+            <Grid container
+                key={validIdHelper('sign in page')}
+                className={`${classes.h100}`}>
+                <Grid item sm={12} >
+                    <Card className={`${classes.card} ${classes.flexCentered} sign-in-background-img`}>
+
+                        <GoogleLogin
+                            clientId={googleClientId}
+                            buttonText="Login"
+                            onSuccess={onSuccess}
+                            onFailure={onSuccess}
+                            cookiePolicy={'single_host_origin'}
+                        />
+                    </Card>
+                </Grid>
+
+            </Grid>
+        </div>
     )
 }
