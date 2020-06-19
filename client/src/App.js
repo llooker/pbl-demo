@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Link, Redirect, withRouter, useHistory 
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 // import Config from './clientConfig.json';
 import Home from './components/Home'
+import SignIn from './components/SignIn'
 // import Header from './components/Header'
 // import Footer from './components/Footer'
 import Customizations from './components/Customizations'
@@ -59,29 +60,11 @@ class Login extends React.Component {
       )
     } else {
       return (
-        <div className="App h-100">
-          <div className="home container p-5 position-relative h-100">
-            <div className="row pt-3 h-25"></div>
-            <div className="row pt-3 h-50">
-              <div className="col-sm-4">
-              </div>
-              <div className="col-sm-4 bg-light h-100 v-center border rounded p-5">
-                <div>
-                  <h2>PBL App</h2>
-                  <p>Login with Google to get started</p>
-                </div>
-                <div className="pt-1">
-                  <GoogleLogin
-                    clientId={googleClientId}
-                    buttonText="Login"
-                    onSuccess={this.responseGoogle}
-                    onFailure={this.responseGoogle}
-                    cookiePolicy={'single_host_origin'}
-                  /></div>
-              </div>
-            </div>
-          </div>
-        </div >
+        <SignIn
+          googleClientId={googleClientId}
+          onSuccess={this.responseGoogle}
+          onFailure={this.responseGoogle}
+        />
       )
     }
   }
@@ -460,24 +443,6 @@ class App extends React.Component {
             lookerUserAttributeBrandOptions={LookerUserAttributeBrandOptions}
             switchUserAttributeBrand={this.switchUserAttributeBrand}
           />
-          {/* <PrivateRoute exact path='/customize'
-            component={Customizations}
-            customizations={customizations}
-            activeCustomization={activeCustomization}
-            applyCustomization={this.applyCustomization}
-            editCustomization={this.editCustomization}
-            userProfile={userProfile}
-            lookerHost={lookerHost}
-          />
-          <PrivateRoute path='/customize/edit' //index
-            component={EditCustomization}
-            customizations={customizations}
-            indexOfCustomizationToEdit={indexOfCustomizationToEdit}
-            saveCustomization={this.saveCustomization}
-            cancelIndexOfCustomizationToEdit={this.cancelIndexOfCustomizationToEdit}
-            userProfile={userProfile}
-            lookerHost={lookerHost}
-          /> */}
         </div>
       </Router>
     )
