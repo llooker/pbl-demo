@@ -104,6 +104,14 @@ iframe{
   width: 100%
 }
 
+/* override */
+.embedContainer iframe.dNone {
+  display: none;
+}
+.embedContainer iframe.dBlock {
+  display: block;
+}
+
 .modal-footer {
   display: block;
 }

@@ -7,6 +7,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import CodeFlyout from '../CodeFlyout'
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
+import '../../Home.css';
 const { validIdHelper } = require('../../../tools');
 
 
@@ -196,10 +197,10 @@ export default function ReportBuilder(props) {
         let matchingIndex = 0;
         for (let i = 0; i < iFrameArray.length; i++) {
             if (iFrameArray[i].classList.contains(contentType) && iFrameArray[i].classList.contains(contentId)) {
-                iFrameArray[i].classList.remove('d-none')
+                iFrameArray[i].classList.remove('dNone')
                 matchingIndex = i;
             } else {
-                iFrameArray[i].classList.add('d-none')
+                iFrameArray[i].classList.add('dNone')
             }
         }
 
@@ -266,7 +267,7 @@ export default function ReportBuilder(props) {
                             .withClassName('iframe')
                             .withClassName('look')
                             .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
-                            .withClassName(index > 0 ? 'd-none' : 'oops')
+                            .withClassName(index > 0 ? 'dNone' : 'oops')
                             .withClassName(lookId)
                             .build()
                             .connect()
@@ -284,7 +285,7 @@ export default function ReportBuilder(props) {
                             .withClassName('iframe')
                             .withClassName('dashboard')
                             .withClassName(lookerResponseData.sharedFolder.dashboards.indexOf(item) > -1 ? "shared" : "personal")
-                            .withClassName('d-none')
+                            .withClassName('dNone')
                             .withClassName(dashboardId)
                             .build()
                             .connect()

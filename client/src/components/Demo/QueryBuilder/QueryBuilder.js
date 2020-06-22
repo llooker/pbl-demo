@@ -89,7 +89,7 @@ function FilterBar(props) {
                 <Grid container spacing={3}>
                     <Grid item sm={12}>
                         <Typography variant="subtitle1">
-                            Select KPIs:
+                            Select Fields:
         {
                                 fieldsChipData.map((item, index) => {
                                     return (
@@ -111,7 +111,7 @@ function FilterBar(props) {
                     </Grid>
                     <Grid item sm={12}>
                         <Typography variant="subtitle1">
-                            Group KPIs By:
+                            Totals:
                             {
                                 fieldsChipData.map((item, index) => {
                                     return (
@@ -314,7 +314,7 @@ function EnhancedTable(props) {
             />
             <FormControlLabel
                 control={<Switch checked={dense} onChange={handleChangeDense} />}
-                label="Dense padding"
+                label="Compact"
             />
         </div>
     );
