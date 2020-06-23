@@ -8,10 +8,7 @@ import CodeFlyout from '../CodeFlyout';
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import rawSampleCode from '!!raw-loader!./SplashPage.js'; // eslint-disable-line import/no-webpack-loader-syntax
-// import rawLookerController from '!!raw-loader!../../../controllers/lookerController'; // eslint-disable-line import/no-webpack-loader-syntax
 const { validIdHelper } = require('../../../tools');
-
-// console.log('rawLookerController', rawLookerController)
 
 //start of SplashPage Component
 export default function SplashPage(props) {
@@ -35,9 +32,6 @@ export default function SplashPage(props) {
   const handleChange = (event, newValue) => {
     handleTabChange(0);
     setValue(newValue);
-
-
-
   };
 
   /** 
@@ -46,7 +40,6 @@ export default function SplashPage(props) {
    * calls specific endpoints and methods available from Looker Node SDK
    * and embed SDK to create the experience on this page
    */
-
   const performLookerApiCalls = function (lookerContent) {
     lookerContent.map(async lookerContent => {
       if (lookerContent.type === 'look') { //embed look
@@ -60,7 +53,7 @@ export default function SplashPage(props) {
             console.error('Connection error', error)
           })
       } else if (lookerContent.type === 'thumbnail') { //call thumbnail api and append to appropriate container
-        let lookerResponse = await fetch(`/getthumbnail/${lookerContent.resourceType}/${lookerContent.id}/0`, {
+        let lookerResponse = await fetch(`/getthumbnail/${lookerContent.resourceType}/${lookerContent.id}`, {
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -69,30 +62,15 @@ export default function SplashPage(props) {
         })
         let lookerResponseData = await lookerResponse.json();
         $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).append(lookerResponseData.svg)
+        if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
       }
     })
   }
 
   //listen for lookerContent and call performLookerApiCalls and setSampleCode
   useEffect(() => {
-    console.log('useEffect')
     performLookerApiCalls([...lookerContent])
     setClientSideCode(rawSampleCode)
-
-    async function fetchServerCode() {
-      let lookerResponse = await fetch(`/getthumbnail/${lookerContent[1].resourceType}/${lookerContent[1].id}/1`, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-      let lookerResponseData = await lookerResponse.json();
-      setServerSideCode(lookerResponseData.code);
-    }
-
-    fetchServerCode()
-
   }, [lookerContent]);
 
   /**
@@ -137,24 +115,13 @@ export default function SplashPage(props) {
                   index={index}>
                   <Grid container>
                     {tabContentItem.type === 'sample code' ?
-                      <Grid item sm={12} >
-                        <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                          Looker Content on Page<br />
-                        </Typography>
-                        <CodeFlyout code={lookerContent} />
-                        <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                          Client Side Code<br />
-                        </Typography>
-                        <CodeFlyout code={clientSideCode} />
-                        <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                          Server Side Code<br />
-                        </Typography>
-                        <CodeFlyout code={serverSideCode} />
-                        <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                          Looker User<br />
-                        </Typography>
-                        <CodeFlyout code={tabContentItem.lookerUser} />
-                      </Grid>
+                      <CodeTab {...props}
+                        classes={classes}
+                        lookerContent={lookerContent}
+                        clientSideCode={clientSideCode}
+                        serverSideCode={serverSideCode}
+                        lookerUser={lookerUser} />
+
                       :
                       <React.Fragment
                         key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
@@ -202,5 +169,30 @@ export default function SplashPage(props) {
         </div >
       </Grid >
     </div >
+  )
+}
+
+//helper function for rendering content in code tab
+function CodeTab(props) {
+  const { classes, lookerContent, clientSideCode, serverSideCode, lookerUser } = props
+  return (
+    <Grid item sm={12} >
+      <Typography variant="h5" component="h2" className={classes.gridTitle}>
+        Looker Content on Page<br />
+      </Typography>
+      <CodeFlyout code={lookerContent} />
+      <Typography variant="h5" component="h2" className={classes.gridTitle}>
+        Client Side Code<br />
+      </Typography>
+      <CodeFlyout code={clientSideCode} />
+      <Typography variant="h5" component="h2" className={classes.gridTitle}>
+        Server Side Code<br />
+      </Typography>
+      <CodeFlyout code={serverSideCode} />
+      <Typography variant="h5" component="h2" className={classes.gridTitle}>
+        Looker User<br />
+      </Typography>
+      <CodeFlyout code={lookerUser} />
+    </Grid>
   )
 }

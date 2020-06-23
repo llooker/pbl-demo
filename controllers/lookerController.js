@@ -262,25 +262,19 @@ module.exports.getThumbnail = async (req, res, next) => {
   // console.log('lookerController getThumbnail');
   // console.log('this.getThumbnail', this.getThumbnail);
   const { params } = req;
-
-  if (params.for_flyout == 1) {
+  try {
     let codeAsString = this.getThumbnail.toString()
+    let thumbnail = await sdk.ok(sdk.get(`/vector_thumbnail/${params.type}/${params.id}`));
     let resObj = {
+      svg: thumbnail,
       code: codeAsString
-    }
-    res.status(200).send(resObj)
-  } else {
-    try {
-      let thumbnail = await sdk.ok(sdk.get(`/vector_thumbnail/${params.type}/${params.id}`));
-      let resObj = {
-        svg: thumbnail
-      };
-      res.status(200).send(resObj);
+    };
+    res.status(200).send(resObj);
 
-    } catch (err) {
-      let errorObj = {
-        errorMessage: 'Not working!'
-      }
+  } catch (err) {
+    let errorObj = {
+      errorMessage: 'Not working!'
     }
+    res.status(400).send(errorObj);
   }
 }
