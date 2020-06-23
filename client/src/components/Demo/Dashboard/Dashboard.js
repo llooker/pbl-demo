@@ -128,10 +128,10 @@ export default function Dashboard(props) {
                                     <Grid container>
                                         {tabContentItem.type === 'sample code' ?
                                             <Grid item sm={12} >
-                                                <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                                                {/* <Typography variant="h5" component="h2" className={classes.gridTitle}>
                                                     Sample Code<br />
                                                 </Typography>
-                                                <CodeFlyout code={tabContentItem.sampleCode} />
+                                                <CodeFlyout code={tabContentItem.sampleCode} /> */}
                                                 <Typography variant="h5" component="h2" className={classes.gridTitle}>
                                                     Looker User<br />
                                                 </Typography>

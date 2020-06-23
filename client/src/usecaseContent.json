@@ -10,40 +10,38 @@
             {
                 "type": "splash page",
                 "label": "Home",
-                "description": "We're thrilled to have you on Atom Fashion - the premiere third party fashion marketplace for today's leading brands. Throughout this portal you will find a series of analtic content designed to help you maximize your performance.",
+                "description": "We're thrilled to have you on Atom Fashion - the premiere third party fashion marketplace for today's leading brands. Throughout this portal you will find a series of analytic content designed to help you maximize your performance.",
                 "icon": "fa-home",
                 "lookerContent": [
-                    [
-                        {
-                            "id": "19",
-                            "type": "look",
-                            "gridWidth": "6"
-                        },
-                        {
-                            "id": "9",
-                            "type": "thumbnail",
-                            "resourceType": "dashboard",
-                            "lookerMethod": "vector_thumbnail",
-                            "label": "Analytics",
-                            "gridWidth": "4"
-                        },
-                        {
-                            "id": "5",
-                            "type": "thumbnail",
-                            "resourceType": "dashboard",
-                            "lookerMethod": "vector_thumbnail",
-                            "label": "Sales",
-                            "gridWidth": "4"
-                        },
-                        {
-                            "id": "1",
-                            "type": "thumbnail",
-                            "resourceType": "dashboard",
-                            "lookerMethod": "vector_thumbnail",
-                            "label": "Inventory",
-                            "gridWidth": "4"
-                        }
-                    ]
+                    {
+                        "id": "19",
+                        "type": "look",
+                        "gridWidth": "6"
+                    },
+                    {
+                        "id": "9",
+                        "type": "thumbnail",
+                        "resourceType": "dashboard",
+                        "lookerMethod": "vector_thumbnail",
+                        "label": "Analytics",
+                        "gridWidth": "4"
+                    },
+                    {
+                        "id": "5",
+                        "type": "thumbnail",
+                        "resourceType": "dashboard",
+                        "lookerMethod": "vector_thumbnail",
+                        "label": "Sales",
+                        "gridWidth": "4"
+                    },
+                    {
+                        "id": "1",
+                        "type": "thumbnail",
+                        "resourceType": "dashboard",
+                        "lookerMethod": "vector_thumbnail",
+                        "label": "Inventory",
+                        "gridWidth": "4"
+                    }
                 ]
             },
             {

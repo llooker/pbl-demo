@@ -11,131 +11,131 @@ const sdk = new Looker40SDK(session)
 
 
 module.exports.auth = async (req, res, next) => {
-    // Authenticate the request is from a valid user here
-    const src = req.query.src;
-    //old method using auth_utils, requires embed secret
-    // console.log('src', src)
-    const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
-    // console.log('url', url)
+  // Authenticate the request is from a valid user here
+  const src = req.query.src;
+  //old method using auth_utils, requires embed secret
+  // console.log('src', src)
+  const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
+  // console.log('url', url)
 
-    // let body = req.session.lookerUser;
-    // body.target_url = "https://" + process.env.LOOKER_HOST + src;
+  // let body = req.session.lookerUser;
+  // body.target_url = "https://" + process.env.LOOKER_HOST + src;
 
-    // const url = await sdk.ok(sdk.create_sso_embed_url(body))
-    //     .then(response => {
-    //         // console.log('response', response)
-    //         // callback(null, response)
-    //         return response.url
-    //     })
-    //     .catch(err => {
-    //         console.log('err', err)
-    //         // callback(err)
-    //         return err;
-    //     })
-    // // console.log('url', url)
-    res.json({ url });
+  // const url = await sdk.ok(sdk.create_sso_embed_url(body))
+  //     .then(response => {
+  //         // console.log('response', response)
+  //         // callback(null, response)
+  //         return response.url
+  //     })
+  //     .catch(err => {
+  //         console.log('err', err)
+  //         // callback(err)
+  //         return err;
+  //     })
+  // // console.log('url', url)
+  res.json({ url });
 }
 
 module.exports.validateLookerContent = async (req, res, next) => {
-    // console.log('lookerController validateLookerContent');
-    const { params } = req;
+  // console.log('lookerController validateLookerContent');
+  const { params } = req;
 
-    let returnVal;
-    try {
-        returnVal = await sdk.ok(sdk[params.content_type](params.content_id));
-        res.status(200).send(returnVal);
-    } catch (err) {
-        let errorObj = {
-            errorMessage: 'Invalid id!'
-        }
-        res.status(404).send(errorObj);
+  let returnVal;
+  try {
+    returnVal = await sdk.ok(sdk[params.content_type](params.content_id));
+    res.status(200).send(returnVal);
+  } catch (err) {
+    let errorObj = {
+      errorMessage: 'Invalid id!'
     }
+    res.status(404).send(errorObj);
+  }
 }
 
 module.exports.fetchFolder = async (req, res, next) => {
-    // console.log('lookerController fetchFolder');
-    const { params } = req;
+  // console.log('lookerController fetchFolder');
+  const { params } = req;
 
-    const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
-    const embedUser = await sdk.ok(sdk.user(userCred.id));
-    const sharedFolder = await sdk.ok(sdk.folder(params.folder_id));
-    const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id));
+  const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
+  const embedUser = await sdk.ok(sdk.user(userCred.id));
+  const sharedFolder = await sdk.ok(sdk.folder(params.folder_id));
+  const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id));
 
-    for (let h = 0; h < sharedFolder.looks.length; h++) {
-        let look = await sdk.ok(sdk.look(sharedFolder.looks[h].id))
-        let clientId = look.query.client_id;
-        sharedFolder.looks[h].client_id = clientId;
-    }
+  for (let h = 0; h < sharedFolder.looks.length; h++) {
+    let look = await sdk.ok(sdk.look(sharedFolder.looks[h].id))
+    let clientId = look.query.client_id;
+    sharedFolder.looks[h].client_id = clientId;
+  }
 
-    for (let i = 0; i < embeddedUserFolder.looks.length; i++) {
-        // console.log('embeddedUserFolder.looks[i]', embeddedUserFolder.looks[i])
-        let look = await sdk.ok(sdk.look(embeddedUserFolder.looks[i].id));
-        // console.log('look', look)
-        let clientId = look.query.client_id;
-        // console.log('embeddedUserFolder clientId', clientId)
-        embeddedUserFolder.looks[i].client_id = clientId;
-    }
+  for (let i = 0; i < embeddedUserFolder.looks.length; i++) {
+    // console.log('embeddedUserFolder.looks[i]', embeddedUserFolder.looks[i])
+    let look = await sdk.ok(sdk.look(embeddedUserFolder.looks[i].id));
+    // console.log('look', look)
+    let clientId = look.query.client_id;
+    // console.log('embeddedUserFolder clientId', clientId)
+    embeddedUserFolder.looks[i].client_id = clientId;
+  }
 
 
-    let resObj = {
-        sharedFolder,
-        embeddedUserFolder
-    }
+  let resObj = {
+    sharedFolder,
+    embeddedUserFolder
+  }
 
-    res.send(resObj)
+  res.send(resObj)
 }
 
 module.exports.updateLookerUser = (req, res, next) => {
-    // console.log('updateLookerUser')
-    // console.log('req.body', req.body)
-    const lookerUser = req.body;
-    let { session } = req;
-    session.lookerUser = lookerUser;
-    res.status(200).send({ session });
+  // console.log('updateLookerUser')
+  // console.log('req.body', req.body)
+  const lookerUser = req.body;
+  let { session } = req;
+  session.lookerUser = lookerUser;
+  res.status(200).send({ session });
 }
 
 //at a glance cards
 module.exports.runQuery = async (req, res, next) => {
-    // console.log('lookerController runQuery');
-    const { params } = req;
-    // console.log('params', params);
+  // console.log('lookerController runQuery');
+  const { params } = req;
+  // console.log('params', params);
 
-    try {
-        let query = await sdk.ok(sdk.run_query({ query_id: params.query_id, result_format: params.result_format }));
-        let resObj = {
-            queryId: params.query_id,
-            queryResults: query
-        }
-        res.status(200).send(resObj);
-    } catch (err) {
-        // console.log('catch')
-        // console.log('err', err)
-        let errorObj = {
-            errorMessage: 'Not working!'
-        }
-        res.status(404).send(errorObj)
+  try {
+    let query = await sdk.ok(sdk.run_query({ query_id: params.query_id, result_format: params.result_format }));
+    let resObj = {
+      queryId: params.query_id,
+      queryResults: query
     }
+    res.status(200).send(resObj);
+  } catch (err) {
+    // console.log('catch')
+    // console.log('err', err)
+    let errorObj = {
+      errorMessage: 'Not working!'
+    }
+    res.status(404).send(errorObj)
+  }
 }
 //shared url?
 module.exports.runInlineQuery = async (req, res, next) => {
-    // console.log('lookerController runInlineQuery');
-    const { params } = req;
-    // console.log('params', params);
+  // console.log('lookerController runInlineQuery');
+  const { params } = req;
+  // console.log('params', params);
 
-    try {
-        let query_response = await sdk.ok(sdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
-        let resObj = {
-            queryResults: query_response
-        };
-        res.status(200).send(resObj);
-    } catch (err) {
-        // console.log('catch')
-        // console.log('err', err)
-        let errorObj = {
-            errorMessage: 'Not working!'
-        }
-        res.status(404).send(errorObj);
+  try {
+    let query_response = await sdk.ok(sdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
+    let resObj = {
+      queryResults: query_response
+    };
+    res.status(200).send(resObj);
+  } catch (err) {
+    // console.log('catch')
+    // console.log('err', err)
+    let errorObj = {
+      errorMessage: 'Not working!'
     }
+    res.status(404).send(errorObj);
+  }
 }
 //og attempt
 /*module.exports.createQuery = async (req, res, next) => {
@@ -163,120 +163,124 @@ module.exports.runInlineQuery = async (req, res, next) => {
 }*/
 
 module.exports.createQueryTask = async (req, res, next) => {
-    // console.log('lookerController createQueryTask');
-    const { params } = req;
+  // console.log('lookerController createQueryTask');
+  const { params } = req;
 
-    try {
-        let create_query_response = await sdk.ok(sdk.create_query(params.query_body, ''));
-        // console.log('create_query_response', create_query_response);
-        let query_task = await sdk.ok(sdk.create_query_task({
-            body: {
-                query_id: create_query_response.id,
-                result_format: params.result_format,
-            }
-        }));
-        // console.log('query_task', query_task)
-        let resObj = {
-            queryTaskId: query_task.id
-        };
-        res.status(200).send(resObj);
-    } catch (err) {
-        // console.log('catch')
-        // console.log('err', err)
-        let errorObj = {
-            errorMessage: 'Not working!'
-        }
-        res.status(404).send(errorObj)
+  try {
+    let create_query_response = await sdk.ok(sdk.create_query(params.query_body, ''));
+    // console.log('create_query_response', create_query_response);
+    let query_task = await sdk.ok(sdk.create_query_task({
+      body: {
+        query_id: create_query_response.id,
+        result_format: params.result_format,
+      }
+    }));
+    // console.log('query_task', query_task)
+    let resObj = {
+      queryTaskId: query_task.id
+    };
+    res.status(200).send(resObj);
+  } catch (err) {
+    // console.log('catch')
+    // console.log('err', err)
+    let errorObj = {
+      errorMessage: 'Not working!'
     }
+    res.status(404).send(errorObj)
+  }
 }
 
 module.exports.checkQueryTask = async (req, res, next) => {
-    // console.log('lookerController checkQueryTask');
-    const { params } = req;
-    // console.log('params', params)
+  // console.log('lookerController checkQueryTask');
+  const { params } = req;
+  // console.log('params', params)
 
-    try {
-        let async_query_results = await sdk.ok(sdk.query_task_results(params.task_id));
-        let resObj = {
-            queryResults: async_query_results
-        };
-        res.status(200).send(resObj);
+  try {
+    let async_query_results = await sdk.ok(sdk.query_task_results(params.task_id));
+    let resObj = {
+      queryResults: async_query_results
+    };
+    res.status(200).send(resObj);
 
-    } catch (err) {
-        // console.log('catch')
-        // console.log('err', err)
-        let errorObj = {
-            errorMessage: 'Not working!'
-        }
-        res.status(404).send(errorObj);
+  } catch (err) {
+    // console.log('catch')
+    // console.log('err', err)
+    let errorObj = {
+      errorMessage: 'Not working!'
     }
+    res.status(404).send(errorObj);
+  }
 }
 
 module.exports.deleteLook = async (req, res, next) => {
-    // console.log('lookerController deleteLook');
-    const { params } = req;
-    // console.log('params', params)
+  // console.log('lookerController deleteLook');
+  const { params } = req;
+  // console.log('params', params)
 
-    try {
-        let delete_look = await sdk.ok(sdk.delete_look(params.look_id));
-        console.log('delete_look', delete_look)
-        let resObj = {
-            message: delete_look
-        };
-        res.status(200).send(resObj);
+  try {
+    let delete_look = await sdk.ok(sdk.delete_look(params.look_id));
+    console.log('delete_look', delete_look)
+    let resObj = {
+      message: delete_look
+    };
+    res.status(200).send(resObj);
 
-    } catch (err) {
-        // console.log('catch')
-        // console.log('err', err)
-        let errorObj = {
-            errorMessage: 'Not working!'
-        }
-        res.status(404).send(errorObj);
+  } catch (err) {
+    // console.log('catch')
+    // console.log('err', err)
+    let errorObj = {
+      errorMessage: 'Not working!'
     }
+    res.status(404).send(errorObj);
+  }
 }
 
 module.exports.getLook = async (req, res, next) => {
-    // console.log('lookerController getLook');
-    const { params } = req;
-    // console.log('params', params)
+  // console.log('lookerController getLook');
+  const { params } = req;
+  // console.log('params', params)
 
-    try {
-        let look = await sdk.ok(sdk.get_look(params.look_id));
-        console.log('look', look)
-        let resObj = {
-            message: look
-        };
-        res.status(200).send(resObj);
+  try {
+    let look = await sdk.ok(sdk.get_look(params.look_id));
+    console.log('look', look)
+    let resObj = {
+      message: look
+    };
+    res.status(200).send(resObj);
 
-    } catch (err) {
-        // console.log('catch')
-        // console.log('err', err)
-        let errorObj = {
-            errorMessage: 'Not working!'
-        }
-        res.status(404).send(errorObj);
+  } catch (err) {
+    // console.log('catch')
+    // console.log('err', err)
+    let errorObj = {
+      errorMessage: 'Not working!'
     }
+    res.status(404).send(errorObj);
+  }
 }
 
 module.exports.getThumbnail = async (req, res, next) => {
-    // console.log('lookerController getThumbnail');
-    const { params } = req;
-    // console.log('params', params)
+  // console.log('lookerController getThumbnail');
+  // console.log('this.getThumbnail', this.getThumbnail);
+  const { params } = req;
 
+  if (params.for_flyout == 1) {
+    let codeAsString = this.getThumbnail.toString()
+    let resObj = {
+      code: codeAsString
+    }
+    res.status(200).send(resObj)
+  } else {
     try {
-        // console.log('await sdk.ok(sdk.vector_thumbnail.toString())', await sdk.ok(sdk.vector_thumbnail.toString()))
-        let thumbnail = await sdk.ok(sdk.get(`/vector_thumbnail/${params.type}/${params.id}`));
-        // console.log('thumbnail', thumbnail)
-        let resObj = {
-            svg: thumbnail
-        };
-        res.status(200).send(resObj);
+      let thumbnail = await sdk.ok(sdk.get(`/vector_thumbnail/${params.type}/${params.id}`));
+      let resObj = {
+        svg: thumbnail
+      };
+      res.status(200).send(resObj);
 
     } catch (err) {
-        // console.log('catch')
-        // console.log('err', err)
-        let errorObj = {
-            errorMessage: 'Not working!'
-        }
+      let errorObj = {
+        errorMessage: 'Not working!'
+      }
     }
+  }
 }

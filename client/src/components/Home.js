@@ -183,7 +183,7 @@ class Home extends Component {
             drawerOpen: true,
             drawerTabValue: 0,
             activeTabValue: 0,
-            sampleCode: {},
+            // sampleCode: {},
             activeUsecase: '',
             appLayout: ''
         }
@@ -191,32 +191,32 @@ class Home extends Component {
 
     handleDrawerTabChange = (event, newValue) => {
         this.handleDrawerChange(true);
-        if (newValue > 0) {
-            const contenttype = $("#drawerTabs button")[newValue].getAttribute('contenttype')
-            const sampleCodeFilePath = require(`../sample-code/${contenttype}.sample.txt`);
-            fetch(sampleCodeFilePath)
-                .then(response => {
-                    return response.text()
-                })
-                .then(text => {
-                    this.setState({
-                        drawerTabValue: newValue,
-                        sampleCode: text
-                    }, () => {
-                        this.handleTabChange(0)
-                    })
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+        // if (newValue > 0) {
+        //     const contenttype = $("#drawerTabs button")[newValue].getAttribute('contenttype')
+        //     const sampleCodeFilePath = require(`../sample-code/${contenttype}.sample.txt`);
+        //     fetch(sampleCodeFilePath)
+        //         .then(response => {
+        //             return response.text()
+        //         })
+        //         .then(text => {
+        //             this.setState({
+        //                 drawerTabValue: newValue,
+        //                 sampleCode: text
+        //             }, () => {
+        //                 this.handleTabChange(0)
+        //             })
+        //         })
+        //         .catch((error) => {
+        //             console.error('Error:', error);
+        //         });
 
-        } else {
-            this.setState({
-                drawerTabValue: newValue
-            }, () => {
-                this.handleTabChange(0)
-            })
-        }
+        // } else {
+        this.setState({
+            drawerTabValue: newValue
+        }, () => {
+            this.handleTabChange(0)
+        })
+        // }
     };
 
     handleTabChange = newValue => {
@@ -342,10 +342,10 @@ class Home extends Component {
         const demoComponentMap = {
             "splash page": SplashPage,
             "simple dashboard": Dashboard,
-            "custom filter": Dashboard,
-            "custom vis": CustomVis,
-            "report builder": ReportBuilder,
-            "query builder": QueryBuilder
+            // "custom filter": Dashboard,
+            // "custom vis": CustomVis,
+            // "report builder": ReportBuilder,
+            // "query builder": QueryBuilder
         }
 
         const themeMap = {
@@ -353,7 +353,7 @@ class Home extends Component {
             "vidly": vidlyTheme
         }
 
-        const { drawerTabValue, drawerOpen, activeTabValue, sampleCode, activeUsecase } = this.state;
+        const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase } = this.state; //, sampleCode
         const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
         const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost } = this.props
 
@@ -457,7 +457,7 @@ class Home extends Component {
                                                 activeTabValue={activeTabValue}
                                                 handleTabChange={handleTabChange}
                                                 lookerUser={lookerUser}
-                                                sampleCode={sampleCode}
+                                                // sampleCode={sampleCode}
                                                 activeUsecase={activeUsecase}
                                                 LookerEmbedSDK={LookerEmbedSDK}
                                                 lookerHost={lookerHost}
