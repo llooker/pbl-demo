@@ -1,222 +1,236 @@
 {
-    "atom": {
-        "label": "Atom Fashion",
-        "vignette": {
-            "name": "Atom",
-            "logo_url": "../images/atom_logo.png"
-        },
-        "layout": "right-appbar",
-        "demoComponents": [
-            {
-                "type": "splash page",
-                "label": "Home",
-                "description": "We're thrilled to have you on Atom Fashion - the premiere third party fashion marketplace for today's leading brands. Throughout this portal you will find a series of analytic content designed to help you maximize your performance.",
-                "icon": "fa-home",
-                "lookerContent": [
-                    {
-                        "id": "19",
-                        "type": "look",
-                        "gridWidth": "6"
-                    },
-                    {
-                        "id": "9",
-                        "type": "thumbnail",
-                        "resourceType": "dashboard",
-                        "lookerMethod": "vector_thumbnail",
-                        "label": "Analytics",
-                        "gridWidth": "4"
-                    },
-                    {
-                        "id": "5",
-                        "type": "thumbnail",
-                        "resourceType": "dashboard",
-                        "lookerMethod": "vector_thumbnail",
-                        "label": "Sales",
-                        "gridWidth": "4"
-                    },
-                    {
-                        "id": "1",
-                        "type": "thumbnail",
-                        "resourceType": "dashboard",
-                        "lookerMethod": "vector_thumbnail",
-                        "label": "Inventory",
-                        "gridWidth": "4"
-                    }
-                ]
-            },
-            {
-                "type": "simple dashboard",
-                "label": "Web Analytics",
-                "description": "Overview of all your web traffic",
-                "icon": "fa-chart-line",
-                "lookerContent": [
-                    {
-                        "type": "dashboard",
-                        "lookerMethod": "embedDashboard",
-                        "id": "9",
-                        "label": "Web Analytics",
-                        "isNext": false
-                    }
-                ]
-            },
-            {
-                "type": "simple dashboard",
-                "label": "Sales Overview",
-                "description": "Overview of all your sales!",
-                "icon": "fa-tachometer-alt",
-                "lookerContent": [
-                    {
-                        "type": "dashboard",
-                        "lookerMethod": "embedDashboard",
-                        "id": "5",
-                        "label": "Sales Overview",
-                        "isNext": false
-                    }
-                ]
-            },
-            {
-                "type": "custom filter",
-                "label": "Inventory Overview",
-                "description": "Overview of your inventory",
-                "icon": "fa-tshirt",
-                "lookerContent": [
-                    {
-                        "type": "dashboard",
-                        "lookerMethod": "embedDashboard",
-                        "id": "1",
-                        "isNext": false,
-                        "label": "Inventory Overview",
-                        "filter": {
-                            "label": "Select Product Name",
-                            "filterName": "Product Name",
-                            "lookerMethod": "runInlineQuery"
-                        },
-                        "inlineQuery": {
-                            "model": "atom_fashion",
-                            "view": "order_items",
-                            "fields": [
-                                "products.item_name"
-                            ],
-                            "query_timezone": "America/Los_Angeles"
-                        },
-                        "desiredFilterName": "products.brand"
-                    }
-                ]
-            },
-            {
-                "type": "custom vis",
-                "label": "Sales Calendar",
-                "description": "Ayeeeeeee",
-                "icon": "fa-calendar",
-                "lookerContent": [
-                    {
-                        "type": "custom vis",
-                        "lookerMethod": "runInlineQuery",
-                        "label": "Sales Calendar",
-                        "inlineQuery": {
-                            "model": "atom_fashion",
-                            "view": "order_items",
-                            "fields": [
-                                "order_items.created_date",
-                                "products.category",
-                                "order_items.order_count",
-                                "order_items.total_sale_price"
-                            ],
-                            "query_timezone": "America/Los_Angeles"
-                        },
-                        "desiredFilterName": "products.brand",
-                        "desiredFields": [
-                            "order_items.order_count",
-                            "order_items.total_sale_price"
-                        ],
-                        "resultFormat": "json_detail"
-                    }
-                ]
-            },
-            {
-                "type": "report builder",
-                "label": "Saved Reports",
-                "description": "Give users the ability to explore existing reports as well as create new ones all from within your application",
-                "icon": "fa-sticky-note",
-                "lookerContent": [
-                    {
-                        "type": "folder",
-                        "id": "14",
-                        "label": "Saved Reports"
-                    },
-                    {
-                        "type": "explore",
-                        "id": "atom_fashion::order_items",
-                        "label": "Create New Report"
-                    }
-                ]
-            },
-            {
-                "type": "query builder",
-                "label": "Query Builder",
-                "description": "Enable business users to self serve on data and answer their own questions",
-                "icon": "fa-search",
-                "lookerContent": [
-                    {
-                        "type": "explorelite",
-                        "id": "explorelite",
-                        "label": "Build & Run Queries",
-                        "queryBody": {
-                            "model": "atom_fashion",
-                            "view": "order_items",
-                            "fields": [
-                                "order_items.created_month",
-                                "order_items.created_date",
-                                "order_items.created_week",
-                                "users.city",
-                                "users.state",
-                                "users.country",
-                                "products.category_type",
-                                "products.category",
-                                "products.brand",
-                                "order_items.total_sale_price",
-                                "order_items.total_tax_amount"
-                            ],
-                            "filters": {
-                                "users.state": "",
-                                "users.city": "",
-                                "users.country": "",
-                                "order_items.created_date": "3 months"
-                            },
-                            "limit": 500
-                        },
-                        "resultFormat": "json",
-                        "fieldType": {
-                            "order_items.created_month": "dimension",
-                            "order_items.created_date": "dimension",
-                            "order_items.created_week": "dimension",
-                            "users.city": "dimension",
-                            "users.state": "dimension",
-                            "users.country": "dimension",
-                            "products.category_type": "dimension",
-                            "products.category": "dimension",
-                            "products.brand": "dimension",
-                            "order_items.total_sale_price": "measure",
-                            "order_items.total_tax_amount": "measure"
-                        },
-                        "filterType": {
-                            "users.state": "string",
-                            "users.city": "string",
-                            "users.country": "string",
-                            "order_items.created_date": "date"
-                        }
-                    }
-                ]
-            }
-        ]
+  "atom": {
+    "label": "Atom Fashion",
+    "vignette": {
+      "name": "Atom",
+      "logo_url": "../images/atom_logo.png"
     },
-    "vidly": {
-        "label": "Vidly Media",
-        "vignette": {
-            "name": "Vidly",
-            "logo": ""
-        },
-        "layout": "right-appbar",
-        "demoComponents": []
-    }
+    "layout": "right-appbar",
+    "demoComponents": [
+      {
+        "type": "splash page",
+        "label": "Home",
+        "description": "We're thrilled to have you on Atom Fashion - the premiere third party fashion marketplace for today's leading brands. Throughout this portal you will find a series of analytic content designed to help you maximize your performance.",
+        "icon": "fa-home",
+        "lookerContent": [
+          {
+            "id": "19",
+            "type": "look",
+            "gridWidth": "6"
+          },
+          {
+            "id": "9",
+            "type": "thumbnail",
+            "resourceType": "dashboard",
+            "lookerMethod": "vector_thumbnail",
+            "label": "Analytics",
+            "gridWidth": "4"
+          },
+          {
+            "id": "5",
+            "type": "thumbnail",
+            "resourceType": "dashboard",
+            "lookerMethod": "vector_thumbnail",
+            "label": "Sales",
+            "gridWidth": "4"
+          },
+          {
+            "id": "1",
+            "type": "thumbnail",
+            "resourceType": "dashboard",
+            "lookerMethod": "vector_thumbnail",
+            "label": "Inventory",
+            "gridWidth": "4"
+          }
+        ]
+      },
+      {
+        "type": "simple dashboard",
+        "label": "Web Analytics",
+        "description": "Overview of all your web traffic",
+        "icon": "fa-chart-line",
+        "lookerContent": [
+          {
+            "type": "dashboard",
+            "lookerMethod": "embedDashboard",
+            "id": "9",
+            "label": "Web Analytics",
+            "isNext": false
+          }
+        ]
+      },
+      {
+        "type": "simple dashboard",
+        "label": "Sales Overview",
+        "description": "Overview of all your sales!",
+        "icon": "fa-tachometer-alt",
+        "lookerContent": [
+          {
+            "type": "dashboard",
+            "lookerMethod": "embedDashboard",
+            "id": "5",
+            "label": "Sales Overview",
+            "isNext": false
+          }
+        ]
+      },
+      {
+        "type": "custom filter",
+        "label": "Inventory Overview",
+        "description": "Overview of your inventory",
+        "icon": "fa-tshirt",
+        "lookerContent": [
+          {
+            "type": "dashboard",
+            "lookerMethod": "embedDashboard",
+            "id": "1",
+            "isNext": false,
+            "label": "Inventory Overview",
+            "filter": {
+              "label": "Select Product Name",
+              "filterName": "Product Name",
+              "lookerMethod": "runInlineQuery"
+            },
+            "inlineQuery": {
+              "model": "atom_fashion",
+              "view": "order_items",
+              "fields": [
+                "products.item_name"
+              ],
+              "query_timezone": "America/Los_Angeles"
+            },
+            "desiredFilterName": "products.brand",
+            "dynamicFieldLookUp": {
+              "Inventory": [
+                1,
+                5,
+                3,
+                107
+              ],
+              "Orders": [
+                2,
+                6,
+                7,
+                8
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "type": "custom vis",
+        "label": "Sales Calendar",
+        "description": "Ayeeeeeee",
+        "icon": "fa-calendar",
+        "lookerContent": [
+          {
+            "type": "custom vis",
+            "lookerMethod": "runInlineQuery",
+            "label": "Sales Calendar",
+            "inlineQuery": {
+              "model": "atom_fashion",
+              "view": "order_items",
+              "fields": [
+                "order_items.created_date",
+                "products.category",
+                "order_items.order_count",
+                "order_items.total_sale_price"
+              ],
+              "query_timezone": "America/Los_Angeles"
+            },
+            "desiredFilterName": "products.brand",
+            "desiredFields": [
+              "order_items.order_count",
+              "order_items.total_sale_price"
+            ],
+            "resultFormat": "json_detail"
+          }
+        ]
+      },
+      {
+        "type": "report builder",
+        "label": "Saved Reports",
+        "description": "Give users the ability to explore existing reports as well as create new ones all from within your application",
+        "icon": "fa-sticky-note",
+        "lookerContent": [
+          {
+            "type": "folder",
+            "id": "14",
+            "label": "Saved Reports"
+          },
+          {
+            "type": "explore",
+            "id": "atom_fashion::order_items",
+            "label": "Create New Report"
+          }
+        ]
+      },
+      {
+        "type": "query builder",
+        "label": "Query Builder",
+        "description": "Enable business users to self serve on data and answer their own questions",
+        "icon": "fa-search",
+        "lookerContent": [
+          {
+            "type": "explorelite",
+            "id": "explorelite",
+            "label": "Build & Run Queries",
+            "queryBody": {
+              "model": "atom_fashion",
+              "view": "order_items",
+              "fields": [
+                "order_items.created_month",
+                "order_items.created_date",
+                "order_items.created_week",
+                "users.city",
+                "users.state",
+                "users.country",
+                "products.category_type",
+                "products.category",
+                "products.brand",
+                "order_items.total_sale_price",
+                "order_items.total_tax_amount"
+              ],
+              "filters": {
+                "users.state": "",
+                "users.city": "",
+                "users.country": "",
+                "order_items.created_date": "3 months"
+              },
+              "limit": 500
+            },
+            "resultFormat": "json",
+            "fieldType": {
+              "order_items.created_month": "dimension",
+              "order_items.created_date": "dimension",
+              "order_items.created_week": "dimension",
+              "users.city": "dimension",
+              "users.state": "dimension",
+              "users.country": "dimension",
+              "products.category_type": "dimension",
+              "products.category": "dimension",
+              "products.brand": "dimension",
+              "order_items.total_sale_price": "measure",
+              "order_items.total_tax_amount": "measure"
+            },
+            "filterType": {
+              "users.state": "string",
+              "users.city": "string",
+              "users.country": "string",
+              "order_items.created_date": "date"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "vidly": {
+    "label": "Vidly Media",
+    "vignette": {
+      "name": "Vidly",
+      "logo": ""
+    },
+    "layout": "right-appbar",
+    "demoComponents": []
+  }
 }

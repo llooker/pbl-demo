@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
 import { AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
+import { Autocomplete, ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./Dashboard.js'; // eslint-disable-line import/no-webpack-loader-syntax
@@ -18,6 +18,8 @@ export default function Dashboard(props) {
   const [dashboardObj, setDashboardObj] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
+  const [toggleValue, setToggleValue] = useState('');
+  const [dashboardLayout, setDashboardLayout] = useState({});
 
   //declare constants
   const classes = useStyles();
@@ -35,6 +37,23 @@ export default function Dashboard(props) {
     setValue(newValue);
   };
 
+  const handleToggle = (event, newValue) => {
+    console.log('handleToggle')
+    console.log('newValue', newValue)
+    setToggleValue(newValue)
+    const filteredLayout = _.filter(dashboardLayout.dashboard_layout_components, (row) => {
+      return (lookerContent[0].dynamicFieldLookUp[newValue].indexOf(row.dashboard_element_id) > -1)
+    })
+
+    console.log('filteredLayout', filteredLayout)
+    const newDashboardLayout = {
+      ...dashboardLayout,
+      dashboard_layout_components: filteredLayout
+    }
+    console.log('newDashboardLayout', newDashboardLayout)
+    dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
+  };
+
   /**
    * listen for lookerContent and call 
    * performLookerApiCalls and setSampleCode
@@ -43,6 +62,13 @@ export default function Dashboard(props) {
     performLookerApiCalls([...lookerContent])
     setClientSideCode(rawSampleCode)
   }, [lookerContent]);
+
+
+  useEffect(() => {
+    if (Object.keys(dashboardLayout).length && Object.keys(dashboardObj).length && lookerContent[0].dynamicFieldLookUp) {
+      handleToggle(null, Object.keys(lookerContent[0].dynamicFieldLookUp)[0])
+    }
+  }, [dashboardLayout]);
 
   /** 
    * What this function does:
@@ -59,7 +85,15 @@ export default function Dashboard(props) {
         .withNext()
         // .withNext(lookerContent.isNext || false) //how can I make this dynamic based on prop??
         .withTheme('Embedded')
-        .on('drillmenu:click', (event) => typeof this[_.camelCase(demoComponentType) + 'Action'] === 'function' ? this[_.camelCase(demoComponentType) + 'Action'](event) : '')
+        .on('drillmenu:click', (event) => {
+          if (typeof this[_.camelCase(demoComponentType) + 'Action'] === 'function') { this[_.camelCase(demoComponentType) + 'Action'](event) }
+          // else console.log('elllse');
+        })
+        //.on('dashboard:loaded', dashboardLoaded)
+        .on('dashboard:loaded', (event) => {
+          // console.log('dashboard:loaded event', event)
+          setDashboardLayout(event.dashboard.options.layouts[0])
+        })
         .build()
         .connect()
         .then((dashboard) => {
@@ -151,6 +185,8 @@ export default function Dashboard(props) {
                   index={index}>
                   <Grid container>
                     {tabContentItem.type === 'code flyout' ?
+                      // could this go to home/parent component
+                      // so it's not in the demo component itself whatsoever
                       <CodeFlyout {...props}
                         classes={classes}
                         lookerContent={lookerContent}
@@ -173,6 +209,26 @@ export default function Dashboard(props) {
                               renderInput={(params) => <TextField {...params} label={tabContentItem.filter.filterName} variant="outlined" />}
                               loadingText="Loading..."
                             />
+                          </Grid> : ''
+                        }
+                        {tabContentItem.dynamicFieldLookUp ?
+                          <Grid item sm={12}>
+                            <ToggleButtonGroup
+                              value={toggleValue}
+                              exclusive
+                              onChange={handleToggle}
+                              aria-label="text alignment"
+                            >
+                              {Object.keys(tabContentItem.dynamicFieldLookUp).map(key => {
+                                return (
+                                  <ToggleButton
+                                    key={validIdHelper(`dynamicDashToggle-${key}`)}
+                                    value={key} aria-label="left aligned">
+                                    {key}
+                                  </ToggleButton>
+                                )
+                              })}
+                            </ToggleButtonGroup>
                           </Grid> : ''
                         }
                         <Box className={classes.w100} mt={2}>

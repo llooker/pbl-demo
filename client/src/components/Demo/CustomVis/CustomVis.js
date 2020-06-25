@@ -344,11 +344,8 @@ export default function CustomVis(props) {
     </div >
   )
 }
-
-
+//Filter Bar code
 function FilterBar(props) {
-  // console.log('FilterBar')
-  // console.log('props', props)
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
     apiContent, fromDate, toDate, category, desiredField, handleFromDate, handleToDate, handleCategory, handleDesiredField } = props;
 
