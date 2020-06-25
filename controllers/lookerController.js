@@ -13,26 +13,7 @@ const sdk = new Looker40SDK(session)
 module.exports.auth = async (req, res, next) => {
   // Authenticate the request is from a valid user here
   const src = req.query.src;
-  //old method using auth_utils, requires embed secret
-  // console.log('src', src)
   const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
-  // console.log('url', url)
-
-  // let body = req.session.lookerUser;
-  // body.target_url = "https://" + process.env.LOOKER_HOST + src;
-
-  // const url = await sdk.ok(sdk.create_sso_embed_url(body))
-  //     .then(response => {
-  //         // console.log('response', response)
-  //         // callback(null, response)
-  //         return response.url
-  //     })
-  //     .catch(err => {
-  //         console.log('err', err)
-  //         // callback(err)
-  //         return err;
-  //     })
-  // // console.log('url', url)
   res.json({ url });
 }
 
@@ -53,41 +34,39 @@ module.exports.validateLookerContent = async (req, res, next) => {
 }
 
 module.exports.fetchFolder = async (req, res, next) => {
-  // console.log('lookerController fetchFolder');
   const { params } = req;
+  try {
+    const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
+    const embedUser = await sdk.ok(sdk.user(userCred.id));
+    const sharedFolder = await sdk.ok(sdk.folder(params.folder_id));
+    const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id));
 
-  const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
-  const embedUser = await sdk.ok(sdk.user(userCred.id));
-  const sharedFolder = await sdk.ok(sdk.folder(params.folder_id));
-  const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id));
+    for (let h = 0; h < sharedFolder.looks.length; h++) {
+      let look = await sdk.ok(sdk.look(sharedFolder.looks[h].id))
+      let clientId = look.query.client_id;
+      sharedFolder.looks[h].client_id = clientId;
+    }
 
-  for (let h = 0; h < sharedFolder.looks.length; h++) {
-    let look = await sdk.ok(sdk.look(sharedFolder.looks[h].id))
-    let clientId = look.query.client_id;
-    sharedFolder.looks[h].client_id = clientId;
+    for (let i = 0; i < embeddedUserFolder.looks.length; i++) {
+      let look = await sdk.ok(sdk.look(embeddedUserFolder.looks[i].id));
+      let clientId = look.query.client_id;
+      embeddedUserFolder.looks[i].client_id = clientId;
+    }
+
+    let resObj = {
+      sharedFolder,
+      embeddedUserFolder
+    }
+    res.status(200).send(resObj)
+  } catch (err) {
+    let errorObj = {
+      errorMessage: 'Not working!'
+    }
+    res.status(400).send(errorObj);
   }
-
-  for (let i = 0; i < embeddedUserFolder.looks.length; i++) {
-    // console.log('embeddedUserFolder.looks[i]', embeddedUserFolder.looks[i])
-    let look = await sdk.ok(sdk.look(embeddedUserFolder.looks[i].id));
-    // console.log('look', look)
-    let clientId = look.query.client_id;
-    // console.log('embeddedUserFolder clientId', clientId)
-    embeddedUserFolder.looks[i].client_id = clientId;
-  }
-
-
-  let resObj = {
-    sharedFolder,
-    embeddedUserFolder
-  }
-
-  res.send(resObj)
 }
 
 module.exports.updateLookerUser = (req, res, next) => {
-  // console.log('updateLookerUser')
-  // console.log('req.body', req.body)
   const lookerUser = req.body;
   let { session } = req;
   session.lookerUser = lookerUser;
@@ -96,10 +75,7 @@ module.exports.updateLookerUser = (req, res, next) => {
 
 //at a glance cards
 module.exports.runQuery = async (req, res, next) => {
-  // console.log('lookerController runQuery');
   const { params } = req;
-  // console.log('params', params);
-
   try {
     let query = await sdk.ok(sdk.run_query({ query_id: params.query_id, result_format: params.result_format }));
     let resObj = {
@@ -108,24 +84,22 @@ module.exports.runQuery = async (req, res, next) => {
     }
     res.status(200).send(resObj);
   } catch (err) {
-    // console.log('catch')
-    // console.log('err', err)
     let errorObj = {
       errorMessage: 'Not working!'
     }
-    res.status(404).send(errorObj)
+    res.status(400).send(errorObj)
   }
 }
-//shared url?
+
 module.exports.runInlineQuery = async (req, res, next) => {
-  // console.log('lookerController runInlineQuery');
   const { params } = req;
-  // console.log('params', params);
 
   try {
+    let codeAsString = this.runInlineQuery.toString();
     let query_response = await sdk.ok(sdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
     let resObj = {
-      queryResults: query_response
+      queryResults: query_response,
+      code: codeAsString
     };
     res.status(200).send(resObj);
   } catch (err) {
@@ -259,11 +233,9 @@ module.exports.getLook = async (req, res, next) => {
 }
 
 module.exports.getThumbnail = async (req, res, next) => {
-  // console.log('lookerController getThumbnail');
-  // console.log('this.getThumbnail', this.getThumbnail);
   const { params } = req;
   try {
-    let codeAsString = this.getThumbnail.toString()
+    let codeAsString = this.getThumbnail.toString();
     let thumbnail = await sdk.ok(sdk.get(`/vector_thumbnail/${params.type}/${params.id}`));
     let resObj = {
       svg: thumbnail,

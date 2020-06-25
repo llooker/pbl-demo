@@ -32,20 +32,6 @@ class Login extends React.Component {
 
   render() {
     // console.log("Login render")
-
-    // let usecaseFromUrl = this.props.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
-    // let includesHome = this.props.location.pathname.includes('home');
-    // let pathnameToUse;
-    // if (UsecaseContent.hasOwnProperty(usecaseFromUrl) && includesHome) {
-    //   pathnameToUse = this.props.location.pathname
-    // } else {
-    //   pathnameToUse = '/atom/home';
-    // }
-    // const { from } = this.props.location.state || { from: { pathname: pathnameToUse } }
-    // const { activeCustomization } = this.props
-    // const { userProfile } = this.props
-
-
     const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
     const { pathname } = this.props.location
     const { activeCustomization } = this.props
