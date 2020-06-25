@@ -53,9 +53,11 @@ module.exports.fetchFolder = async (req, res, next) => {
       embeddedUserFolder.looks[i].client_id = clientId;
     }
 
+    let codeAsString = this.fetchFolder.toString();
     let resObj = {
       sharedFolder,
-      embeddedUserFolder
+      embeddedUserFolder,
+      code: codeAsString
     }
     res.status(200).send(resObj)
   } catch (err) {
@@ -141,6 +143,7 @@ module.exports.createQueryTask = async (req, res, next) => {
   const { params } = req;
 
   try {
+    let codeAsString = this.createQueryTask.toString();
     let create_query_response = await sdk.ok(sdk.create_query(params.query_body, ''));
     // console.log('create_query_response', create_query_response);
     let query_task = await sdk.ok(sdk.create_query_task({
@@ -151,7 +154,8 @@ module.exports.createQueryTask = async (req, res, next) => {
     }));
     // console.log('query_task', query_task)
     let resObj = {
-      queryTaskId: query_task.id
+      queryTaskId: query_task.id,
+      code: codeAsString
     };
     res.status(200).send(resObj);
   } catch (err) {
@@ -170,9 +174,11 @@ module.exports.checkQueryTask = async (req, res, next) => {
   // console.log('params', params)
 
   try {
+    let codeAsString = this.createQueryTask.toString();
     let async_query_results = await sdk.ok(sdk.query_task_results(params.task_id));
     let resObj = {
-      queryResults: async_query_results
+      queryResults: async_query_results,
+      code: codeAsString
     };
     res.status(200).send(resObj);
 

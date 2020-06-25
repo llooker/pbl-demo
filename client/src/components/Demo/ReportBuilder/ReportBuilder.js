@@ -4,185 +4,36 @@ import { AppBar, Tabs, Tab, Typography, Box, Grid, Icon, CircularProgress, Card,
 import { TreeView, TreeItem } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import CodeFlyout from '../CodeFlyout'
+import CodeFlyout from '../CodeFlyout';
+import rawSampleCode from '!!raw-loader!./ReportBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
 const { validIdHelper } = require('../../../tools');
 
-
-function TreeSideBar(props) {
-
-
-
-  const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser } = props
-  const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
-  let treeCounter = 0;
-
-  const [selected, setSelected] = useState(2)
-  const [expanded, setExpanded] = useState(["1"]);
-
-  const handleToggle = (event, nodeIds) => {
-    setExpanded(nodeIds);
-  }
-
-  const handleSelect = (event, nodeIds) => {
-    setSelected(nodeIds);
-  };
-
-  return (
-    <TreeView
-      className={classes.tree}
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      expanded={expanded}
-      onNodeToggle={handleToggle}
-      onNodeSelect={handleSelect}
-    >
-      {apiContent ? Object.keys(apiContent).map((key, outerIndex) => (
-        <React.Fragment
-          key={`${validIdHelper(demoComponentType + '-innerFragment-' + outerIndex)}`}>
-          <TreeItem
-            key={`${validIdHelper(demoComponentType + '-outerTreeItem-' + outerIndex)}`}
-            nodeId={"" + (treeCounter += 1)}
-            treecounter={treeCounter}
-            label={key.charAt(0).toUpperCase() + key.substring(1)}
-            icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
-            disabled={apiContent[key].length ? false : true}
-          >
-            {
-              apiContent[key].length ?
-                apiContent[key].map((item, index) => (
-                  <TreeItem
-                    key={`${validIdHelper(demoComponentType + '-innerTreeItem-' + treeCounter)}`}
-                    nodeId={"" + (treeCounter += 1)}
-                    treecounter={treeCounter}
-                    selected={selected === treeCounter}
-                    className={selected === treeCounter ? `Mui-selected innerTreeItem` : `innerTreeItem`}
-                    contentid={item.id}
-                    label={item.folder_id === sharedFolderId &&
-                      key === 'looks' &&
-                      lookerUser.permission_level === 'premium' ?
-
-                      < div
-                        id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                        key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                        className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
-                        {item.title}
-
-                        <Button
-                          id={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
-                          key={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
-                          size="small"
-                          className={`${classes.ml24} ${classes.childHoverVisibility}`}
-                          onClick={(event) => {
-                            setSelected(treeCounter);
-                            action(
-                              key.substring(0, key.length - 1),
-                              item.id,
-                              'explore',
-                              item.client_id,
-                              tabContent[tabContentItemIndex + 1].id,
-                              validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                            );
-                            event.stopPropagation();
-                          }
-                          }
-                          color="default"
-                        >
-                          Explore
-                                                                                            </Button>
-                      </div>
-                      : key === 'looks' && lookerUser.permission_level === 'premium' ?
-                        <div
-                          id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                          key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                          className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
-                          {item.title}
-                          <Button
-                            id={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
-                            key={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
-                            size="small"
-                            className={`${classes.ml24} ${classes.childHoverVisibility}`} //
-                            onClick={(event) => {
-                              setSelected(treeCounter);
-                              action(
-                                key.substring(0, key.length - 1),
-                                item.id,
-                                'edit',
-                                item.client_id,
-                                tabContent[tabContentItemIndex + 1].id,
-                                validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                              );
-                              event.stopPropagation();
-                            }
-                            }
-                            color="primary"
-                          >
-                            Edit
-                                                                                            </Button>
-                          <Button
-                            id={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
-                            key={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
-                            size="small"
-                            className={`${classes.ml24} ${classes.childHoverVisibility}`} //
-                            onClick={(event) => {
-                              setSelected(treeCounter);
-                              action(
-                                key.substring(0, key.length - 1),
-                                item.id,
-                                'delete',
-                                item.client_id,
-                                tabContent[tabContentItemIndex + 1].id,
-                                validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                              );
-                              event.stopPropagation();
-                            }
-                            }
-                            color="secondary"
-                          >
-                            Delete
-                                                                                            </Button>
-                        </div>
-                        : item.title
-                    }
-                    onClick={() => {
-                      setSelected(treeCounter)
-                      action(
-                        key.substring(0, key.length - 1), item.id)
-                    }} />
-
-                ))
-                :
-                ''
-            }
-          </TreeItem>
-
-        </React.Fragment>
-      )) : ''}
-    </TreeView>
-  )
-}
-
+//start of ReportBuilder Component
 export default function ReportBuilder(props) {
-
-  // console.log('ReportBuilder')
-  // console.log('props', props)
-
-  const classes = useStyles();
-  const [value, setValue] = useState(0);
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, LookerEmbedSDK, activeTabValue, handleTabChange, lookerUser, sampleCode } = props;
-  const sampleCodeTab = { type: 'sample code', label: 'Code', id: 'sampleCode', lookerUser, sampleCode }
-  const demoComponentType = type || 'sample code';
-  // const tabContent = [...lookerContent, sampleCodeTab]
-  const tabContent = lookerUser.permission_level === 'premium' ?
-    [...lookerContent, sampleCodeTab] :
-    [lookerContent[0], sampleCodeTab];
-
+  //initialize state using hooks
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState([]);
   const [exploreObj, setExploreObj] = useState({});
+  const [clientSideCode, setClientSideCode] = useState('');
+  const [serverSideCode, setServerSideCode] = useState('');
 
+  //declare constants
+  const classes = useStyles();
+  const [value, setValue] = useState(0);
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, LookerEmbedSDK, activeTabValue, handleTabChange, lookerUser } = props;
+  const codeTab = {
+    type: 'code flyout', label: 'Code', id: 'codeFlyout',
+    lookerContent, lookerUser, clientSideCode, serverSideCode
+  }
+  const demoComponentType = type || 'code flyout';
+  const tabContent = lookerUser.permission_level === 'premium' ?
+    [...lookerContent, codeTab] :
+    [lookerContent[0], codeTab];
+
+  //handle tab change
   const handleChange = (event, newValue) => {
     handleTabChange(newValue);
     setValue(newValue);
@@ -190,8 +41,21 @@ export default function ReportBuilder(props) {
     if (newValue === 0) performLookerApiCalls(lookerContent)
   };
 
-  const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
+  /**
+   * listen for lookerContent and call 
+   * performLookerApiCalls and setSampleCode
+  */
+  useEffect(() => {
+    if (activeTabValue > value) {
+      setValue(activeTabValue)
+    }
 
+    performLookerApiCalls(lookerContent)
+    setClientSideCode(rawSampleCode)
+
+  }, [lookerContent]);
+
+  const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
     let iFrameArray = $(".embedContainer:visible > iframe")
 
     let matchingIndex = 0;
@@ -252,6 +116,8 @@ export default function ReportBuilder(props) {
         })
 
         let lookerResponseData = await lookerResponse.json();
+        if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
+
         let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
         let dashboardsToUse = [...lookerResponseData.sharedFolder.dashboards]
         let objToUse = {
@@ -295,7 +161,7 @@ export default function ReportBuilder(props) {
           })
         }
         setApiContent(objToUse)
-      } else if (lookerContent.type === 'explore') {
+      } else if (lookerContent.type === 'explore' && lookerUser.permission_level === 'premium') {
         let exploreId = lookerContent.id;
         LookerEmbedSDK.createExploreWithId(exploreId)
           .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
@@ -314,15 +180,6 @@ export default function ReportBuilder(props) {
       }
     })
   }
-
-  useEffect(() => {
-    if (activeTabValue > value) {
-      setValue(activeTabValue)
-    }
-
-    performLookerApiCalls(lookerContent)
-
-  }, [lookerContent]);
 
 
   return (
@@ -352,7 +209,7 @@ export default function ReportBuilder(props) {
                   <Tab
                     key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
                     label={item.label}
-                    className={item.type === 'sample code' ? `${classes.mlAuto}` : ``}
+                    className={item.type === 'code flyout' ? `${classes.mlAuto}` : ``}
                     {...a11yProps(index)} />
                 ))}
               </Tabs>
@@ -365,17 +222,13 @@ export default function ReportBuilder(props) {
                   value={value}
                   index={tabContentItemIndex}>
                   <Grid container>
-                    {tabContentItem.type === 'sample code' ?
-                      <Grid item sm={12} >
-                        <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                          Sample Code<br />
-                        </Typography>
-                        <CodeFlyout code={tabContentItem.sampleCode} />
-                        <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                          Looker User<br />
-                        </Typography>
-                        <CodeFlyout code={tabContentItem.lookerUser} />
-                      </Grid>
+                    {tabContentItem.type === 'code flyout' ?
+                      <CodeFlyout {...props}
+                        classes={classes}
+                        lookerContent={lookerContent}
+                        clientSideCode={clientSideCode}
+                        serverSideCode={serverSideCode}
+                        lookerUser={lookerUser} />
                       :
                       tabContentItemIndex === 0
                         ?
@@ -420,3 +273,154 @@ export default function ReportBuilder(props) {
   )
 }
 
+
+function TreeSideBar(props) {
+
+  const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser } = props
+  const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
+  let treeCounter = 0;
+
+  const [selected, setSelected] = useState(2)
+  const [expanded, setExpanded] = useState(["1"]);
+
+  const handleToggle = (event, nodeIds) => {
+    setExpanded(nodeIds);
+  }
+
+  const handleSelect = (event, nodeIds) => {
+    setSelected(nodeIds);
+  };
+
+  return (
+    <TreeView
+      className={classes.tree}
+      defaultCollapseIcon={<ExpandMoreIcon />}
+      defaultExpandIcon={<ChevronRightIcon />}
+      expanded={expanded}
+      onNodeToggle={handleToggle}
+      onNodeSelect={handleSelect}
+    >
+      {apiContent ? Object.keys(apiContent).map((key, outerIndex) => (
+        <React.Fragment
+          key={`${validIdHelper(demoComponentType + '-innerFragment-' + outerIndex)}`}>
+          <TreeItem
+            key={`${validIdHelper(demoComponentType + '-outerTreeItem-' + outerIndex)}`}
+            nodeId={"" + (treeCounter += 1)}
+            treecounter={treeCounter}
+            label={key.charAt(0).toUpperCase() + key.substring(1)}
+            icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
+            disabled={apiContent[key].length ? false : true}
+          >
+            {
+              apiContent[key].length ?
+                apiContent[key].map((item, index) => (
+                  <TreeItem
+                    key={`${validIdHelper(demoComponentType + '-innerTreeItem-' + treeCounter)}`}
+                    nodeId={"" + (treeCounter += 1)}
+                    treecounter={treeCounter}
+                    selected={selected === treeCounter}
+                    className={selected === treeCounter ? `Mui-selected innerTreeItem` : `innerTreeItem`}
+                    contentid={item.id}
+                    label={item.folder_id === sharedFolderId &&
+                      key === 'looks' &&
+                      lookerUser.permission_level === 'premium' ?
+
+                      < div
+                        id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                        key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                        className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
+                        {item.title.length > 30 ? item.title.substring(0, 30) + '...' : item.title}
+
+                        <Button
+                          id={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
+                          key={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
+                          size="small"
+                          className={`${classes.ml24} ${classes.childHoverVisibility}`}
+                          onClick={(event) => {
+                            setSelected(treeCounter);
+                            action(
+                              key.substring(0, key.length - 1),
+                              item.id,
+                              'explore',
+                              item.client_id,
+                              tabContent[tabContentItemIndex + 1].id,
+                              validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                            );
+                            event.stopPropagation();
+                          }
+                          }
+                          color="default"
+                        >
+                          Explore
+                                                                                            </Button>
+                      </div>
+                      : key === 'looks' && lookerUser.permission_level === 'premium' ?
+                        <div
+                          id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                          key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                          className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
+
+                          {item.title.length > 30 ? item.title.substring(0, 30) + '...' : item.title}                          <Button
+                            id={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
+                            key={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
+                            size="small"
+                            className={`${classes.ml24} ${classes.childHoverVisibility}`}
+                            onClick={(event) => {
+                              setSelected(treeCounter);
+                              action(
+                                key.substring(0, key.length - 1),
+                                item.id,
+                                'edit',
+                                item.client_id,
+                                tabContent[tabContentItemIndex + 1].id,
+                                validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                              );
+                              event.stopPropagation();
+                            }
+                            }
+                            color="primary"
+                          >
+                            Edit
+                                                                                            </Button>
+                          <Button
+                            id={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
+                            key={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
+                            size="small"
+                            className={`${classes.ml24} ${classes.childHoverVisibility}`}
+                            onClick={(event) => {
+                              setSelected(treeCounter);
+                              action(
+                                key.substring(0, key.length - 1),
+                                item.id,
+                                'delete',
+                                item.client_id,
+                                tabContent[tabContentItemIndex + 1].id,
+                                validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                              );
+                              event.stopPropagation();
+                            }
+                            }
+                            color="secondary"
+                          >
+                            Delete
+                                                                                            </Button>
+                        </div>
+                        : item.title.length > 30 ? item.title.substring(0, 30) + '...' : item.title
+                    }
+                    onClick={() => {
+                      setSelected(treeCounter)
+                      action(
+                        key.substring(0, key.length - 1), item.id)
+                    }} />
+
+                ))
+                :
+                ''
+            }
+          </TreeItem>
+
+        </React.Fragment>
+      )) : ''}
+    </TreeView>
+  )
+}

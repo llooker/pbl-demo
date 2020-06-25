@@ -323,8 +323,8 @@ class Home extends Component {
       "simple dashboard": Dashboard,
       "custom filter": Dashboard,
       "custom vis": CustomVis,
-      // "report builder": ReportBuilder,
-      // "query builder": QueryBuilder
+      "report builder": ReportBuilder,
+      "query builder": QueryBuilder
     }
 
     const themeMap = {

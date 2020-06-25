@@ -38,19 +38,14 @@ export default function Dashboard(props) {
   };
 
   const handleToggle = (event, newValue) => {
-    console.log('handleToggle')
-    console.log('newValue', newValue)
     setToggleValue(newValue)
     const filteredLayout = _.filter(dashboardLayout.dashboard_layout_components, (row) => {
       return (lookerContent[0].dynamicFieldLookUp[newValue].indexOf(row.dashboard_element_id) > -1)
     })
-
-    console.log('filteredLayout', filteredLayout)
     const newDashboardLayout = {
       ...dashboardLayout,
       dashboard_layout_components: filteredLayout
     }
-    console.log('newDashboardLayout', newDashboardLayout)
     dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
   };
 
@@ -197,7 +192,7 @@ export default function Dashboard(props) {
                       <React.Fragment
                         key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
                         {tabContentItem.filter ?
-                          <Grid item sm={12}>
+                          <Grid item sm={6}>
                             <Autocomplete
                               id={`combo-box-dashboard-${lookerContent.id}`}
                               options={Array.isArray(apiContent) ?
@@ -212,7 +207,7 @@ export default function Dashboard(props) {
                           </Grid> : ''
                         }
                         {tabContentItem.dynamicFieldLookUp ?
-                          <Grid item sm={12}>
+                          <Grid item sm={6}>
                             <ToggleButtonGroup
                               value={toggleValue}
                               exclusive
