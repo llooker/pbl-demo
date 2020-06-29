@@ -4,20 +4,15 @@ import _ from 'lodash'
 import React, { Component } from 'react'
 import clsx from 'clsx';
 import { withStyles } from "@material-ui/core/styles";
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
+import {
+  Drawer, CssBaseline, AppBar, Toolbar, Typography,
+  Divider, IconButton, Tabs, Tab, Icon, Box, Avatar
+} from '@material-ui/core/';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Icon from '@material-ui/core/Icon';
-import Box from '@material-ui/core/Box';
-import Avatar from '@material-ui/core/Avatar'
+import { TreeView, TreeItem } from '@material-ui/lab';
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { blue, green, orange, indigo, red, grey } from '@material-ui/core/colors';
 import './Home.css'; //needed for iframe height
@@ -162,7 +157,12 @@ const styles = theme => ({
     bottom: theme.spacing(2),
     left: theme.spacing(2),
     zIndex: 1200
-  }
+  },
+  tree: {
+    height: 240,
+    flexGrow: 1,
+    maxWidth: 400
+  },
 });
 
 const defaultTheme = createMuiTheme({})
@@ -192,15 +192,15 @@ class Home extends Component {
       drawerOpen: true,
       drawerTabValue: 0,
       activeTabValue: 0,
-      // sampleCode: {},
       activeUsecase: '',
       appLayout: '',
-      highlight_show: false
+      highlightShow: false,
+      selectedTreeItem: ''
     }
   }
 
   toggleHighlightShow = () => {
-    this.setState({ highlight_show: !this.state.highlight_show })
+    this.setState({ highlightShow: !this.state.highlightShow })
   }
 
   handleDrawerTabChange = (event, newValue) => {
@@ -333,12 +333,12 @@ class Home extends Component {
   render() {
     //why are these different?
     const demoComponentMap = {
-      "splash page": SplashPage,
-      "simple dashboard": Dashboard,
-      "custom filter": Dashboard,
-      "custom vis": CustomVis,
-      "report builder": ReportBuilder,
-      "query builder": QueryBuilder
+      "splashpage": SplashPage,
+      // "simple dashboard": Dashboard,
+      // "custom filter": Dashboard,
+      // "custom vis": CustomVis,
+      // "report builder": ReportBuilder,
+      // "query builder": QueryBuilder
     }
 
     const themeMap = {
@@ -346,15 +346,46 @@ class Home extends Component {
       "vidly": vidlyTheme
     }
 
-    const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase } = this.state; //, sampleCode
+    const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedTreeItem } = this.state; //, sampleCode
     const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
     const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost } = this.props
 
-    // console.log('activeUsecase', activeUsecase)
+    //new code for tree style menu
+    let treeCounter = 0;
+    let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : []; // Use Lodash to sort array by 'name'
+    let orderedDemoComponentsForMenuObj = {};
+    let expandedTreeItemsArr = [];
+    let cumulativePusher = 0;
+    orderedDemoComponentsForMenu.map((item, index) => {
+      if (orderedDemoComponentsForMenuObj.hasOwnProperty(item.menuCategory)) {
+        orderedDemoComponentsForMenuObj[item.menuCategory] = [...orderedDemoComponentsForMenuObj[item.menuCategory], item]
+      } else {
+        orderedDemoComponentsForMenuObj[item.menuCategory] = [item];
+        cumulativePusher += 1;
+        expandedTreeItemsArr.push("" + (index + cumulativePusher));
+      }
+    })
+
+    if (activeUsecase && !selectedTreeItem.length) {
+      this.setState({
+        //item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) :  validIdHelper(item.type)
+        selectedTreeItem:
+          // UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
+          // validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
+          validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
+      }, () => {
+        // console.log('calback this.state.selectedTreeItem', this.state.selectedTreeItem)
+      })
+    }
+
+    console.log('selectedTreeItem', selectedTreeItem)
+
+    const DemoComponentToRender = demoComponentMap[selectedTreeItem];
+    console.log('DemoComponentToRender', DemoComponentToRender)
 
     return (
       <div className={classes.root}>
-        <AppContext.Provider value={{ show: this.state.highlight_show, toggleShow: this.toggleHighlightShow }} >
+        <AppContext.Provider value={{ show: this.state.highlightShow, toggleShow: this.toggleHighlightShow }} >
           <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
             <CssBaseline />
             <AppBar
@@ -406,7 +437,7 @@ class Home extends Component {
                 </IconButton>
               </div>
               <Divider />
-              <Tabs
+              {/* <Tabs
                 id="drawerTabs"
                 orientation="vertical"
                 variant="scrollable"
@@ -426,7 +457,45 @@ class Home extends Component {
                 ))
                   : ''
                 }
-              </Tabs>
+              </Tabs> */}
+
+
+              <TreeView
+                className={classes.tree}
+                defaultCollapseIcon={<ExpandMoreIcon />}
+                defaultExpandIcon={<ChevronRightIcon />}
+                expanded={expandedTreeItemsArr}
+              >
+
+                {activeUsecase ? Object.keys(orderedDemoComponentsForMenuObj).map((key, outerIndex) => (
+                  <TreeItem
+                    key={`${validIdHelper(key + '-outerTreeItem-' + outerIndex)}`}
+                    nodeId={"" + (treeCounter += 1)}
+                    treecounter={treeCounter}
+                    label={_.capitalize(key)}>
+                    {orderedDemoComponentsForMenuObj[key].map((item, innerIndex) => (
+                      <TreeItem
+                        key={`${validIdHelper(key + '-innerTreeItem-' + innerIndex)}`}
+                        nodeId={"" + (treeCounter += 1)}
+                        treecounter={treeCounter}
+                        label={_.capitalize(item.label)}
+                        selected={selectedTreeItem === item.type}
+                        onClick={(event) => {
+                          this.setState({
+                            selectedTreeItem:
+                              //item.lookerContent[0].id ? 
+                              // validIdHelper(item.type + item.lookerContent[0].id) : 
+                              validIdHelper(item.type)
+                          })
+                        }}
+                      // icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
+                      // disabled={apiContent[key].length ? false : true}
+                      />
+                    ))}
+                  </TreeItem>)) : ''}
+              </TreeView>
+
+
               <HighlightSourcesLegend className={classes.highlightLegend} />
             </Drawer>
             <main
@@ -435,7 +504,7 @@ class Home extends Component {
               })}
             >
               <div className={classes.drawerHeader} />
-              {activeUsecase ?
+              {/* {activeUsecase ?
                 UsecaseContent[activeUsecase].demoComponents.map((item, index) => {
                   const DemoComponent = demoComponentMap[item.type];
                   return (
@@ -460,8 +529,39 @@ class Home extends Component {
                         "Coming Soon"
                       }
                     </TabPanel>)
-                }) : ''
+                }) : 
+                ''
+              } */}
+
+              {activeUsecase ?
+                UsecaseContent[activeUsecase].demoComponents.map((item, index) => {
+                  // const DemoComponent = demoComponentMap[item.type];
+                  return (
+                    <TabPanel
+                      key={validIdHelper(`tab-panel-${item.type}-${item.lookerContent[0].id}`)}
+                      value={drawerTabValue}
+                      index={index}
+                      className={classes.relative}
+                    >
+                      {validIdHelper(item.type) === selectedTreeItem ?
+                        <DemoComponentToRender key={validIdHelper(`list-${item.type}`)}
+                          staticContent={item}
+                          handleDrawerTabChange={handleDrawerTabChange}
+                          activeTabValue={activeTabValue}
+                          handleTabChange={handleTabChange}
+                          lookerUser={lookerUser}
+                          activeUsecase={activeUsecase}
+                          LookerEmbedSDK={LookerEmbedSDK}
+                          lookerHost={lookerHost}
+                        /> :
+                        "Coming Soon"
+                      }
+                    </TabPanel>)
+                }) :
+                ''
               }
+
+
             </main >
           </ThemeProvider>
         </AppContext.Provider>

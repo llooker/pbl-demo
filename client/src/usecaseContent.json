@@ -12,6 +12,7 @@
         "label": "Home",
         "description": "We're thrilled to have you on Atom Fashion - the premiere third party fashion marketplace for today's leading brands. Throughout this portal you will find a series of analytic content designed to help you maximize your performance.",
         "icon": "fa-home",
+        "menuCategory": "home",
         "lookerContent": [
           {
             "id": "19",
@@ -47,6 +48,7 @@
       {
         "type": "simple dashboard",
         "label": "Web Analytics",
+        "menuCategory": "marketing",
         "description": "Overview of all your web traffic",
         "icon": "fa-chart-line",
         "lookerContent": [
@@ -62,6 +64,7 @@
       {
         "type": "simple dashboard",
         "label": "Sales Overview",
+        "menuCategory": "sales",
         "description": "Overview of all your sales!",
         "icon": "fa-tachometer-alt",
         "lookerContent": [
@@ -77,6 +80,7 @@
       {
         "type": "custom filter",
         "label": "Inventory Overview",
+        "menuCategory": "operations",
         "description": "Overview of your inventory",
         "icon": "fa-tshirt",
         "lookerContent": [
@@ -120,6 +124,7 @@
       {
         "type": "custom vis",
         "label": "Sales Calendar",
+        "menuCategory": "sales",
         "description": "Ayeeeeeee",
         "icon": "fa-calendar",
         "lookerContent": [
@@ -150,6 +155,7 @@
       {
         "type": "report builder",
         "label": "Saved Reports",
+        "menuCategory": "operations",
         "description": "Give users the ability to explore existing reports as well as create new ones all from within your application",
         "icon": "fa-sticky-note",
         "lookerContent": [
@@ -168,6 +174,7 @@
       {
         "type": "query builder",
         "label": "Query Builder",
+        "menuCategory": "operations",
         "description": "Enable business users to self serve on data and answer their own questions",
         "icon": "fa-search",
         "lookerContent": [

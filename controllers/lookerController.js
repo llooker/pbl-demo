@@ -14,6 +14,7 @@ module.exports.auth = async (req, res, next) => {
   // Authenticate the request is from a valid user here
   const src = req.query.src;
   const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
+
   res.json({ url });
 }
 
