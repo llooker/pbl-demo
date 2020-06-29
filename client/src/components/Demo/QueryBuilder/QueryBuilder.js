@@ -11,6 +11,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./QueryBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
+import { ApiHighlight } from '../../Highlights/Highlight';
 import { TabPanel, a11yProps, descendingComparator, getComparator, stableSort } from './helpers.js';
 const { validIdHelper, prettifyString } = require('../../../tools');
 
@@ -409,64 +410,67 @@ function EnhancedTable(props) {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-    <div className={classes.root}>
-      <TableContainer>
-        <Table
-          className={classes.table}
-          aria-labelledby="tableTitle"
-          size={dense ? 'small' : 'medium'}
-          aria-label="enhanced table"
-        >
-          <EnhancedTableHead
-            {...props}
-            classes={classes}
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-            rowCount={rows.length}
-          />
-          <TableBody>
-            {stableSort(rows, getComparator(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => {
-                return (
-                  <TableRow
-                    hover
-                    key={validIdHelper('TableRow-' + index)}
-                    id={validIdHelper('TableRow-' + index)}>
-                    {Object.keys(row).map((key, index) => (
-                      <TableCell
-                        key={validIdHelper(key + '-TableBody-TableCell-' + index)}
-                        id={validIdHelper(key + '-TableBody-TableCell-' + index)}
-                        className={lookerContent[0].fieldType[key] === 'dimension' ? classes.greySecondary : classes.orangeSecondary}
-                        align="right">
-                        {row[key].rendered ? row[key].rendered : row[key].value}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25, 50]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Compact"
-      />
-    </div>
+    <ApiHighlight>
+      <div className={classes.root}>
+        <TableContainer>
+          <Table
+            className={classes.table}
+            aria-labelledby="tableTitle"
+            size={dense ? 'small' : 'medium'}
+            aria-label="enhanced table"
+          >
+            <EnhancedTableHead
+              {...props}
+              classes={classes}
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length}
+            />
+
+            <TableBody>
+              {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  return (
+                    <TableRow
+                      hover
+                      key={validIdHelper('TableRow-' + index)}
+                      id={validIdHelper('TableRow-' + index)}>
+                      {Object.keys(row).map((key, index) => (
+                        <TableCell
+                          key={validIdHelper(key + '-TableBody-TableCell-' + index)}
+                          id={validIdHelper(key + '-TableBody-TableCell-' + index)}
+                          className={lookerContent[0].fieldType[key] === 'dimension' ? classes.greySecondary : classes.orangeSecondary}
+                          align="right">
+                          {row[key].rendered ? row[key].rendered : row[key].value}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25, 50]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
+        <FormControlLabel
+          control={<Switch checked={dense} onChange={handleChangeDense} />}
+          label="Compact"
+        />
+      </div>
+    </ApiHighlight>
   );
 }

@@ -225,7 +225,6 @@ class App extends React.Component {
         },
         lookerHost
       }), () => {
-        console.log('applySession callback this.state.lookerUser', this.state.lookerUser)
         this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
       });
     }

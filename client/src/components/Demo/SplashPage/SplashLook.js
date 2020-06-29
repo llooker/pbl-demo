@@ -3,9 +3,9 @@ import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import { Typography } from '@material-ui/core';
 
-export function SplashLook({lookerContent, classes, id}) {
+export function SplashLook({ lookerContent, classes, id }) {
 
-  useEffect(()=>{
+  useEffect(() => {
     LookerEmbedSDK.createLookWithId(lookerContent.id)
       .appendTo(document.getElementById(id))
       .withClassName('look')
@@ -15,11 +15,11 @@ export function SplashLook({lookerContent, classes, id}) {
       .catch((error) => {
         console.error('Connection error', error)
       })
-  },[])
-  
-  useEffect(()=>{
+  }, [])
 
-  },[])
+  useEffect(() => {
+
+  }, [])
 
   return (
     <div

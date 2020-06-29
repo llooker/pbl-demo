@@ -80,7 +80,7 @@ export default function Dashboard(props) {
         .withClassName('iframe')
         .withNext()
         // .withNext(lookerContent.isNext || false) //how can I make this dynamic based on prop??
-        .withTheme('Embedded')
+        .withTheme('atom_fashion')
         .on('drillmenu:click', (event) => typeof (_.camelCase(demoComponentType) + 'Action') == 'function' ? this[_.camelCase(demoComponentType) + 'Action'](event) : '')
         //.on('dashboard:loaded', dashboardLoaded)
         .on('dashboard:loaded', (event) => {

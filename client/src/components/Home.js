@@ -200,7 +200,7 @@ class Home extends Component {
   }
 
   toggleHighlightShow = () => {
-    this.setState({highlight_show: !this.state.highlight_show})
+    this.setState({ highlight_show: !this.state.highlight_show })
   }
 
   handleDrawerTabChange = (event, newValue) => {
@@ -355,114 +355,114 @@ class Home extends Component {
     return (
       <div className={classes.root}>
         <AppContext.Provider value={{ show: this.state.highlight_show, toggleShow: this.toggleHighlightShow }} >
-        <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
-          <CssBaseline />
-          <AppBar
-            position="fixed"
-            className={clsx(classes.appBar, {
-              [classes.appBarShift]: drawerOpen,
-            })}
-          >
-            <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={() => handleDrawerChange(true)}
-                edge="start"
-                className={clsx(classes.menuButton, drawerOpen && classes.hide)}
-              >
-                <MenuIcon />
-              </IconButton>
-
-              {activeUsecase ?
-                <Avatar alt="Icon"
-                  src={require(`../images/${activeUsecase}_logo.png`)}
-                /> : ''}
-
-              <Typography variant="h6" noWrap className={`${classes.title} ${classes.ml12}`}>
-                {activeUsecase ? UsecaseContent[activeUsecase].vignette.name : ''}
-              </Typography>
-              <UserMenu
-                lookerUser={lookerUser}
-                switchLookerUser={switchLookerUser}
-                onLogoutSuccess={applySession}
-                lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
-                switchUserAttributeBrand={switchUserAttributeBrand}
-              />
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            className={classes.drawer}
-            variant="persistent"
-            anchor="left"
-            open={drawerOpen}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-          >
-            <div className={classes.drawerHeader}>
-              <IconButton onClick={() => handleDrawerChange(false)}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </div>
-            <Divider />
-            <Tabs
-              id="drawerTabs"
-              orientation="vertical"
-              variant="scrollable"
-              value={drawerTabValue}
-              onChange={handleDrawerTabChange}
-              aria-label="Vertical tabs example"
-              className={classes.tabs}
+          <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
+            <CssBaseline />
+            <AppBar
+              position="fixed"
+              className={clsx(classes.appBar, {
+                [classes.appBarShift]: drawerOpen,
+              })}
             >
-              {activeUsecase ? UsecaseContent[activeUsecase].demoComponents.map((item, index) => (
-                <Tab label={item.label}
-                  id={`homeVerticalTabs${index}`}
-                  key={`homeVerticalTabs${index}`}
-                  icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
-                  {...a11yProps(index)}
-                  contenttype={validIdHelper(item.type)}
-                ></Tab>
-              ))
-                : ''
+              <Toolbar>
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={() => handleDrawerChange(true)}
+                  edge="start"
+                  className={clsx(classes.menuButton, drawerOpen && classes.hide)}
+                >
+                  <MenuIcon />
+                </IconButton>
+
+                {activeUsecase ?
+                  <Avatar alt="Icon"
+                    src={require(`../images/${activeUsecase}_logo.png`)}
+                  /> : ''}
+
+                <Typography variant="h6" noWrap className={`${classes.title} ${classes.ml12}`}>
+                  {activeUsecase ? UsecaseContent[activeUsecase].vignette.name : ''}
+                </Typography>
+                <UserMenu
+                  lookerUser={lookerUser}
+                  switchLookerUser={switchLookerUser}
+                  onLogoutSuccess={applySession}
+                  lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
+                  switchUserAttributeBrand={switchUserAttributeBrand}
+                />
+              </Toolbar>
+            </AppBar>
+            <Drawer
+              className={classes.drawer}
+              variant="persistent"
+              anchor="left"
+              open={drawerOpen}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+            >
+              <div className={classes.drawerHeader}>
+                <IconButton onClick={() => handleDrawerChange(false)}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </div>
+              <Divider />
+              <Tabs
+                id="drawerTabs"
+                orientation="vertical"
+                variant="scrollable"
+                value={drawerTabValue}
+                onChange={handleDrawerTabChange}
+                aria-label="Vertical tabs example"
+                className={classes.tabs}
+              >
+                {activeUsecase ? UsecaseContent[activeUsecase].demoComponents.map((item, index) => (
+                  <Tab label={item.label}
+                    id={`homeVerticalTabs${index}`}
+                    key={`homeVerticalTabs${index}`}
+                    icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
+                    {...a11yProps(index)}
+                    contenttype={validIdHelper(item.type)}
+                  ></Tab>
+                ))
+                  : ''
+                }
+              </Tabs>
+              <HighlightSourcesLegend className={classes.highlightLegend} />
+            </Drawer>
+            <main
+              className={clsx(classes.content, {
+                [classes.contentShift]: drawerOpen,
+              })}
+            >
+              <div className={classes.drawerHeader} />
+              {activeUsecase ?
+                UsecaseContent[activeUsecase].demoComponents.map((item, index) => {
+                  const DemoComponent = demoComponentMap[item.type];
+                  return (
+                    <TabPanel
+                      key={validIdHelper(`tab-panel-${item.type}-${item.lookerContent[0].id}`)}
+                      value={drawerTabValue}
+                      index={index}
+                      className={classes.relative}
+                    >
+                      {DemoComponent ?
+                        <DemoComponent key={validIdHelper(`list-${item.type}`)}
+                          staticContent={item}
+                          handleDrawerTabChange={handleDrawerTabChange}
+                          activeTabValue={activeTabValue}
+                          handleTabChange={handleTabChange}
+                          lookerUser={lookerUser}
+                          // sampleCode={sampleCode}
+                          activeUsecase={activeUsecase}
+                          LookerEmbedSDK={LookerEmbedSDK}
+                          lookerHost={lookerHost}
+                        /> :
+                        "Coming Soon"
+                      }
+                    </TabPanel>)
+                }) : ''
               }
-            </Tabs>
-          </Drawer>
-          <main
-            className={clsx(classes.content, {
-              [classes.contentShift]: drawerOpen,
-            })}
-          >
-            <div className={classes.drawerHeader} />
-            {activeUsecase ?
-              UsecaseContent[activeUsecase].demoComponents.map((item, index) => {
-                const DemoComponent = demoComponentMap[item.type];
-                return (
-                  <TabPanel
-                    key={validIdHelper(`tab-panel-${item.type}-${item.lookerContent[0].id}`)}
-                    value={drawerTabValue}
-                    index={index}
-                    className={classes.relative}
-                  >
-                    {DemoComponent ?
-                      <DemoComponent key={validIdHelper(`list-${item.type}`)}
-                        staticContent={item}
-                        handleDrawerTabChange={handleDrawerTabChange}
-                        activeTabValue={activeTabValue}
-                        handleTabChange={handleTabChange}
-                        lookerUser={lookerUser}
-                        // sampleCode={sampleCode}
-                        activeUsecase={activeUsecase}
-                        LookerEmbedSDK={LookerEmbedSDK}
-                        lookerHost={lookerHost}
-                      /> :
-                      "Coming Soon"
-                    }
-                  </TabPanel>)
-              }) : ''
-            }
-          </main >
-          <HighlightSourcesLegend className={classes.highlightLegend}/>
+            </main >
           </ThemeProvider>
         </AppContext.Provider>
       </div >

@@ -8,7 +8,6 @@ import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./SplashPage.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
-import { ApiHighlight } from '../../Highlights/Highlight';
 import { SplashThumbnail } from './SplashThumbnail';
 import { SplashLook } from './SplashLook';
 const { validIdHelper } = require('../../../tools');
@@ -129,51 +128,51 @@ export default function SplashPage(props) {
             <Box className="tabPanelContainer">
               {tabContent.map((tabContentItem, index) => {
                 return <TabPanel
-                key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
-                value={value}
-                index={index}>
-                <Grid container>
-                  {tabContentItem.type === 'code flyout' ?
-                    <CodeFlyout {...props}
-                      classes={classes}
-                      lookerContent={lookerContent}
-                      clientSideCode={clientSideCode}
-                      serverSideCode={serverSideCode}
-                      lookerUser={lookerUser} />
-                    :
-                    <React.Fragment
-                      key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
-                      <Grid item sm={6}>
-                        <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                          Welcome {lookerUser.user_attributes.brand}!<br />
-                        </Typography>
-                        <br />
-                        <Typography variant="h5" component="h5" className={classes.gridTitle}>
-                          {staticContent.description}<br />
-                        </Typography>
-                      </Grid>
-                      {tabContentItem.map((lookerContent, innerIndex) => {
-                        return  <React.Fragment
-                          key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}>
-                          {innerIndex === 1 ? <Grid item sm={12}><Divider className={`${classes.mt30} ${classes.mb30}`} /></Grid> : ''}
-                          <Grid
-                            item
-                            sm={parseInt(lookerContent.gridWidth)}
-                            id={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
-                            key={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
-                          >
-                            {(lookerContent.type === 'thumbnail') && <SplashThumbnail
-                              {...{lookerContent, classes, demoComponentType}}
-                              onClick={innerIndex > 0 ? (e) => handleDrawerTabChange(e, innerIndex) : undefined}
-                            />}
-                            {(lookerContent.type === 'look') && <SplashLook {...{lookerContent, classes}} id={validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
-                          </Grid>
-                        </React.Fragment>
-                      })}
-                    </React.Fragment>
-                  }
-                </Grid>
-              </TabPanel>
+                  key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
+                  value={value}
+                  index={index}>
+                  <Grid container>
+                    {tabContentItem.type === 'code flyout' ?
+                      <CodeFlyout {...props}
+                        classes={classes}
+                        lookerContent={lookerContent}
+                        clientSideCode={clientSideCode}
+                        serverSideCode={serverSideCode}
+                        lookerUser={lookerUser} />
+                      :
+                      <React.Fragment
+                        key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
+                        <Grid item sm={6}>
+                          <Typography variant="h5" component="h2" className={classes.gridTitle}>
+                            Welcome {lookerUser.user_attributes.brand}!<br />
+                          </Typography>
+                          <br />
+                          <Typography variant="h5" component="h5" className={classes.gridTitle}>
+                            {staticContent.description}<br />
+                          </Typography>
+                        </Grid>
+                        {tabContentItem.map((lookerContent, innerIndex) => {
+                          return <React.Fragment
+                            key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}>
+                            {innerIndex === 1 ? <Grid item sm={12}><Divider className={`${classes.mt30} ${classes.mb30}`} /></Grid> : ''}
+                            <Grid
+                              item
+                              sm={parseInt(lookerContent.gridWidth)}
+                              id={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
+                              key={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
+                            >
+                              {(lookerContent.type === 'thumbnail') && <SplashThumbnail
+                                {...{ lookerContent, classes, demoComponentType }}
+                                onClick={innerIndex > 0 ? (e) => handleDrawerTabChange(e, innerIndex) : undefined}
+                              />}
+                              {(lookerContent.type === 'look') && <SplashLook {...{ lookerContent, classes }} id={validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
+                            </Grid>
+                          </React.Fragment>
+                        })}
+                      </React.Fragment>
+                    }
+                  </Grid>
+                </TabPanel>
               })}
             </Box>
           </Box >

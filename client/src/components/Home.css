@@ -137,7 +137,8 @@ iframe{
 }
 
 .sign-in-background-img {
-  background: url('../images/atom_logo.png');
+  background: url('../images/atom_background.jpg');
+  background-size: cover;
   height: 100%;
   width: 100%;
 }

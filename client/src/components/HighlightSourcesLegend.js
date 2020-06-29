@@ -11,12 +11,11 @@ export function HighlightSourcesLegend({ className }) {
       <Box
         className={className}
       >
-        <Grid container direction="column">
-          <Grid item>
-
+        <Grid container>
+          <Grid item sm={6}>
             <Typography variant="subtitle1" ><CheckBoxOutlineBlankIcon style={{ color: API_COLOR }} /> API</Typography>
           </Grid>
-          <Grid>
+          <Grid item sm={6}>
             <Typography variant="subtitle1" ><CheckBoxOutlineBlankIcon style={{ color: EMBED_COLOR }} /> Embed</Typography>
           </Grid>
         </Grid>
