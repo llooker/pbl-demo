@@ -99,7 +99,15 @@ export default function CustomVis(props) {
   };
 
   const handleFromDate = newValue => {
-    setFromDate(newValue)
+    console.log('handleFromDate')
+    console.log('newValue', newValue)
+    let validDate = Date.parse(newValue);
+    // console.log('validDate', validDate)
+
+    if (validDate > 0) {
+      console.log('inside validDate iffff')
+      setFromDate(newValue)
+    }
   }
   const handleToDate = newValue => {
     setToDate(newValue)
@@ -394,7 +402,7 @@ function FilterBar(props) {
               </Grid>
 
               <Grid item sm={3}>
-                <form className={classes.container} noValidate>
+                <form className={classes.container} >
                   <TextField
                     id="fromDate"
                     label="From date"
@@ -409,7 +417,7 @@ function FilterBar(props) {
                 </form>
               </Grid>
               <Grid item sm={3}>
-                <form className={classes.container} noValidate>
+                <form className={classes.container} >
                   <TextField
                     id="toDate"
                     label="To date"

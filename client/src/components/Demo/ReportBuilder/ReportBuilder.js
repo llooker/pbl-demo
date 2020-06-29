@@ -137,6 +137,9 @@ export default function ReportBuilder(props) {
               .withClassName(lookId)
               .build()
               .connect()
+              .then((look) => {
+                setIFrame(1)
+              })
               .catch((error) => {
                 // console.error('Connection error', error)
               })
@@ -155,6 +158,9 @@ export default function ReportBuilder(props) {
               .withClassName(dashboardId)
               .build()
               .connect()
+              .then((dashboard) => {
+                setIFrame(1)
+              })
               .catch((error) => {
                 console.error('Connection error', error)
               })
