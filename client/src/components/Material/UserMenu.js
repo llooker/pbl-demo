@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import AppContext from '../../AppContext';
 
 const { validIdHelper } = require('../../tools');
 
@@ -24,6 +25,7 @@ export default function UserMenu(props) {
 
     const { lookerUser, switchLookerUser, onLogoutSuccess, lookerUserAttributeBrandOptions, switchUserAttributeBrand } = props
     const classes = useStyles();
+    const { toggleShow } = useContext(AppContext)
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [selectedBrand, setSelectedBrand] = React.useState(lookerUser.user_attributes.brand || '');
@@ -70,6 +72,8 @@ export default function UserMenu(props) {
                 <MenuItem autoFocus={false} onClick={() => handleClose('basic')}>Basic</MenuItem>
                 <MenuItem autoFocus={false} onClick={() => handleClose('advanced')}>Advanced</MenuItem>
                 <MenuItem autoFocus={false} onClick={() => handleClose('premium')}>Premium</MenuItem>
+                <Divider className={classes.divider} />
+                <MenuItem onClick={()=>{toggleShow()}}>Highlight Source</MenuItem>
                 <Divider className={classes.divider} />
                 <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
                 <Divider className={classes.divider} />

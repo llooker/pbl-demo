@@ -13,6 +13,7 @@ import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./CustomVis.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
+import { ApiHighlight } from '../../Highlights/Highlight';
 const { validIdHelper } = require('../../../tools');
 
 //start of Custom Viz Calendar Component
@@ -281,35 +282,37 @@ export default function CustomVis(props) {
                               <>
                                 <Grid item sm={12} className={classes.height800}>
                                   <h1>{desiredField.substring(desiredField.lastIndexOf(".") + 1, desiredField.length).split("_").map(item => item.charAt(0).toUpperCase() + item.substring(1)).join(" ")}</h1>
-                                  <ResponsiveCalendar
-                                    data={filterData}
-                                    from={fromDate}
-                                    to={toDate}
-                                    // colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
-                                    colors={desiredField === lookerContent[0].desiredFields[0] ? redToBlueColorScale : yellowToGreenColorScale}
-                                    yearSpacing={40}
-                                    monthBorderColor="#ffffff"
-                                    dayBorderWidth={2}
-                                    dayBorderColor="#ffffff"
-                                    legends={[
-                                      {
-                                        anchor: 'bottom-right',
-                                        direction: 'row',
-                                        translateY: 36,
-                                        itemCount: 4,
-                                        itemWidth: 42,
-                                        itemHeight: 36,
-                                        itemsSpacing: 14,
-                                        itemDirection: 'right-to-left'
-                                      }
-                                    ]}
-                                    height={700}
-                                    maxHeight={500}
-                                    onClick={lookerUser.permission_level !== 'basic' ? (day, event) => {
-                                      handleModalOpen(day)
-                                      event.stopPropagation()
-                                    } : undefined}
-                                  />
+                                  <ApiHighlight height={700}>
+                                    <ResponsiveCalendar
+                                      data={filterData}
+                                      from={fromDate}
+                                      to={toDate}
+                                      // colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
+                                      colors={desiredField === lookerContent[0].desiredFields[0] ? redToBlueColorScale : yellowToGreenColorScale}
+                                      yearSpacing={40}
+                                      monthBorderColor="#ffffff"
+                                      dayBorderWidth={2}
+                                      dayBorderColor="#ffffff"
+                                      legends={[
+                                        {
+                                          anchor: 'bottom-right',
+                                          direction: 'row',
+                                          translateY: 36,
+                                          itemCount: 4,
+                                          itemWidth: 42,
+                                          itemHeight: 36,
+                                          itemsSpacing: 14,
+                                          itemDirection: 'right-to-left'
+                                        }
+                                      ]}
+                                      height={700}
+                                      maxHeight={500}
+                                      onClick={lookerUser.permission_level !== 'basic' ? (day, event) => {
+                                        handleModalOpen(day)
+                                        event.stopPropagation()
+                                      } : undefined}
+                                    />
+                                  </ApiHighlight>
                                 </Grid>
                               </> :
                               ''

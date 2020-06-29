@@ -64,5 +64,4 @@ export default makeStyles((theme) => ({
     childHoverVisibility: {
         visibility: 'hidden'
     }
-
 }));
