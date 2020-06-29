@@ -36,6 +36,9 @@ import CustomVis from './Demo/CustomVis/CustomVis';
 import ReportBuilder from './Demo/ReportBuilder/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder/QueryBuilder';
 import ComingSoon from './Demo/ComingSoon';
+import AppContext from '../AppContext';
+import { HighlightSourcesLegend } from './HighlightSourcesLegend';
+import style from 'react-syntax-highlighter/dist/esm/styles/hljs/agate';
 
 
 
@@ -153,6 +156,12 @@ const styles = theme => ({
   },
   ml12: {
     marginLeft: 12
+  },
+  highlightLegend: {
+    position: 'fixed',
+    bottom: theme.spacing(2),
+    left: theme.spacing(2),
+    zIndex: 1200
   }
 });
 
@@ -185,8 +194,13 @@ class Home extends Component {
       activeTabValue: 0,
       // sampleCode: {},
       activeUsecase: '',
-      appLayout: ''
+      appLayout: '',
+      highlight_show: false
     }
+  }
+
+  toggleHighlightShow = () => {
+    this.setState({highlight_show: !this.state.highlight_show})
   }
 
   handleDrawerTabChange = (event, newValue) => {
@@ -340,6 +354,7 @@ class Home extends Component {
 
     return (
       <div className={classes.root}>
+        <AppContext.Provider value={{ show: this.state.highlight_show, toggleShow: this.toggleHighlightShow }} >
         <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
           <CssBaseline />
           <AppBar
@@ -447,7 +462,9 @@ class Home extends Component {
               }) : ''
             }
           </main >
-        </ThemeProvider>
+          <HighlightSourcesLegend className={classes.highlightLegend}/>
+          </ThemeProvider>
+        </AppContext.Provider>
       </div >
     )
   }

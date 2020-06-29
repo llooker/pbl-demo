@@ -7,6 +7,7 @@ import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./Dashboard.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
+import { EmbedHighlight } from '../../Highlights/Highlight';
 const { validIdHelper } = require('../../../tools');
 
 //start of Dashboard Component
@@ -225,12 +226,14 @@ export default function Dashboard(props) {
                         }
                         <Box className={classes.w100} mt={2}>
                           <Grid item sm={12}>
-                            <div
-                              className="embedContainer"
-                              id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                              key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                            >
-                            </div>
+                            <EmbedHighlight>
+                              <div
+                                className="embedContainer"
+                                id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                              >
+                              </div>
+                            </EmbedHighlight>
                           </Grid>
                         </Box>
                       </React.Fragment>

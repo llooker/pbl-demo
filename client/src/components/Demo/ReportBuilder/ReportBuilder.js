@@ -9,6 +9,7 @@ import rawSampleCode from '!!raw-loader!./ReportBuilder.js'; // eslint-disable-l
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
+import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 const { validIdHelper } = require('../../../tools');
 
 //start of ReportBuilder Component
@@ -190,7 +191,6 @@ export default function ReportBuilder(props) {
 
   return (
     <div className={`${classes.root} demoComponent`}>
-
       <Grid container
         spacing={3}
         key={validIdHelper(type)} >
@@ -241,21 +241,25 @@ export default function ReportBuilder(props) {
                         <React.Fragment
                           key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
                           <Grid item sm={4} >
-                            <TreeSideBar {...props}
-                              classes={classes}
-                              demoComponentType={demoComponentType}
-                              tabContent={tabContent}
-                              tabContentItemIndex={tabContentItemIndex}
-                              action={action}
-                              apiContent={apiContent} />
+                            <ApiHighlight>
+                              <TreeSideBar {...props}
+                                classes={classes}
+                                demoComponentType={demoComponentType}
+                                tabContent={tabContent}
+                                tabContentItemIndex={tabContentItemIndex}
+                                action={action}
+                                apiContent={apiContent} />
+                            </ApiHighlight>
                           </Grid>
                           <Grid item sm={8} >
-                            <div
-                              className="embedContainer"
-                              id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                              key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                            >
-                            </div>
+                            <EmbedHighlight>
+                              <div
+                                className="embedContainer"
+                                id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                              >
+                              </div>
+                            </EmbedHighlight>
                           </Grid>
                         </React.Fragment>
                         :
