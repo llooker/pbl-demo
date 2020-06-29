@@ -2,7 +2,7 @@ import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { ApiHighlight } from '../../Highlights/Highlight';
 import { Typography } from '@material-ui/core';
 
-export function SplashThumbnail({lookerContent, classes}) {
+export function SplashThumbnail({lookerContent, classes, onClick}) {
   const [svg, setSvg] = useState(undefined)
  
   useEffect(()=>{
@@ -36,6 +36,7 @@ export function SplashThumbnail({lookerContent, classes}) {
         width={"306px"} 
         margin={"auto"}
         dangerouslySetInnerHTML={{ __html: svg || '' }}
+        onClick={onClick}
       >
       </ApiHighlight>
     </div>
