@@ -162,7 +162,10 @@ export default function SplashPage(props) {
                             id={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
                             key={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
                           >
-                            {(lookerContent.type === 'thumbnail') && <SplashThumbnail {...{lookerContent, classes, demoComponentType}}/>}
+                            {(lookerContent.type === 'thumbnail') && <SplashThumbnail
+                              {...{lookerContent, classes, demoComponentType}}
+                              onClick={innerIndex > 0 ? (e) => handleDrawerTabChange(e, innerIndex) : undefined}
+                            />}
                             {(lookerContent.type === 'look') && <SplashLook {...{lookerContent, classes}} id={validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
                           </Grid>
                         </React.Fragment>
