@@ -17,6 +17,11 @@ const { validIdHelper, prettifyString } = require('../../../tools');
 
 //start of QueryBuilder Component
 export default function QueryBuilder(props) {
+
+
+  // console.log('QueryBuilder')
+  // console.log('props', props)
+
   //initialize state using hooks
   const [value, setValue] = useState(0);
   const [apiContent, setApiContent] = useState({});
@@ -51,6 +56,7 @@ export default function QueryBuilder(props) {
   }, [lookerContent])
 
   const action = async (newQuery, resultFormat) => {
+    // console.log('action')
     let apiContentCopy = { ...apiContent }
     apiContentCopy.status = 'running';
     setApiContent(apiContentCopy)
@@ -63,7 +69,7 @@ export default function QueryBuilder(props) {
       }
     })
     let lookerCreateTaskResponseData = await lookerCreateTaskResposnse.json();
-    setServerSideCode(lookerCreateTaskResponseData.code)
+    // setServerSideCode(lookerCreateTaskResponseData.code)
 
     let taskInterval = setInterval(async () => {
       let lookerCheckTaskResposnse = await fetch('/checkquerytask/' + lookerCreateTaskResponseData.queryTaskId, {
@@ -167,12 +173,14 @@ export default function QueryBuilder(props) {
 
 
 function FilterBar(props) {
+  // console.log('FilterBar')
+  // console.log('props', props)
   const { staticContent, staticContent: { lookerContent }, classes, action } = props;
   let measureCounter = 0;
   let dimensionCounter = 0;
 
   const [expanded, setExpanded] = useState(true);
-  const [fieldsChipData, setFieldsChipData] = useState(lookerContent[0].queryBody.fields.map((item, index) => {
+  const [fieldsChipData, setFieldsChipData] = useState(lookerContent[0].queryBody ? lookerContent[0].queryBody.fields.map((item, index) => {
     return {
       key: 'fieldChipData' + index,
       label: prettifyString(item.substring(item.lastIndexOf('.') + 1, item.length)),
@@ -180,16 +188,16 @@ function FilterBar(props) {
       selected: true,
       fieldType: lookerContent[0].fieldType[item]
     }
-  }));
+  }) : '');
   const [queryModified, setQueryModified] = useState(false);
-  const [filtersData, setFilterData] = useState(Object.keys(lookerContent[0].queryBody.filters).map((key, index) => {
+  const [filtersData, setFilterData] = useState(lookerContent[0].queryBody ? Object.keys(lookerContent[0].queryBody.filters).map((key, index) => {
     return {
       key: 'filter' + index,
       label: key,
       value: lookerContent[0].queryBody.filters[key],
       type: lookerContent[0].filterType[key]
     }
-  }))
+  }) : '')
 
   const handleExpansionPanel = (event, newValue) => {
     setExpanded(expanded ? false : true);
@@ -242,7 +250,7 @@ function FilterBar(props) {
           <Grid item sm={12}>
             <Typography variant="subtitle1">
               Select Fields:
-      {
+      {fieldsChipData.length ?
                 fieldsChipData.map((item, index) => {
                   return (
                     item.fieldType === 'measure' ?
@@ -257,14 +265,14 @@ function FilterBar(props) {
                         icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
                       /> : ''
                   )
-                })
+                }) : ''
               }<br />
             </Typography>
           </Grid>
           <Grid item sm={12}>
             <Typography variant="subtitle1">
               Totals:
-                          {
+                          {fieldsChipData.length ?
                 fieldsChipData.map((item, index) => {
                   return (
                     item.fieldType === 'dimension' ?
@@ -278,7 +286,7 @@ function FilterBar(props) {
                         icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
                       /> : ''
                   )
-                })
+                }) : ''
               }<br />
             </Typography>
           </Grid>
@@ -287,7 +295,7 @@ function FilterBar(props) {
             <Typography variant="subtitle1">
               Filter By:
                       </Typography>
-            {filtersData.map((item, index) => {
+            {filtersData.length ? filtersData.map((item, index) => {
               return (
                 <FormControl className={item.value.length ? classes.formControl : classes.hidden} key={validIdHelper(`${item.label}FormControl`)}>
                   {
@@ -326,7 +334,7 @@ function FilterBar(props) {
                   }
                 </FormControl>
               )
-            })}
+            }) : ''}
           </Grid>
         </Grid>
       </ExpansionPanelDetails>

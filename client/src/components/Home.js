@@ -331,15 +331,17 @@ class Home extends Component {
   }*/
 
   render() {
-    //why are these different?
+
+    //how to make this dynamic????
     const demoComponentMap = {
-      "splashpage": SplashPage,
-      // "simple dashboard": Dashboard,
-      // "custom filter": Dashboard,
-      // "custom vis": CustomVis,
-      // "report builder": ReportBuilder,
-      // "query builder": QueryBuilder
-    }
+      "splashpage19": SplashPage,
+      "simpledashboard5": Dashboard,
+      "simpledashboard9": Dashboard,
+      "customfilter1": Dashboard,
+      "customvis": CustomVis,
+      "querybuilderexplorelite": QueryBuilder,
+      "reportbuilder14": ReportBuilder,
+    };
 
     const themeMap = {
       "atom": atomTheme,
@@ -350,7 +352,6 @@ class Home extends Component {
     const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
     const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost } = this.props
 
-    //new code for tree style menu
     let treeCounter = 0;
     let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : []; // Use Lodash to sort array by 'name'
     let orderedDemoComponentsForMenuObj = {};
@@ -368,20 +369,20 @@ class Home extends Component {
 
     if (activeUsecase && !selectedTreeItem.length) {
       this.setState({
-        //item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) :  validIdHelper(item.type)
         selectedTreeItem:
-          // UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
-          // validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
-          validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
+          UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
+            validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
+            validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
       }, () => {
-        // console.log('calback this.state.selectedTreeItem', this.state.selectedTreeItem)
       })
+
+      //couldn't figure this out...
+      // UsecaseContent[activeUsecase].demoComponents.map(item => {
+      //   demoComponentMap[item.lookerContent[0].id ?
+      //     validIdHelper(item.type + item.lookerContent[0].id) :
+      //     validIdHelper(item.type)] = item.type.split(" ").map(item => _.capitalize(item)).join("")
+      // })
     }
-
-    console.log('selectedTreeItem', selectedTreeItem)
-
-    const DemoComponentToRender = demoComponentMap[selectedTreeItem];
-    console.log('DemoComponentToRender', DemoComponentToRender)
 
     return (
       <div className={classes.root}>
@@ -437,36 +438,12 @@ class Home extends Component {
                 </IconButton>
               </div>
               <Divider />
-              {/* <Tabs
-                id="drawerTabs"
-                orientation="vertical"
-                variant="scrollable"
-                value={drawerTabValue}
-                onChange={handleDrawerTabChange}
-                aria-label="Vertical tabs example"
-                className={classes.tabs}
-              >
-                {activeUsecase ? UsecaseContent[activeUsecase].demoComponents.map((item, index) => (
-                  <Tab label={item.label}
-                    id={`homeVerticalTabs${index}`}
-                    key={`homeVerticalTabs${index}`}
-                    icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
-                    {...a11yProps(index)}
-                    contenttype={validIdHelper(item.type)}
-                  ></Tab>
-                ))
-                  : ''
-                }
-              </Tabs> */}
-
-
               <TreeView
                 className={classes.tree}
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
                 expanded={expandedTreeItemsArr}
               >
-
                 {activeUsecase ? Object.keys(orderedDemoComponentsForMenuObj).map((key, outerIndex) => (
                   <TreeItem
                     key={`${validIdHelper(key + '-outerTreeItem-' + outerIndex)}`}
@@ -479,23 +456,20 @@ class Home extends Component {
                         nodeId={"" + (treeCounter += 1)}
                         treecounter={treeCounter}
                         label={_.capitalize(item.label)}
-                        selected={selectedTreeItem === item.type}
+                        selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedTreeItem}
+                        className={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedTreeItem ? `Mui-selected innerTreeItem` : `innerTreeItem`}
                         onClick={(event) => {
                           this.setState({
                             selectedTreeItem:
-                              //item.lookerContent[0].id ? 
-                              // validIdHelper(item.type + item.lookerContent[0].id) : 
-                              validIdHelper(item.type)
+                              item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) : validIdHelper(item.type)
                           })
                         }}
-                      // icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
+                      // icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
                       // disabled={apiContent[key].length ? false : true}
                       />
                     ))}
                   </TreeItem>)) : ''}
               </TreeView>
-
-
               <HighlightSourcesLegend className={classes.highlightLegend} />
             </Drawer>
             <main
@@ -504,64 +478,26 @@ class Home extends Component {
               })}
             >
               <div className={classes.drawerHeader} />
-              {/* {activeUsecase ?
-                UsecaseContent[activeUsecase].demoComponents.map((item, index) => {
-                  const DemoComponent = demoComponentMap[item.type];
-                  return (
-                    <TabPanel
-                      key={validIdHelper(`tab-panel-${item.type}-${item.lookerContent[0].id}`)}
-                      value={drawerTabValue}
-                      index={index}
-                      className={classes.relative}
-                    >
-                      {DemoComponent ?
-                        <DemoComponent key={validIdHelper(`list-${item.type}`)}
-                          staticContent={item}
-                          handleDrawerTabChange={handleDrawerTabChange}
-                          activeTabValue={activeTabValue}
-                          handleTabChange={handleTabChange}
-                          lookerUser={lookerUser}
-                          // sampleCode={sampleCode}
-                          activeUsecase={activeUsecase}
-                          LookerEmbedSDK={LookerEmbedSDK}
-                          lookerHost={lookerHost}
-                        /> :
-                        "Coming Soon"
-                      }
-                    </TabPanel>)
-                }) : 
-                ''
-              } */}
-
               {activeUsecase ?
                 UsecaseContent[activeUsecase].demoComponents.map((item, index) => {
-                  // const DemoComponent = demoComponentMap[item.type];
+                  const key = item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) : validIdHelper(item.type);
+                  const DemoComponent = demoComponentMap[key];
                   return (
-                    <TabPanel
-                      key={validIdHelper(`tab-panel-${item.type}-${item.lookerContent[0].id}`)}
-                      value={drawerTabValue}
-                      index={index}
-                      className={classes.relative}
-                    >
-                      {validIdHelper(item.type) === selectedTreeItem ?
-                        <DemoComponentToRender key={validIdHelper(`list-${item.type}`)}
-                          staticContent={item}
-                          handleDrawerTabChange={handleDrawerTabChange}
-                          activeTabValue={activeTabValue}
-                          handleTabChange={handleTabChange}
-                          lookerUser={lookerUser}
-                          activeUsecase={activeUsecase}
-                          LookerEmbedSDK={LookerEmbedSDK}
-                          lookerHost={lookerHost}
-                        /> :
-                        "Coming Soon"
-                      }
-                    </TabPanel>)
+                    <Box className={key === selectedTreeItem ? `` : `${classes.hide}`}>
+                      <DemoComponent key={validIdHelper(`list-${item.type}`)}
+                        staticContent={item}
+                        handleDrawerTabChange={handleDrawerTabChange}
+                        activeTabValue={activeTabValue}
+                        handleTabChange={handleTabChange}
+                        lookerUser={lookerUser}
+                        activeUsecase={activeUsecase}
+                        LookerEmbedSDK={LookerEmbedSDK}
+                        lookerHost={lookerHost}
+                      />
+                    </Box>)
                 }) :
                 ''
               }
-
-
             </main >
           </ThemeProvider>
         </AppContext.Provider>

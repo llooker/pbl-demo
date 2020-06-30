@@ -100,13 +100,8 @@ export default function CustomVis(props) {
   };
 
   const handleFromDate = newValue => {
-    console.log('handleFromDate')
-    console.log('newValue', newValue)
     let validDate = Date.parse(newValue);
-    // console.log('validDate', validDate)
-
     if (validDate > 0) {
-      console.log('inside validDate iffff')
       setFromDate(newValue)
     }
   }
@@ -123,13 +118,13 @@ export default function CustomVis(props) {
   //format response from initial api call based on LookerContent array
   //to match format required by Nivo Calendar component
   let filterData = [];
-  if (apiContent.queryResults) {
+  if (apiContent.queryResults && apiContent.queryResults.data) {
     //filtering for fromDate, toDate and category
     filterData = _.filter(apiContent.queryResults.data, (row) => {
-      // console.log('row', row)
       return (row[apiContent.inlineQuery.fields[0]].value > fromDate
         && row[apiContent.inlineQuery.fields[0]].value < toDate
-        && (category === 'All' ? true : row[apiContent.inlineQuery.fields[1]].value === category))
+        && (category === 'All' ? true : row[apiContent.inlineQuery.fields[1]].value === category)
+      )
     })
     //converting filterDAta to desired format for vis
     filterData = filterData.map(item => {
@@ -170,9 +165,11 @@ export default function CustomVis(props) {
    * performLookerApiCalls and setSampleCode
   */
   useEffect(() => {
-    performLookerApiCalls(lookerContent);
-    setDesiredField(lookerContent[0].desiredFields[0])
-    setClientSideCode(rawSampleCode)
+    if (lookerContent.length) {
+      performLookerApiCalls(lookerContent);
+      setDesiredField(lookerContent[0].desiredFields[0])
+      setClientSideCode(rawSampleCode)
+    }
   }, [lookerContent])
 
   /** 
@@ -207,9 +204,9 @@ export default function CustomVis(props) {
       }
       lookerResponseData.inlineQuery = inlineQuery;
       lookerResponseData.uniqueCategories = uniqueCategories;
-      setApiContent(lookerResponseData)
       setFromDate(lookerResponseData.queryResults.data[lookerResponseData.queryResults.data.length - 1][lookerResponseData.inlineQuery.fields[0]].value);
       setToDate(lookerResponseData.queryResults.data[0][lookerResponseData.inlineQuery.fields[0]].value);
+      setApiContent(lookerResponseData)
       if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
     })
   }
