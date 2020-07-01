@@ -16,7 +16,7 @@ import { TabPanel, a11yProps } from './helpers.js';
 import { ApiHighlight } from '../../Highlights/Highlight';
 
 //new date pickers
-import { format, addDays } from 'date-fns';
+import { format, endOfDay, addDays } from 'date-fns';
 // import React from 'react';
 // import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
@@ -114,15 +114,15 @@ export default function CustomVis(props) {
   const handleFromDate = newValue => {
     let validDate = Date.parse(newValue);
     if (validDate > 0) {
-      let newValueAsDate = format(new Date(newValue), 'yyyy-MM-dd');
+      let newValueAsDate = format(addDays(new Date(newValue), 1), 'yyyy-MM-dd');
       setFromDate(newValueAsDate);
     }
   }
   const handleToDate = newValue => {
     let validDate = Date.parse(newValue);
     if (validDate > 0) {
-      let newValueAsDate = format(new Date(newValue), 'yyyy-MM-dd');
-      setFromDate(newValueAsDate);
+      let newValueAsDate = format(addDays(new Date(newValue), 1), 'yyyy-MM-dd');
+      setToDate(newValueAsDate);
     }
   }
   const handleCategory = newValue => {
