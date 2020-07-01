@@ -1,5 +1,3 @@
-
-import $ from 'jquery';
 import _ from 'lodash'
 import React, { Component } from 'react'
 import clsx from 'clsx';
@@ -8,20 +6,13 @@ import {
   Drawer, CssBaseline, AppBar, Toolbar, Typography,
   Divider, IconButton, Tabs, Tab, Icon, Box, Avatar
 } from '@material-ui/core/';
+import { TreeView, TreeItem } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { TreeView, TreeItem } from '@material-ui/lab';
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
-import { blue, green, orange, indigo, red, grey } from '@material-ui/core/colors';
-import './Home.css'; //needed for iframe height
-
-//fabio suggestion 6/12
-//look at dynamic importing + code splitting to further optimize load
-//https://github.com/fabio-looker/cs-app-internal/blob/master/extension/src/index.js lines ~34
-//https://github.com/fabio-looker/cs-app-internal/blob/master/extension/src/main.jsx lines 11, 54
-//https://github.com/fabio-looker/cs-app-internal/blob/master/extension/webpack.config.js output line
+import { blue, grey } from '@material-ui/core/colors';
 import UserMenu from './Material/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
@@ -34,35 +25,10 @@ import ComingSoon from './Demo/ComingSoon';
 import AppContext from '../AppContext';
 import { HighlightSourcesLegend } from './HighlightSourcesLegend';
 import style from 'react-syntax-highlighter/dist/esm/styles/hljs/agate';
-
-
+import './Home.css'; //needed for iframe height
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      <Box p={3}>{children}</Box>
-    </Typography>
-  );
-}
-
-function a11yProps(index) {
-  return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
-  };
-}
 
 const styles = theme => ({
   root: {
@@ -73,14 +39,7 @@ const styles = theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+    zIndex: 1201
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -152,6 +111,12 @@ const styles = theme => ({
   ml12: {
     marginLeft: 12
   },
+  mr12: {
+    marginRight: 12
+  },
+  mt12: {
+    marginTop: 12
+  },
   highlightLegend: {
     position: 'fixed',
     bottom: theme.spacing(2),
@@ -163,6 +128,21 @@ const styles = theme => ({
     flexGrow: 1,
     maxWidth: 400
   },
+  parentHoverVisibility: {
+    '&:hover $childHoverVisibility': {
+      visibility: 'visible'
+    }
+
+  },
+  childHoverVisibility: {
+    visibility: 'hidden'
+  },
+  fontSize1em: {
+    fontSize: '1em'
+  },
+  padding10: {
+    padding: 10
+  }
 });
 
 const defaultTheme = createMuiTheme({})
@@ -218,9 +198,25 @@ class Home extends Component {
     })
   }
 
-  handleDrawerChange = (open) => {
+  // handleDrawerChange = (open) => {
+  //   this.setState({
+  //     drawerOpen: open
+  //   })
+  // }
+
+  handleDrawerTreeItemChange = (event, newValue) => {
+    let selectedTreeItemValue = ''
+    UsecaseContent[this.state.activeUsecase].demoComponents.map(item => {
+      if (item.type !== "splash page") {
+        item.lookerContent.map(lookerContentItem => {
+          if (lookerContentItem.id === newValue) {
+            selectedTreeItemValue = validIdHelper(item.type + lookerContentItem.id)
+          }
+        })
+      }
+    })
     this.setState({
-      drawerOpen: open
+      selectedTreeItem: selectedTreeItemValue
     })
   }
 
@@ -233,102 +229,6 @@ class Home extends Component {
       LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
     })
   }
-
-  /*dashboardOverviewDetailAction(event) {
-      // console.log('dashboardOverviewDetailAction')
-      // console.log('event', event)
-      if (event.label === 'Campaign Performance Dashboard') { //ecommm
-          const url = event.url;
-          let stateName = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
-          const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
-          const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
-          if (stateName === 'pwSkck3zvGd1fnhCO7Fc12') stateName = 3106; // hack for now...
-          this.setState({}, () => {
-              this.state[stateName].updateFilters({ [filterName]: filterValue })
-              this.state[stateName].run()
-          })
-
-          this.handleTabChange(1) //can assume one for now
-          return { cancel: true }
-      } else if (event.label === "Condition Lookup Dashboard") { //insurance
-          const url = event.url;
-          let stateName = decodeURIComponent(url.substring(url.lastIndexOf('/') + 1, url.indexOf('?')));
-          const filterName = decodeURIComponent(url.substring(url.indexOf('?') + 1, url.indexOf('=')));
-          const filterValue = decodeURIComponent(url.substring(url.lastIndexOf('=') + 1, url.length));
-          if (stateName === 'TU4SBUVLvW1gDzfwCms2ji') stateName = 286; // hack for now...
-          this.setState({}, () => {
-              this.state[stateName].updateFilters({ [filterName]: filterValue })
-              this.state[stateName].run()
-          })
-          this.handleTabChange(1) //can assume one for now
-          return { cancel: true }
-      }
-  }*/
-
-  /*cohortBuilderAction = async (lookerContent) => {
-      // console.log('cohortBuilderAction');
-      // console.log('lookerContent', lookerContent);
-  
-  
-      let cohortBuilderApiContentCopy = { ...this.state.cohortBuilderApiContent }
-      cohortBuilderApiContentCopy.status = 'running';
-      cohortBuilderApiContentCopy.filterContent = {};
-      // this.setState({ 'cohortBuilderApiContent': cohortBuilderApiContentCopy })
-  
-      for (let i = 0; i < lookerContent.fields.length; i++) {
-  
-          let newQuery = lookerContent.queryBody;
-          newQuery.fields = [lookerContent.fields[i]];
-          // console.log('newQuery', newQuery);
-  
-  
-          let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
-              method: 'GET',
-              headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json'
-              }
-          })
-          let lookerCreateTaskResponseData = await lookerCreateTaskResposnse.json();
-          // console.log('lookerCreateTaskResponseData', lookerCreateTaskResponseData);
-  
-          let taskInterval = setInterval(async () => {
-              let lookerCheckTaskResposnse = await fetch('/checkquerytask/' + lookerCreateTaskResponseData.queryTaskId, {
-                  method: 'GET',
-                  headers: {
-                      Accept: 'application/json',
-                      'Content-Type': 'application/json'
-                  }
-              })
-              let lookerCheckTaskResponseData = await lookerCheckTaskResposnse.json();
-  
-              if (lookerCheckTaskResponseData.queryResults.status === 'complete') {
-                  clearInterval(taskInterval)
-  
-                  lookerCheckTaskResponseData.queryResults.options = []
-                  for (let j = 0; j < lookerCheckTaskResponseData.queryResults.data.length; j++) {
-                      let thisOption = {};
-                      thisOption.label = lookerCheckTaskResponseData.queryResults.data[j][lookerCheckTaskResponseData.queryResults.added_params.sorts[0]].value == null
-                          ? '' :
-                          lookerCheckTaskResponseData.queryResults.data[j][lookerCheckTaskResponseData.queryResults.added_params.sorts[0]].value
-                      lookerCheckTaskResponseData.queryResults.options.push(thisOption)
-                  }
-  
-                  cohortBuilderApiContentCopy.filterContent[lookerCheckTaskResponseData.queryResults.id] = lookerCheckTaskResponseData.queryResults
-                  cohortBuilderApiContentCopy.status = Object.keys(cohortBuilderApiContentCopy.filterContent).length === lookerContent.fields.length ? "complete" : "running";
-                  this.setState((prevState) => ({
-                      'cohortBuilderApiContent': cohortBuilderApiContentCopy
-                  }))
-              }
-          }, 1000)
-  
-      }
-      // console.log('cohortBuilderApiContentCopy', cohortBuilderApiContentCopy)
-      // this.setState({
-      //     cohortBuilderApiContent: cohortBuilderApiContentCopy
-      // })
-  
-  }*/
 
   render() {
 
@@ -349,7 +249,9 @@ class Home extends Component {
     }
 
     const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedTreeItem } = this.state; //, sampleCode
-    const { handleDrawerChange, handleDrawerTabChange, handleTabChange } = this;
+    const {
+      // handleDrawerChange, handleDrawerTabChange, 
+      handleTabChange, handleDrawerTreeItemChange } = this;
     const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost } = this.props
 
     let treeCounter = 0;
@@ -392,11 +294,11 @@ class Home extends Component {
             <AppBar
               position="fixed"
               className={clsx(classes.appBar, {
-                [classes.appBarShift]: drawerOpen,
+                // [classes.appBarShift]: drawerOpen,
               })}
             >
               <Toolbar>
-                <IconButton
+                {/* <IconButton
                   color="inherit"
                   aria-label="open drawer"
                   onClick={() => handleDrawerChange(true)}
@@ -404,7 +306,7 @@ class Home extends Component {
                   className={clsx(classes.menuButton, drawerOpen && classes.hide)}
                 >
                   <MenuIcon />
-                </IconButton>
+                </IconButton> */}
 
                 {activeUsecase ?
                   <Avatar alt="Icon"
@@ -432,14 +334,17 @@ class Home extends Component {
                 paper: classes.drawerPaper,
               }}
             >
-              <div className={classes.drawerHeader}>
+              {/* <div className={classes.drawerHeader}>
                 <IconButton onClick={() => handleDrawerChange(false)}>
                   <ChevronLeftIcon />
                 </IconButton>
               </div>
-              <Divider />
+              <Divider /> */}
+
+              <div className={classes.drawerHeader} />
+
               <TreeView
-                className={classes.tree}
+                className={`${classes.tree} ${classes.mt12} ${classes.padding10}`}
                 defaultCollapseIcon={<ExpandMoreIcon />}
                 defaultExpandIcon={<ChevronRightIcon />}
                 expanded={expandedTreeItemsArr}
@@ -452,10 +357,17 @@ class Home extends Component {
                     label={_.capitalize(key)}>
                     {orderedDemoComponentsForMenuObj[key].map((item, innerIndex) => (
                       <TreeItem
-                        key={`${validIdHelper(key + '-innerTreeItem-' + innerIndex)}`}
+                        key={`${validIdHelper(key + '-innerTreeItem-' + treeCounter)}`}
                         nodeId={"" + (treeCounter += 1)}
                         treecounter={treeCounter}
-                        label={_.capitalize(item.label)}
+                        // label={_.capitalize(item.label)}
+                        // icon={<Icon className={`fa ${item.icon} ${classes.icon} ${classes.fontSize1em} ml12`} />}
+                        label={< div
+                          id={`${validIdHelper(key + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                          key={`${validIdHelper(key + '-innerTreeItem-LabelContainer' + treeCounter)}`}
+                          className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
+                          <Icon className={`fa ${item.icon} ${classes.icon} ${classes.fontSize1em}  ${classes.mr12} ${classes.mt12}`} />{_.capitalize(item.label)}
+                        </div>}
                         selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedTreeItem}
                         className={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedTreeItem ? `Mui-selected innerTreeItem` : `innerTreeItem`}
                         onClick={(event) => {
@@ -464,7 +376,6 @@ class Home extends Component {
                               item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) : validIdHelper(item.type)
                           })
                         }}
-                      // icon={<Icon className={`fa ${item.icon} ${classes.icon}`} />}
                       // disabled={apiContent[key].length ? false : true}
                       />
                     ))}
@@ -483,16 +394,19 @@ class Home extends Component {
                   const key = item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) : validIdHelper(item.type);
                   const DemoComponent = demoComponentMap[key];
                   return (
-                    <Box className={key === selectedTreeItem ? `` : `${classes.hide}`}>
-                      <DemoComponent key={validIdHelper(`list-${item.type}`)}
+                    <Box key={validIdHelper(`box-${item.type}-${index}`)}
+                      className={key === selectedTreeItem ? `` : `${classes.hide}`}>
+                      <DemoComponent key={validIdHelper(`treeItem-${item.type}-${index}`)}
                         staticContent={item}
-                        handleDrawerTabChange={handleDrawerTabChange}
+                        // handleDrawerTabChange={handleDrawerTabChange}
+                        handleDrawerTreeItemChange={handleDrawerTreeItemChange}
                         activeTabValue={activeTabValue}
                         handleTabChange={handleTabChange}
                         lookerUser={lookerUser}
                         activeUsecase={activeUsecase}
                         LookerEmbedSDK={LookerEmbedSDK}
                         lookerHost={lookerHost}
+                      // UsecaseContent={activeUsecase ? UsecaseContent[activeUsecase] : ''}
                       />
                     </Box>)
                 }) :

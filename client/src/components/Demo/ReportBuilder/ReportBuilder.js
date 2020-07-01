@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
 import { AppBar, Tabs, Tab, Typography, Box, Grid, Icon, CircularProgress, Card, Button } from '@material-ui/core'
 import { TreeView, TreeItem } from '@material-ui/lab';
@@ -317,7 +318,7 @@ function TreeSideBar(props) {
             key={`${validIdHelper(demoComponentType + '-outerTreeItem-' + outerIndex)}`}
             nodeId={"" + (treeCounter += 1)}
             treecounter={treeCounter}
-            label={key.charAt(0).toUpperCase() + key.substring(1)}
+            label={_.capitalize(key)}
             icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
             disabled={apiContent[key].length ? false : true}
           >

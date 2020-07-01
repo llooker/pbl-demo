@@ -16,6 +16,9 @@ const { validIdHelper } = require('../../tools');
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: 12
+  },
+  zIndex1500: {
+    zIndex: 1500
   }
 }))
 
@@ -46,7 +49,7 @@ export default function UserMenu(props) {
   };
 
   return (
-    <div>
+    <div className={`${classes.zIndex1500}`}>
       <IconButton
         aria-label="account of current user"
         aria-controls="menu-appbar"

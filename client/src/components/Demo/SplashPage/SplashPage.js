@@ -22,7 +22,7 @@ export default function SplashPage(props) {
 
   //declare constants
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, lookerUser, handleDrawerTabChange } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, lookerUser, handleDrawerTreeItemChange } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
@@ -38,57 +38,11 @@ export default function SplashPage(props) {
 
   /**
    * listen for lookerContent and call 
-   * performLookerApiCalls and setSampleCode
+   * setSampleCode
   */
   useEffect(() => {
-    performLookerApiCalls([...lookerContent])
     setClientSideCode(rawSampleCode)
   }, [lookerContent]);
-
-  /** 
-   * What this function does:
-   * iterate over Looker Content array referenced above and
-   * calls specific endpoints and methods available from Looker Node SDK
-   * and embed SDK to create the experience on this page
-   */
-  const performLookerApiCalls = function (lookerContent) {
-    lookerContent.map(async lookerContent => {
-      /**
-       * if content type of array index is look,
-       * call LookerEmbedSDK to embed look by ID
-       * and append to appropriate container on page
-       */
-      if (lookerContent.type === 'look') {
-        // LookerEmbedSDK.createLookWithId(lookerContent.id)
-        //   .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
-        //   .withClassName('look')
-        //   .withClassName(lookerContent.id)
-        //   .build()
-        //   .connect()
-        //   .catch((error) => {
-        //     console.error('Connection error', error)
-        //   })
-      }
-      /** 
-       * else if content type of array index is thumbnail,
-       * make call to server @ /getthumbnail route to call Looker API
-       * and append to appropriate container on the page
-       * see server side code snippet below for actual API call using SDK
-      */
-      else if (lookerContent.type === 'thumbnail') {
-        let lookerResponse = await fetch(`/getthumbnail/${lookerContent.resourceType}/${lookerContent.id}`, {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          }
-        })
-        let lookerResponseData = await lookerResponse.json();
-        $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).append(lookerResponseData.svg)
-        if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
-      }
-    })
-  }
 
 
   /**
@@ -163,7 +117,7 @@ export default function SplashPage(props) {
                             >
                               {(lookerContent.type === 'thumbnail') && <SplashThumbnail
                                 {...{ lookerContent, classes, demoComponentType }}
-                                onClick={innerIndex > 0 ? (e) => handleDrawerTabChange(e, innerIndex) : undefined}
+                                onClick={innerIndex > 0 ? (e) => handleDrawerTreeItemChange(e, lookerContent.id) : undefined}
                               />}
                               {(lookerContent.type === 'look') && <SplashLook {...{ lookerContent, classes }} id={validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
                             </Grid>

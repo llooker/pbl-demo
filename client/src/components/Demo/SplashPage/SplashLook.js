@@ -33,7 +33,3 @@ export function SplashLook({ lookerContent, classes, id }) {
     </div>
   );
 }
-
-//       id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
-// key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
-// onClick={innerIndex > 0 ? (e) => handleDrawerTabChange(e, innerIndex) : undefined}
