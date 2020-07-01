@@ -142,6 +142,12 @@ const styles = theme => ({
   },
   padding10: {
     padding: 10
+  },
+  mt5: {
+    marginTop: 5
+  },
+  mb5: {
+    marginBottom: 5
   }
 });
 
@@ -365,8 +371,8 @@ class Home extends Component {
                         label={< div
                           id={`${validIdHelper(key + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                           key={`${validIdHelper(key + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                          className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
-                          <Icon className={`fa ${item.icon} ${classes.icon} ${classes.fontSize1em}  ${classes.mr12} ${classes.mt12}`} />{_.capitalize(item.label)}
+                          className={`${classes.labelRoot} ${classes.parentHoverVisibility} ${classes.mt12}`}>
+                          <Icon className={`fa ${item.icon} ${classes.icon} ${classes.fontSize1em} ${classes.mr12} `} />{_.capitalize(item.label)}
                         </div>}
                         selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedTreeItem}
                         className={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedTreeItem ? `Mui-selected innerTreeItem` : `innerTreeItem`}
@@ -379,7 +385,10 @@ class Home extends Component {
                       // disabled={apiContent[key].length ? false : true}
                       />
                     ))}
-                  </TreeItem>)) : ''}
+                    {outerIndex < Object.keys(orderedDemoComponentsForMenuObj).length - 1 ? <Divider className={`${classes.mt5} ${classes.mb5}`} /> : ''}
+
+                  </TreeItem>
+                )) : ''}
               </TreeView>
               <HighlightSourcesLegend className={classes.highlightLegend} />
             </Drawer>

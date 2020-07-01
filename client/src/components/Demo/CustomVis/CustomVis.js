@@ -14,6 +14,18 @@ import rawSampleCode from '!!raw-loader!./CustomVis.js'; // eslint-disable-line 
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import { ApiHighlight } from '../../Highlights/Highlight';
+
+//new date pickers
+import { format, addDays } from 'date-fns';
+// import React from 'react';
+// import Grid from '@material-ui/core/Grid';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+
 const { validIdHelper } = require('../../../tools');
 
 //start of Custom Viz Calendar Component
@@ -102,11 +114,16 @@ export default function CustomVis(props) {
   const handleFromDate = newValue => {
     let validDate = Date.parse(newValue);
     if (validDate > 0) {
-      setFromDate(newValue)
+      let newValueAsDate = format(new Date(newValue), 'yyyy-MM-dd');
+      setFromDate(newValueAsDate);
     }
   }
   const handleToDate = newValue => {
-    setToDate(newValue)
+    let validDate = Date.parse(newValue);
+    if (validDate > 0) {
+      let newValueAsDate = format(new Date(newValue), 'yyyy-MM-dd');
+      setFromDate(newValueAsDate);
+    }
   }
   const handleCategory = newValue => {
     setCategory(newValue)
@@ -334,12 +351,6 @@ export default function CustomVis(props) {
         </div>
       </Grid >
       {open ?
-        // <SimpleModal {...props}
-        //     classes={classes}
-        //     open={open}
-        //     handleModalClose={handleModalClose}
-        //     getModalStyle={getModalStyle}
-        //     modalContent={modalContent} /> 
         <ModalTable
           {...props}
           open={open}
@@ -362,6 +373,10 @@ function FilterBar(props) {
   const handleExpansionPanel = (event, newValue) => {
     setExpanded(expanded ? false : true);
   };
+
+  // console.log('FilterBar')
+  // console.log('fromDate', fromDate)
+  // console.log('toDate', toDate)
 
   return (
     <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} className={classes.w100}>
@@ -400,37 +415,6 @@ function FilterBar(props) {
                   </Select>
                 </FormControl>
               </Grid>
-
-              <Grid item sm={3}>
-                <form className={classes.container} >
-                  <TextField
-                    id="fromDate"
-                    label="From date"
-                    type="date"
-                    value={fromDate}
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={(event) => handleFromDate(event.target.value)}
-                  />
-                </form>
-              </Grid>
-              <Grid item sm={3}>
-                <form className={classes.container} >
-                  <TextField
-                    id="toDate"
-                    label="To date"
-                    type="date"
-                    value={toDate}
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={(event) => handleToDate(event.target.value)}
-                  />
-                </form>
-              </Grid>
               <Grid item sm={3}>
                 <FormControl className={classes.formControl}>
                   <InputLabel
@@ -452,6 +436,55 @@ function FilterBar(props) {
                     ))}
                   </Select>
                 </FormControl>
+              </Grid>
+
+              <Grid item sm={3}>
+                {/* <form className={classes.container} >
+                  <TextField
+                    id="fromDate"
+                    label="From date"
+                    type="date"
+                    value={fromDate}
+                    className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    onChange={(event) => handleFromDate(event.target.value)}
+                  />
+                </form> */}
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    id="fromDate"
+                    label="From date"
+                    value={fromDate}
+                    onChange={handleFromDate}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+
+              </Grid>
+              <Grid item sm={3}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    id="toDate"
+                    label="To date"
+                    value={toDate}
+                    onChange={handleToDate}
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
               </Grid>
             </>
             : ''}
