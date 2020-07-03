@@ -141,6 +141,7 @@
                 "order_items.order_count",
                 "order_items.total_sale_price"
               ],
+              "filters": {"order_items.created_date": "2 years"},
               "query_timezone": "America/Los_Angeles"
             },
             "desiredFilterName": "products.brand",

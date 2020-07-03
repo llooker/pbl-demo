@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AppBar, Tabs, Tab, Typography, Box, Grid, Icon, CircularProgress, Card, Button } from '@material-ui/core'
 import { TreeView, TreeItem } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -10,6 +10,7 @@ import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
+import AppContext from '../../../AppContext';
 const { validIdHelper } = require('../../../tools');
 
 //start of ReportBuilder Component
@@ -20,6 +21,8 @@ export default function ReportBuilder(props) {
   const [exploreObj, setExploreObj] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
+
+  const { toggleShowPayWallModal } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -242,13 +245,17 @@ export default function ReportBuilder(props) {
                           key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
                           <Grid item sm={4} >
                             <ApiHighlight>
-                              <TreeSideBar {...props}
-                                classes={classes}
-                                demoComponentType={demoComponentType}
-                                tabContent={tabContent}
-                                tabContentItemIndex={tabContentItemIndex}
-                                action={action}
-                                apiContent={apiContent} />
+                              <TreeSideBar {...{
+                                  toggleShowPayWallModal,
+                                  classes,
+                                  demoComponentType,
+                                  tabContent,
+                                  tabContentItemIndex,
+                                  action,
+                                  apiContent,
+                                  ...props
+                                }}
+                              />
                             </ApiHighlight>
                           </Grid>
                           <Grid item sm={8} >
@@ -286,7 +293,7 @@ export default function ReportBuilder(props) {
 
 function TreeSideBar(props) {
 
-  const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser } = props
+  const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser, toggleShowPayWallModal } = props
   const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
   let treeCounter = 0;
 
@@ -332,8 +339,7 @@ function TreeSideBar(props) {
                     className={selected === treeCounter ? `Mui-selected innerTreeItem` : `innerTreeItem`}
                     contentid={item.id}
                     label={item.folder_id === sharedFolderId &&
-                      key === 'looks' &&
-                      lookerUser.permission_level === 'premium' ?
+                      key === 'looks'  ?
 
                       < div
                         id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
@@ -347,16 +353,20 @@ function TreeSideBar(props) {
                           size="small"
                           className={`${classes.ml24} ${classes.childHoverVisibility}`}
                           onClick={(event) => {
-                            setSelected(treeCounter);
-                            action(
-                              key.substring(0, key.length - 1),
-                              item.id,
-                              'explore',
-                              item.client_id,
-                              tabContent[tabContentItemIndex + 1].id,
-                              validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                            );
-                            event.stopPropagation();
+                            if ( lookerUser.permission_level === 'premium') {
+                              setSelected(treeCounter);
+                              action(
+                                key.substring(0, key.length - 1),
+                                item.id,
+                                'explore',
+                                item.client_id,
+                                tabContent[tabContentItemIndex + 1].id,
+                                validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                              );
+                              event.stopPropagation();
+                            } else {
+                              toggleShowPayWallModal();
+                            }
                           }
                           }
                           color="default"
@@ -364,7 +374,7 @@ function TreeSideBar(props) {
                           Explore
                                                                                             </Button>
                       </div>
-                      : key === 'looks' && lookerUser.permission_level === 'premium' ?
+                      : key === 'looks' ?
                         <div
                           id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                           key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
@@ -398,16 +408,20 @@ function TreeSideBar(props) {
                             size="small"
                             className={`${classes.ml24} ${classes.childHoverVisibility}`}
                             onClick={(event) => {
-                              setSelected(treeCounter);
-                              action(
-                                key.substring(0, key.length - 1),
-                                item.id,
-                                'delete',
-                                item.client_id,
-                                tabContent[tabContentItemIndex + 1].id,
-                                validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                              );
-                              event.stopPropagation();
+                              if (lookerUser.permission_level === 'premium') {
+                                setSelected(treeCounter);
+                                action(
+                                  key.substring(0, key.length - 1),
+                                  item.id,
+                                  'delete',
+                                  item.client_id,
+                                  tabContent[tabContentItemIndex + 1].id,
+                                  validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                                );
+                                event.stopPropagation();
+                              } else {
+                                toggleShowPayWallModal();
+                              }
                             }
                             }
                             color="secondary"
