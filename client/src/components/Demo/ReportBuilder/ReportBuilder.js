@@ -110,6 +110,7 @@ export default function ReportBuilder(props) {
   }
 
   const performLookerApiCalls = function (lookerContent) {
+
     lookerContent.map(async lookerContent => {
       if (lookerContent.type === 'folder') {
         let lookerResponse = await fetch('/fetchfolder/' + lookerContent.id, {
@@ -129,46 +130,65 @@ export default function ReportBuilder(props) {
           looks: looksToUse,
           dashboards: dashboardsToUse
         }
+        let iFrameArray = $(".embedContainer:visible > iframe");
 
         if (objToUse.looks.length) {
           objToUse.looks.map((item, index) => {
-            let lookId = item.id
-            LookerEmbedSDK.createLookWithId(lookId)
-              .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
-              .withClassName('iframe')
-              .withClassName('look')
-              .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
-              .withClassName(index > 0 ? 'dNone' : 'oops')
-              .withClassName(lookId)
-              .build()
-              .connect()
-              .then((look) => {
-                setIFrame(1)
-              })
-              .catch((error) => {
-                // console.error('Connection error', error)
-              })
+
+            let lookId = item.id;
+            let lookIsRendered = false;
+            for (let i = 0; i < iFrameArray.length; i++) {
+              if (iFrameArray[i].classList.contains('look') && iFrameArray[i].classList.contains(lookId)) {
+                lookIsRendered = true;
+              }
+            }
+
+            if (!lookIsRendered) {
+              LookerEmbedSDK.createLookWithId(lookId)
+                .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+                .withClassName('iframe')
+                .withClassName('look')
+                .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
+                .withClassName(index > 0 ? 'dNone' : 'oops')
+                .withClassName(lookId)
+                .build()
+                .connect()
+                .then((look) => {
+                  setIFrame(1)
+                })
+                .catch((error) => {
+                  // console.error('Connection error', error)
+                })
+            }
           })
         }
 
         if (objToUse.dashboards.length) {
           objToUse.dashboards.map((item, index) => {
             let dashboardId = item.id
-            LookerEmbedSDK.createDashboardWithId(dashboardId)
-              .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
-              .withClassName('iframe')
-              .withClassName('dashboard')
-              .withClassName(lookerResponseData.sharedFolder.dashboards.indexOf(item) > -1 ? "shared" : "personal")
-              .withClassName('dNone')
-              .withClassName(dashboardId)
-              .build()
-              .connect()
-              .then((dashboard) => {
-                setIFrame(1)
-              })
-              .catch((error) => {
-                console.error('Connection error', error)
-              })
+            let dashboardIsRendered = false;
+            for (let i = 0; i < iFrameArray.length; i++) {
+              if (iFrameArray[i].classList.contains('dashboard') && iFrameArray[i].classList.contains(dashboardId)) {
+                dashboardIsRendered = true;
+              }
+            }
+            if (!dashboardIsRendered) {
+              LookerEmbedSDK.createDashboardWithId(dashboardId)
+                .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+                .withClassName('iframe')
+                .withClassName('dashboard')
+                .withClassName(lookerResponseData.sharedFolder.dashboards.indexOf(item) > -1 ? "shared" : "personal")
+                .withClassName('dNone')
+                .withClassName(dashboardId)
+                .build()
+                .connect()
+                .then((dashboard) => {
+                  setIFrame(1)
+                })
+                .catch((error) => {
+                  console.error('Connection error', error)
+                })
+            }
           })
         }
         setApiContent(objToUse)

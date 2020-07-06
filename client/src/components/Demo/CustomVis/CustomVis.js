@@ -234,7 +234,6 @@ export default function CustomVis(props) {
 
   let redToBlueColorScale = ['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002'];
   let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B'];
-  console.log({ fromDate, toDate, filterData })
   return (
     <div className={`${classes.root} demoComponent`}>
       <Grid container
@@ -335,7 +334,6 @@ export default function CustomVis(props) {
                                       ]}
                                       onClick={(day, event) => {
                                         if (!day.value) {
-                                          console.log(day)
                                         } else if (lookerUser.permission_level === 'basic') {
                                           toggleShowPayWallModal();
                                         } else {
@@ -507,6 +505,5 @@ function FilterBar(props) {
 function incrementDate(dateInput, increment) {
   var dateFormatTotime = new Date(dateInput);
   var increasedDate = new Date(dateFormatTotime.getTime() + (increment * 86400000));
-  console.log(increasedDate.toISOString().split('T')[0])
   return increasedDate.toISOString().split('T')[0];
 }
