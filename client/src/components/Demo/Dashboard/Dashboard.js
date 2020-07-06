@@ -8,6 +8,7 @@ import rawSampleCode from '!!raw-loader!./Dashboard.js'; // eslint-disable-line 
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import { EmbedHighlight } from '../../Highlights/Highlight';
+import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent';
 const { validIdHelper } = require('../../../tools');
 
 //start of Dashboard Component
@@ -101,6 +102,7 @@ export default function Dashboard(props) {
         //get inline query from usecase file & set user attribute dynamically
         let jsonQuery = lookerContent.inlineQuery;
         jsonQuery.filters = {
+          ...jsonQuery.filters,
           [lookerContent.desiredFilterName]: lookerUser.user_attributes.brand
         };
         lookerContent.inlineQuery = jsonQuery;
@@ -116,7 +118,10 @@ export default function Dashboard(props) {
         let queryResultsForDropdown = [];
         let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
         for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
-          queryResultsForDropdown.push({ 'label': lookerResponseData.queryResults[i][desiredProperty] })
+          queryResultsForDropdown.push({ 
+            'label': lookerResponseData.queryResults[i][desiredProperty], 
+            'trend': (lookerResponseData.queryResults[i]['trend']) ? lookerResponseData.queryResults[i]['trend'] : undefined
+          })
         }
         setApiContent(queryResultsForDropdown);
         if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
@@ -196,9 +201,25 @@ export default function Dashboard(props) {
                               options={Array.isArray(apiContent) ?
                                 apiContent :
                                 []}
+                              renderOption={(option) => (
+                                <Grid container justify="space-between">
+                                  <Grid item>
+                                    {option.label}
+                                  </Grid>
+                                  {option.trend && <Grid item>
+                                    <NumberToColoredPercent 
+                                      val={option.trend} 
+                                      positive_good={true}
+                                      abs_val={Math.abs(option.trend)}
+                                    />
+                                  </Grid>}
+                                </Grid>
+                              )}
                               getOptionLabel={(option) => option.label}
-                              style={{ width: 300 }}
-                              onChange={(event) => customFilterAction(tabContentItem.id, tabContentItem.filter.filterName, event.target.innerText || '')}
+                              style={{ width: 400 }}
+                              onChange={(event, newValue) => { 
+                                customFilterAction(tabContentItem.id, tabContentItem.filter.filterName, (newValue) ? newValue.label : '' )
+                              }}
                               renderInput={(params) => <TextField {...params} label={tabContentItem.filter.filterName} variant="outlined" />}
                               loadingText="Loading..."
                             />
