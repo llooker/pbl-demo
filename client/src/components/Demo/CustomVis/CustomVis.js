@@ -201,10 +201,14 @@ export default function CustomVis(props) {
   const performLookerApiCalls = function (lookerContent) {
     lookerContent.map(async lookerContent => {
       let inlineQuery = lookerContent.inlineQuery;
+      console.log('000 inlineQuery', inlineQuery);
+      // console.log('Object.keys(inlineQuery.filters)[0]', Object.keys(inlineQuery.filters)[0]);
       inlineQuery.filters = {
-        ...inlineQuery.filters,
+        // ...inlineQuery.filters,
+        [Object.keys(inlineQuery.filters)[0]]: lookerUser.user_attributes.time_horizon,
         [lookerContent.desiredFilterName]: lookerUser.user_attributes.brand
       };
+      console.log('1111 inlineQuery', inlineQuery);
       let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
       let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
         method: 'GET',
@@ -214,6 +218,7 @@ export default function CustomVis(props) {
         }
       })
       let lookerResponseData = await lookerResponse.json();
+      console.log('lookerResponseData', lookerResponseData)
       lookerResponseData.queryResults.data = lookerResponseData.queryResults.data.filter(item => {
         return item[inlineQuery.fields[0]].value
       })
