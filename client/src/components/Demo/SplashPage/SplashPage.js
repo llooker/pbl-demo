@@ -22,7 +22,7 @@ export default function SplashPage(props) {
 
   //declare constants
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, lookerUser, handleDrawerTreeItemChange } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, lookerUser, handleMenuItemSelect } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
@@ -117,7 +117,7 @@ export default function SplashPage(props) {
                             >
                               {(lookerContent.type === 'thumbnail') && <SplashThumbnail
                                 {...{ lookerContent, classes, demoComponentType }}
-                                onClick={innerIndex > 0 ? (e) => handleDrawerTreeItemChange(e, lookerContent.id) : undefined}
+                                onClick={innerIndex > 0 ? () => handleMenuItemSelect(lookerContent.id, 1) : undefined}
                               />}
                               {(lookerContent.type === 'look') && <SplashLook {...{ lookerContent, classes }} id={validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
                             </Grid>

@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { withStyles } from "@material-ui/core/styles";
 import {
   Drawer, CssBaseline, AppBar, Toolbar, Typography,
-  Divider, IconButton, Tabs, Tab, Icon, Box, Avatar
+  Divider, IconButton, Tabs, Tab, Icon, Box, Avatar,
+  ListSubheader, List, ListItem, ListItemIcon, ListItemText
 } from '@material-ui/core/';
-import { TreeView, TreeItem } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -21,7 +21,6 @@ import Dashboard from './Demo/Dashboard/Dashboard';
 import CustomVis from './Demo/CustomVis/CustomVis';
 import ReportBuilder from './Demo/ReportBuilder/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder/QueryBuilder';
-import ComingSoon from './Demo/ComingSoon';
 import AppContext from '../AppContext';
 import { HighlightSourcesLegend } from './HighlightSourcesLegend';
 import style from 'react-syntax-highlighter/dist/esm/styles/hljs/agate';
@@ -163,6 +162,14 @@ const styles = theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  list: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  },
 });
 
 const defaultTheme = createMuiTheme({})
@@ -196,7 +203,7 @@ class Home extends Component {
       appLayout: '',
       highlightShow: false,
       showPayWallModal: false,
-      selectedTreeItem: ''
+      selectedMenuItem: ''
     }
   }
 
@@ -208,14 +215,14 @@ class Home extends Component {
     this.setState({ highlightShow: !this.state.highlightShow })
   }
 
-  handleDrawerTabChange = (event, newValue) => {
+  /*handleDrawerTabChange = (event, newValue) => {
     this.handleDrawerChange(true);
     this.setState({
       drawerTabValue: newValue
     }, () => {
       this.handleTabChange(0)
     })
-  };
+  };*/
 
   handleTabChange = newValue => {
     this.setState({
@@ -229,21 +236,23 @@ class Home extends Component {
   //   })
   // }
 
-  handleDrawerTreeItemChange = (event, newValue) => {
-    let selectedTreeItemValue = ''
-    UsecaseContent[this.state.activeUsecase].demoComponents.map(item => {
-      if (item.type !== "splash page") {
-        item.lookerContent.map(lookerContentItem => {
-          if (lookerContentItem.id === newValue) {
-            selectedTreeItemValue = validIdHelper(item.type + lookerContentItem.id)
-          }
-        })
-      }
-    })
+  handleMenuItemSelect = (newValue, fromSplash) => {
+    let selectedMenuItemValue = ''
+    if (fromSplash) {
+      UsecaseContent[this.state.activeUsecase].demoComponents.map(item => {
+        if (item.type !== "splash page") {
+          item.lookerContent.map(lookerContentItem => {
+            if (lookerContentItem.id === newValue) {
+              selectedMenuItemValue = validIdHelper(item.type + lookerContentItem.id)
+            }
+          })
+        }
+      })
+    } else selectedMenuItemValue = newValue;
     this.setState({
-      selectedTreeItem: selectedTreeItemValue
+      selectedMenuItem: selectedMenuItemValue
     })
-  }
+  };
 
   componentDidMount(props) {
     let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
@@ -273,13 +282,10 @@ class Home extends Component {
       "vidly": vidlyTheme
     }
 
-    const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedTreeItem } = this.state; //, sampleCode
-    const {
-      // handleDrawerChange, handleDrawerTabChange, 
-      handleTabChange, handleDrawerTreeItemChange } = this;
+    const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedMenuItem } = this.state;
+    const { handleTabChange, handleMenuItemSelect } = this;
     const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost } = this.props
 
-    let treeCounter = 0;
     let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : []; // Use Lodash to sort array by 'name'
     let orderedDemoComponentsForMenuObj = {};
     let expandedTreeItemsArr = [];
@@ -294,9 +300,9 @@ class Home extends Component {
       }
     })
 
-    if (activeUsecase && !selectedTreeItem.length) {
+    if (activeUsecase && !selectedMenuItem.length) {
       this.setState({
-        selectedTreeItem:
+        selectedMenuItem:
           UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
             validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
             validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
@@ -376,47 +382,14 @@ class Home extends Component {
 
               <div className={classes.drawerHeader} />
 
-              <TreeView
-                className={`${classes.tree} ${classes.mt12} ${classes.padding10}`}
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpandIcon={<ChevronRightIcon />}
-                expanded={expandedTreeItemsArr}
-              >
-                {activeUsecase ? Object.keys(orderedDemoComponentsForMenuObj).map((key, outerIndex) => (
-                  <TreeItem
-                    key={`${validIdHelper(key + '-outerTreeItem-' + outerIndex)}`}
-                    nodeId={"" + (treeCounter += 1)}
-                    treecounter={treeCounter}
-                    label={_.capitalize(key)}>
-                    {orderedDemoComponentsForMenuObj[key].map((item, innerIndex) => (
-                      <TreeItem
-                        key={`${validIdHelper(key + '-innerTreeItem-' + treeCounter)}`}
-                        nodeId={"" + (treeCounter += 1)}
-                        treecounter={treeCounter}
-                        // label={_.capitalize(item.label)}
-                        // icon={<Icon className={`fa ${item.icon} ${classes.icon} ${classes.fontSize1em} ml12`} />}
-                        label={< div
-                          id={`${validIdHelper(key + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                          key={`${validIdHelper(key + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                          className={`${classes.labelRoot} ${classes.parentHoverVisibility} ${classes.mt12}`}>
-                          <Icon className={`fa ${item.icon} ${classes.icon} ${classes.fontSize1em} ${classes.mr12} `} />{_.capitalize(item.label)}
-                        </div>}
-                        selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedTreeItem}
-                        className={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedTreeItem ? `Mui-selected innerTreeItem` : `innerTreeItem`}
-                        onClick={(event) => {
-                          this.setState({
-                            selectedTreeItem:
-                              item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) : validIdHelper(item.type)
-                          })
-                        }}
-                      // disabled={apiContent[key].length ? false : true}
-                      />
-                    ))}
-                    {outerIndex < Object.keys(orderedDemoComponentsForMenuObj).length - 1 ? <Divider className={`${classes.mt5} ${classes.mb5}`} /> : ''}
 
-                  </TreeItem>
-                )) : ''}
-              </TreeView>
+              <MenuList {...this.props}
+                classes={classes}
+                activeUsecase={activeUsecase}
+                orderedDemoComponentsForMenuObj={orderedDemoComponentsForMenuObj}
+                selectedMenuItem={selectedMenuItem}
+                handleMenuItemSelect={handleMenuItemSelect} />
+
               <HighlightSourcesLegend className={classes.highlightLegend} />
               <MonetizationModal {...{ classes }} />
             </Drawer>
@@ -432,19 +405,18 @@ class Home extends Component {
                   const DemoComponent = demoComponentMap[key];
                   return (
                     <Box key={validIdHelper(`box-${item.type}-${index}`)}
-                      className={key === selectedTreeItem ? `` : `${classes.hide}`}>
-                      <DemoComponent key={validIdHelper(`treeItem-${item.type}-${index}`)}
-                        staticContent={item}
-                        // handleDrawerTabChange={handleDrawerTabChange}
-                        handleDrawerTreeItemChange={handleDrawerTreeItemChange}
-                        activeTabValue={activeTabValue}
-                        handleTabChange={handleTabChange}
-                        lookerUser={lookerUser}
-                        activeUsecase={activeUsecase}
-                        LookerEmbedSDK={LookerEmbedSDK}
-                        lookerHost={lookerHost}
-                      // UsecaseContent={activeUsecase ? UsecaseContent[activeUsecase] : ''}
-                      />
+                      className={key === selectedMenuItem ? `` : `${classes.hide}`}>
+                      {DemoComponent ?
+                        <DemoComponent key={validIdHelper(`treeItem-${item.type}-${index}`)}
+                          staticContent={item}
+                          handleMenuItemSelect={handleMenuItemSelect}
+                          activeTabValue={activeTabValue}
+                          handleTabChange={handleTabChange}
+                          lookerUser={lookerUser}
+                          activeUsecase={activeUsecase}
+                          LookerEmbedSDK={LookerEmbedSDK}
+                          lookerHost={lookerHost}
+                        /> : 'Coming soon'}
                     </Box>)
                 }) :
                 ''
@@ -457,3 +429,53 @@ class Home extends Component {
   }
 }
 export default withStyles(styles)(Home);
+
+function MenuList(props) {
+  const { classes, activeUsecase, orderedDemoComponentsForMenuObj, selectedMenuItem, handleMenuItemSelect } = props
+
+  return (<List
+    component="nav"
+    aria-labelledby="nested-list-subheader"
+    //         subheader={
+    //           <ListSubheader component="div" id="nested-list-subheader">
+    //             Menu
+    // </ListSubheader>
+    //         }
+    className={classes.list}
+  >
+
+    {activeUsecase ? Object.keys(orderedDemoComponentsForMenuObj).map((key, outerIndex) => (
+
+      <React.Fragment
+        key={`${validIdHelper(key + '-menuList-' + outerIndex)}`}>
+        <ListItem button
+          key={`${validIdHelper(key + '-outerListItem-' + outerIndex)}`}
+        >
+          {/* need to be dynamic */}
+          {/* <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon> */}
+          <ListItemText primary={_.capitalize(key)} />
+        </ListItem>
+        < List component="div" disablePadding
+          key={`${validIdHelper(key + '-innerList-' + outerIndex)}`}>
+          {orderedDemoComponentsForMenuObj[key].map((item, innerIndex) => (
+            <ListItem button className={classes.nested}
+              key={`${validIdHelper(key + '-innerListItem-' + innerIndex)}`}
+              onClick={
+                () => handleMenuItemSelect(validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type))
+              }
+              selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedMenuItem}
+            >
+              <ListItemIcon>
+                <Icon className={`fa ${item.icon} ${classes.icon}  mr12`} />
+              </ListItemIcon>
+              <ListItemText primary={_.capitalize(item.label)} />
+            </ListItem>))}
+        </List>
+      </React.Fragment>
+
+    )) : ''}
+  </List>
+  )
+}
