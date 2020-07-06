@@ -16,7 +16,6 @@ import { makeStyles } from '@material-ui/core/styles';
 
 
 export function SplashThumbnail({ lookerContent, classes, onClick }) {
-  // const classes = useStyles();
   const [svg, setSvg] = useState(undefined)
 
   useEffect(() => {
@@ -34,37 +33,15 @@ export function SplashThumbnail({ lookerContent, classes, onClick }) {
       }
     })
     let lookerResponseData = await lookerResponse.json();
-    setSvg(lookerResponseData.svg)
+    const blob = new Blob([lookerResponseData.svg], {type: 'image/svg+xml'});
+    let url = URL.createObjectURL(blob);
+    setSvg(url)
   }
 
   return (
 
-
-    // <Card className={classes.root}>
-    //   <CardActionArea>
-    //     <CardMedia
-    //       className={classes.media}
-    //       // children={svg}
-    //       title="Contemplative Reptile"
-    //     >
-    //       <ApiHighlight
-    //         // height={"144px"}
-    //         // width={"306px"}
-    //         // margin={"auto"}
-    //         maxHeight={"200px"}
-    //         dangerouslySetInnerHTML={{ __html: svg || '' }}
-    //         onClick={onClick}
-    //       />
-    //     </CardMedia>
-    //     <CardContent>
-    //       <Typography gutterBottom variant="h5" component="h2">
-    //         {lookerContent.label}
-    //       </Typography>
-    //     </CardContent>
-    //   </CardActionArea>
-    // </Card>
-
-    <div
+    <div 
+      onClick={onClick}
       className={`embedContainer ${classes.maxHeight200} ${classes.textCenter} ${classes.cursor}`}
     >
       <Typography variant="h5" component="h5" className={classes.gridTitle} align="center">
@@ -75,9 +52,9 @@ export function SplashThumbnail({ lookerContent, classes, onClick }) {
         height={"144px"}
         width={"306px"}
         margin={"auto"}
-        dangerouslySetInnerHTML={{ __html: svg || '' }}
         onClick={onClick}
       >
+        <img onClick={onClick} src={svg} />
       </ApiHighlight>
     </div>
   );

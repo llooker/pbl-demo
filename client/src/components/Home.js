@@ -26,6 +26,9 @@ import AppContext from '../AppContext';
 import { HighlightSourcesLegend } from './HighlightSourcesLegend';
 import style from 'react-syntax-highlighter/dist/esm/styles/hljs/agate';
 import './Home.css'; //needed for iframe height
+import { MonetizationModal } from './Demo/MonetizationModal';
+
+
 
 const drawerWidth = 240;
 const { validIdHelper } = require('../tools');
@@ -148,7 +151,18 @@ const styles = theme => ({
   },
   mb5: {
     marginBottom: 5
-  }
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
 });
 
 const defaultTheme = createMuiTheme({})
@@ -181,8 +195,13 @@ class Home extends Component {
       activeUsecase: '',
       appLayout: '',
       highlightShow: false,
+      showPayWallModal: false,
       selectedTreeItem: ''
     }
+  }
+
+  toggleShowPayWallModal = () => {
+    this.setState({ showPayWallModal: !this.state.showPayWallModal })
   }
 
   toggleHighlightShow = () => {
@@ -294,7 +313,15 @@ class Home extends Component {
 
     return (
       <div className={classes.root}>
-        <AppContext.Provider value={{ show: this.state.highlightShow, toggleShow: this.toggleHighlightShow }} >
+        <AppContext.Provider value={
+          {
+            show: this.state.highlightShow,
+            toggleShow: this.toggleHighlightShow,
+            showPayWallModal: this.state.showPayWallModal,
+            toggleShowPayWallModal: this.toggleShowPayWallModal,
+            lookerUser
+          }
+        } >
           <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
             <CssBaseline />
             <AppBar
@@ -391,6 +418,7 @@ class Home extends Component {
                 )) : ''}
               </TreeView>
               <HighlightSourcesLegend className={classes.highlightLegend} />
+              <MonetizationModal {...{ classes }} />
             </Drawer>
             <main
               className={clsx(classes.content, {

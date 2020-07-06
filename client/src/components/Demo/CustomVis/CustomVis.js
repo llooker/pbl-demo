@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField,
   ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Divider, InputLabel, MenuItem,
@@ -26,6 +26,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
+import AppContext from '../../../AppContext';
 const { validIdHelper } = require('../../../tools');
 
 //start of Custom Viz Calendar Component
@@ -41,6 +42,8 @@ export default function CustomVis(props) {
   const [modalContent, setModalContent] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
+
+  const { toggleShowPayWallModal } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -138,7 +141,7 @@ export default function CustomVis(props) {
   if (apiContent.queryResults && apiContent.queryResults.data) {
     //filtering for fromDate, toDate and category
     filterData = _.filter(apiContent.queryResults.data, (row) => {
-      return (row[apiContent.inlineQuery.fields[0]].value > fromDate
+      return (row[apiContent.inlineQuery.fields[0]].value >= fromDate
         && row[apiContent.inlineQuery.fields[0]].value < toDate
         && (category === 'All' ? true : row[apiContent.inlineQuery.fields[1]].value === category)
       )
@@ -199,6 +202,7 @@ export default function CustomVis(props) {
     lookerContent.map(async lookerContent => {
       let inlineQuery = lookerContent.inlineQuery;
       inlineQuery.filters = {
+        ...inlineQuery.filters,
         [lookerContent.desiredFilterName]: lookerUser.user_attributes.brand
       };
       let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
@@ -222,7 +226,7 @@ export default function CustomVis(props) {
       lookerResponseData.inlineQuery = inlineQuery;
       lookerResponseData.uniqueCategories = uniqueCategories;
       setFromDate(lookerResponseData.queryResults.data[lookerResponseData.queryResults.data.length - 1][lookerResponseData.inlineQuery.fields[0]].value);
-      setToDate(lookerResponseData.queryResults.data[0][lookerResponseData.inlineQuery.fields[0]].value);
+      setToDate(incrementDate(lookerResponseData.queryResults.data[0][lookerResponseData.inlineQuery.fields[0]].value, 1));
       setApiContent(lookerResponseData)
       if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
     })
@@ -230,7 +234,7 @@ export default function CustomVis(props) {
 
   let redToBlueColorScale = ['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002'];
   let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B'];
-
+  console.log({ fromDate, toDate, filterData })
   return (
     <div className={`${classes.root} demoComponent`}>
       <Grid container
@@ -303,18 +307,20 @@ export default function CustomVis(props) {
                             : apiContent.queryResults.data && apiContent.queryResults.data.length ?
                               <>
                                 <Grid item sm={12} className={classes.height800}>
-                                  <h1>{desiredField.substring(desiredField.lastIndexOf(".") + 1, desiredField.length).split("_").map(item => item.charAt(0).toUpperCase() + item.substring(1)).join(" ")}</h1>
-                                  <ApiHighlight height={700}>
+                                  <ApiHighlight height={400}>
                                     <ResponsiveCalendar
                                       data={filterData}
-                                      from={fromDate}
-                                      to={toDate}
+                                      align="top"
+                                      from={incrementDate(fromDate, 1)}
+                                      to={incrementDate(toDate, 1)}
+                                      emptyColor="#eeeeee"
                                       // colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
                                       colors={desiredField === lookerContent[0].desiredFields[0] ? redToBlueColorScale : yellowToGreenColorScale}
                                       yearSpacing={40}
                                       monthBorderColor="#ffffff"
                                       dayBorderWidth={2}
                                       dayBorderColor="#ffffff"
+                                      margin={{ bottom: 40, left: 40 }}
                                       legends={[
                                         {
                                           anchor: 'bottom-right',
@@ -327,12 +333,16 @@ export default function CustomVis(props) {
                                           itemDirection: 'right-to-left'
                                         }
                                       ]}
-                                      height={700}
-                                      maxHeight={500}
-                                      onClick={lookerUser.permission_level !== 'basic' ? (day, event) => {
-                                        handleModalOpen(day)
-                                        event.stopPropagation()
-                                      } : undefined}
+                                      onClick={(day, event) => {
+                                        if (!day.value) {
+                                          console.log(day)
+                                        } else if (lookerUser.permission_level === 'basic') {
+                                          toggleShowPayWallModal();
+                                        } else {
+                                          handleModalOpen(day)
+                                          event.stopPropagation();
+                                        }
+                                      }}
                                     />
                                   </ApiHighlight>
                                 </Grid>
@@ -492,4 +502,11 @@ function FilterBar(props) {
       </ExpansionPanelDetails>
     </ExpansionPanel >
   )
+}
+
+function incrementDate(dateInput, increment) {
+  var dateFormatTotime = new Date(dateInput);
+  var increasedDate = new Date(dateFormatTotime.getTime() + (increment * 86400000));
+  console.log(increasedDate.toISOString().split('T')[0])
+  return increasedDate.toISOString().split('T')[0];
 }
