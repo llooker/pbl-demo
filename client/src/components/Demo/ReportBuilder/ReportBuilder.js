@@ -42,10 +42,14 @@ export default function ReportBuilder(props) {
 
   //handle tab change
   const handleChange = (event, newValue) => {
-    handleTabChange(newValue);
-    setValue(newValue);
 
-    if (newValue === 0) performLookerApiCalls(lookerContent)
+    if (newValue == 1 && lookerUser.permission_level != 'premium') {
+      toggleShowPayWallModal()
+    } else {
+      handleTabChange(newValue);
+      setValue(newValue);
+      if (newValue === 0) performLookerApiCalls(lookerContent)
+    }
   };
 
   /**
@@ -257,9 +261,10 @@ export default function ReportBuilder(props) {
                 {tabContent.map((item, index) => (
                   <Tab
                     key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
-                    label={item.label}
+                    label={index == 1 && lookerUser.permission_level != 'premium' ?
+                      <div>{item.label} <Icon className={`fa fa-lock ${classes.faSm}`} /></div> :
+                      item.label}
                     className={item.type === 'code flyout' ? `${classes.mlAuto}` : ``}
-                    disabled={index == 1 && lookerUser.permission_level != 'premium' ? true : false}
                     {...a11yProps(index)} />
                 ))}
               </Tabs>
