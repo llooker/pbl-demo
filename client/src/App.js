@@ -363,8 +363,6 @@ class App extends React.Component {
       })
 
       let lookerUserResponseData = await lookerUserResponse.json();
-      // reload necessary to effect permissions
-      window.location.reload();
 
     });
   }
@@ -393,8 +391,6 @@ class App extends React.Component {
       })
 
       let lookerUserResponseData = await lookerUserResponse.json();
-      // reload necessary to effect permissions
-      window.location.reload();
 
     });
   }

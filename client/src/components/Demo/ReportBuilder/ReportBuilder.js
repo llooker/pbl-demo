@@ -34,9 +34,11 @@ export default function ReportBuilder(props) {
     lookerContent, lookerUser, clientSideCode, serverSideCode
   }
   const demoComponentType = type || 'code flyout';
-  const tabContent = lookerUser.permission_level === 'premium' ?
-    [...lookerContent, codeTab] :
-    [lookerContent[0], codeTab];
+  // const tabContent = lookerUser.permission_level === 'premium' ?
+  //   [...lookerContent, codeTab] :
+  //   [lookerContent[0], codeTab];
+  const tabContent =
+    [...lookerContent, codeTab]
 
   //handle tab change
   const handleChange = (event, newValue) => {
@@ -55,10 +57,10 @@ export default function ReportBuilder(props) {
       setValue(activeTabValue)
     }
 
-    performLookerApiCalls(lookerContent)
+    performLookerApiCalls(lookerContent, 1)
     setClientSideCode(rawSampleCode)
 
-  }, [lookerContent]);
+  }, [lookerContent, lookerUser]);
 
   const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
     let iFrameArray = $(".embedContainer:visible > iframe")
@@ -109,7 +111,13 @@ export default function ReportBuilder(props) {
     }
   }
 
-  const performLookerApiCalls = function (lookerContent) {
+  const performLookerApiCalls = function (lookerContent, animateLoad) {
+    // console.log('performLookerApiCalls')
+    if (animateLoad) {
+      handleChange('refresh', 0)
+      setIFrame(0)
+      setApiContent([])
+    }
 
     lookerContent.map(async lookerContent => {
       if (lookerContent.type === 'folder') {
@@ -157,8 +165,12 @@ export default function ReportBuilder(props) {
                   setIFrame(1)
                 })
                 .catch((error) => {
-                  // console.error('Connection error', error)
+                  console.error('Connection error', error)
                 })
+            }
+
+            if (index === objToUse.looks.length - 1) {
+              setIFrame(1)
             }
           })
         }
@@ -183,11 +195,18 @@ export default function ReportBuilder(props) {
                 .build()
                 .connect()
                 .then((dashboard) => {
-                  setIFrame(1)
+                  setTimeout(() => {
+                    setIFrame(1)
+                  }, 1000)
                 })
                 .catch((error) => {
                   console.error('Connection error', error)
                 })
+            }
+
+
+            if (index === objToUse.dashboards.length - 1) {
+              setIFrame(1)
             }
           })
         }
@@ -240,6 +259,7 @@ export default function ReportBuilder(props) {
                     key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
                     label={item.label}
                     className={item.type === 'code flyout' ? `${classes.mlAuto}` : ``}
+                    disabled={index == 1 && lookerUser.permission_level != 'premium' ? true : false}
                     {...a11yProps(index)} />
                 ))}
               </Tabs>
@@ -407,16 +427,20 @@ function TreeSideBar(props) {
                             size="small"
                             className={`${classes.ml24} ${classes.childHoverVisibility}`}
                             onClick={(event) => {
-                              setSelected(treeCounter);
-                              action(
-                                key.substring(0, key.length - 1),
-                                item.id,
-                                'edit',
-                                item.client_id,
-                                tabContent[tabContentItemIndex + 1].id,
-                                validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                              );
-                              event.stopPropagation();
+                              if (lookerUser.permission_level === 'premium') {
+                                setSelected(treeCounter);
+                                action(
+                                  key.substring(0, key.length - 1),
+                                  item.id,
+                                  'edit',
+                                  item.client_id,
+                                  tabContent[tabContentItemIndex + 1].id,
+                                  validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                                );
+                                event.stopPropagation();
+                              } else {
+                                toggleShowPayWallModal();
+                              }
                             }
                             }
                             color="primary"

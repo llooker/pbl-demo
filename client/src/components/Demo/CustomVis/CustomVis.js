@@ -190,7 +190,7 @@ export default function CustomVis(props) {
       setDesiredField(lookerContent[0].desiredFields[0])
       setClientSideCode(rawSampleCode)
     }
-  }, [lookerContent])
+  }, [lookerContent, lookerUser])
 
   /** 
    * What this function does:
@@ -199,16 +199,16 @@ export default function CustomVis(props) {
    * and embed SDK to create the experience on this page
    */
   const performLookerApiCalls = function (lookerContent) {
+    setApiContent([]); //set to empty array to show progress bar and skeleton
     lookerContent.map(async lookerContent => {
       let inlineQuery = lookerContent.inlineQuery;
-      console.log('000 inlineQuery', inlineQuery);
-      // console.log('Object.keys(inlineQuery.filters)[0]', Object.keys(inlineQuery.filters)[0]);
+      // console.log('000 inlineQuery', inlineQuery);
       inlineQuery.filters = {
         // ...inlineQuery.filters,
         [Object.keys(inlineQuery.filters)[0]]: lookerUser.user_attributes.time_horizon,
         [lookerContent.desiredFilterName]: lookerUser.user_attributes.brand
       };
-      console.log('1111 inlineQuery', inlineQuery);
+      // console.log('1111 inlineQuery', inlineQuery);
       let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
       let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
         method: 'GET',
@@ -218,7 +218,7 @@ export default function CustomVis(props) {
         }
       })
       let lookerResponseData = await lookerResponse.json();
-      console.log('lookerResponseData', lookerResponseData)
+      // console.log('lookerResponseData', lookerResponseData)
       lookerResponseData.queryResults.data = lookerResponseData.queryResults.data.filter(item => {
         return item[inlineQuery.fields[0]].value
       })
