@@ -106,8 +106,8 @@ module.exports.runInlineQuery = async (req, res, next) => {
     };
     res.status(200).send(resObj);
   } catch (err) {
-    console.log('catch')
-    console.log('err', err)
+    // console.log('catch')
+    // console.log('err', err)
     let errorObj = {
       errorMessage: 'Not working!'
     }
@@ -237,7 +237,6 @@ module.exports.getThumbnail = async (req, res, next) => {
 
 async function createEmbeddedUserSdkSession(req) {
   // console.log('createEmbeddedUserSdkSession', createEmbeddedUserSdkSession)
-  // const src = req.query.src;
   const src = req.query.src;
   const lookerUser = req.session.lookerUser;
   const url = await createSignedUrl(src, lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);

@@ -142,8 +142,7 @@ export default function ReportBuilder(props) {
           looks: looksToUse,
           dashboards: dashboardsToUse
         }
-        let iFrameArray = $(".embedContainer:visible > iframe");
-
+        let iFrameArray = $(`.embedContainer.${validIdHelper(demoComponentType)} > iframe`);
         if (objToUse.looks.length) {
           objToUse.looks.map((item, index) => {
 
@@ -307,7 +306,7 @@ export default function ReportBuilder(props) {
                           <Grid item sm={8} >
                             <EmbedHighlight>
                               <div
-                                className="embedContainer"
+                                className={`embedContainer ${validIdHelper(demoComponentType)}`}
                                 id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                                 key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                               >

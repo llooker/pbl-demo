@@ -1,3 +1,5 @@
+import $ from 'jquery';
+import _ from 'lodash';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -53,7 +55,7 @@ export default function QueryBuilder(props) {
       action(lookerContent.queryBody, lookerContent.resultFormat)
     })
     setClientSideCode(rawSampleCode)
-  }, [lookerContent])
+  }, [lookerContent, lookerUser])
 
   const action = async (newQuery, resultFormat) => {
     // console.log('action')
@@ -69,8 +71,6 @@ export default function QueryBuilder(props) {
       }
     })
     let lookerCreateTaskResponseData = await lookerCreateTaskResposnse.json();
-    console.log('lookerCreateTaskResponseData', lookerCreateTaskResponseData)
-    // setServerSideCode(lookerCreateTaskResponseData.code)
 
     let taskInterval = setInterval(async () => {
       let lookerCheckTaskResposnse = await fetch('/checkquerytask/' + lookerCreateTaskResponseData.queryTaskId, {
@@ -81,7 +81,6 @@ export default function QueryBuilder(props) {
         }
       })
       let lookerCheckTaskResponseData = await lookerCheckTaskResposnse.json();
-      console.log('lookerCheckTaskResponseData', lookerCheckTaskResponseData)
       if (lookerCheckTaskResponseData.queryResults.status === 'complete') {
         clearInterval(taskInterval);
         setApiContent(lookerCheckTaskResponseData.queryResults)
@@ -175,9 +174,7 @@ export default function QueryBuilder(props) {
 
 
 function FilterBar(props) {
-  // console.log('FilterBar')
-  // console.log('props', props)
-  const { staticContent, staticContent: { lookerContent }, classes, action } = props;
+  const { staticContent, staticContent: { lookerContent }, classes, action, lookerUser } = props;
   let measureCounter = 0;
   let dimensionCounter = 0;
 
@@ -236,6 +233,12 @@ function FilterBar(props) {
   useEffect(() => {
     handleQuerySubmit()
   }, [fieldsChipData, filtersData]);
+
+  const datePermissionMap = {
+    'basic': ["1 week", "1 month", "3 months", "6 months"]
+  }
+  datePermissionMap.advanced = [...datePermissionMap.basic, "1 year"]
+  datePermissionMap.premium = [...datePermissionMap.advanced, "before today"]
 
 
   return (
@@ -325,11 +328,9 @@ function FilterBar(props) {
                             value={item.value}
                             onChange={(event) => handleSelectChange(index, event.target.value)}
                           >
-                            <MenuItem value="1 week">1 week</MenuItem>
-                            <MenuItem value="1 month">1 month</MenuItem>
-                            <MenuItem value="3 months">3 months</MenuItem>
-                            <MenuItem value="6 months">6 months</MenuItem>
-                            <MenuItem value="1 year">1 year</MenuItem>
+                            {lookerUser.permission_level ? datePermissionMap[lookerUser.permission_level].map(item => (
+                              <MenuItem key={validIdHelper(item)} value={item}>{_.capitalize(item)}</MenuItem>
+                            )) : ''}
                           </Select>
                         </>
                         : ''
