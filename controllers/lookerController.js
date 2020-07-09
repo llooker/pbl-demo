@@ -3,13 +3,8 @@
 const { Looker40SDK, Looker31SDK, NodeSession, NodeSettingsIniFile } = require('@looker/sdk')
 const { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
 const settings = new NodeSettingsIniFile()
-console.log('settings', settings)
 const session = new NodeSession(settings)
-// console.log('session', session)
 const sdk = new Looker40SDK(session)
-// const sdk = new Looker31SDK(session)
-// console.log('sdk', sdk);
-// const path = require('path');
 const rp = require('request-promise');
 
 module.exports.auth = async (req, res, next) => {
@@ -101,23 +96,9 @@ module.exports.runInlineQuery = async (req, res, next) => {
   const { params } = req;
 
   try {
-    const src = req.query.src;
-    const url = await createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
-    await rp(url)
-
     let codeAsString = this.runInlineQuery.toString();
-    //get user id of embedded user
-    const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
-    //create separate session for embedded user
-    const embeddedUserSession = new NodeSession(settings)
-    //instantiate new sdk client based on embedded session
-    const embeddedUserSdk = new Looker40SDK(embeddedUserSession)
-    //ensure service account connected before sudoing
-    await embeddedUserSdk.ok(embeddedUserSdk.me())
-    //sudo as embedded user
-    await embeddedUserSdk.authSession.login(userCred.id.toString())
-
-    let query_response = await embeddedUserSdk.ok(embeddedUserSdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
+    let embeddedUserSdkSession = await createEmbeddedUserSdkSession(req);
+    let query_response = await embeddedUserSdkSession.ok(embeddedUserSdkSession.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
 
     let resObj = {
       queryResults: query_response,
@@ -133,30 +114,6 @@ module.exports.runInlineQuery = async (req, res, next) => {
     res.status(404).send(errorObj);
   }
 }
-//og attempt
-/*module.exports.createQuery = async (req, res, next) => {
-    console.log('lookerController createQuery');
-    const { params } = req;
-    console.log('params', params);
-    try {
-        let create_query_response = await sdk.ok(sdk.create_query(params.query_body, ''));
-        let query_response = await sdk.ok(sdk.run_query({
-            query_id: create_query_response.id,
-            result_format: params.result_format
-        }));
-        let resObj = {
-            queryResults: query_response
-        };
-        res.status(200).send(resObj);
-    } catch (err) {
-        console.log('catch')
-        console.log('err', err)
-        let errorObj = {
-            errorMessage: 'Not working!'
-        }
-        res.status(404).send(errorObj);
-    }
-}*/
 
 module.exports.createQueryTask = async (req, res, next) => {
   // console.log('lookerController createQueryTask');
@@ -164,9 +121,9 @@ module.exports.createQueryTask = async (req, res, next) => {
 
   try {
     let codeAsString = this.createQueryTask.toString();
-    let create_query_response = await sdk.ok(sdk.create_query(params.query_body, ''));
-    // console.log('create_query_response', create_query_response);
-    let query_task = await sdk.ok(sdk.create_query_task({
+    let embeddedUserSdkSession = await createEmbeddedUserSdkSession(req);
+    let create_query_response = await embeddedUserSdkSession.ok(embeddedUserSdkSession.create_query(params.query_body, ''));
+    let query_task = await embeddedUserSdkSession.ok(embeddedUserSdkSession.create_query_task({
       body: {
         query_id: create_query_response.id,
         result_format: params.result_format,
@@ -195,7 +152,8 @@ module.exports.checkQueryTask = async (req, res, next) => {
 
   try {
     let codeAsString = this.createQueryTask.toString();
-    let async_query_results = await sdk.ok(sdk.query_task_results(params.task_id));
+    let embeddedUserSdkSession = await createEmbeddedUserSdkSession(req);
+    let async_query_results = await embeddedUserSdkSession.ok(embeddedUserSdkSession.query_task_results(params.task_id));
     let resObj = {
       queryResults: async_query_results,
       code: codeAsString
@@ -275,4 +233,24 @@ module.exports.getThumbnail = async (req, res, next) => {
     }
     res.status(400).send(errorObj);
   }
+}
+
+async function createEmbeddedUserSdkSession(req) {
+  // console.log('createEmbeddedUserSdkSession', createEmbeddedUserSdkSession)
+  // const src = req.query.src;
+  const src = req.query.src;
+  const lookerUser = req.session.lookerUser;
+  const url = await createSignedUrl(src, lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
+  await rp(url)
+  //get user id of embedded user
+  const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
+  //create separate session for embedded user
+  const embeddedUserSession = new NodeSession(settings)
+  //instantiate new sdk client based on embedded session
+  const embeddedUserSdk = new Looker40SDK(embeddedUserSession)
+  //ensure service account connected before sudoing
+  await embeddedUserSdk.ok(embeddedUserSdk.me())
+  //sudo as embedded user
+  await embeddedUserSdk.authSession.login(userCred.id.toString())
+  return embeddedUserSdk
 }

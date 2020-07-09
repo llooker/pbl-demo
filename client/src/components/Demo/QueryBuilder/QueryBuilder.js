@@ -69,6 +69,7 @@ export default function QueryBuilder(props) {
       }
     })
     let lookerCreateTaskResponseData = await lookerCreateTaskResposnse.json();
+    console.log('lookerCreateTaskResponseData', lookerCreateTaskResponseData)
     // setServerSideCode(lookerCreateTaskResponseData.code)
 
     let taskInterval = setInterval(async () => {
