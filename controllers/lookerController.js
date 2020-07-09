@@ -3,14 +3,17 @@
 const { Looker40SDK, Looker31SDK, NodeSession, NodeSettingsIniFile } = require('@looker/sdk')
 const { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
 const settings = new NodeSettingsIniFile()
+console.log('settings', settings)
 const session = new NodeSession(settings)
+// console.log('session', session)
 const sdk = new Looker40SDK(session)
 // const sdk = new Looker31SDK(session)
 // console.log('sdk', sdk);
 // const path = require('path');
-
+const rp = require('request-promise');
 
 module.exports.auth = async (req, res, next) => {
+  // console.log('lookerController auth');
   // Authenticate the request is from a valid user here
   const src = req.query.src;
   const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
@@ -98,16 +101,32 @@ module.exports.runInlineQuery = async (req, res, next) => {
   const { params } = req;
 
   try {
+    const src = req.query.src;
+    const url = await createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
+    await rp(url)
+
     let codeAsString = this.runInlineQuery.toString();
-    let query_response = await sdk.ok(sdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
+    //get user id of embedded user
+    const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
+    //create separate session for embedded user
+    const embeddedUserSession = new NodeSession(settings)
+    //instantiate new sdk client based on embedded session
+    const embeddedUserSdk = new Looker40SDK(embeddedUserSession)
+    //ensure service account connected before sudoing
+    await embeddedUserSdk.ok(embeddedUserSdk.me())
+    //sudo as embedded user
+    await embeddedUserSdk.authSession.login(userCred.id.toString())
+
+    let query_response = await embeddedUserSdk.ok(embeddedUserSdk.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
+
     let resObj = {
       queryResults: query_response,
       code: codeAsString
     };
     res.status(200).send(resObj);
   } catch (err) {
-    // console.log('catch')
-    // console.log('err', err)
+    console.log('catch')
+    console.log('err', err)
     let errorObj = {
       errorMessage: 'Not working!'
     }

@@ -165,9 +165,6 @@
                 "order_items.order_count",
                 "order_items.total_sale_price"
               ],
-              "filters": {
-                "order_items.created_date": "last 6 months"
-              },
               "query_timezone": "America/Los_Angeles"
             },
             "desiredFilterName": "products.brand",

@@ -219,7 +219,7 @@ class App extends React.Component {
               "locale": "en_US",
               "country": "USA",
               "brand": "Calvin Klein",
-              "time_horizon": "6 months"
+              "time_horizon": "last 6 months"
             }
           }
         },

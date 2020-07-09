@@ -80,6 +80,7 @@ export default function QueryBuilder(props) {
         }
       })
       let lookerCheckTaskResponseData = await lookerCheckTaskResposnse.json();
+      console.log('lookerCheckTaskResponseData', lookerCheckTaskResponseData)
       if (lookerCheckTaskResponseData.queryResults.status === 'complete') {
         clearInterval(taskInterval);
         setApiContent(lookerCheckTaskResponseData.queryResults)

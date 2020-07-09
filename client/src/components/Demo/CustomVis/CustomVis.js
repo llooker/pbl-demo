@@ -202,13 +202,11 @@ export default function CustomVis(props) {
     setApiContent([]); //set to empty array to show progress bar and skeleton
     lookerContent.map(async lookerContent => {
       let inlineQuery = lookerContent.inlineQuery;
-      // console.log('000 inlineQuery', inlineQuery);
       inlineQuery.filters = {
         // ...inlineQuery.filters,
-        [Object.keys(inlineQuery.filters)[0]]: lookerUser.user_attributes.time_horizon,
+        // [Object.keys(inlineQuery.filters)[0]]: lookerUser.user_attributes.time_horizon,
         [lookerContent.desiredFilterName]: lookerUser.user_attributes.brand
       };
-      // console.log('1111 inlineQuery', inlineQuery);
       let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
       let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
         method: 'GET',
