@@ -60,10 +60,8 @@ export default function ReportBuilder(props) {
     if (activeTabValue > value) {
       setValue(activeTabValue)
     }
-
-    performLookerApiCalls(lookerContent, 1)
+    setTimeout(() => performLookerApiCalls(lookerContent, 1), 100)
     setClientSideCode(rawSampleCode)
-
   }, [lookerContent, lookerUser]);
 
   const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {

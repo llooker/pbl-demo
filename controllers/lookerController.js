@@ -236,7 +236,6 @@ module.exports.getThumbnail = async (req, res, next) => {
 }
 
 async function createEmbeddedUserSdkSession(req) {
-  // console.log('createEmbeddedUserSdkSession', createEmbeddedUserSdkSession)
   const src = req.query.src;
   const lookerUser = req.session.lookerUser;
   const url = await createSignedUrl(src, lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);

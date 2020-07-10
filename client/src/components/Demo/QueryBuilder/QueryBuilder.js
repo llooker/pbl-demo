@@ -52,7 +52,7 @@ export default function QueryBuilder(props) {
   */
   useEffect(() => {
     lookerContent.map(lookerContent => {
-      action(lookerContent.queryBody, lookerContent.resultFormat)
+      setTimeout(() => action(lookerContent.queryBody, lookerContent.resultFormat), 100);
     })
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser])
@@ -240,6 +240,11 @@ function FilterBar(props) {
   datePermissionMap.advanced = [...datePermissionMap.basic, "1 year"]
   datePermissionMap.premium = [...datePermissionMap.advanced, "before today"]
 
+  useEffect(() => {
+    let updatedFiltersData = [...filtersData]
+    updatedFiltersData[3].value = "6 months";
+    setFilterData(updatedFiltersData)
+  }, [lookerUser]);
 
   return (
     <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel}>
@@ -325,7 +330,7 @@ function FilterBar(props) {
                           <Select
                             labelId={validIdHelper(`${item.label}FilterLabel`)}
                             id={validIdHelper(`${item.label}FilterSelect`)}
-                            value={item.value}
+                            value={item.value || '6 months'}
                             onChange={(event) => handleSelectChange(index, event.target.value)}
                           >
                             {lookerUser.permission_level ? datePermissionMap[lookerUser.permission_level].map(item => (

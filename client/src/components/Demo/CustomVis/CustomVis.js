@@ -186,7 +186,7 @@ export default function CustomVis(props) {
   */
   useEffect(() => {
     if (lookerContent.length) {
-      performLookerApiCalls(lookerContent);
+      setTimeout(() => performLookerApiCalls(lookerContent), 100);
       setDesiredField(lookerContent[0].desiredFields[0])
       setClientSideCode(rawSampleCode)
     }
