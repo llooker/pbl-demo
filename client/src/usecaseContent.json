@@ -18,7 +18,33 @@
             "id": "19",
             "gridWidth": 3,
             "height": 200,
-            "copy": "single value vis"
+            "copy": "single value vis",
+            "type": "single value vis",
+            "lookerMethod": "runInlineQuery",
+            "inlineQuery": {
+              "model": "atom_fashion",
+              "view": "order_items",
+              "fields": [
+                "order_items.previous_period",
+                "order_items.created_date",
+                "order_items.count"
+              ],
+              "pivots": [
+                "order_items.previous_period"
+              ],
+              "fill_fields": [
+                "order_items.created_date"
+              ],
+              "filters": {
+                "order_items.previous_period_filter": "7 days"
+              },
+              "sorts": [
+                "order_items.created_date desc",
+                "order_items.previous_period"
+              ],
+              "limit": "500",
+              "total": true
+            }
           },
           {
             "gridWidth": 3,

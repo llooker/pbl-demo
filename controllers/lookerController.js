@@ -93,6 +93,7 @@ module.exports.runQuery = async (req, res, next) => {
 }
 
 module.exports.runInlineQuery = async (req, res, next) => {
+  // console.log('runInlineQuery')
   const { params } = req;
 
   try {

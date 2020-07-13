@@ -72,5 +72,8 @@ export default makeStyles((theme) => ({
   },
   border: {
     border: '1px solid black'
+  },
+  height800: {
+    height: 800
   }
 }));

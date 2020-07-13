@@ -9,6 +9,7 @@ import rawSampleCode from '!!raw-loader!./SplashPage.js'; // eslint-disable-line
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import { SplashThumbnail } from './SplashThumbnail';
+import { SingleValueVis } from './SingleValueVis';
 import { SplashLook } from './SplashLook';
 const { validIdHelper } = require('../../../tools');
 
@@ -135,12 +136,10 @@ export default function SplashPage(props) {
                             // id={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
                             // key={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
                             >
-                              {(lookerContent.type === 'thumbnail') && <SplashThumbnail
+
+                              {(lookerContent.type === 'single value vis') && <SingleValueVis
                                 {...{ lookerContent, classes, demoComponentType }}
-                                onClick={innerIndex > 0 ? () => handleMenuItemSelect(lookerContent.id, 1) : undefined}
                               />}
-                              {(lookerContent.type === 'look') && <SplashLook {...{ lookerContent, classes }} id={validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
-                              <Typography>{lookerContent.copy}</Typography>
                             </Grid>
                           </React.Fragment>
                         })}
