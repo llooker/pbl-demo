@@ -26,6 +26,7 @@ import { HighlightSourcesLegend } from './HighlightSourcesLegend';
 import style from 'react-syntax-highlighter/dist/esm/styles/hljs/agate';
 import './Home.css'; //needed for iframe height
 import { MonetizationModal } from './Demo/MonetizationModal';
+import Extension from './Extension';
 
 
 
@@ -275,6 +276,7 @@ class Home extends Component {
       "customvis": CustomVis,
       "querybuilderexplorelite": QueryBuilder,
       "reportbuilder14": ReportBuilder,
+      "extensionextension-schedulerpage": Extension,
     };
 
     const themeMap = {

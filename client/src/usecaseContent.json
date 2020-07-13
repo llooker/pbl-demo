@@ -252,6 +252,20 @@
             }
           }
         ]
+      },
+      {
+        "type": "extension",
+        "label": "Scheduler",
+        "menuCategory": "admin",
+        "description": "View your schedules",
+        "icon": "fa-clock",
+        "lookerContent": [
+          {
+            "type": "extension",
+            "id": "extension-scheduler::page",
+            "label": "View your schedules"
+          }
+        ]
       }
     ]
   },

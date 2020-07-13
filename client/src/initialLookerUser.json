@@ -24,7 +24,7 @@
     "create_alerts"
   ],
   "models": [
-    "atom_fashion"
+    "atom_fashion", "extension-scheduler"
   ],
   "user_attributes": {
     "locale": "en_US",
