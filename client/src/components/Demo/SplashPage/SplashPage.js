@@ -96,7 +96,7 @@ export default function SplashPage(props) {
                       :
                       <React.Fragment
                         key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
-                        <Grid item sm={6}>
+                        {/* <Grid item sm={6}>
                           <Typography variant="h5" component="h2" className={classes.gridTitle}>
                             Welcome {lookerUser.user_attributes.brand}!<br />
                           </Typography>
@@ -104,8 +104,8 @@ export default function SplashPage(props) {
                           <Typography variant="h5" component="h5" className={classes.gridTitle}>
                             {staticContent.description}<br />
                           </Typography>
-                        </Grid>
-                        {tabContentItem.map((lookerContent, innerIndex) => {
+                        </Grid> */}
+                        {/* {tabContentItem.map((lookerContent, innerIndex) => {
                           return <React.Fragment
                             key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}>
                             {innerIndex === 1 ? <Grid item sm={12}><Divider className={`${classes.mt30} ${classes.mb30}`} /></Grid> : ''}
@@ -120,6 +120,27 @@ export default function SplashPage(props) {
                                 onClick={innerIndex > 0 ? () => handleMenuItemSelect(lookerContent.id, 1) : undefined}
                               />}
                               {(lookerContent.type === 'look') && <SplashLook {...{ lookerContent, classes }} id={validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
+                            </Grid>
+                          </React.Fragment>
+                        })} */}
+                        {tabContentItem.map((lookerContent, innerIndex) => {
+                          return <React.Fragment
+                            key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}>
+                            {/* {innerIndex === 1 ? <Grid item sm={12}><Divider className={`${classes.mt30} ${classes.mb30}`} /></Grid> : ''} */}
+                            <Grid
+                              item
+                              sm={parseInt(lookerContent.gridWidth)}
+                              style={{ height: lookerContent.height }}
+                              className={classes.border}
+                            // id={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
+                            // key={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
+                            >
+                              {(lookerContent.type === 'thumbnail') && <SplashThumbnail
+                                {...{ lookerContent, classes, demoComponentType }}
+                                onClick={innerIndex > 0 ? () => handleMenuItemSelect(lookerContent.id, 1) : undefined}
+                              />}
+                              {(lookerContent.type === 'look') && <SplashLook {...{ lookerContent, classes }} id={validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
+                              <Typography>{lookerContent.copy}</Typography>
                             </Grid>
                           </React.Fragment>
                         })}

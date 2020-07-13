@@ -16,32 +16,39 @@
         "lookerContent": [
           {
             "id": "19",
-            "type": "look",
-            "gridWidth": "6"
+            "gridWidth": 3,
+            "height": 200,
+            "copy": "single value vis"
           },
           {
-            "id": "9",
-            "type": "thumbnail",
-            "resourceType": "dashboard",
-            "lookerMethod": "vector_thumbnail",
-            "label": "Analytics",
-            "gridWidth": "4"
+            "gridWidth": 3,
+            "height": 200,
+            "copy": "single value vis"
           },
           {
-            "id": "5",
-            "type": "thumbnail",
-            "resourceType": "dashboard",
-            "lookerMethod": "vector_thumbnail",
-            "label": "Sales",
-            "gridWidth": "4"
+            "gridWidth": 3,
+            "height": 200,
+            "copy": "single value vis"
           },
           {
-            "id": "1",
-            "type": "thumbnail",
-            "resourceType": "dashboard",
-            "lookerMethod": "vector_thumbnail",
-            "label": "Inventory",
-            "gridWidth": "4"
+            "gridWidth": 3,
+            "height": 200,
+            "copy": "single value vis"
+          },
+          {
+            "gridWidth": 3,
+            "height": 400,
+            "copy": "welcome column"
+          },
+          {
+            "gridWidth": 3,
+            "height": 400,
+            "copy": "actionable insights"
+          },
+          {
+            "gridWidth": 6,
+            "height": 400,
+            "copy": "embedded iframe"
           }
         ]
       },
