@@ -10,6 +10,8 @@ import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import { SplashThumbnail } from './SplashThumbnail';
 import { SingleValueVis } from './SingleValueVis';
+import { Welcome } from './Welcome';
+import { ActionableInsights } from './ActionableInsights';
 import { SplashLook } from './SplashLook';
 const { validIdHelper } = require('../../../tools');
 
@@ -23,7 +25,7 @@ export default function SplashPage(props) {
 
   //declare constants
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, lookerUser, handleMenuItemSelect } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, lookerUser, handleMenuItemSelect, userProfile } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
@@ -97,48 +99,24 @@ export default function SplashPage(props) {
                       :
                       <React.Fragment
                         key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
-                        {/* <Grid item sm={6}>
-                          <Typography variant="h5" component="h2" className={classes.gridTitle}>
-                            Welcome {lookerUser.user_attributes.brand}!<br />
-                          </Typography>
-                          <br />
-                          <Typography variant="h5" component="h5" className={classes.gridTitle}>
-                            {staticContent.description}<br />
-                          </Typography>
-                        </Grid> */}
-                        {/* {tabContentItem.map((lookerContent, innerIndex) => {
-                          return <React.Fragment
-                            key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}>
-                            {innerIndex === 1 ? <Grid item sm={12}><Divider className={`${classes.mt30} ${classes.mb30}`} /></Grid> : ''}
-                            <Grid
-                              item
-                              sm={parseInt(lookerContent.gridWidth)}
-                              id={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
-                              key={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
-                            >
-                              {(lookerContent.type === 'thumbnail') && <SplashThumbnail
-                                {...{ lookerContent, classes, demoComponentType }}
-                                onClick={innerIndex > 0 ? () => handleMenuItemSelect(lookerContent.id, 1) : undefined}
-                              />}
-                              {(lookerContent.type === 'look') && <SplashLook {...{ lookerContent, classes }} id={validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
-                            </Grid>
-                          </React.Fragment>
-                        })} */}
                         {tabContentItem.map((lookerContent, innerIndex) => {
                           return <React.Fragment
                             key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}>
-                            {/* {innerIndex === 1 ? <Grid item sm={12}><Divider className={`${classes.mt30} ${classes.mb30}`} /></Grid> : ''} */}
                             <Grid
                               item
                               sm={parseInt(lookerContent.gridWidth)}
                               style={{ height: lookerContent.height }}
-                              className={classes.border}
-                            // id={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
-                            // key={validIdHelper(`gridItem-${demoComponentType}-${lookerContent.id}`)}
                             >
 
-                              {(lookerContent.type === 'single value vis') && <SingleValueVis
+                              {(lookerContent.type === 'single value') && <SingleValueVis
                                 {...{ lookerContent, classes, demoComponentType }}
+                              />}
+                              {(lookerContent.type === 'welcome') && <Welcome
+                                {...{ lookerContent, classes, demoComponentType, userProfile }}
+                              />}
+                              {(lookerContent.type === 'actionable insights') && <ActionableInsights
+                                {...{ lookerContent, classes, demoComponentType }}
+                                onClick={handleMenuItemSelect}
                               />}
                             </Grid>
                           </React.Fragment>

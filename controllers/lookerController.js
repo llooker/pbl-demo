@@ -99,7 +99,7 @@ module.exports.runInlineQuery = async (req, res, next) => {
   try {
     let codeAsString = this.runInlineQuery.toString();
     let embeddedUserSdkSession = await createEmbeddedUserSdkSession(req);
-    let query_response = await embeddedUserSdkSession.ok(embeddedUserSdkSession.run_inline_query({ result_format: params.result_format, body: params.inline_query }));
+    let query_response = await embeddedUserSdkSession.ok(embeddedUserSdkSession.run_inline_query({ result_format: params.result_format || 'json', body: params.inline_query }));
 
     let resObj = {
       queryResults: query_response,

@@ -237,6 +237,9 @@ class Home extends Component {
   // }
 
   handleMenuItemSelect = (newValue, fromSplash) => {
+    console.log('handleMenuItemSelect')
+    console.log('newValue', newValue)
+    console.log('fromSplash', fromSplash)
     let selectedMenuItemValue = ''
     if (fromSplash) {
       UsecaseContent[this.state.activeUsecase].demoComponents.map(item => {
@@ -284,7 +287,7 @@ class Home extends Component {
 
     const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedMenuItem } = this.state;
     const { handleTabChange, handleMenuItemSelect } = this;
-    const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost } = this.props
+    const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost, userProfile } = this.props
 
     let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : []; // Use Lodash to sort array by 'name'
     let orderedDemoComponentsForMenuObj = {};
@@ -416,6 +419,7 @@ class Home extends Component {
                           activeUsecase={activeUsecase}
                           LookerEmbedSDK={LookerEmbedSDK}
                           lookerHost={lookerHost}
+                          userProfile={userProfile}
                         /> : 'Coming soon'}
                     </Box>)
                 }) :

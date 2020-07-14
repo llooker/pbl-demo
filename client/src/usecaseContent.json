@@ -17,59 +17,150 @@
           {
             "id": "19",
             "gridWidth": 3,
+            "type": "single value",
             "height": 200,
-            "copy": "single value vis",
-            "type": "single value vis",
-            "lookerMethod": "runInlineQuery",
             "inlineQuery": {
               "model": "atom_fashion",
               "view": "order_items",
               "fields": [
-                "order_items.previous_period",
-                "order_items.created_date",
-                "order_items.count"
-              ],
-              "pivots": [
-                "order_items.previous_period"
+                "order_items.created_week",
+                "order_items.total_gross_margin"
               ],
               "fill_fields": [
-                "order_items.created_date"
+                "order_items.created_week"
               ],
               "filters": {
-                "order_items.previous_period_filter": "7 days"
+                "order_items.created_date": "12 weeks ago for 12 weeks"
               },
               "sorts": [
-                "order_items.created_date desc",
-                "order_items.previous_period"
+                "order_items.created_week desc"
               ],
-              "limit": "500",
-              "total": true
-            }
+              "limit": "500"
+            },
+            "resultFormat": "json",
+            "label": "Revenue by week",
+            "visColor": "#4595EC"
           },
           {
+            "id": "20",
             "gridWidth": 3,
+            "type": "single value",
             "height": 200,
-            "copy": "single value vis"
+            "inlineQuery": {
+              "model": "atom_fashion",
+              "view": "web_events",
+              "fields": [
+                "events.event_week",
+                "events.sessions_count"
+              ],
+              "fill_fields": [
+                "events.event_week"
+              ],
+              "filters": {
+                "events.event_date": "12 weeks ago for 12 weeks"
+              },
+              "sorts": [
+                "events.event_week desc"
+              ],
+              "limit": "500"
+            },
+            "resultFormat": "json",
+            "label": "Visits by Week",
+            "visColor": "#F3A759"
           },
           {
+            "id": "21",
             "gridWidth": 3,
+            "type": "single value",
             "height": 200,
-            "copy": "single value vis"
+            "inlineQuery": {
+              "model": "atom_fashion",
+              "view": "web_events",
+              "fields": [
+                "events.event_week",
+                "events.bounce_rate"
+              ],
+              "fill_fields": [
+                "events.event_week"
+              ],
+              "filters": {
+                "events.event_date": "12 weeks ago for 12 weeks"
+              },
+              "filter_expression": null,
+              "sorts": [
+                "events.event_week desc"
+              ],
+              "limit": "500"
+            },
+            "resultFormat": "json",
+            "label": "Bounce Rate by Week",
+            "visColor": "#E24E3A"
           },
           {
+            "id": "22",
             "gridWidth": 3,
+            "type": "single value",
             "height": 200,
-            "copy": "single value vis"
+            "inlineQuery": {
+              "model": "atom_fashion",
+              "view": "web_events",
+              "fields": [
+                "events.event_week",
+                "sessions.average_duration"
+              ],
+              "pivots": null,
+              "fill_fields": [
+                "events.event_week"
+              ],
+              "filters": {
+                "events.event_date": "12 weeks ago for 12 weeks"
+              },
+              "filter_expression": null,
+              "sorts": [
+                "events.event_week desc"
+              ],
+              "limit": "500"
+            },
+            "resultFormat": "json",
+            "label": "Average Time on Site by Week",
+            "visColor": "#65AB5A"
           },
           {
             "gridWidth": 3,
             "height": 400,
-            "copy": "welcome column"
+            "type": "welcome"
           },
           {
             "gridWidth": 3,
             "height": 400,
-            "copy": "actionable insights"
+            "type": "actionable insights",
+            "vectors": [
+              {
+                "id": "9",
+                "type": "thumbnail",
+                "resourceType": "dashboard",
+                "lookerMethod": "vector_thumbnail",
+                "label": "Analytics",
+                "gridWidth": "4"
+              },
+              {
+                "id": "5",
+                "type": "thumbnail",
+                "resourceType": "dashboard",
+                "lookerMethod": "vector_thumbnail",
+                "label": "Sales",
+                "gridWidth": "4"
+              },
+              {
+                "id": "1",
+                "type": "thumbnail",
+                "resourceType": "dashboard",
+                "lookerMethod": "vector_thumbnail",
+                "label": "Inventory",
+                "gridWidth": "4"
+              }
+            ],
+            "label": "Actionable insights"
           },
           {
             "gridWidth": 6,
