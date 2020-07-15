@@ -8,7 +8,7 @@ import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./SplashPage.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
-import { SplashThumbnail } from './SplashThumbnail';
+import { VectorThumbnail } from './VectorThumbnail';
 import { SingleValueVis } from './SingleValueVis';
 import { Welcome } from './Welcome';
 import { ActionableInsights } from './ActionableInsights';

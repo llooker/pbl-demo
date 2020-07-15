@@ -36,6 +36,7 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
       }
     })
     let lookerResponseData = await lookerResponse.json();
+    console.log('lookerResponseData', lookerResponseData);
     dataObjForSparkline.id = validIdHelper(`singleVisValue-${lookerContent.id}`);
     dataObjForSparkline.data = [];
 
@@ -54,6 +55,7 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
       }
     })
     dataObjForSparkline.data = [...dataArrForDataObj]
+    console.log('dataObjForSparkline', dataObjForSparkline);
     setApiContent([...apiContent, dataObjForSparkline])
   }
   return (
@@ -64,12 +66,15 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
     >
       {apiContent.length ?
         <div
-          style={{ borderLeft: `solid 10px ${lookerContent.visColor || "transparent"}` }}
+          style={{ borderLeft: `solid 5px ${lookerContent.visColor || "transparent"}` }}
         >
           <Typography variant="subtitle1" color="secondary">
             {lookerContent.label}
           </Typography>
           <ApiHighlight height={400}>
+            <Typography variant="subtitle1" color="secondary">
+              {apiContent[0].data ? parseInt(apiContent[0].data[0].y).toFixed(2) : ''}
+            </Typography>
             <ResponsiveLine
               data={apiContent}
               margin={{ top: 25, right: 25, bottom: 25, left: 25 }}

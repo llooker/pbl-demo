@@ -4,7 +4,7 @@ import { ApiHighlight } from '../../Highlights/Highlight';
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-export function SplashThumbnail({ lookerContent, classes, onClick, item }) {
+export function VectorThumbnail({ lookerContent, classes, onClick, item }) {
   const [svg, setSvg] = useState(undefined)
 
   useEffect(() => {
@@ -28,23 +28,18 @@ export function SplashThumbnail({ lookerContent, classes, onClick, item }) {
   }
 
   return (
-
-
     <Grid item sm={6}>
+      <Typography variant="subtitle1" className={`${classes.textCenter}`} color="secondary">{item.label}</Typography>
       <div
         onClick={() => onClick(item.id, 1)}
-        className={classes.maxHeight200}
+        className={classes.maxHeight100}
       >
-        <ApiHighlight
-        // height={"144px"}
-        // width={"306px"}
-        // margin={"auto"}
-        // onClick={onClick}
-        >
+        <ApiHighlight>
           <img
             onClick={() => onClick(item.id, 1)}
             src={svg} />
         </ApiHighlight>
+
       </div>
     </Grid>
   );

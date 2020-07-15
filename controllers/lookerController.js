@@ -93,7 +93,6 @@ module.exports.runQuery = async (req, res, next) => {
 }
 
 module.exports.runInlineQuery = async (req, res, next) => {
-  // console.log('runInlineQuery')
   const { params } = req;
 
   try {
@@ -107,8 +106,9 @@ module.exports.runInlineQuery = async (req, res, next) => {
     };
     res.status(200).send(resObj);
   } catch (err) {
-    // console.log('catch')
-    // console.log('err', err)
+    console.log('catch')
+    console.log('err', err)
+    console.log('params.inline_query', params.inline_query)
     let errorObj = {
       errorMessage: 'Not working!'
     }

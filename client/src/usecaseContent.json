@@ -119,7 +119,8 @@
               "sorts": [
                 "events.event_week desc"
               ],
-              "limit": "500"
+              "limit": "500",
+              "dynamic_fields": "[{\"table_calculation\":\"change\",\"label\":\"%25 Change\",\"expression\":\"(${sessions.average_duration}-offset(${sessions.average_duration},1))/offset(${sessions.average_duration},1)\",\"value_format\":null,\"value_format_name\":\"percent_2\",\"_kind_hint\":\"measure\",\"_type_hint\":\"number\"}]"
             },
             "resultFormat": "json",
             "label": "Average Time on Site by Week",
