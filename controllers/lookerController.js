@@ -106,9 +106,8 @@ module.exports.runInlineQuery = async (req, res, next) => {
     };
     res.status(200).send(resObj);
   } catch (err) {
-    console.log('catch')
-    console.log('err', err)
-    console.log('params.inline_query', params.inline_query)
+    // console.log('catch')
+    // console.log('err', err)
     let errorObj = {
       errorMessage: 'Not working!'
     }

@@ -81,4 +81,9 @@ export default makeStyles((theme) => ({
     height: 100,
     overflow: 'hidden'
   },
+  maxHeight400: {
+    maxHeight: 400,
+    height: 400,
+    overflow: 'hidden',
+  }
 }));

@@ -237,9 +237,6 @@ class Home extends Component {
   // }
 
   handleMenuItemSelect = (newValue, fromSplash) => {
-    console.log('handleMenuItemSelect')
-    console.log('newValue', newValue)
-    console.log('fromSplash', fromSplash)
     let selectedMenuItemValue = ''
     if (fromSplash) {
       UsecaseContent[this.state.activeUsecase].demoComponents.map(item => {

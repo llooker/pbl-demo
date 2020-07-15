@@ -12,7 +12,7 @@ import { VectorThumbnail } from './VectorThumbnail';
 import { SingleValueVis } from './SingleValueVis';
 import { Welcome } from './Welcome';
 import { ActionableInsights } from './ActionableInsights';
-import { SplashLook } from './SplashLook';
+import { EmbeddedLook } from './EmbeddedLook';
 const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
@@ -118,6 +118,8 @@ export default function SplashPage(props) {
                                 {...{ lookerContent, classes, demoComponentType }}
                                 onClick={handleMenuItemSelect}
                               />}
+                              {(lookerContent.type === 'look') && <EmbeddedLook {...{ lookerContent, classes }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
+
                             </Grid>
                           </React.Fragment>
                         })}

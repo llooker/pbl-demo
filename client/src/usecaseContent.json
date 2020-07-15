@@ -35,10 +35,11 @@
               "sorts": [
                 "order_items.created_week desc"
               ],
-              "limit": "500"
+              "limit": "500",
+              "dynamic_fields": "[{\"table_calculation\":\"week_over_week_change\",\"label\":\"Week over Week %25 Change\",\"expression\":\"(${order_items.total_gross_margin}-offset(${order_items.total_gross_margin},1))/offset(${order_items.total_gross_margin},1)\",\"value_format\":null,\"value_format_name\":\"percent_2\",\"_kind_hint\":\"measure\",\"_type_hint\":\"number\"}]"
             },
             "resultFormat": "json",
-            "label": "Revenue by week",
+            "label": "Revenue by Week",
             "visColor": "#4595EC"
           },
           {
@@ -62,7 +63,8 @@
               "sorts": [
                 "events.event_week desc"
               ],
-              "limit": "500"
+              "limit": "500",
+              "dynamic_fields": "[{\"table_calculation\":\"change\",\"label\":\"%25 Change\",\"expression\":\"(${events.sessions_count}-offset(${events.sessions_count},1))/offset(${events.sessions_count},1)\",\"value_format\":null,\"value_format_name\":\"percent_2\",\"_kind_hint\":\"measure\",\"_type_hint\":\"number\"}]"
             },
             "resultFormat": "json",
             "label": "Visits by Week",
@@ -90,7 +92,8 @@
               "sorts": [
                 "events.event_week desc"
               ],
-              "limit": "500"
+              "limit": "500",
+              "dynamic_fields": "[{\"table_calculation\":\"change\",\"label\":\"%25 Change\",\"expression\":\"(${events.bounce_rate}-offset(${events.bounce_rate},1))/offset(${events.bounce_rate},1)\",\"value_format\":null,\"value_format_name\":\"percent_2\",\"_kind_hint\":\"measure\",\"_type_hint\":\"number\"}]"
             },
             "resultFormat": "json",
             "label": "Bounce Rate by Week",
@@ -166,7 +169,8 @@
           {
             "gridWidth": 6,
             "height": 400,
-            "copy": "embedded iframe"
+            "type": "look",
+            "id": "51"
           }
         ]
       },

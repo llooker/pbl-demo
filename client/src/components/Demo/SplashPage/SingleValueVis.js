@@ -26,7 +26,6 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
 
 
   const runInlineQuery = async () => {
-    console.log('runInlineQuery');
     let stringifiedQuery = encodeURIComponent(JSON.stringify(lookerContent.inlineQuery))
     let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
       method: 'GET',
@@ -36,7 +35,7 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
       }
     })
     let lookerResponseData = await lookerResponse.json();
-    console.log('lookerResponseData', lookerResponseData);
+    // console.log('lookerResponseData', lookerResponseData)
     dataObjForSparkline.id = validIdHelper(`singleVisValue-${lookerContent.id}`);
     dataObjForSparkline.data = [];
 
@@ -49,17 +48,20 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
           "x": item[lookerContent.inlineQuery.fields[0]].toString(),
           "y": lookerContent.inlineQuery.fields.length > 2 ?
             `${item[lookerContent.inlineQuery.fields[1]][lookerContent.inlineQuery.fields[2]]["This Period"]}` :
-            `${item[lookerContent.inlineQuery.fields[1]]}`
+            `${item[lookerContent.inlineQuery.fields[1]]}`,
+          "change": item.change
         }
         if (thisDataItem.y !== "null") dataArrForDataObj.push(thisDataItem)
       }
     })
     dataObjForSparkline.data = [...dataArrForDataObj]
-    console.log('dataObjForSparkline', dataObjForSparkline);
+    // console.log('dataObjForSparkline', dataObjForSparkline)
     setApiContent([...apiContent, dataObjForSparkline])
   }
-  return (
 
+  // console.log('apiContent', apiContent);
+
+  return (
 
     <div
       className={`${classes.maxHeight200} ${classes.textCenter}`}
@@ -74,6 +76,9 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
           <ApiHighlight height={400}>
             <Typography variant="subtitle1" color="secondary">
               {apiContent[0].data ? parseInt(apiContent[0].data[0].y).toFixed(2) : ''}
+            </Typography>
+            <Typography variant="subtitle1" color="secondary">
+              {apiContent[0].data ? parseInt(apiContent[0].data[0].change * 100).toFixed(2) : ''}
             </Typography>
             <ResponsiveLine
               data={apiContent}

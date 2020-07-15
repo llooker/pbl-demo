@@ -24,6 +24,7 @@ export function ActionableInsights({ lookerContent, classes, onClick, vectors })
           </Typography></Grid>
         {lookerContent.vectors.map((item, index) => (
           <VectorThumbnail
+            key={`${validIdHelper('vectorTheumbnail-splashPage-' + item.id)}`}
             {...{ lookerContent, item, classes }}
             onClick={() => onClick(item.id, 1)}
           />

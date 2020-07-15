@@ -101,7 +101,10 @@ iframe{
 
 .embedContainer iframe {
   display: block;
-  width: 100%
+  width: 100%;
+}
+.embedContainer iframe.splashPage {
+  height: 100%;
 }
 
 /* override */
