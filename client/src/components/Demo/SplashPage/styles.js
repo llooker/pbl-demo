@@ -1,10 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { red, green } from '@material-ui/core/colors';
+const redPrimary = red[500];
+const greenPrimary = green[500];
 
 export default makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    minHeight: 680
+    backgroundColor: theme.palette.background.paper
   },
   flexCentered: {
     display: 'flex',
@@ -51,7 +53,6 @@ export default makeStyles((theme) => ({
   },
   card: {
     minWidth: 275,
-    minHeight: 800,
   },
   maxHeight200: {
     maxHeight: 200,
@@ -84,6 +85,23 @@ export default makeStyles((theme) => ({
   maxHeight400: {
     maxHeight: 400,
     height: 400,
-    overflow: 'hidden',
+    overflow: 'scroll',
+  },
+  minHeight680: {
+    minHeight: 680,
+    overflow: 'scroll'
+  },
+  minHeight200: {
+    minHeight: 200,
+    overflow: 'scroll'
+  },
+  redNeg: {
+    color: redPrimary
+  },
+  greenPos: {
+    color: greenPrimary
+  },
+  padding30: {
+    padding: 30
   }
 }));

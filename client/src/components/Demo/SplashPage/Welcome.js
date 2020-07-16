@@ -14,7 +14,9 @@ export function Welcome({ lookerContent, classes, onClick, userProfile }) {
 
 
   return (
-    <div>
+    <div
+      className={` ${classes.maxHeight400}`}
+    >
       <Typography variant="h5" >
         Welcome back, {userProfile.givenName}!
       </Typography>

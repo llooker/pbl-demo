@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { ApiHighlight } from '../../Highlights/Highlight';
 
-import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid } from '@material-ui/core';
+import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 export function VectorThumbnail({ lookerContent, classes, onClick, item }) {
@@ -29,18 +29,31 @@ export function VectorThumbnail({ lookerContent, classes, onClick, item }) {
 
   return (
     <Grid item sm={6}>
-      <Typography variant="subtitle1" className={`${classes.textCenter}`} color="secondary">{item.label}</Typography>
-      <div
-        onClick={() => onClick(item.id, 1)}
-        className={classes.maxHeight100}
-      >
-        <ApiHighlight>
-          <img
+      {svg ?
+        <Grid item sm={12}>
+          <Typography variant="subtitle1" className={`${classes.textCenter}`} color="secondary">{item.label}</Typography>
+          <div
             onClick={() => onClick(item.id, 1)}
-            src={svg} />
-        </ApiHighlight>
+            className={` ${classes.maxHeight100} ${classes.textCenter}`}
+          >
+            <ApiHighlight>
+              <img
+                onClick={() => onClick(item.id, 1)}
+                src={svg} />
+            </ApiHighlight>
 
-      </div>
+          </div> </Grid>
+        :
+
+        ''
+        // <Grid item sm={12} >
+        //   <Card className={` ${classes.flexCentered} ${classes.minHeight200}`}>
+        //     <CircularProgress className={classes.circularProgress} color={lookerContent.visColor}
+        //       style={{ color: `${lookerContent.visColor}` }} />
+        //   </Card>
+        // </Grid>
+      }
     </Grid>
+
   );
 }

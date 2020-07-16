@@ -3,17 +3,19 @@ import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import { Typography, Grid, Card, CircularProgress, Box } from '@material-ui/core';
 
-export function EmbeddedLook({ lookerContent, classes, id }) {
+export function EmbeddedDashboard({ lookerContent, classes, id }) {
 
 
   const [iFrameExists, setIFrame] = useState(0);
 
   useEffect(() => {
-    LookerEmbedSDK.createLookWithId(lookerContent.id)
+    LookerEmbedSDK.createDashboardWithId(lookerContent.id)
       .appendTo(document.getElementById(id))
-      .withClassName('look')
+      .withClassName('dashboard')
       .withClassName('splashPage')
       .withClassName(lookerContent.id)
+      .withNext()
+      .withTheme('atom_fashion')
       .build()
       .connect()
       .then((look) => {

@@ -13,6 +13,7 @@ import { SingleValueVis } from './SingleValueVis';
 import { Welcome } from './Welcome';
 import { ActionableInsights } from './ActionableInsights';
 import { EmbeddedLook } from './EmbeddedLook';
+import { EmbeddedDashboard } from './EmbeddedDashboard';
 const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
@@ -54,7 +55,7 @@ export default function SplashPage(props) {
    * this section is necessary but less relevant to looker functionality itself
    */
   return (
-    <div className={`${classes.root} demoComponent`}>
+    <div className={`${classes.root} ${classes.minHeight680} demoComponent`}>
       <Grid container
         spacing={3}
         key={validIdHelper(type)} >
@@ -88,7 +89,8 @@ export default function SplashPage(props) {
                   key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
                   value={value}
                   index={index}>
-                  <Grid container>
+                  <Grid container
+                    spacing={3}>
                     {tabContentItem.type === 'code flyout' ?
                       <CodeFlyout {...props}
                         classes={classes}
@@ -100,28 +102,29 @@ export default function SplashPage(props) {
                       <React.Fragment
                         key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
                         {tabContentItem.map((lookerContent, innerIndex) => {
-                          return <React.Fragment
-                            key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}>
-                            <Grid
+                          return (
+                            <Grid key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
                               item
                               sm={parseInt(lookerContent.gridWidth)}
-                              style={{ height: lookerContent.height }}
+                            // style={{ height: lookerContent.height }}
                             >
-
-                              {(lookerContent.type === 'single value') && <SingleValueVis
-                                {...{ lookerContent, classes, demoComponentType }}
-                              />}
-                              {(lookerContent.type === 'welcome') && <Welcome
-                                {...{ lookerContent, classes, demoComponentType, userProfile }}
-                              />}
-                              {(lookerContent.type === 'actionable insights') && <ActionableInsights
-                                {...{ lookerContent, classes, demoComponentType }}
-                                onClick={handleMenuItemSelect}
-                              />}
-                              {(lookerContent.type === 'look') && <EmbeddedLook {...{ lookerContent, classes }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)} />}
-
+                              <Card className={classes.padding30}>
+                                {(lookerContent.type === 'single value') && <SingleValueVis
+                                  {...{ lookerContent, classes, demoComponentType }}
+                                />}
+                                {(lookerContent.type === 'welcome') && <Welcome
+                                  {...{ lookerContent, classes, demoComponentType, userProfile }}
+                                />}
+                                {(lookerContent.type === 'actionable insights') && <ActionableInsights
+                                  {...{ lookerContent, classes, demoComponentType }}
+                                  onClick={handleMenuItemSelect}
+                                />}
+                                {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
+                                  {...{ lookerContent, classes }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                                />}
+                              </Card>
                             </Grid>
-                          </React.Fragment>
+                          )
                         })}
                       </React.Fragment>
                     }
