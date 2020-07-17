@@ -44,27 +44,22 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
       ) {
         let thisDataItem = {
           "x": item[lookerContent.inlineQuery.fields[0]].toString(),
-          "y": lookerContent.inlineQuery.fields.length > 2 ?
-            `${item[lookerContent.inlineQuery.fields[1]][lookerContent.inlineQuery.fields[2]]["This Period"]}` :
-            `${item[lookerContent.inlineQuery.fields[1]]}`,
+          "y": item[lookerContent.inlineQuery.fields[1]] || 0,
           "change": item.change
         }
         if (thisDataItem.y !== "null") dataArrForDataObj.push(thisDataItem)
       }
     })
     dataObjForSparkline.data = [...dataArrForDataObj]
-    // console.log('dataObjForSparkline', dataObjForSparkline)
     setApiContent([...apiContent, dataObjForSparkline])
   }
-
-  // console.log('apiContent', apiContent);
 
   return (
 
     <div
       className={` ${classes.maxHeight200} ${classes.textCenter}`}
-      // className={` ${classes.textCenter}`}
-      style={apiContent.length ? { borderLeft: `solid 3px ${lookerContent.visColor}` } : {}}
+      // className={` ${ classes.textCenter } `}
+      style={apiContent.length ? { borderLeft: `solid 3px ${lookerContent.visColor} ` } : {}}
     >
       {apiContent.length ?
         <React.Fragment>
@@ -80,7 +75,7 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
                 <Typography variant="subtitle1"
                   className={isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? classes.greenPos : classes.redNeg}
                   align="right">
-                  {apiContent[0].data ? `${parseInt(apiContent[0].data[0].change * 100).toFixed(0)}%` : ''}
+                  {apiContent[0].data ? `${parseInt(apiContent[0].data[0].change * 100).toFixed(0)}% ` : ''}
                 </Typography>
               </Grid>
               <Grid item sm={1} />
@@ -124,9 +119,9 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
         </React.Fragment>
         :
         <Grid item sm={12} >
-          <Card className={`${classes.card} ${classes.flexCentered} ${classes.minHeight200}`}>
+          <Card className={`${classes.card} ${classes.flexCentered} ${classes.minHeight200} `}>
             <CircularProgress className={classes.circularProgress} color={lookerContent.visColor}
-              style={{ color: `${lookerContent.visColor}` }} />
+              style={{ color: `${lookerContent.visColor} ` }} />
           </Card>
         </Grid>
       }
