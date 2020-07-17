@@ -32,7 +32,7 @@ export function ActionableInsights({ lookerContent, classes, onClick, vectors })
         )
         )}
       </Grid>
-      <Divider classNAme={classes.divider} />
+      <Divider className={`${classes.divider} ${classes.mb12} ${classes.mt12}`} />
       <Grid container
         spacing={3}>
         <Grid item sm={12}>

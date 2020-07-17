@@ -28,8 +28,6 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
     let lookerResponseData = await lookerResponse.json();
     setApiContent(lookerResponseData.queryResults[0])
   }
-
-  console.log('apiContent', apiContent)
   return (
     <Grid item sm={12}>
       {apiContent ?
@@ -44,7 +42,7 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
             over the past week.
           </Typography>
         </React.Fragment>
-        : 'Loading...'
+        : <div style={{ height: '56px' }}></div>
       }
     </Grid >
   );
