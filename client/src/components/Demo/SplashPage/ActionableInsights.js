@@ -10,7 +10,7 @@ const { validIdHelper } = require('../../../tools');
 
 
 
-export function ActionableInsights({ lookerContent, classes, onClick, vectors }) {
+export function ActionableInsights({ lookerContent, classes, onClick, lookerUser }) {
   const [apiContent, setApiContent] = useState([]);
 
 
@@ -26,8 +26,9 @@ export function ActionableInsights({ lookerContent, classes, onClick, vectors })
         spacing={3}>
         {lookerContent.inlineQueries.map((item, index) => (
           <NaturalLanguage
-            key={`${validIdHelper('naturalLanguage-splashPage-' + item.id)}`}
-            {...{ lookerContent, item, index, classes }}
+            key={`${validIdHelper('naturalLanguage-splashPage-' + index)}`}
+            {...{ lookerContent, item, index, classes, lookerUser }}
+
           />
         )
         )}
@@ -41,7 +42,7 @@ export function ActionableInsights({ lookerContent, classes, onClick, vectors })
           </Typography></Grid>
         {lookerContent.vectors.map((item, index) => (
           <VectorThumbnail
-            key={`${validIdHelper('vectorThumbnail-splashPage-' + item.id)}`}
+            key={`${validIdHelper('vectorThumbnail-splashPage-' + index)}`}
             {...{ lookerContent, item, classes }}
             onClick={() => onClick(item.id, 1)}
           />

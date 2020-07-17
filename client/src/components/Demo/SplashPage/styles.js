@@ -89,7 +89,7 @@ export default makeStyles((theme) => ({
   },
   minHeight680: {
     minHeight: 680,
-    overflow: 'scroll'
+    // overflow: 'scroll'
   },
   minHeight200: {
     minHeight: 200,

@@ -14,6 +14,7 @@ import { Welcome } from './Welcome';
 import { ActionableInsights } from './ActionableInsights';
 import { EmbeddedLook } from './EmbeddedLook';
 import { EmbeddedDashboard } from './EmbeddedDashboard';
+import Dashboard from '../Dashboard/Dashboard';
 const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
@@ -106,22 +107,26 @@ export default function SplashPage(props) {
                             <Grid key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
                               item
                               sm={parseInt(lookerContent.gridWidth)}
-                            // style={{ height: lookerContent.height }}
+                              padding={lookerContent.type === 'dashboard' ? 0 : 3}
+                              spacing={lookerContent.type === 'dashboard' ? 0 : 3}
                             >
                               <Card className={classes.padding30}>
                                 {(lookerContent.type === 'single value') && <SingleValueVis
-                                  {...{ lookerContent, classes, demoComponentType }}
+                                  {...{ lookerContent, classes, demoComponentType, lookerUser }}
                                 />}
                                 {(lookerContent.type === 'welcome') && <Welcome
-                                  {...{ lookerContent, classes, demoComponentType, userProfile }}
+                                  {...{ lookerContent, classes, demoComponentType, userProfile, lookerUser }}
                                 />}
                                 {(lookerContent.type === 'actionable insights') && <ActionableInsights
-                                  {...{ lookerContent, classes, demoComponentType }}
+                                  {...{ lookerContent, classes, demoComponentType, lookerUser }}
                                   onClick={handleMenuItemSelect}
                                 />}
                                 {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
-                                  {...{ lookerContent, classes }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                                  {...{ lookerContent, classes, lookerUser }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
                                 />}
+                                {/* {(lookerContent.type === 'dashboard') && <Dashboard
+                                  {...{ lookerContent, classes, lookerUser }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                                />} */}
                               </Card>
                             </Grid>
                           )

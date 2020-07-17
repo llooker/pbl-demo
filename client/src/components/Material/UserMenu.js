@@ -38,6 +38,8 @@ export default function UserMenu(props) {
   };
 
   const handleClose = (newValue) => {
+
+
     setAnchorEl(null);
     if (newValue == null) {
       onLogoutSuccess({})
@@ -45,8 +47,10 @@ export default function UserMenu(props) {
       switchLookerUser(newValue)
     } else if (typeof newValue === 'string') {
       switchUserAttributeBrand(newValue)
+      setSelectedBrand(newValue);
     }
   };
+
 
   return (
     <div className={`${classes.zIndex1500}`}>

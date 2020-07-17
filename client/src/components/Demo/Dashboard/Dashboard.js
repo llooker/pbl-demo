@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
 import { AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField } from '@material-ui/core'
@@ -7,7 +8,7 @@ import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./Dashboard.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
-import { EmbedHighlight } from '../../Highlights/Highlight';
+import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent';
 const { validIdHelper } = require('../../../tools');
 
@@ -58,7 +59,7 @@ export default function Dashboard(props) {
   useEffect(() => {
     performLookerApiCalls([...lookerContent])
     setClientSideCode(rawSampleCode)
-  }, [lookerContent]);
+  }, [lookerContent, lookerUser]);
 
 
   useEffect(() => {
@@ -74,6 +75,9 @@ export default function Dashboard(props) {
    * and embed SDK to create the experience on this page
    */
   const performLookerApiCalls = function (lookerContent) {
+    $(`.embedContainer.${validIdHelper(demoComponentType)}`).html('')
+    setIFrame(0)
+    setApiContent([])
     lookerContent.map(async lookerContent => {
       let dashboardId = lookerContent.id;
       LookerEmbedSDK.createDashboardWithId(dashboardId)
@@ -118,8 +122,8 @@ export default function Dashboard(props) {
         let queryResultsForDropdown = [];
         let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
         for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
-          queryResultsForDropdown.push({ 
-            'label': lookerResponseData.queryResults[i][desiredProperty], 
+          queryResultsForDropdown.push({
+            'label': lookerResponseData.queryResults[i][desiredProperty],
             'trend': (lookerResponseData.queryResults[i]['trend']) ? lookerResponseData.queryResults[i]['trend'] : undefined
           })
         }
@@ -195,61 +199,67 @@ export default function Dashboard(props) {
                       <React.Fragment
                         key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
                         {tabContentItem.filter ?
+
                           <Grid item sm={6}>
-                            <Autocomplete
-                              id={`combo-box-dashboard-${lookerContent.id}`}
-                              options={Array.isArray(apiContent) ?
-                                apiContent :
-                                []}
-                              renderOption={(option) => (
-                                <Grid container justify="space-between">
-                                  <Grid item>
-                                    {option.label}
+                            <ApiHighlight>
+                              <Autocomplete
+                                id={`combo-box-dashboard-${lookerContent.id}`}
+                                options={Array.isArray(apiContent) ?
+                                  apiContent :
+                                  []}
+                                renderOption={(option) => (
+                                  <Grid container justify="space-between">
+                                    <Grid item>
+                                      {option.label}
+                                    </Grid>
+                                    {option.trend && <Grid item>
+                                      <NumberToColoredPercent
+                                        val={option.trend}
+                                        positive_good={true}
+                                        abs_val={Math.abs(option.trend)}
+                                      />
+                                    </Grid>}
                                   </Grid>
-                                  {option.trend && <Grid item>
-                                    <NumberToColoredPercent 
-                                      val={option.trend} 
-                                      positive_good={true}
-                                      abs_val={Math.abs(option.trend)}
-                                    />
-                                  </Grid>}
-                                </Grid>
-                              )}
-                              getOptionLabel={(option) => option.label}
-                              style={{ width: 400 }}
-                              onChange={(event, newValue) => { 
-                                customFilterAction(tabContentItem.id, tabContentItem.filter.filterName, (newValue) ? newValue.label : '' )
-                              }}
-                              renderInput={(params) => <TextField {...params} label={tabContentItem.filter.filterName} variant="outlined" />}
-                              loadingText="Loading..."
-                            />
+                                )}
+                                getOptionLabel={(option) => option.label}
+                                style={{ width: 400 }}
+                                onChange={(event, newValue) => {
+                                  customFilterAction(tabContentItem.id, tabContentItem.filter.filterName, (newValue) ? newValue.label : '')
+                                }}
+                                renderInput={(params) => <TextField {...params} label={tabContentItem.filter.filterName} variant="outlined" />}
+                                loadingText="Loading..."
+                              />
+                            </ApiHighlight>
                           </Grid> : ''
                         }
                         {tabContentItem.dynamicFieldLookUp ?
                           <Grid item sm={6}>
-                            <ToggleButtonGroup
-                              value={toggleValue}
-                              exclusive
-                              onChange={handleToggle}
-                              aria-label="text alignment"
-                            >
-                              {Object.keys(tabContentItem.dynamicFieldLookUp).map(key => {
-                                return (
-                                  <ToggleButton
-                                    key={validIdHelper(`dynamicDashToggle-${key}`)}
-                                    value={key} aria-label="left aligned">
-                                    {key}
-                                  </ToggleButton>
-                                )
-                              })}
-                            </ToggleButtonGroup>
-                          </Grid> : ''
+                            <ApiHighlight>
+                              <ToggleButtonGroup
+                                value={toggleValue}
+                                exclusive
+                                onChange={handleToggle}
+                                aria-label="text alignment"
+                              >
+                                {Object.keys(tabContentItem.dynamicFieldLookUp).map(key => {
+                                  return (
+                                    <ToggleButton
+                                      key={validIdHelper(`dynamicDashToggle-${key}`)}
+                                      value={key} aria-label="left aligned">
+                                      {key}
+                                    </ToggleButton>
+                                  )
+                                })}
+                              </ToggleButtonGroup>
+                            </ApiHighlight>
+                          </Grid>
+                          : ''
                         }
                         <Box className={classes.w100} mt={2}>
                           <Grid item sm={12}>
                             <EmbedHighlight>
                               <div
-                                className="embedContainer"
+                                className={`embedContainer ${validIdHelper(demoComponentType)}`}
                                 id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                                 key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                               >

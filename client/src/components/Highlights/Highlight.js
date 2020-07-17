@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import AppContext from '../../AppContext';
+import zIndex from '@material-ui/core/styles/zIndex';
 
 // maybe move this to config?
 export const API_COLOR = '#FF0000'
@@ -11,9 +12,9 @@ function Highlight({ children, color, height, width, margin, id, ...props }) {
   if (show) {
     style = {
       ...style,
-      boxShadow: `0 4px 40px ${color}`,
-      // width: '99%',
-      // margin: '0 auto'
+      boxShadow: `0 0 10px ${color}, 
+      inset 0 0 10px ${color}`,
+      zIndex: 1000000
     }
   }
 

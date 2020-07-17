@@ -4,19 +4,18 @@ import { ApiHighlight } from '../../Highlights/Highlight';
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-export function NaturalLanguage({ lookerContent, item, index, classes }) {
+export function NaturalLanguage({ lookerContent, item, index, classes, lookerUser }) {
   const [apiContent, setApiContent] = useState(undefined);
 
   useEffect(() => {
     if (item) {
       runInlineQuery();
     }
-  }, [item])
+  }, [item, lookerUser])
 
   const runInlineQuery = async () => {
-    console.log('runInlineQuery')
+    setApiContent(undefined)
     let inlineQuery = item;
-    console.log('inlineQuery', inlineQuery)
     let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
     let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
       method: 'GET',
@@ -31,7 +30,7 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
   return (
     <Grid item sm={12}>
       {apiContent ?
-        <React.Fragment>
+        <ApiHighlight>
           <Typography variant="subtitle1" display="inline">
             Your {lookerContent.inlineQueriesMap[index]} category, <b>{apiContent['products.category']}</b>, is {apiContent.change > 0 ? 'up ' : 'down '}
           </Typography>
@@ -40,8 +39,8 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
           </Typography>
           <Typography variant="subtitle1" display="inline">
             over the past week.
-          </Typography>
-        </React.Fragment>
+        </Typography>
+        </ApiHighlight>
         : <div style={{ height: '56px' }}></div>
       }
     </Grid >

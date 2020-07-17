@@ -287,7 +287,7 @@ export default function ReportBuilder(props) {
                         <React.Fragment
                           key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
                           <Grid item sm={4} >
-                            <ApiHighlight>
+                            <ApiHighlight height={400}>
                               <TreeSideBar {...{
                                 toggleShowPayWallModal,
                                 classes,
@@ -314,12 +314,14 @@ export default function ReportBuilder(props) {
                         </React.Fragment>
                         :
                         <Grid item sm={12} >
-                          <div
-                            className="embedContainer"
-                            id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                            key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                          >
-                          </div>
+                          <EmbedHighlight>
+                            <div
+                              className="embedContainer"
+                              id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                              key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                            >
+                            </div>
+                          </EmbedHighlight>
                         </Grid>
                     }
                   </Grid>

@@ -6,7 +6,7 @@ const { validIdHelper } = require('../../../tools');
 
 
 
-export function SingleValueVis({ lookerContent, classes, onClick }) {
+export function SingleValueVis({ lookerContent, classes, onClick, lookerUser }) {
   // console.log('SingleValueVis')
   // console.log('lookerContent', lookerContent)
   // const [svg, setSvg] = useState(undefined)
@@ -16,14 +16,15 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
 
   let dataObjForSparkline = {}
   useEffect(() => {
-    if (lookerContent) {
+    if (lookerContent || lookerUser) {
       runInlineQuery();
     }
-  }, [lookerContent])
+  }, [lookerContent, lookerUser])
 
 
 
   const runInlineQuery = async () => {
+    setApiContent([])
     let stringifiedQuery = encodeURIComponent(JSON.stringify(lookerContent.inlineQuery))
     let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
       method: 'GET',
@@ -51,7 +52,7 @@ export function SingleValueVis({ lookerContent, classes, onClick }) {
       }
     })
     dataObjForSparkline.data = [...dataArrForDataObj]
-    setApiContent([...apiContent, dataObjForSparkline])
+    setApiContent([dataObjForSparkline])
   }
 
   return (

@@ -316,16 +316,20 @@
             "desiredFilterName": "products.brand",
             "dynamicFieldLookUp": {
               "Inventory": [
-                1,
-                5,
-                3,
-                107
+                125,
+                118,
+                124,
+                123,
+                122,
+                121
               ],
               "Orders": [
-                2,
+                126,
                 6,
                 7,
-                8
+                8,
+                2,
+                127
               ]
             }
           }
