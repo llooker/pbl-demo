@@ -34,7 +34,7 @@ export function VectorThumbnail({ lookerContent, classes, onClick, item }) {
           <Typography variant="subtitle1" className={`${classes.textCenter}`} color="secondary">{item.label}</Typography>
           <div
             onClick={() => onClick(item.id, 1)}
-            className={` ${classes.maxHeight100} ${classes.textCenter}`}
+            className={` ${classes.maxHeight100} ${classes.textCenter} ${classes.cursorPointer}`}
           >
             <ApiHighlight>
               <img

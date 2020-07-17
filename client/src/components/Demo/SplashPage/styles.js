@@ -68,7 +68,7 @@ export default makeStyles((theme) => ({
   textCenter: {
     textAlign: 'center'
   },
-  cursor: {
+  cursorPointer: {
     cursor: 'pointer'
   },
   border: {
@@ -103,5 +103,8 @@ export default makeStyles((theme) => ({
   },
   padding30: {
     padding: 30
-  }
+  },
+  mb12: {
+    marginBottom: 12
+  },
 }));

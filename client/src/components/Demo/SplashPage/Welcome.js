@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { ApiHighlight } from '../../Highlights/Highlight';
 
-import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, CircularProgress, Grid } from '@material-ui/core';
+import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, CircularProgress, Grid, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { ResponsiveLine } from '@nivo/line';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
+
 const { validIdHelper } = require('../../../tools');
 
 
@@ -21,21 +23,28 @@ export function Welcome({ lookerContent, classes, onClick, userProfile }) {
         Welcome back, {userProfile.givenName}!
       </Typography>
 
-      <Typography variant="subtitle1">
-        <b><i>atom</i> fashion</b>
+      <Typography variant="subtitle1" display="inline">
+        <b><i>atom</i> fashion</b> build an atomic connection with your customers
       </Typography>
-      <Typography variant="subtitle1">
-        build an atomic connection with your customers
-      </Typography>
+      <Divider className={`${classes.divider} ${classes.mb12} ${classes.mt12}`} />
       <Typography variant="h6" >
-        Blog
+        Latest content for you
       </Typography>
-      <Typography variant="h6" >
-        Inventory Best Practices
-      </Typography>
-      <Typography variant="h6" >
-        Macro Trends
-      </Typography>
+
+      <Carousel>
+        <div>
+          <img src={require(`../../../images/blog.jpg`)} />
+          <p className="legend">Blog</p>
+        </div>
+        <div>
+          <img src={require(`../../../images/inventory.jpg`)} />
+          <p className="legend">Inventory Best Practices</p>
+        </div>
+        <div>
+          <img src={require(`../../../images/macro.jpg`)} />
+          <p className="legend">Macro Trends</p>
+        </div>
+      </Carousel>
     </div >
   );
 }
