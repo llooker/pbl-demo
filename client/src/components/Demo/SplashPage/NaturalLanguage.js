@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
+import AppContext from '../../../AppContext';
 import { ApiHighlight } from '../../Highlights/Highlight';
 
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-export function NaturalLanguage({ lookerContent, item, index, classes, lookerUser }) {
+export function NaturalLanguage({ lookerContent, item, index, classes }) {
   const [apiContent, setApiContent] = useState(undefined);
+  const { userProfile, lookerUser } = useContext(AppContext)
 
   useEffect(() => {
     if (item) {

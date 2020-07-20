@@ -72,7 +72,7 @@ export default function SignIn(props) {
         className={`${classes.h100}`}>
         <Grid item sm={12} className={'sign-in-background-img'}
           style={{
-            background: `url(${backgroundImage})`,
+            backgroundImage: `url(${backgroundImage})`,
             backgroundSize: 'cover'
           }}
         >

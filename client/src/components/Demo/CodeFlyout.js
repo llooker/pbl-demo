@@ -37,7 +37,7 @@ export default function CodeFlyout(props) {
         </> : ''} */}
       {Object.keys(lookerUser).length ?
         <>
-          <Typography variant="h5" component="h2" className={classes.gridTitle}>
+          <Typography variant="h6" className={classes.gridTitle}>
             Looker User Object<br />
           </Typography>
           <CodeSnippet code={lookerUser} />

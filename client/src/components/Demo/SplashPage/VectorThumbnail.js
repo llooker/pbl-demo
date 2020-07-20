@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
+import AppContext from '../../../AppContext';
 import { ApiHighlight } from '../../Highlights/Highlight';
 
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-export function VectorThumbnail({ lookerContent, classes, onClick, item }) {
+export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSelect }) {
   const [svg, setSvg] = useState(undefined)
+  const { userProfile, lookerUser } = useContext(AppContext)
 
   useEffect(() => {
     if (item) {
@@ -34,11 +36,11 @@ export function VectorThumbnail({ lookerContent, classes, onClick, item }) {
           <Typography variant="subtitle1" className={`${classes.textCenter}`} color="secondary">{item.label}</Typography>
           <ApiHighlight>
             <div
-              onClick={() => onClick(item.id, 1)}
+              onClick={() => handleMenuItemSelect(item.id, 1)}
               className={` ${classes.maxHeight100} ${classes.textCenter} ${classes.cursorPointer} ${classes.overflowHidden}`}
             >
               <img
-                onClick={() => onClick(item.id, 1)}
+                onClick={() => handleMenuItemSelect(item.id, 1)}
                 src={svg} />
 
             </div>

@@ -1,7 +1,7 @@
 //imports
 import $ from 'jquery';
 import _ from 'lodash'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, Divider } from '@material-ui/core'
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
@@ -19,6 +19,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
 export default function SplashPage(props) {
+  // console.log('SplashPage')
   //intialize state using hooks
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(1);
@@ -27,7 +28,7 @@ export default function SplashPage(props) {
 
   //declare constants
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, lookerUser, handleMenuItemSelect, userProfile } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, handleMenuItemSelect, lookerUser } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
@@ -107,22 +108,19 @@ export default function SplashPage(props) {
                             <Grid key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
                               item
                               sm={parseInt(lookerContent.gridWidth)}
-                              padding={lookerContent.type === 'dashboard' ? 0 : 3}
-                              spacing={lookerContent.type === 'dashboard' ? 0 : 3}
                             >
                               <Card className={classes.padding30}>
                                 {(lookerContent.type === 'single value') && <SingleValueVis
-                                  {...{ lookerContent, classes, demoComponentType, lookerUser }}
+                                  {...{ lookerContent, classes, demoComponentType }}
                                 />}
                                 {(lookerContent.type === 'welcome') && <Welcome
-                                  {...{ lookerContent, classes, demoComponentType, userProfile, lookerUser }}
+                                  {...{ lookerContent, classes, demoComponentType }}
                                 />}
                                 {(lookerContent.type === 'actionable insights') && <ActionableInsights
-                                  {...{ lookerContent, classes, demoComponentType, lookerUser }}
-                                  onClick={handleMenuItemSelect}
+                                  {...{ lookerContent, classes, demoComponentType, handleMenuItemSelect }}
                                 />}
                                 {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
-                                  {...{ lookerContent, classes, lookerUser }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                                  {...{ lookerContent, classes }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
                                 />}
                               </Card>
                             </Grid>

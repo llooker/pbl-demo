@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
+import AppContext from '../../../AppContext';
 import { ApiHighlight } from '../../Highlights/Highlight';
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, CircularProgress, Grid } from '@material-ui/core';
 import { ResponsiveLine } from '@nivo/line';
@@ -6,11 +7,12 @@ const { validIdHelper } = require('../../../tools');
 
 
 
-export function SingleValueVis({ lookerContent, classes, onClick, lookerUser }) {
+export function SingleValueVis({ lookerContent, classes }) {
   // console.log('SingleValueVis')
   // console.log('lookerContent', lookerContent)
   // const [svg, setSvg] = useState(undefined)
   const [apiContent, setApiContent] = useState([]);
+  const { userProfile, lookerUser } = useContext(AppContext)
 
 
 
@@ -120,7 +122,7 @@ export function SingleValueVis({ lookerContent, classes, onClick, lookerUser }) 
         :
         <Grid item sm={12} >
           <Card className={`${classes.card} ${classes.flexCentered} ${classes.minHeight200} `}>
-            <CircularProgress className={classes.circularProgress} color={lookerContent.visColor}
+            <CircularProgress className={classes.circularProgress}
               style={{ color: `${lookerContent.visColor} ` }} />
           </Card>
         </Grid>

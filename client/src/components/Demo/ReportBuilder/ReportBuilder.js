@@ -163,7 +163,7 @@ export default function ReportBuilder(props) {
                 .build()
                 .connect()
                 .then((look) => {
-                  setIFrame(1)
+                  // setIFrame(1)
                 })
                 .catch((error) => {
                   console.error('Connection error', error)
@@ -171,7 +171,7 @@ export default function ReportBuilder(props) {
             }
 
             if (index === objToUse.looks.length - 1) {
-              setIFrame(1)
+              setTimeout(() => setIFrame(1), 1000)
             }
           })
         }
@@ -197,7 +197,7 @@ export default function ReportBuilder(props) {
                 .connect()
                 .then((dashboard) => {
                   setTimeout(() => {
-                    setIFrame(1)
+                    // setIFrame(1)
                   }, 1000)
                 })
                 .catch((error) => {
@@ -207,7 +207,7 @@ export default function ReportBuilder(props) {
 
 
             if (index === objToUse.dashboards.length - 1) {
-              setIFrame(1)
+              setTimeout(() => setIFrame(1), 1000)
             }
           })
         }
@@ -222,7 +222,7 @@ export default function ReportBuilder(props) {
           .build()
           .connect()
           .then((explore) => {
-            setIFrame(1)
+            setTimeout(() => setIFrame(1), 1000)
             setExploreObj(exploreObj)
           })
           .catch((error) => {
@@ -337,13 +337,13 @@ export default function ReportBuilder(props) {
 
 
 function TreeSideBar(props) {
-
+  // console.log('TreeSideBar')
   const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser, toggleShowPayWallModal } = props
   const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
   let treeCounter = 0;
-
   const [selected, setSelected] = useState(2)
-  const [expanded, setExpanded] = useState(["1"]);
+  const expandedArr = Object.keys(apiContent).length ? ["1", "" + (2 + apiContent[Object.keys(apiContent)[0]].length)] : [];
+  const [expanded, setExpanded] = useState(expandedArr);
 
   const handleToggle = (event, nodeIds) => {
     setExpanded(nodeIds);
@@ -352,6 +352,11 @@ function TreeSideBar(props) {
   const handleSelect = (event, nodeIds) => {
     setSelected(nodeIds);
   };
+
+
+  useEffect(() => {
+    setExpanded(expandedArr)
+  }, [apiContent]);
 
   return (
     <TreeView
@@ -368,7 +373,7 @@ function TreeSideBar(props) {
           <TreeItem
             key={`${validIdHelper(demoComponentType + '-outerTreeItem-' + outerIndex)}`}
             nodeId={"" + (treeCounter += 1)}
-            treecounter={treeCounter}
+            // treecounter={treeCounter}
             label={_.capitalize(key)}
             icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
             disabled={apiContent[key].length ? false : true}
@@ -399,7 +404,7 @@ function TreeSideBar(props) {
                           className={`${classes.ml24} ${classes.childHoverVisibility}`}
                           onClick={(event) => {
                             if (lookerUser.permission_level === 'premium') {
-                              setSelected(treeCounter);
+                              // setSelected(treeCounter);
                               action(
                                 key.substring(0, key.length - 1),
                                 item.id,
@@ -432,7 +437,7 @@ function TreeSideBar(props) {
                             className={`${classes.ml24} ${classes.childHoverVisibility}`}
                             onClick={(event) => {
                               if (lookerUser.permission_level === 'premium') {
-                                setSelected(treeCounter);
+                                // setSelected(treeCounter);
                                 action(
                                   key.substring(0, key.length - 1),
                                   item.id,
@@ -458,7 +463,7 @@ function TreeSideBar(props) {
                             className={`${classes.ml24} ${classes.childHoverVisibility}`}
                             onClick={(event) => {
                               if (lookerUser.permission_level === 'premium') {
-                                setSelected(treeCounter);
+                                // setSelected(treeCounter);
                                 action(
                                   key.substring(0, key.length - 1),
                                   item.id,
@@ -481,7 +486,7 @@ function TreeSideBar(props) {
                         : item.title.length > 30 ? item.title.substring(0, 30) + '...' : item.title
                     }
                     onClick={() => {
-                      setSelected(treeCounter)
+                      // setSelected(treeCounter)
                       action(
                         key.substring(0, key.length - 1), item.id)
                     }} />

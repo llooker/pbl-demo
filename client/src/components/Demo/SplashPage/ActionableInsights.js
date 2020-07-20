@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
+import AppContext from '../../../AppContext';
 import { ApiHighlight } from '../../Highlights/Highlight';
-
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, CircularProgress, Grid, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ResponsiveLine } from '@nivo/line';
@@ -10,9 +10,8 @@ const { validIdHelper } = require('../../../tools');
 
 
 
-export function ActionableInsights({ lookerContent, classes, onClick, lookerUser }) {
+export function ActionableInsights({ lookerContent, classes, handleMenuItemSelect }) {
   const [apiContent, setApiContent] = useState([]);
-
 
   return (
     <div
@@ -27,7 +26,7 @@ export function ActionableInsights({ lookerContent, classes, onClick, lookerUser
         {lookerContent.inlineQueries.map((item, index) => (
           <NaturalLanguage
             key={`${validIdHelper('naturalLanguage-splashPage-' + index)}`}
-            {...{ lookerContent, item, index, classes, lookerUser }}
+            {...{ lookerContent, item, index, classes }}
 
           />
         )
@@ -43,8 +42,8 @@ export function ActionableInsights({ lookerContent, classes, onClick, lookerUser
         {lookerContent.vectors.map((item, index) => (
           <VectorThumbnail
             key={`${validIdHelper('vectorThumbnail-splashPage-' + index)}`}
-            {...{ lookerContent, item, classes }}
-            onClick={() => onClick(item.id, 1)}
+            {...{ lookerContent, item, classes, handleMenuItemSelect }}
+          // onClick={() => onClick(item.id, 1)}
           />
         )
         )}

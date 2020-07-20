@@ -8,7 +8,9 @@ import {
   ListSubheader, List, ListItem, ListItemIcon, ListItemText,
   Badge
 } from '@material-ui/core/';
-import { AddAlert } from '@material-ui/icons';
+
+import { AddAlert, Speed, TrendingUp, StoreMallDirectory, DateRange, Search, FindInPage } from '@material-ui/icons';
+import HomeIcon from '@material-ui/icons/Home'; //can't reuse home name
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { blue, grey } from '@material-ui/core/colors';
 import UserMenu from './Material/UserMenu';
@@ -330,7 +332,8 @@ class Home extends Component {
                   {activeUsecase ? UsecaseContent[activeUsecase].vignette.name : ''}
                 </Typography>
 
-                <Badge badgeContent={Math.floor(Math.random() * 5) + 1} color="error" className={classes.mr12}>
+                {/* Math.floor(Math.random() * 5) + 1 */}
+                <Badge badgeContent={3} color="error" className={classes.mr12}>
                   <AddAlert />
                 </Badge>
                 <UserMenu
@@ -353,12 +356,13 @@ class Home extends Component {
             >
               <div className={classes.drawerHeader} />
 
-              <MenuList {...this.props}
-                classes={classes}
-                activeUsecase={activeUsecase}
-                orderedDemoComponentsForMenuObj={orderedDemoComponentsForMenuObj}
-                selectedMenuItem={selectedMenuItem}
-                handleMenuItemSelect={handleMenuItemSelect} />
+              {Object.keys(orderedDemoComponentsForMenuObj).length ?
+                <MenuList {...this.props}
+                  classes={classes}
+                  activeUsecase={activeUsecase}
+                  orderedDemoComponentsForMenuObj={orderedDemoComponentsForMenuObj}
+                  selectedMenuItem={selectedMenuItem}
+                  handleMenuItemSelect={handleMenuItemSelect} /> : ''}
 
               <HighlightSourcesLegend className={classes.highlightLegend} />
               <MonetizationModal {...{ classes }} />
@@ -375,8 +379,9 @@ class Home extends Component {
                   const DemoComponent = demoComponentMap[key];
                   return (
                     <Box key={validIdHelper(`box-${item.type}-${index}`)}
-                      className={key === selectedMenuItem ? `` : `${classes.hide}`}>
-                      {DemoComponent ?
+                    // className={key === selectedMenuItem ? `` : `${classes.hide}`}
+                    >
+                      {DemoComponent && key === selectedMenuItem ?
                         <DemoComponent key={validIdHelper(`treeItem-${item.type}-${index}`)}
                           staticContent={item}
                           handleMenuItemSelect={handleMenuItemSelect}
@@ -387,7 +392,7 @@ class Home extends Component {
                           LookerEmbedSDK={LookerEmbedSDK}
                           lookerHost={lookerHost}
                           userProfile={userProfile}
-                        /> : 'Coming soon'}
+                        /> : ''}
                     </Box>)
                 }) :
                 ''
@@ -403,41 +408,58 @@ export default withStyles(styles)(Home);
 
 function MenuList(props) {
   const { classes, activeUsecase, orderedDemoComponentsForMenuObj, selectedMenuItem, handleMenuItemSelect } = props
+  const demoComponentIconMap = {
+    "splashpage19": HomeIcon,
+    "simpledashboard5": TrendingUp,
+    "simpledashboard9": Speed,
+    "customfilter1": StoreMallDirectory,
+    "customvis": DateRange,
+    "querybuilderexplorelite": Search,
+    "reportbuilder14": FindInPage,
+  }
 
   return (<List
     component="nav"
     aria-labelledby="nested-list-subheader"
     className={classes.list}
   >
+    {activeUsecase ? Object.keys(orderedDemoComponentsForMenuObj).map((outerItem, outerIndex) => {
+      return (
+        < React.Fragment
+          key={`${validIdHelper(outerItem + '-menuList-' + outerIndex)}`}>
+          <ListItem button
+            key={`${validIdHelper(outerItem + '-outerListItem-' + outerIndex)}`}
+          >
+            <ListItemText primary={_.capitalize(outerItem)} />
+          </ListItem>
+          < List component="div" disablePadding
+            key={`${validIdHelper(outerItem + '-innerList-' + outerIndex)}`}>
+            {orderedDemoComponentsForMenuObj[outerItem].map((item, innerIndex) => {
+              const key = item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) : validIdHelper(item.type);
+              const MatchingIconComponent = demoComponentIconMap[key]
 
-    {activeUsecase ? Object.keys(orderedDemoComponentsForMenuObj).map((key, outerIndex) => (
+              return (
+                <ListItem button className={classes.nested}
+                  key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
+                  onClick={
+                    () => handleMenuItemSelect(validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type))
+                  }
+                  selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedMenuItem}
+                >
+                  <ListItemIcon>
+                    <MatchingIconComponent />
+                  </ListItemIcon>
+                  <ListItemText primary={_.capitalize(item.label)} />
+                </ListItem>
+              )
+            })}
+          </List>
+        </React.Fragment>
+      )
 
-      <React.Fragment
-        key={`${validIdHelper(key + '-menuList-' + outerIndex)}`}>
-        <ListItem button
-          key={`${validIdHelper(key + '-outerListItem-' + outerIndex)}`}
-        >
-          <ListItemText primary={_.capitalize(key)} />
-        </ListItem>
-        < List component="div" disablePadding
-          key={`${validIdHelper(key + '-innerList-' + outerIndex)}`}>
-          {orderedDemoComponentsForMenuObj[key].map((item, innerIndex) => (
-            <ListItem button className={classes.nested}
-              key={`${validIdHelper(key + '-innerListItem-' + innerIndex)}`}
-              onClick={
-                () => handleMenuItemSelect(validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type))
-              }
-              selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedMenuItem}
-            >
-              <ListItemIcon>
-                <Icon className={`fa ${item.icon} ${classes.icon}  mr12`} />
-              </ListItemIcon>
-              <ListItemText primary={_.capitalize(item.label)} />
-            </ListItem>))}
-        </List>
-      </React.Fragment>
 
-    )) : ''}
-  </List>
+    }) : ''
+    }
+  </List >
   )
 }

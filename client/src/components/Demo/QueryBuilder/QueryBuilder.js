@@ -19,8 +19,6 @@ const { validIdHelper, prettifyString } = require('../../../tools');
 
 //start of QueryBuilder Component
 export default function QueryBuilder(props) {
-
-
   // console.log('QueryBuilder')
   // console.log('props', props)
 

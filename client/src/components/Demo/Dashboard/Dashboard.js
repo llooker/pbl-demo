@@ -14,6 +14,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of Dashboard Component
 export default function Dashboard(props) {
+  // console.log('Dashboard')
   //initialize state using hooks
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(0);

@@ -1,13 +1,14 @@
 import $ from 'jquery';
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useCallback, useState, useContext } from 'react';
+import AppContext from '../../../AppContext';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import { Typography, Grid, Card, CircularProgress, Box } from '@material-ui/core';
 
-export function EmbeddedDashboard({ lookerContent, classes, id, lookerUser }) {
-
+export function EmbeddedDashboard({ lookerContent, classes, id }) {
 
   const [iFrameExists, setIFrame] = useState(0);
+  const { userProfile, lookerUser } = useContext(AppContext)
 
   useEffect(() => {
     $(`#${id}`).html('')
@@ -39,7 +40,7 @@ export function EmbeddedDashboard({ lookerContent, classes, id, lookerUser }) {
 
           <Grid item sm={12} >
             <Card className={`${classes.card} ${classes.flexCentered} ${classes.maxHeight400} `} elevation={0}>
-              <CircularProgress className={classes.circularProgress} color={lookerContent.visColor}
+              <CircularProgress className={classes.circularProgress}
               />
             </Card>
           </Grid>
