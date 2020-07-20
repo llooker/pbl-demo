@@ -14,7 +14,7 @@ export default function CodeFlyout(props) {
   const { classes, lookerContent, clientSideCode, serverSideCode, lookerUser } = props
   return (
     <Grid item sm={12} >
-      {lookerContent.length ?
+      {/* {lookerContent.length ?
         <>
           <Typography variant="h5" component="h2" className={classes.gridTitle}>
             Looker Content Array Referenced on Page<br />
@@ -34,7 +34,7 @@ export default function CodeFlyout(props) {
             Server Side Code<br />
           </Typography>
           <CodeSnippet code={serverSideCode} />
-        </> : ''}
+        </> : ''} */}
       {Object.keys(lookerUser).length ?
         <>
           <Typography variant="h5" component="h2" className={classes.gridTitle}>

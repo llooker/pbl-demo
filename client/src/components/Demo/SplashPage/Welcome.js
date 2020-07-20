@@ -19,7 +19,7 @@ export function Welcome({ lookerContent, classes, onClick, userProfile, lookerUs
 
   return (
     <div
-      className={` ${classes.maxHeight400}`}
+      className={` ${classes.maxHeight400} ${classes.overflowScroll}`}
     >
       <Typography variant="h5" >
         Welcome back, <b>{userProfile.givenName} & {lookerUser.user_attributes.brand}!</b>
@@ -33,17 +33,17 @@ export function Welcome({ lookerContent, classes, onClick, userProfile, lookerUs
         Latest content for you
       </Typography>
 
-      <Carousel>
+      <Carousel infiniteLoop={true} autoPlay={true} showThumbs={false}>
         <div>
-          <img src={require(`../../../images/blog.jpg`)} />
+          <img src={require(`../../../images/splash_blog.jpg`)} />
           <p className="legend">Blog</p>
         </div>
         <div>
-          <img src={require(`../../../images/inventory.jpg`)} />
+          <img src={require(`../../../images/splash_inventory.jpg`)} />
           <p className="legend">Inventory Best Practices</p>
         </div>
         <div>
-          <img src={require(`../../../images/macro.jpg`)} />
+          <img src={require(`../../../images/splash_macro.jpg`)} />
           <p className="legend">Macro Trends</p>
         </div>
       </Carousel>

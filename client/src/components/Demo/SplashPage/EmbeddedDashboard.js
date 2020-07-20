@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import { Typography, Grid, Card, CircularProgress, Box } from '@material-ui/core';
-const { validIdHelper } = require('../../../tools');
 
 export function EmbeddedDashboard({ lookerContent, classes, id, lookerUser }) {
 
@@ -31,27 +30,25 @@ export function EmbeddedDashboard({ lookerContent, classes, id, lookerUser }) {
   }, [lookerUser])
 
   return (
+
     <div
-      className={` ${classes.maxHeight400} ${classes.textCenter}`}
+      className={` ${classes.maxHeight400} ${classes.textCenter} ${classes.overflowVisible}`}
     >
       {
         iFrameExists ? '' :
+
           <Grid item sm={12} >
-            <Card className={`${classes.card} ${classes.flexCentered} ${classes.maxHeight400}`}>
-              <CircularProgress className={classes.circularProgress} />
+            <Card className={`${classes.card} ${classes.flexCentered} ${classes.maxHeight400} `} elevation={0}>
+              <CircularProgress className={classes.circularProgress} color={lookerContent.visColor}
+              />
             </Card>
           </Grid>
       }
-      {/* <Box className={iFrameExists ? `` : `${classes.hidden}`}>
-        <EmbedHighlight id={id} className={`embedContainer ${classes.maxHeight400} ${classes.textCenter} ${classes.cursor}`} />
-      </Box> */}
-
-
-      <Box className={iFrameExists ? `` : `${classes.hidden}`}>
+      <Box >
         <Grid item sm={12}>
-          <EmbedHighlight height={400}>
+          <EmbedHighlight>
             <div
-              className={`embedContainer splashpage`}
+              className={`embedContainer splashPage`}
               id={id}
               key={id}
             >
@@ -59,7 +56,6 @@ export function EmbeddedDashboard({ lookerContent, classes, id, lookerUser }) {
           </EmbedHighlight>
         </Grid>
       </Box>
-
     </div >
 
   );

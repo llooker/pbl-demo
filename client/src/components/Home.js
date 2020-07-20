@@ -5,12 +5,10 @@ import { withStyles } from "@material-ui/core/styles";
 import {
   Drawer, CssBaseline, AppBar, Toolbar, Typography,
   Divider, IconButton, Tabs, Tab, Icon, Box, Avatar,
-  ListSubheader, List, ListItem, ListItemIcon, ListItemText
+  ListSubheader, List, ListItem, ListItemIcon, ListItemText,
+  Badge
 } from '@material-ui/core/';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import { AddAlert } from '@material-ui/icons';
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { blue, grey } from '@material-ui/core/colors';
 import UserMenu from './Material/UserMenu';
@@ -215,26 +213,11 @@ class Home extends Component {
     this.setState({ highlightShow: !this.state.highlightShow })
   }
 
-  /*handleDrawerTabChange = (event, newValue) => {
-    this.handleDrawerChange(true);
-    this.setState({
-      drawerTabValue: newValue
-    }, () => {
-      this.handleTabChange(0)
-    })
-  };*/
-
   handleTabChange = newValue => {
     this.setState({
       activeTabValue: newValue
     })
   }
-
-  // handleDrawerChange = (open) => {
-  //   this.setState({
-  //     drawerOpen: open
-  //   })
-  // }
 
   handleMenuItemSelect = (newValue, fromSplash) => {
     let selectedMenuItemValue = ''
@@ -325,36 +308,31 @@ class Home extends Component {
             toggleShow: this.toggleHighlightShow,
             showPayWallModal: this.state.showPayWallModal,
             toggleShowPayWallModal: this.toggleShowPayWallModal,
-            lookerUser
+            lookerUser,
+            userProfile
           }
         } >
           <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
             <CssBaseline />
             <AppBar
               position="fixed"
-              className={clsx(classes.appBar, {
-                // [classes.appBarShift]: drawerOpen,
-              })}
+              className={clsx(classes.appBar)}
             >
               <Toolbar>
-                {/* <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={() => handleDrawerChange(true)}
-                  edge="start"
-                  className={clsx(classes.menuButton, drawerOpen && classes.hide)}
-                >
-                  <MenuIcon />
-                </IconButton> */}
 
                 {activeUsecase ?
                   <Avatar alt="Icon"
                     src={require(`../images/${activeUsecase}_logo.png`)}
+                  // src={require(`../images/${activeUsecase}_logo_white.svg`)}
                   /> : ''}
 
                 <Typography variant="h6" noWrap className={`${classes.title} ${classes.ml12}`}>
                   {activeUsecase ? UsecaseContent[activeUsecase].vignette.name : ''}
                 </Typography>
+
+                <Badge badgeContent={Math.floor(Math.random() * 5) + 1} color="error" className={classes.mr12}>
+                  <AddAlert />
+                </Badge>
                 <UserMenu
                   lookerUser={lookerUser}
                   switchLookerUser={switchLookerUser}
@@ -373,15 +351,7 @@ class Home extends Component {
                 paper: classes.drawerPaper,
               }}
             >
-              {/* <div className={classes.drawerHeader}>
-                <IconButton onClick={() => handleDrawerChange(false)}>
-                  <ChevronLeftIcon />
-                </IconButton>
-              </div>
-              <Divider /> */}
-
               <div className={classes.drawerHeader} />
-
 
               <MenuList {...this.props}
                 classes={classes}
@@ -437,11 +407,6 @@ function MenuList(props) {
   return (<List
     component="nav"
     aria-labelledby="nested-list-subheader"
-    //         subheader={
-    //           <ListSubheader component="div" id="nested-list-subheader">
-    //             Menu
-    // </ListSubheader>
-    //         }
     className={classes.list}
   >
 
@@ -452,10 +417,6 @@ function MenuList(props) {
         <ListItem button
           key={`${validIdHelper(key + '-outerListItem-' + outerIndex)}`}
         >
-          {/* need to be dynamic */}
-          {/* <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon> */}
           <ListItemText primary={_.capitalize(key)} />
         </ListItem>
         < List component="div" disablePadding

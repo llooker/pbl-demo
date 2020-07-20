@@ -58,13 +58,12 @@ export function SingleValueVis({ lookerContent, classes, onClick, lookerUser }) 
   return (
 
     <div
-      className={` ${classes.maxHeight200} ${classes.textCenter}`}
-      // className={` ${ classes.textCenter } `}
+      className={` ${classes.maxHeight200} ${classes.textCenter} ${classes.overflowHidden}`}
       style={apiContent.length ? { borderLeft: `solid 3px ${lookerContent.visColor} ` } : {}}
     >
       {apiContent.length ?
         <React.Fragment>
-          <ApiHighlight height={140}>
+          <ApiHighlight height={200}>
             <Grid container>
               <Grid item sm={1} />
               <Grid item sm={5}>

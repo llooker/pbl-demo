@@ -124,9 +124,6 @@ export default function SplashPage(props) {
                                 {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
                                   {...{ lookerContent, classes, lookerUser }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
                                 />}
-                                {/* {(lookerContent.type === 'dashboard') && <Dashboard
-                                  {...{ lookerContent, classes, lookerUser }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
-                                />} */}
                               </Card>
                             </Grid>
                           )

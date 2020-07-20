@@ -32,26 +32,19 @@ export function VectorThumbnail({ lookerContent, classes, onClick, item }) {
       {svg ?
         <Grid item sm={12}>
           <Typography variant="subtitle1" className={`${classes.textCenter}`} color="secondary">{item.label}</Typography>
-          <div
-            onClick={() => onClick(item.id, 1)}
-            className={` ${classes.maxHeight100} ${classes.textCenter} ${classes.cursorPointer}`}
-          >
-            <ApiHighlight>
+          <ApiHighlight>
+            <div
+              onClick={() => onClick(item.id, 1)}
+              className={` ${classes.maxHeight100} ${classes.textCenter} ${classes.cursorPointer} ${classes.overflowHidden}`}
+            >
               <img
                 onClick={() => onClick(item.id, 1)}
                 src={svg} />
-            </ApiHighlight>
 
-          </div> </Grid>
+            </div>
+          </ApiHighlight></Grid>
         :
-
         ''
-        // <Grid item sm={12} >
-        //   <Card className={` ${classes.flexCentered} ${classes.minHeight200}`}>
-        //     <CircularProgress className={classes.circularProgress} color={lookerContent.visColor}
-        //       style={{ color: `${lookerContent.visColor}` }} />
-        //   </Card>
-        // </Grid>
       }
     </Grid>
 

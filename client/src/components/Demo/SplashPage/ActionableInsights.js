@@ -16,7 +16,7 @@ export function ActionableInsights({ lookerContent, classes, onClick, lookerUser
 
   return (
     <div
-      className={` ${classes.maxHeight400}`}
+      className={` ${classes.maxHeight400} ${classes.overflowScroll}`}
     >
       <Typography variant="h5" >
         Actionable Insights

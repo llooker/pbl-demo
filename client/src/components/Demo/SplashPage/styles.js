@@ -80,16 +80,13 @@ export default makeStyles((theme) => ({
   maxHeight100: {
     maxHeight: 100,
     height: 100,
-    overflow: 'hidden'
   },
   maxHeight400: {
     maxHeight: 400,
     height: 400,
-    overflow: 'scroll',
   },
   minHeight680: {
     minHeight: 680,
-    // overflow: 'scroll'
   },
   minHeight200: {
     minHeight: 200,
@@ -107,4 +104,13 @@ export default makeStyles((theme) => ({
   mb12: {
     marginBottom: 12
   },
+  overflowScroll: {
+    overflow: 'scroll'
+  },
+  overflowHidden: {
+    overflow: 'hidden'
+  },
+  overflowVisible: {
+    overflow: 'visible'
+  }
 }));

@@ -131,21 +131,7 @@ iframe{
 .min-height-200{
   min-height: 200px;
 }
-/* .nav-pills .nav-link.active, .nav-pills .show>.nav-link  {
-  background-color:#6c757d;
-} */
 
 .pointer{
   cursor: pointer;
-}
-
-.sign-in-background-img {
-  background: url('../images/atom_background.jpg');
-  background-size: cover;
-  height: 100%;
-  width: 100%;
-}
-
-#embedContainer-splashpage-12 {
-  margin: -30px;
 }
