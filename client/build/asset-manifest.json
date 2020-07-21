@@ -1,0 +1,34 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9bb21c17.chunk.css",
+    "main.js": "/static/js/main.b02d685c.chunk.js",
+    "main.js.map": "/static/js/main.b02d685c.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.8c40394c.js",
+    "runtime-main.js.map": "/static/js/runtime-main.8c40394c.js.map",
+    "static/css/2.fb346933.chunk.css": "/static/css/2.fb346933.chunk.css",
+    "static/js/2.08d816a4.chunk.js": "/static/js/2.08d816a4.chunk.js",
+    "static/js/2.08d816a4.chunk.js.map": "/static/js/2.08d816a4.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.3e30ad8e1cf0ffd2a144142976a03c18.js": "/precache-manifest.3e30ad8e1cf0ffd2a144142976a03c18.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.fb346933.chunk.css.map": "/static/css/2.fb346933.chunk.css.map",
+    "static/css/main.9bb21c17.chunk.css.map": "/static/css/main.9bb21c17.chunk.css.map",
+    "static/js/2.08d816a4.chunk.js.LICENSE.txt": "/static/js/2.08d816a4.chunk.js.LICENSE.txt",
+    "static/media/atom_background1.jpg": "/static/media/atom_background1.716b981c.jpg",
+    "static/media/atom_background2.jpg": "/static/media/atom_background2.96780042.jpg",
+    "static/media/atom_background3.jpg": "/static/media/atom_background3.0bc7dd7a.jpg",
+    "static/media/atom_background4.jpg": "/static/media/atom_background4.1ceecbd2.jpg",
+    "static/media/atom_logo.png": "/static/media/atom_logo.30c26478.png",
+    "static/media/atom_logo_black.svg": "/static/media/atom_logo_black.a213ea2a.svg",
+    "static/media/splash_blog.jpg": "/static/media/splash_blog.f5ac79c9.jpg",
+    "static/media/splash_inventory.jpg": "/static/media/splash_inventory.bc226973.jpg",
+    "static/media/splash_macro.jpg": "/static/media/splash_macro.a3836bb2.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8c40394c.js",
+    "static/css/2.fb346933.chunk.css",
+    "static/js/2.08d816a4.chunk.js",
+    "static/css/main.9bb21c17.chunk.css",
+    "static/js/main.b02d685c.chunk.js"
+  ]
+}
