@@ -203,7 +203,8 @@ class Home extends Component {
       appLayout: '',
       highlightShow: false,
       showPayWallModal: false,
-      selectedMenuItem: ''
+      selectedMenuItem: '',
+      renderedDemoComponents: []
     }
   }
 
@@ -234,9 +235,14 @@ class Home extends Component {
         }
       })
     } else selectedMenuItemValue = newValue;
-    this.setState({
-      selectedMenuItem: selectedMenuItemValue
-    })
+
+    let renderedDemoComponentsCopy = [...this.state.renderedDemoComponents]
+    if (renderedDemoComponentsCopy.indexOf(selectedMenuItemValue) == -1) renderedDemoComponentsCopy.push(selectedMenuItemValue)
+
+    this.setState((prevState) => ({
+      selectedMenuItem: selectedMenuItemValue,
+      renderedDemoComponents: [...renderedDemoComponentsCopy]
+    }))
   };
 
   componentDidMount(props) {
@@ -247,6 +253,19 @@ class Home extends Component {
     }, () => {
       LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
     })
+  }
+
+  componentDidUpdate(prevProps) {
+    let prevPermissionLevel = prevProps.lookerUser.permission_level;
+    let currPermissionLevel = this.props.lookerUser.permission_level;
+    let prevUserBrand = prevProps.lookerUser.user_attributes.brand;
+    let currUserBrand = this.props.lookerUser.user_attributes.brand;
+
+    if ((prevPermissionLevel !== currPermissionLevel) || (prevUserBrand !== currUserBrand)) {
+      this.setState({
+        renderedDemoComponents: [this.state.selectedMenuItem]
+      })
+    }
   }
 
   render() {
@@ -267,7 +286,7 @@ class Home extends Component {
       "vidly": vidlyTheme
     }
 
-    const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedMenuItem } = this.state;
+    const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedMenuItem, renderedDemoComponents } = this.state;
     const { handleTabChange, handleMenuItemSelect } = this;
     const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost, userProfile } = this.props
 
@@ -286,11 +305,13 @@ class Home extends Component {
     })
 
     if (activeUsecase && !selectedMenuItem.length) {
+      let selectedMenuItemVal =
+        UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
+          validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
+          validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
       this.setState({
-        selectedMenuItem:
-          UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
-            validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
-            validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
+        selectedMenuItem: selectedMenuItemVal,
+        renderedDemoComponents: [selectedMenuItemVal]
       }, () => {
       })
 
@@ -378,10 +399,11 @@ class Home extends Component {
                   const key = item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) : validIdHelper(item.type);
                   const DemoComponent = demoComponentMap[key];
                   return (
-                    <Box key={validIdHelper(`box-${item.type}-${index}`)}
-                    // className={key === selectedMenuItem ? `` : `${classes.hide}`}
-                    >
-                      {DemoComponent && key === selectedMenuItem ?
+                    <React.Fragment
+                      key={validIdHelper(`outerFragment-${item.type}-${index}`)}>
+                      {renderedDemoComponents.indexOf(key) > -1 ? <Box key={validIdHelper(`box-${item.type}-${index}`)}
+                        className={key === selectedMenuItem ? `` : `${classes.hide}`}
+                      >
                         <DemoComponent key={validIdHelper(`treeItem-${item.type}-${index}`)}
                           staticContent={item}
                           handleMenuItemSelect={handleMenuItemSelect}
@@ -392,8 +414,9 @@ class Home extends Component {
                           LookerEmbedSDK={LookerEmbedSDK}
                           lookerHost={lookerHost}
                           userProfile={userProfile}
-                        /> : ''}
-                    </Box>)
+                        />
+                      </Box> : ''}
+                    </React.Fragment>)
                 }) :
                 ''
               }

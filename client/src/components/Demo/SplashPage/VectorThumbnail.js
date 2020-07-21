@@ -13,7 +13,7 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
     if (item) {
       getThumbnail();
     }
-  }, [item])
+  }, [item, lookerUser])
 
   const getThumbnail = async () => {
     let lookerResponse = await fetch(`/getthumbnail/${item.resourceType}/${item.id}`, {

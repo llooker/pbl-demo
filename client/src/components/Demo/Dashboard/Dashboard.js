@@ -76,7 +76,9 @@ export default function Dashboard(props) {
    * and embed SDK to create the experience on this page
    */
   const performLookerApiCalls = function (lookerContent) {
-    $(`.embedContainer.${validIdHelper(demoComponentType)}`).html('')
+    $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
+    // let embedContainerId = validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`);
+    // $(`#${embedContainerId}`).html();
     setIFrame(0)
     setApiContent([])
     lookerContent.map(async lookerContent => {
