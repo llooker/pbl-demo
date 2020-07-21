@@ -18,6 +18,7 @@ handlers:
   - url: /
     static_files: client/build/index.html
     upload: client/build/index.html
+    secure: always
   - url: /
     static_dir: client/build
     secure: always
@@ -28,5 +29,5 @@ handlers:
 #   BUCKET_NAME: "example-gcs-bucket"
 #   NODE_ENV: "production"
 
-includes:
-  - env_variables.yaml
+# includes:
+#   - env_variables.yaml
