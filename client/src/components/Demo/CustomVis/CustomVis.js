@@ -31,7 +31,6 @@ const { validIdHelper } = require('../../../tools');
 
 //start of Custom Viz Calendar Component
 export default function CustomVis(props) {
-  console.log('CustomVis')
   //initialize state using hooks
   const [value, setValue] = useState(0);
   const [fromDate, setFromDate] = useState('');
@@ -58,7 +57,7 @@ export default function CustomVis(props) {
 
   //handle opening of modal for advanced and premium users
   const handleModalOpen = async ({ day }) => {
-    let originalInlineQueryCopy = lookerContent[0].inlineQuery
+    let originalInlineQueryCopy = JSON.parse(JSON.stringify(lookerContent[0].inlineQuery));
     originalInlineQueryCopy.filters = {
       ...originalInlineQueryCopy.filters,
       [originalInlineQueryCopy.fields[0]]: day,
@@ -76,7 +75,6 @@ export default function CustomVis(props) {
       }
     })
     let lookerResponseData = await lookerResponse.json();
-    console.log('lookerResponseData', lookerResponseData)
     let modalObj = {
       "title": `Detail View for ${day}`,
       "body": lookerResponseData.queryResults
