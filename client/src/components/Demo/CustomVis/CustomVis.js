@@ -31,7 +31,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of Custom Viz Calendar Component
 export default function CustomVis(props) {
-  // console.log('CustomVis')
+  console.log('CustomVis')
   //initialize state using hooks
   const [value, setValue] = useState(0);
   const [fromDate, setFromDate] = useState('');
@@ -58,49 +58,30 @@ export default function CustomVis(props) {
 
   //handle opening of modal for advanced and premium users
   const handleModalOpen = async ({ day }) => {
-    setOpen(true);
-    //filter api data to match date clicked
-    let modalData = _.filter(apiContent.queryResults.data, (row) => {
-      return (row[apiContent.inlineQuery.fields[0]].value >= day
-        && row[apiContent.inlineQuery.fields[0]].value <= day)
-    })
-    //from first index of date clicked, assemble query from url associated with JSON detail
-    let sharedUrl = modalData[0][desiredField].links[0].url;
-    let parsedUrl = new URL(`https://${lookerHost}.looker.com${sharedUrl}`);
-    if (parsedUrl.pathname.split('/')[1] === "explore") {
-      let filters = parsedUrl.search.match(/(?<=&f\[).+?(?=\])/g);
-      let filtersObj = {}
-      let categoryField = ''
-      filters.forEach(item => {
-        if (category === "All" && item.indexOf('category') > -1) {
-          //add category as field always
-          categoryField = item;
-        } else filtersObj[item] = parsedUrl.searchParams.get(`f[${item}]`)
-      })
-      let fieldsArr = parsedUrl.searchParams.get("fields").split(",");
-      fieldsArr.push(categoryField)
-      let newQueryParams = {
-        model: parsedUrl.pathname.split('/')[2],
-        view: parsedUrl.pathname.split('/')[3],
-        fields: fieldsArr,
-        filters: filtersObj,
-        total: true,
-        limit: "25"
-      }
-      let lookerResponse = await fetch('/runinlinequery/' + JSON.stringify(newQueryParams) + '/json', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-      let lookerResponseData = await lookerResponse.json();
-      let modalObj = {
-        "title": `Detail View for ${day}`,
-        "body": lookerResponseData.queryResults
-      }
-      setModalContent(modalObj);
+    let originalInlineQueryCopy = lookerContent[0].inlineQuery
+    originalInlineQueryCopy.filters = {
+      ...originalInlineQueryCopy.filters,
+      [originalInlineQueryCopy.fields[0]]: day,
+      [originalInlineQueryCopy.fields[1]]: category === "All" ? '' : category
     }
+    originalInlineQueryCopy.total = true;
+    originalInlineQueryCopy.limit = "25";
+
+    setOpen(true);
+    let lookerResponse = await fetch('/runinlinequery/' + encodeURIComponent(JSON.stringify(originalInlineQueryCopy)) + '/json', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    let lookerResponseData = await lookerResponse.json();
+    console.log('lookerResponseData', lookerResponseData)
+    let modalObj = {
+      "title": `Detail View for ${day}`,
+      "body": lookerResponseData.queryResults
+    }
+    setModalContent(modalObj);
   };
 
   //handle modal close
@@ -139,20 +120,20 @@ export default function CustomVis(props) {
   //format response from initial api call based on LookerContent array
   //to match format required by Nivo Calendar component
   let filterData = [];
-  if (apiContent.queryResults && apiContent.queryResults.data) {
+  if (apiContent.queryResults && apiContent.queryResults) {
     //filtering for fromDate, toDate and category
-    filterData = _.filter(apiContent.queryResults.data, (row) => {
-      return (row[apiContent.inlineQuery.fields[0]].value >= fromDate
-        && row[apiContent.inlineQuery.fields[0]].value < toDate
-        && (category === 'All' ? true : row[apiContent.inlineQuery.fields[1]].value === category)
+    filterData = _.filter(apiContent.queryResults, (row) => {
+      return (row[apiContent.inlineQuery.fields[0]] >= fromDate
+        && row[apiContent.inlineQuery.fields[0]] < toDate
+        && (category === 'All' ? true : row[apiContent.inlineQuery.fields[1]] === category)
       )
     })
     //converting filterDAta to desired format for vis
     filterData = filterData.map(item => {
       return {
-        'day': item[apiContent.inlineQuery.fields[0]].value,
-        'category': item[apiContent.inlineQuery.fields[1]].value,
-        'value': item[desiredField].value
+        'day': item[apiContent.inlineQuery.fields[0]],
+        'category': item[apiContent.inlineQuery.fields[1]],
+        'value': item[desiredField]
       }
     })
 
@@ -217,20 +198,19 @@ export default function CustomVis(props) {
         }
       })
       let lookerResponseData = await lookerResponse.json();
-      // console.log('lookerResponseData', lookerResponseData)
-      lookerResponseData.queryResults.data = lookerResponseData.queryResults.data.filter(item => {
-        return item[inlineQuery.fields[0]].value
+      lookerResponseData.queryResults = lookerResponseData.queryResults.filter(item => {
+        return item[inlineQuery.fields[0]]
       })
       let uniqueCategories = ['All'];
-      for (let i = 0; i < lookerResponseData.queryResults.data.length; i++) {
-        if (uniqueCategories.indexOf(lookerResponseData.queryResults.data[i][inlineQuery.fields[1]].value) === -1) {
-          uniqueCategories.push(lookerResponseData.queryResults.data[i][inlineQuery.fields[1]].value)
+      for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
+        if (uniqueCategories.indexOf(lookerResponseData.queryResults[i][inlineQuery.fields[1]]) === -1) {
+          uniqueCategories.push(lookerResponseData.queryResults[i][inlineQuery.fields[1]])
         }
       }
       lookerResponseData.inlineQuery = inlineQuery;
       lookerResponseData.uniqueCategories = uniqueCategories;
-      setFromDate(lookerResponseData.queryResults.data[lookerResponseData.queryResults.data.length - 1][lookerResponseData.inlineQuery.fields[0]].value);
-      setToDate(incrementDate(lookerResponseData.queryResults.data[0][lookerResponseData.inlineQuery.fields[0]].value, 1));
+      setFromDate(lookerResponseData.queryResults[lookerResponseData.queryResults.length - 1][lookerResponseData.inlineQuery.fields[0]]);
+      setToDate(incrementDate(lookerResponseData.queryResults[0][lookerResponseData.inlineQuery.fields[0]], 1));
       setApiContent(lookerResponseData)
       if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
     })
@@ -307,7 +287,7 @@ export default function CustomVis(props) {
                               </Card>
                             </Grid>
 
-                            : apiContent.queryResults.data && apiContent.queryResults.data.length ?
+                            : apiContent.queryResults && apiContent.queryResults.length ?
                               <>
                                 <Grid item sm={12} className={classes.height800}>
                                   <ApiHighlight height={400}>
