@@ -36,15 +36,15 @@ export function Welcome({ lookerContent, classes }) {
 
       <Carousel infiniteLoop={true} autoPlay={true} showThumbs={false}>
         <div>
-          <img src={require(`../../../images/splash_blog.jpg`)} />
+          <img src={require(`../../../images/atom_splash_blog.jpg`)} />
           <p className="legend">Blog</p>
         </div>
         <div>
-          <img src={require(`../../../images/splash_inventory.jpg`)} />
+          <img src={require(`../../../images/atom_splash_inventory.jpg`)} />
           <p className="legend">Inventory Best Practices</p>
         </div>
         <div>
-          <img src={require(`../../../images/splash_macro.jpg`)} />
+          <img src={require(`../../../images/atom_splash_trends.jpg`)} />
           <p className="legend">Macro Trends</p>
         </div>
       </Carousel>
