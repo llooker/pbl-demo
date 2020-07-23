@@ -45,7 +45,7 @@ export function Welcome({ lookerContent, classes }) {
         </div>
         <div>
           <img src={require(`../../../images/atom_splash_trends.jpg`)} />
-          <p className="legend">Macro Trends</p>
+          <p className="legend">Macro Trendsssss</p>
         </div>
       </Carousel>
     </div >
