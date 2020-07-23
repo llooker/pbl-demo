@@ -26,20 +26,20 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var sess = {
-    secret: 'keyboard cat',
-    cookie: {
-        // expires: new Date(Date.now() + 3600000), //hour
-        maxAge: 14 * 24 * 3600000 //two weeks
-    },
-    saveUninitialized: false,
-    resave: false,
-    store: new MongoStore({ mongooseConnection: mongoose.connection })
-    // userProfile: {} //not working
+  secret: 'keyboard cat',
+  cookie: {
+    // expires: new Date(Date.now() + 3600000), //hour
+    maxAge: 14 * 24 * 3600000 //two weeks
+  },
+  saveUninitialized: false,
+  resave: false,
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
+  // userProfile: {} //not working
 }
 
 if (app.get('env') === 'production') {
-    app.set('trust proxy', 1) // trust first proxy
-    sess.cookie.secure = true // serve secure cookies
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
 }
 
 app.use(session(sess))
@@ -50,16 +50,26 @@ const port = process.env.PORT || 5000;
 
 let routes = require('./routes/index')
 app.use('/', routes)
-
+//https://stackoverflow.com/questions/7450940/automatic-https-connection-redirect-with-node-js-express
+//115 upvoted answer
 if (process.env.NODE_ENV === 'production') {
-    // console.log('inside ifff')
-    // Serve any static files
-    app.use(express.static(path.join(__dirname, 'client/build')));
+  // console.log('inside ifff')
+  // Serve any static files
+  app.use((req, res, next) => {
+    if (req.secure) {
+      // request was via https, so do no special handling
+      next();
+    } else {
+      // request was via http, so redirect to https
+      res.redirect('https://' + req.headers.host + req.url);
+    }
+    express.static(path.join(__dirname, 'client/build'))
+  });
 
-    // Handle React routing, return all requests to React app
-    app.get('*', function (req, res) {
-        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-    });
+  // Handle React routing, return all requests to React app
+  app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
 }
 // else console.log('elllse')
 

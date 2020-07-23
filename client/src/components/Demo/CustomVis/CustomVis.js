@@ -218,6 +218,7 @@ export default function CustomVis(props) {
 
   let redToBlueColorScale = ['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002'];
   let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B'];
+  let nivoColorScale = ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']
   return (
     <div className={`${classes.root} demoComponent`}>
       <Grid container
@@ -298,7 +299,7 @@ export default function CustomVis(props) {
                                       to={incrementDate(toDate, 1)}
                                       emptyColor="#eeeeee"
                                       // colors={['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002']}
-                                      colors={desiredField === lookerContent[0].desiredFields[0] ? redToBlueColorScale : yellowToGreenColorScale}
+                                      colors={desiredField === lookerContent[0].desiredFields[0] ? redToBlueColorScale : nivoColorScale}
                                       yearSpacing={40}
                                       monthBorderColor="#ffffff"
                                       dayBorderWidth={2}

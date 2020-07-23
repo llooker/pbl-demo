@@ -100,7 +100,7 @@ module.exports.runInlineQuery = async (req, res, next) => {
     let codeAsString = this.runInlineQuery.toString();
     let embeddedUserSdkSession = await createEmbeddedUserSdkSession(req);
     let query_response = await embeddedUserSdkSession.ok(embeddedUserSdkSession.run_inline_query({ result_format: params.result_format || 'json', body: params.inline_query, apply_formatting: false }));
-
+    // console.log('query_response', query_response)
     // var end = new Date().getTime();
     // var time = end - start;
     // console.log('execution time ', time)
