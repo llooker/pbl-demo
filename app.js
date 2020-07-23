@@ -53,24 +53,24 @@ app.use('/', routes)
 //https://stackoverflow.com/questions/7450940/automatic-https-connection-redirect-with-node-js-express
 //115 upvoted answer
 if (process.env.NODE_ENV === 'production') {
-  console.log('inside ifff')
+  // console.log('inside ifff')
   // Serve any static files
-  app.use((req, res, next) => {
-    console.log('topp')
-    express.static(path.join(__dirname, 'client/build'))
-    if (req.secure) {
-      console.log('if')
-      // request was via https, so do no special handling
-      next();
-    } else {
-      console.log('else')
-      console.log('https://' + req.headers.host + req.url)
-      // request was via http, so redirect to https
-      res.redirect('https://' + req.headers.host + req.url);
-    }
-  });
+  // app.use((req, res, next) => {
+  //   console.log('topp')
+  //   express.static(path.join(__dirname, 'client/build'))
+  //   if (req.secure) {
+  //     console.log('if')
+  //     // request was via https, so do no special handling
+  //     next();
+  //   } else {
+  //     console.log('else')
+  //     console.log('https://' + req.headers.host + req.url)
+  //     // request was via http, so redirect to https
+  //     res.redirect('https://' + req.headers.host + req.url);
+  //   }
+  // });
 
-  // app.use(express.static(path.join(__dirname, 'client/build')))
+  app.use(express.static(path.join(__dirname, 'client/build')))
 
   // Handle React routing, return all requests to React app
   app.get('*', function (req, res) {
