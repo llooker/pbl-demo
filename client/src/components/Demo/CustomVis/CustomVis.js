@@ -31,6 +31,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of Custom Viz Calendar Component
 export default function CustomVis(props) {
+  // console.log('CustomVis')
   //initialize state using hooks
   const [value, setValue] = useState(0);
   const [fromDate, setFromDate] = useState('');
@@ -179,6 +180,7 @@ export default function CustomVis(props) {
    * and embed SDK to create the experience on this page
    */
   const performLookerApiCalls = function (lookerContent) {
+    // console.log('performLookerApiCalls')
     setApiContent([]); //set to empty array to show progress bar and skeleton
     lookerContent.map(async lookerContent => {
       let inlineQuery = lookerContent.inlineQuery;

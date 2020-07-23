@@ -19,13 +19,14 @@ export function SingleValueVis({ lookerContent, classes }) {
   let dataObjForSparkline = {}
   useEffect(() => {
     if (lookerContent || lookerUser) {
-      runInlineQuery();
+      setTimeout(() => runInlineQuery(), 1000);
     }
   }, [lookerContent, lookerUser])
 
 
 
   const runInlineQuery = async () => {
+    // console.log('runInlineQuery')
     setApiContent([])
     let stringifiedQuery = encodeURIComponent(JSON.stringify(lookerContent.inlineQuery))
     let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {

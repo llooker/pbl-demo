@@ -237,7 +237,7 @@ class Home extends Component {
     } else selectedMenuItemValue = newValue;
 
     let renderedDemoComponentsCopy = [...this.state.renderedDemoComponents]
-    if (renderedDemoComponentsCopy.indexOf(selectedMenuItemValue) == -1) renderedDemoComponentsCopy.push(selectedMenuItemValue)
+    if (renderedDemoComponentsCopy.indexOf(selectedMenuItemValue) == -1) renderedDemoComponentsCopy.unshift(selectedMenuItemValue)
 
     this.setState((prevState) => ({
       selectedMenuItem: selectedMenuItemValue,
@@ -256,12 +256,14 @@ class Home extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    // console.log('componentDidUpdate')
     let prevPermissionLevel = prevProps.lookerUser.permission_level;
     let currPermissionLevel = this.props.lookerUser.permission_level;
     let prevUserBrand = prevProps.lookerUser.user_attributes.brand;
     let currUserBrand = this.props.lookerUser.user_attributes.brand;
 
     if ((prevPermissionLevel !== currPermissionLevel) || (prevUserBrand !== currUserBrand)) {
+      // console.log('we are inside this iffff')
       this.setState({
         renderedDemoComponents: [this.state.selectedMenuItem]
       })
@@ -280,6 +282,23 @@ class Home extends Component {
       "querybuilderexplorelite": QueryBuilder,
       "reportbuilder14": ReportBuilder,
     };
+
+    const demoComponentKeyMap = ["splashpage19",
+      "simpledashboard5",
+      "simpledashboard9",
+      "customfilter1",
+      "customvis",
+      "querybuilderexplorelite",
+      "reportbuilder14"
+    ]
+    // const demoComponentValueMap = [SplashPage,
+    //   Dashboard,
+    //   Dashboard,
+    //   Dashboard,
+    //   CustomVis,
+    //   QueryBuilder,
+    //   ReportBuilder
+    // ]
 
     const themeMap = {
       "atom": atomTheme,
@@ -321,6 +340,26 @@ class Home extends Component {
       //     validIdHelper(item.type + item.lookerContent[0].id) :
       //     validIdHelper(item.type)] = item.type.split(" ").map(item => _.capitalize(item)).join("")
       // })
+    }
+
+
+    /**
+     * what this does
+     * we want rendered demo components to render active one first
+     * renderedDemoComponents is always up to date
+     * so create array of unique demo components starting with rendered
+     * then iterate through usecase file and sort array according to order of unique
+     */
+
+    const orderedDemoComponentsForRender = [...renderedDemoComponents, ...demoComponentKeyMap]
+    const uniqueOrderedDemoComponentsForRender = [...new Set(orderedDemoComponentsForRender)];
+
+    if (activeUsecase) {
+      UsecaseContent[activeUsecase].demoComponents.sort(function (a, b) {
+        let idToUseForA = validIdHelper(a.lookerContent[0].id ? a.type + a.lookerContent[0].id : a.type);
+        let idToUseForB = validIdHelper(b.lookerContent[0].id ? b.type + b.lookerContent[0].id : b.type);
+        return uniqueOrderedDemoComponentsForRender.indexOf(idToUseForA) - uniqueOrderedDemoComponentsForRender.indexOf(idToUseForB);
+      });
     }
 
     return (

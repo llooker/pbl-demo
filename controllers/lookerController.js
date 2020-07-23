@@ -12,7 +12,6 @@ module.exports.auth = async (req, res, next) => {
   // Authenticate the request is from a valid user here
   const src = req.query.src;
   const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
-
   res.json({ url });
 }
 
@@ -100,7 +99,7 @@ module.exports.runInlineQuery = async (req, res, next) => {
   try {
     let codeAsString = this.runInlineQuery.toString();
     let embeddedUserSdkSession = await createEmbeddedUserSdkSession(req);
-    let query_response = await embeddedUserSdkSession.ok(embeddedUserSdkSession.run_inline_query({ result_format: params.result_format || 'json', body: params.inline_query }));
+    let query_response = await embeddedUserSdkSession.ok(embeddedUserSdkSession.run_inline_query({ result_format: params.result_format || 'json', body: params.inline_query, apply_formatting: false }));
 
     // var end = new Date().getTime();
     // var time = end - start;
