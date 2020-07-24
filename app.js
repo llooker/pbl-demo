@@ -4,25 +4,14 @@ const path = require('path');
 const mongoose = require('mongoose');
 const app = express();
 require('dotenv').config();
-// require('dotenv').config({ path: './app.yaml' })
-
-// console.log('process.env', process.env)
-// console.log('NODE_ENV from env: ', process.env.NODE_ENV)
-// console.log('LOOKERSDK_CLIENT_SECRET from env: ', process.env.LOOKERSDK_CLIENT_SECRET)
-// console.log('process.env.BUCKET_NAME ', process.env.BUCKET_NAME) //test for yaml file
 
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
-
-//update for new GCP cluster
 let mongoDB = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster1.97hzq.gcp.mongodb.net/pbl-demo
 `
-// console.log('mongoDB', mongoDB)
-
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
-// console.log('db', db)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var sess = {
@@ -34,7 +23,6 @@ var sess = {
   saveUninitialized: false,
   resave: false,
   store: new MongoStore({ mongooseConnection: mongoose.connection })
-  // userProfile: {} //not working
 }
 
 if (app.get('env') === 'production') {
@@ -50,15 +38,13 @@ const port = process.env.PORT || 5000;
 
 let routes = require('./routes/index')
 app.use('/', routes)
-//https://stackoverflow.com/questions/7450940/automatic-https-connection-redirect-with-node-js-express
-//115 upvoted answer
-if (process.env.NODE_ENV === 'production') {
-  console.log('inside ifff')
 
+//https://medium.com/@paulrohan/deploying-a-react-node-mongodb-app-to-google-cloud-platforms-google-app-engine-1ba680447d59
+if (process.env.NODE_ENV === 'production') {
+  //https://stackoverflow.com/questions/41944776/force-ssl-on-app-engine-flexible-environment-custom-runtime/48085977#48085977
+  //5 upvoted asnswer
   app.use(function (req, res, next) {
-    console.log('inside this app.use statement')
     if (req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'] === "http") {
-      console.log('inside this app.use statement ifff')
       return res.redirect(['https://', req.get('Host'), req.url].join(''));
     }
     next();
@@ -70,8 +56,6 @@ if (process.env.NODE_ENV === 'production') {
   app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
-
-
 }
 else console.log('elllse')
 

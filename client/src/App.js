@@ -403,7 +403,7 @@ class App extends React.Component {
     // console.log('activeCustomization', activeCustomization);
 
     let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
-    // console.log('usecaseFromUrl', usecaseFromUrl)
+    console.log('usecaseFromUrl', usecaseFromUrl)
     if (!usecaseFromUrl.length) {     //no usecase
       window.location.href = window.location.href + 'atom'
     } else if (!UsecaseContent.hasOwnProperty(usecaseFromUrl)) {     //usecase param isn't in JSON file

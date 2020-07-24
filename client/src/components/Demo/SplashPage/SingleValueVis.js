@@ -51,7 +51,7 @@ export function SingleValueVis({ lookerContent, classes }) {
           "y": item[lookerContent.inlineQuery.fields[1]] || 0,
           "change": item.change
         }
-        if (thisDataItem.y !== "null") dataArrForDataObj.push(thisDataItem)
+        if (thisDataItem && thisDataItem.y !== "null") dataArrForDataObj.push(thisDataItem)
       }
     })
     dataObjForSparkline.data = [...dataArrForDataObj]
@@ -71,7 +71,7 @@ export function SingleValueVis({ lookerContent, classes }) {
               <Grid item sm={1} />
               <Grid item sm={5}>
                 <Typography variant="subtitle1" align="left">
-                  <b>{apiContent[0].data ? parseInt(apiContent[0].data[0].y).toFixed(2) : ''}</b>
+                  <b>{apiContent[0].data && apiContent[0].data[0] ? parseInt(apiContent[0].data[0].y).toFixed(2) : ''}</b>
                 </Typography>
               </Grid>
               <Grid item sm={5}>

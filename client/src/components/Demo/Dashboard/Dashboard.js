@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import _ from 'lodash'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField } from '@material-ui/core'
 import { Autocomplete, ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { LookerEmbedSDK } from '@looker/embed-sdk'
@@ -10,6 +10,7 @@ import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent';
+import AppContext from '../../../AppContext';
 const { validIdHelper } = require('../../../tools');
 
 //start of Dashboard Component
@@ -24,6 +25,7 @@ export default function Dashboard(props) {
   const [serverSideCode, setServerSideCode] = useState('');
   const [toggleValue, setToggleValue] = useState('');
   const [dashboardLayout, setDashboardLayout] = useState({});
+  const { toggleShowPayWallModal } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -58,7 +60,7 @@ export default function Dashboard(props) {
    * performLookerApiCalls and setSampleCode
   */
   useEffect(() => {
-    performLookerApiCalls([...lookerContent])
+    setTimeout(() => performLookerApiCalls([...lookerContent]), 1000)
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser]);
 
@@ -76,6 +78,7 @@ export default function Dashboard(props) {
    * and embed SDK to create the experience on this page
    */
   const performLookerApiCalls = function (lookerContent) {
+    console.log('performLookerApiCalls')
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     // let embedContainerId = validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`);
     // $(`#${embedContainerId}`).html();
@@ -89,12 +92,13 @@ export default function Dashboard(props) {
         .withNext()
         // .withNext(lookerContent.isNext || false) //how can I make this dynamic based on prop??
         .withTheme('atom_fashion')
-        .on('drillmenu:click', (event) => typeof (_.camelCase(demoComponentType) + 'Action') == 'function' ? this[_.camelCase(demoComponentType) + 'Action'](event) : '')
-        //.on('dashboard:loaded', dashboardLoaded)
+        .withParams({ 'schedule_modal': 'true' })
         .on('dashboard:loaded', (event) => {
-          // console.log('dashboard:loaded event', event)
           setDashboardLayout(event.dashboard.options.layouts[0])
         })
+        // .on('drillmenu:click', (event) => {
+        //   drillMenuClick(event)
+        // })
         .build()
         .connect()
         .then((dashboard) => {
@@ -143,6 +147,15 @@ export default function Dashboard(props) {
     if (Object.keys(dashboardObj).length) {
       dashboardObj.updateFilters({ [filterName]: newFilterValue })
       dashboardObj.run()
+    }
+  }
+
+  const drillMenuClick = (event) => {
+
+    const basicLookerUser = lookerUser.permission_level === 'basic' ? true : false;
+    if (basicLookerUser) {
+      toggleShowPayWallModal()
+      return { cancel: (basicLookerUser) ? true : false }
     }
   }
 
