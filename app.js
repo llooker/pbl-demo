@@ -53,22 +53,16 @@ app.use('/', routes)
 //https://stackoverflow.com/questions/7450940/automatic-https-connection-redirect-with-node-js-express
 //115 upvoted answer
 if (process.env.NODE_ENV === 'production') {
-  // console.log('inside ifff')
-  // Serve any static files
-  // app.use((req, res, next) => {
-  //   console.log('topp')
-  //   express.static(path.join(__dirname, 'client/build'))
-  //   if (req.secure) {
-  //     console.log('if')
-  //     // request was via https, so do no special handling
-  //     next();
-  //   } else {
-  //     console.log('else')
-  //     console.log('https://' + req.headers.host + req.url)
-  //     // request was via http, so redirect to https
-  //     res.redirect('https://' + req.headers.host + req.url);
-  //   }
-  // });
+  console.log('inside ifff')
+
+  app.use(function (req, res, next) {
+    console.log('inside this app.use statement')
+    if (req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'] === "http") {
+      console.log('inside this app.use statement ifff')
+      return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    }
+    next();
+  });
 
   app.use(express.static(path.join(__dirname, 'client/build')))
 
@@ -76,8 +70,10 @@ if (process.env.NODE_ENV === 'production') {
   app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
+
+
 }
-// else console.log('elllse')
+else console.log('elllse')
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
