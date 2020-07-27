@@ -15,7 +15,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of Dashboard Component
 export default function Dashboard(props) {
-  // console.log('Dashboard')
+  console.log('Dashboard')
   //initialize state using hooks
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(0);
@@ -79,13 +79,18 @@ export default function Dashboard(props) {
    */
   const performLookerApiCalls = function (lookerContent) {
     console.log('performLookerApiCalls')
+    console.log('test')
+    console.log($(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html())
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
-    // let embedContainerId = validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`);
-    // $(`#${embedContainerId}`).html();
     setIFrame(0)
     setApiContent([])
     lookerContent.map(async lookerContent => {
+      console.log('lookerContent map')
       let dashboardId = lookerContent.id;
+      console.log('dashboardId ', dashboardId)
+      console.log('does embed container exist???')
+      console.log($('#' + validIdHelper(`embedContainer-${demoComponentType}-${dashboardId}`)).length)
+      //how can test to see if it has content???
       LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
         .withClassName('iframe')

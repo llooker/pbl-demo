@@ -41,7 +41,8 @@ const styles = theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    zIndex: 1201
+    zIndex: 1201,
+    backgroundColor: "#605E57"
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -170,6 +171,9 @@ const styles = theme => ({
   nested: {
     paddingLeft: theme.spacing(4),
   },
+  mlAuto: {
+    marginLeft: 'auto'
+  }
 });
 
 const defaultTheme = createMuiTheme({})
@@ -246,12 +250,13 @@ class Home extends Component {
   };
 
   componentDidMount(props) {
+    console.log('componentDidMount')
     let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
     this.setState({
       activeUsecase: usecaseFromUrl,
       appLayout: UsecaseContent[usecaseFromUrl].layout || 'left-sidebar'
     }, () => {
-      LookerEmbedSDK.init(`${this.props.lookerHost}.looker.com`, '/auth');
+      LookerEmbedSDK.init(`https://${this.props.lookerHost}.looker.com`, '/auth');
     })
   }
 
@@ -362,6 +367,8 @@ class Home extends Component {
       });
     }
 
+    console.log('this.state.renderedDemoComponents', this.state.renderedDemoComponents)
+
     return (
       <div className={classes.root}>
         <AppContext.Provider value={
@@ -384,16 +391,11 @@ class Home extends Component {
 
                 {activeUsecase ?
                   <Avatar alt="Icon"
-                    src={require(`../images/${activeUsecase}_logo.png`)}
-                  // src={require(`../images/${activeUsecase}_logo_white.svg`)}
+                    src={require(`../images/${activeUsecase}_logo_white.svg`)}
+                    variant="square"
                   /> : ''}
 
-                <Typography variant="h6" noWrap className={`${classes.title} ${classes.ml12}`}>
-                  {activeUsecase ? UsecaseContent[activeUsecase].vignette.name : ''}
-                </Typography>
-
-                {/* Math.floor(Math.random() * 5) + 1 */}
-                <Badge badgeContent={3} color="error" className={classes.mr12}>
+                <Badge badgeContent={3} color="error" className={`${classes.mr12} ${classes.mlAuto}`} >
                   <AddAlert />
                 </Badge>
                 <UserMenu
@@ -440,21 +442,24 @@ class Home extends Component {
                   return (
                     <React.Fragment
                       key={validIdHelper(`outerFragment-${item.type}-${index}`)}>
-                      {renderedDemoComponents.indexOf(key) > -1 ? <Box key={validIdHelper(`box-${item.type}-${index}`)}
-                        className={key === selectedMenuItem ? `` : `${classes.hide}`}
-                      >
-                        <DemoComponent key={validIdHelper(`treeItem-${item.type}-${index}`)}
-                          staticContent={item}
-                          handleMenuItemSelect={handleMenuItemSelect}
-                          activeTabValue={activeTabValue}
-                          handleTabChange={handleTabChange}
-                          lookerUser={lookerUser}
-                          activeUsecase={activeUsecase}
-                          LookerEmbedSDK={LookerEmbedSDK}
-                          lookerHost={lookerHost}
-                          userProfile={userProfile}
-                        />
-                      </Box> : ''}
+                      {renderedDemoComponents.indexOf(key) > -1 ?
+                        <Box key={validIdHelper(`box-${item.type}-${index}`)}
+                          className={key === selectedMenuItem ? `` : `${classes.hide}`}
+                        >
+                          {/* {key === selectedMenuItem ? */}
+                          <DemoComponent key={validIdHelper(`treeItem-${item.type}-${index}`)}
+                            staticContent={item}
+                            handleMenuItemSelect={handleMenuItemSelect}
+                            activeTabValue={activeTabValue}
+                            handleTabChange={handleTabChange}
+                            lookerUser={lookerUser}
+                            activeUsecase={activeUsecase}
+                            lookerHost={lookerHost}
+                            userProfile={userProfile}
+                          />
+                          {/* : ''} */}
+
+                        </Box> : ''}
                     </React.Fragment>)
                 }) :
                 ''

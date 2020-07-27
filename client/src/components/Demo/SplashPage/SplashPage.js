@@ -19,7 +19,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
 export default function SplashPage(props) {
-  // console.log('SplashPage')
+  console.log('SplashPage')
   //intialize state using hooks
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(1);
@@ -47,6 +47,7 @@ export default function SplashPage(props) {
    * setSampleCode
   */
   useEffect(() => {
+    console.log('useEffect')
     setClientSideCode(rawSampleCode)
   }, [lookerContent]);
 

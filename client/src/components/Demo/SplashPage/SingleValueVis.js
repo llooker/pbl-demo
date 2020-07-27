@@ -8,7 +8,7 @@ const { validIdHelper } = require('../../../tools');
 
 
 export function SingleValueVis({ lookerContent, classes }) {
-  // console.log('SingleValueVis')
+  console.log('SingleValueVis')
   // console.log('lookerContent', lookerContent)
   // const [svg, setSvg] = useState(undefined)
   const [apiContent, setApiContent] = useState([]);
@@ -26,7 +26,7 @@ export function SingleValueVis({ lookerContent, classes }) {
 
 
   const runInlineQuery = async () => {
-    // console.log('runInlineQuery')
+    console.log('runInlineQuery')
     setApiContent([])
     let stringifiedQuery = encodeURIComponent(JSON.stringify(lookerContent.inlineQuery))
     let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
@@ -61,12 +61,12 @@ export function SingleValueVis({ lookerContent, classes }) {
   return (
 
     <div
-      className={` ${classes.maxHeight200} ${classes.textCenter} ${classes.overflowHidden}`}
+      className={` ${classes.maxHeight150} ${classes.textCenter} ${classes.overflowHidden}`}
       style={apiContent.length ? { borderLeft: `solid 3px ${lookerContent.visColor} ` } : {}}
     >
       {apiContent.length ?
         <React.Fragment>
-          <ApiHighlight height={200}>
+          <ApiHighlight height={150}>
             <Grid container>
               <Grid item sm={1} />
               <Grid item sm={5}>
@@ -114,7 +114,7 @@ export function SingleValueVis({ lookerContent, classes }) {
               enablePoints={false}
               enableGridX={false}
               enableGridY={false}
-              height={150}
+              height={125}
               colors={lookerContent.visColor}
               animate={true}
             />
@@ -122,7 +122,7 @@ export function SingleValueVis({ lookerContent, classes }) {
         </React.Fragment>
         :
         <Grid item sm={12} >
-          <Card className={`${classes.card} ${classes.flexCentered} ${classes.minHeight200} `}>
+          <Card className={`${classes.card} ${classes.flexCentered} ${classes.minHeight150} `}>
             <CircularProgress className={classes.circularProgress}
               style={{ color: `${lookerContent.visColor} ` }} />
           </Card>

@@ -112,5 +112,13 @@ export default makeStyles((theme) => ({
   },
   overflowVisible: {
     overflow: 'visible'
-  }
+  },
+  maxHeight150: {
+    maxHeight: 150,
+    height: 150,
+  },
+  minHeight150: {
+    minHeight: 150,
+    overflow: 'scroll'
+  },
 }));
