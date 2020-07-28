@@ -8,7 +8,7 @@ const { validIdHelper } = require('../../../tools');
 
 
 export function SingleValueVis({ lookerContent, classes }) {
-  console.log('SingleValueVis')
+  // console.log('SingleValueVis')
   // console.log('lookerContent', lookerContent)
   // const [svg, setSvg] = useState(undefined)
   const [apiContent, setApiContent] = useState([]);
@@ -26,7 +26,7 @@ export function SingleValueVis({ lookerContent, classes }) {
 
 
   const runInlineQuery = async () => {
-    console.log('runInlineQuery')
+    // console.log('runInlineQuery')
     setApiContent([])
     let stringifiedQuery = encodeURIComponent(JSON.stringify(lookerContent.inlineQuery))
     let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {

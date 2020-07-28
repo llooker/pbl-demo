@@ -367,7 +367,7 @@ class Home extends Component {
       });
     }
 
-    console.log('this.state.renderedDemoComponents', this.state.renderedDemoComponents)
+    // console.log('this.state.renderedDemoComponents', this.state.renderedDemoComponents)
 
     return (
       <div className={classes.root}>

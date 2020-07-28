@@ -15,7 +15,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of Dashboard Component
 export default function Dashboard(props) {
-  console.log('Dashboard')
+  // console.log('Dashboard')
   //initialize state using hooks
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(0);
@@ -60,8 +60,11 @@ export default function Dashboard(props) {
    * performLookerApiCalls and setSampleCode
   */
   useEffect(() => {
+    // console.log('validIdHelper(demoComponentType + lookerContent[0].id)', validIdHelper(demoComponentType + lookerContent[0].id))
+    // if (validIdHelper(demoComponentType + lookerContent[0].id) === selectedMenuItem) {
     setTimeout(() => performLookerApiCalls([...lookerContent]), 1000)
     setClientSideCode(rawSampleCode)
+    // }
   }, [lookerContent, lookerUser]);
 
 
@@ -78,18 +81,18 @@ export default function Dashboard(props) {
    * and embed SDK to create the experience on this page
    */
   const performLookerApiCalls = function (lookerContent) {
-    console.log('performLookerApiCalls')
-    console.log('test')
-    console.log($(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html())
-    $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
+    // console.log('performLookerApiCalls')
+    // $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     setIFrame(0)
     setApiContent([])
     lookerContent.map(async lookerContent => {
-      console.log('lookerContent map')
+      // console.log('lookerContent map')
       let dashboardId = lookerContent.id;
-      console.log('dashboardId ', dashboardId)
-      console.log('does embed container exist???')
-      console.log($('#' + validIdHelper(`embedContainer-${demoComponentType}-${dashboardId}`)).length)
+      // console.log('dashboardId ', dashboardId)
+      // console.log('embed container exists??', $('#' + validIdHelper(`embedContainer-${demoComponentType}-${dashboardId}`)).length)
+      // console.log('embed container html??', $('#' + validIdHelper(`embedContainer-${demoComponentType}-${dashboardId}`)).html())
+
+
       //how can test to see if it has content???
       LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
