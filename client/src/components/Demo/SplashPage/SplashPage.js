@@ -18,6 +18,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
 export default function SplashPage(props) {
+  console.log('SplashPage')
   //intialize state using hooks
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(1);

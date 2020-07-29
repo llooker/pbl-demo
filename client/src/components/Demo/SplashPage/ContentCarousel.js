@@ -27,15 +27,15 @@ export function ContentCarousel({ lookerContent, classes }) {
       <Carousel infiniteLoop={true} autoPlay={true} showThumbs={false}>
         <div style={{ maxHeight: lookerContent.height }}>
           <img src={require(`../../../images/atom_splash_blog.jpg`)} />
-          <p className="legend">Blog</p>
+          <p className={`legend ${classes.carouselLegend}`}>Blog</p>
         </div>
         <div style={{ maxHeight: lookerContent.height }}>
           <img src={require(`../../../images/atom_splash_inventory.jpg`)} />
-          <p className="legend">Inventory Best Practices</p>
+          <p className={`legend ${classes.carouselLegend}`}>Inventory Best Practices</p>
         </div>
         <div style={{ maxHeight: lookerContent.height }}>
           <img src={require(`../../../images/atom_splash_trends.jpg`)} />
-          <p className="legend">Macro Trendsssss</p>
+          <p className={`legend ${classes.carouselLegend}`}>Macro Trends</p>
         </div>
       </Carousel>
     </div >

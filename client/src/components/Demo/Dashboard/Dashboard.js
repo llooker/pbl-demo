@@ -15,7 +15,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of Dashboard Component
 export default function Dashboard(props) {
-  // console.log('Dashboard')
+  console.log('Dashboard')
   //initialize state using hooks
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(0);
@@ -101,6 +101,10 @@ export default function Dashboard(props) {
         // .withNext(lookerContent.isNext || false) //how can I make this dynamic based on prop??
         .withTheme('atom_fashion')
         .withParams({ 'schedule_modal': 'true' })
+        .on('page:property:change', (event) => {
+          console.log('page propert is changing!!!!')
+          changeHeight(event)
+        }) // dashboards-next
         .on('dashboard:loaded', (event) => {
           setDashboardLayout(event.dashboard.options.layouts[0])
         })
@@ -165,6 +169,11 @@ export default function Dashboard(props) {
       toggleShowPayWallModal()
       return { cancel: (basicLookerUser) ? true : false }
     }
+  }
+
+  const changeHeight = (event) => {
+    console.log('changeHeight')
+    console.log('event', event)
   }
 
   /**

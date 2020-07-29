@@ -224,14 +224,15 @@ class Home extends Component {
   }
 
   handleTabChange = newValue => {
-    console.log('handleTabChange')
-    console.log('newValue', newValue)
+    // console.log('handleTabChange')
+    // console.log('newValue', newValue)
     this.setState({
       activeTabValue: newValue
     })
   }
 
   handleMenuItemSelect = (newValue, fromSplash) => {
+    // console.log('handleMenuItemSelect')
     this.handleTabChange(0)
     let selectedMenuItemValue = ''
     if (fromSplash) {
@@ -256,7 +257,7 @@ class Home extends Component {
   };
 
   componentDidMount(props) {
-    console.log('componentDidMount')
+    // console.log('componentDidMount')
     let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
     this.setState({
       activeUsecase: usecaseFromUrl,
@@ -334,6 +335,7 @@ class Home extends Component {
       }
     })
 
+
     if (activeUsecase && !selectedMenuItem.length) {
       let selectedMenuItemVal =
         UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
@@ -362,21 +364,23 @@ class Home extends Component {
      * then iterate through usecase file and sort array according to order of unique
      */
 
-    const orderedDemoComponentsForRender = [...renderedDemoComponents, ...demoComponentKeyMap]
-    const uniqueOrderedDemoComponentsForRender = [...new Set(orderedDemoComponentsForRender)];
+    // const orderedDemoComponentsForRender = [...renderedDemoComponents, ...demoComponentKeyMap]
+    // const uniqueOrderedDemoComponentsForRender = [...new Set(orderedDemoComponentsForRender)];
 
-    if (activeUsecase) {
-      UsecaseContent[activeUsecase].demoComponents.sort(function (a, b) {
-        let idToUseForA = validIdHelper(a.lookerContent[0].id ? a.type + a.lookerContent[0].id : a.type);
-        let idToUseForB = validIdHelper(b.lookerContent[0].id ? b.type + b.lookerContent[0].id : b.type);
-        return uniqueOrderedDemoComponentsForRender.indexOf(idToUseForA) - uniqueOrderedDemoComponentsForRender.indexOf(idToUseForB);
-      });
-    }
+    // if (activeUsecase) {
+    //   UsecaseContent[activeUsecase].demoComponents.sort(function (a, b) {
+    //     let idToUseForA = validIdHelper(a.lookerContent[0].id ? a.type + a.lookerContent[0].id : a.type);
+    //     let idToUseForB = validIdHelper(b.lookerContent[0].id ? b.type + b.lookerContent[0].id : b.type);
+    //     return uniqueOrderedDemoComponentsForRender.indexOf(idToUseForA) - uniqueOrderedDemoComponentsForRender.indexOf(idToUseForB);
+    //   });
+    // }
 
     // console.log('this.state.renderedDemoComponents', this.state.renderedDemoComponents)
+    // console.log('orderedDemoComponentsForRender', orderedDemoComponentsForRender)
+    // console.log('uniqueOrderedDemoComponentsForRender', uniqueOrderedDemoComponentsForRender)
 
     return (
-      <div className={classes.root}>
+      <div className={classes.root} >
         <AppContext.Provider value={
           {
             show: this.state.highlightShow,
@@ -483,7 +487,9 @@ class Home extends Component {
 export default withStyles(styles)(Home);
 
 function MenuList(props) {
+  // console.log('MenuList')
   const { classes, activeUsecase, orderedDemoComponentsForMenuObj, selectedMenuItem, handleMenuItemSelect } = props
+  // console.log('orderedDemoComponentsForMenuObj', orderedDemoComponentsForMenuObj)
   const demoComponentIconMap = {
     "splashpage19": HomeIcon,
     "simpledashboard5": TrendingUp,
