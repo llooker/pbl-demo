@@ -173,6 +173,9 @@ const styles = theme => ({
   },
   mlAuto: {
     marginLeft: 'auto'
+  },
+  mrAuto: {
+    marginRight: 'auto'
   }
 });
 
@@ -221,12 +224,15 @@ class Home extends Component {
   }
 
   handleTabChange = newValue => {
+    console.log('handleTabChange')
+    console.log('newValue', newValue)
     this.setState({
       activeTabValue: newValue
     })
   }
 
   handleMenuItemSelect = (newValue, fromSplash) => {
+    this.handleTabChange(0)
     let selectedMenuItemValue = ''
     if (fromSplash) {
       UsecaseContent[this.state.activeUsecase].demoComponents.map(item => {
@@ -394,8 +400,11 @@ class Home extends Component {
                     src={require(`../images/${activeUsecase}_logo_white.svg`)}
                     variant="square"
                   /> : ''}
+                <Typography align="center" className={`${classes.mr12} ${classes.mlAuto} ${classes.mrAuto}`}>
+                  {lookerUser.user_attributes.brand}
+                </Typography>
 
-                <Badge badgeContent={3} color="error" className={`${classes.mr12} ${classes.mlAuto}`} >
+                <Badge badgeContent={3} color="error" className={`${classes.mr12} `} >
                   <AddAlert />
                 </Badge>
                 <UserMenu

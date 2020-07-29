@@ -5,10 +5,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import { ApiHighlight } from '../../Highlights/Highlight';
-import { NaturalLanguage } from './NaturalLanguage';
+
 const { validIdHelper } = require('../../../tools');
 
-export function Welcome({ lookerContent, classes }) {
+
+
+export function ContentCarousel({ lookerContent, classes }) {
   // console.log('Welcome')
   const { userProfile, lookerUser } = useContext(AppContext)
 
@@ -21,21 +23,21 @@ export function Welcome({ lookerContent, classes }) {
       className={`${classes.overflowScroll}`}
       style={{ height: lookerContent.height }}
     >
-      <Typography variant="h4">Welcome back</Typography>
-      <br />
-      <Typography variant="subtitle1" display="inline">
-        Hi <b>{userProfile.givenName}</b>, hope you're having a good day. Here are a few things you might want to know.
-      </Typography>
-      <br />
-      <>
-        {lookerContent.inlineQueries.map((item, index) => (
-          <NaturalLanguage
-            key={`${validIdHelper('naturalLanguage-splashPage-' + index)}`}
-            {...{ lookerContent, item, index, classes }}
-          />
-        )
-        )}
-      </>
+
+      <Carousel infiniteLoop={true} autoPlay={true} showThumbs={false}>
+        <div style={{ maxHeight: lookerContent.height }}>
+          <img src={require(`../../../images/atom_splash_blog.jpg`)} />
+          <p className="legend">Blog</p>
+        </div>
+        <div style={{ maxHeight: lookerContent.height }}>
+          <img src={require(`../../../images/atom_splash_inventory.jpg`)} />
+          <p className="legend">Inventory Best Practices</p>
+        </div>
+        <div style={{ maxHeight: lookerContent.height }}>
+          <img src={require(`../../../images/atom_splash_trends.jpg`)} />
+          <p className="legend">Macro Trendsssss</p>
+        </div>
+      </Carousel>
     </div >
   );
 }

@@ -5,6 +5,7 @@ import { AppBar, Tabs, Tab, Typography, Box, Grid, Icon, CircularProgress, Card,
 import { TreeView, TreeItem } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./ReportBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
@@ -28,7 +29,7 @@ export default function ReportBuilder(props) {
   //declare constants
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, LookerEmbedSDK, activeTabValue, handleTabChange, lookerUser } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
@@ -132,6 +133,7 @@ export default function ReportBuilder(props) {
         })
 
         let lookerResponseData = await lookerResponse.json();
+        console.log('lookerResponseData', lookerResponseData)
         if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
 
         let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
@@ -140,6 +142,7 @@ export default function ReportBuilder(props) {
           looks: looksToUse,
           dashboards: dashboardsToUse
         }
+        console.log('objToUse', objToUse)
         let iFrameArray = $(`.embedContainer.${validIdHelper(demoComponentType)} > iframe`);
         if (objToUse.looks.length) {
           objToUse.looks.map((item, index) => {

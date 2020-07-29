@@ -2,7 +2,7 @@ import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 
 import AppContext from '../../../AppContext';
 import { ApiHighlight } from '../../Highlights/Highlight';
 
-import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress } from '@material-ui/core';
+import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSelect }) {
@@ -30,25 +30,37 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
   }
 
   return (
-    <Grid item sm={6}>
+    <Grid container
+      alignItems="center"
+      spacing={3}
+      onClick={() => handleMenuItemSelect(item.id, 1)}
+      className={`${classes.cursorPointer}`}
+    >
       {svg ?
-        <Grid item sm={12}>
-          <Typography variant="subtitle1" className={`${classes.textCenter}`} color="secondary">{item.label}</Typography>
-          <ApiHighlight>
-            <div
-              onClick={() => handleMenuItemSelect(item.id, 1)}
-              className={` ${classes.maxHeight100} ${classes.textCenter} ${classes.cursorPointer} ${classes.overflowHidden}`}
-            >
-              <img
-                onClick={() => handleMenuItemSelect(item.id, 1)}
-                src={svg} />
+        <>
+          <Grid item sm={6}>
+            <ApiHighlight>
+              <div
+                className={` ${classes.maxHeight100} ${classes.textCenter} ${classes.cursorPointer} ${classes.overflowHidden}`}
+              >
+                <img
+                  onClick={() => handleMenuItemSelect(item.id, 1)}
+                  src={svg} />
 
-            </div>
-          </ApiHighlight></Grid>
+              </div>
+            </ApiHighlight>
+          </Grid>
+          <Grid item sm={5}>
+            <Typography variant="subtitle1"  >{item.label}</Typography>
+          </Grid>
+          <Grid item sm={12}>
+            <Divider className={`${classes.divider} ${classes.mb12} ${classes.mt12}`} />
+          </Grid>
+        </>
         :
         ''
       }
-    </Grid>
+    </Grid >
 
   );
 }

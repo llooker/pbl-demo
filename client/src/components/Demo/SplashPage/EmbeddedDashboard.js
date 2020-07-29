@@ -18,7 +18,7 @@ export function EmbeddedDashboard({ lookerContent, classes, id }) {
       .withClassName('dashboard')
       .withClassName('splashPage')
       .withClassName(lookerContent.id)
-      .withNext()
+      // .withNext()
       .withTheme('atom_fashion')
       .build()
       .connect()
@@ -32,32 +32,37 @@ export function EmbeddedDashboard({ lookerContent, classes, id }) {
 
   return (
 
-    <div
-      className={` ${classes.maxHeight400} ${classes.textCenter} ${classes.overflowVisible}`}
-    >
-      {
-        iFrameExists ? '' :
+    <Card elevation={1} className={classes.padding30}>
 
-          <Grid item sm={12} >
-            <Card className={`${classes.card} ${classes.flexCentered} ${classes.maxHeight400} `} elevation={0}>
-              <CircularProgress className={classes.circularProgress}
-              />
-            </Card>
+      <div
+        className={`${classes.textCenter} ${classes.overflowVisible}`}
+        style={
+          { height: lookerContent.height }
+        }
+      >
+        {
+          iFrameExists ? '' :
+
+            <Grid item sm={12} >
+              <Card className={`${classes.card} ${classes.flexCentered} ${classes.maxHeight400} `} elevation={0}>
+                <CircularProgress className={classes.circularProgress}
+                />
+              </Card>
+            </Grid>
+        }
+        <Box >
+          <Grid item sm={12}>
+            <EmbedHighlight>
+              <div
+                className={`embedContainer splashPage`}
+                id={id}
+                key={id}
+              >
+              </div>
+            </EmbedHighlight>
           </Grid>
-      }
-      <Box >
-        <Grid item sm={12}>
-          <EmbedHighlight>
-            <div
-              className={`embedContainer splashPage`}
-              id={id}
-              key={id}
-            >
-            </div>
-          </EmbedHighlight>
-        </Grid>
-      </Box>
-    </div >
-
+        </Box>
+      </div >
+    </Card >
   );
 }

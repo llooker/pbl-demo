@@ -2,6 +2,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { red, green } from '@material-ui/core/colors';
 const redPrimary = red[500];
 const greenPrimary = green[500];
+const redDark = red[900];
+const greenDark = green[900];
+const redLight = red[100];
+const greenLight = green[100];
 
 export default makeStyles((theme) => ({
   root: {
@@ -93,10 +97,14 @@ export default makeStyles((theme) => ({
     overflow: 'scroll'
   },
   redNeg: {
-    color: redPrimary
+    backgroundColor: redLight,
+    color: redPrimary,
+    fontWeight: 800
   },
   greenPos: {
-    color: greenPrimary
+    backgroundColor: greenLight,
+    color: greenPrimary,
+    fontWeight: 800
   },
   padding30: {
     padding: 30

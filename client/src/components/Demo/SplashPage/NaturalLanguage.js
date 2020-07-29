@@ -2,8 +2,9 @@ import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 
 import AppContext from '../../../AppContext';
 import { ApiHighlight } from '../../Highlights/Highlight';
 
-import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress } from '@material-ui/core';
+import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress, Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+const { validIdHelper, decodeHtml } = require('../../../tools');
 
 export function NaturalLanguage({ lookerContent, item, index, classes }) {
   const [apiContent, setApiContent] = useState(undefined);
@@ -29,6 +30,9 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
     let lookerResponseData = await lookerResponse.json();
     setApiContent(lookerResponseData.queryResults[0])
   }
+
+  const upOrDownArrow = apiContent ? apiContent.change > 0 ? `&uarr;` : `&darr;` : '';
+
   return (
     <Grid item sm={12}>
       {apiContent ?
@@ -36,15 +40,25 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
           <Typography variant="subtitle1" display="inline">
             Your {lookerContent.inlineQueriesMap[index]} category, <b>{apiContent['products.category']}</b>, is {apiContent.change > 0 ? 'up ' : 'down '}
           </Typography>
-          <Typography variant="subtitle1" display="inline" className={apiContent.change > 0 ? classes.greenPos : classes.redNeg}>
-            {`${parseInt(apiContent.change * 100).toFixed(0)}% `}
-          </Typography>
+          <Chip size="small"
+            label={`${decodeHtml(upOrDownArrow)} ${parseInt(apiContent.change * 100).toFixed(0)}% `}
+            className={apiContent.change > 0 ? classes.greenPos : classes.redNeg}
+            display="inline"
+          />
           <Typography variant="subtitle1" display="inline">
-            over the past week.
+            &nbsp;over the past week.
         </Typography>
         </ApiHighlight>
         : <div style={{ height: '56px' }}></div>
+
+        // <Grid item sm={12} >
+        //   <Card className={`${classes.card} ${classes.flexCentered}`}>
+        //     <CircularProgress className={classes.circularProgress}
+        //       style={{ color: `${lookerContent.visColor} ` }} />
+        //   </Card>
+        // </Grid>
       }
     </Grid >
   );
 }
+
