@@ -24,7 +24,7 @@ export default function ReportBuilder(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
 
-  const { toggleShowPayWallModal } = useContext(AppContext)
+  const { togglePayWallModal } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -45,11 +45,16 @@ export default function ReportBuilder(props) {
   const handleChange = (event, newValue) => {
 
     if (newValue == 1 && lookerUser.permission_level != 'premium') {
-      toggleShowPayWallModal()
+      // togglePayWallModal()
+
+      togglePayWallModal({
+        'show': true,
+        'permissionNeeded': 'explore'
+      });
     } else {
       handleTabChange(newValue);
       setValue(newValue);
-      if (newValue === 0) performLookerApiCalls(lookerContent)
+      if (value > 0 && newValue === 0) performLookerApiCalls(lookerContent)
     }
   };
 
@@ -115,7 +120,6 @@ export default function ReportBuilder(props) {
   }
 
   const performLookerApiCalls = function (lookerContent, animateLoad) {
-    // console.log('performLookerApiCalls')
     if (animateLoad) {
       handleChange('refresh', 0)
       setIFrame(0)
@@ -133,7 +137,6 @@ export default function ReportBuilder(props) {
         })
 
         let lookerResponseData = await lookerResponse.json();
-        console.log('lookerResponseData', lookerResponseData)
         if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
 
         let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
@@ -142,7 +145,6 @@ export default function ReportBuilder(props) {
           looks: looksToUse,
           dashboards: dashboardsToUse
         }
-        console.log('objToUse', objToUse)
         let iFrameArray = $(`.embedContainer.${validIdHelper(demoComponentType)} > iframe`);
         if (objToUse.looks.length) {
           objToUse.looks.map((item, index) => {
@@ -217,6 +219,7 @@ export default function ReportBuilder(props) {
         setApiContent(objToUse)
       } else if (lookerContent.type === 'explore' && lookerUser.permission_level === 'premium') {
         let exploreId = lookerContent.id;
+        $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).html('')
         LookerEmbedSDK.createExploreWithId(exploreId)
           .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
           .withClassName('iframe')
@@ -292,7 +295,7 @@ export default function ReportBuilder(props) {
                           <Grid item sm={4} >
                             <ApiHighlight height={400}>
                               <TreeSideBar {...{
-                                toggleShowPayWallModal,
+                                togglePayWallModal,
                                 classes,
                                 demoComponentType,
                                 tabContent,
@@ -341,7 +344,7 @@ export default function ReportBuilder(props) {
 
 function TreeSideBar(props) {
   // console.log('TreeSideBar')
-  const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser, toggleShowPayWallModal } = props
+  const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser, togglePayWallModal } = props
   const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
   let treeCounter = 0;
   const [selected, setSelected] = useState(2)
@@ -418,7 +421,12 @@ function TreeSideBar(props) {
                               );
                               event.stopPropagation();
                             } else {
-                              toggleShowPayWallModal();
+                              // togglePayWallModal();
+
+                              togglePayWallModal({
+                                'show': true,
+                                'permissionNeeded': 'explore'
+                              });
                             }
                           }
                           }
@@ -451,7 +459,12 @@ function TreeSideBar(props) {
                                 );
                                 event.stopPropagation();
                               } else {
-                                toggleShowPayWallModal();
+                                // togglePayWallModal();
+
+                                togglePayWallModal({
+                                  'show': true,
+                                  'permissionNeeded': 'explore'
+                                });
                               }
                             }
                             }
@@ -477,7 +490,12 @@ function TreeSideBar(props) {
                                 );
                                 event.stopPropagation();
                               } else {
-                                toggleShowPayWallModal();
+                                // togglePayWallModal();
+
+                                togglePayWallModal({
+                                  'show': true,
+                                  'permissionNeeded': 'explore'
+                                });
                               }
                             }
                             }

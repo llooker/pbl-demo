@@ -18,7 +18,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
 export default function SplashPage(props) {
-  console.log('SplashPage')
+  // console.log('SplashPage')
   //intialize state using hooks
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(1);
@@ -71,29 +71,12 @@ export default function SplashPage(props) {
             </Grid>
           }
           <Box className={iFrameExists ? `` : `${classes.hidden}`}>
-            {/* <AppBar position="static">
-              <Tabs
-                className={classes.tabs}
-                value={value}
-                onChange={handleChange}
-                aria-label="simple tabs example">
-                {tabContent.map((item, index) => (
-                  <Tab
-                    key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
-                    label={item.label ? item.label : 'At a glance'}
-                    className={item.type === 'code flyout' ? `${classes.mlAuto}` : ``}
-                    {...a11yProps(index)} />
-                ))}
-              </Tabs>
-            </AppBar> */}
             <Box className="tabPanelContainer">
               {tabContent.map((tabContentItem, index) => {
-                // return <TabPanel
-                //   key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
-                //   value={value}
-                //   index={index}>
                 return <Grid container
-                  spacing={3}>
+                  spacing={3}
+                  key={`${validIdHelper(demoComponentType + '-gridContainer-' + index)}`}
+                >
                   {tabContentItem.type === 'code flyout' ?
                     <CodeFlyout {...props}
                       classes={classes}
@@ -106,7 +89,8 @@ export default function SplashPage(props) {
                       key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
                       {tabContentItem.map((lookerContent, innerIndex) => {
                         return (
-                          <Grid key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
+                          <Grid
+                            key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
                             item
                             sm={parseInt(lookerContent.gridWidth)}
                           >

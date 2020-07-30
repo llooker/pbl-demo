@@ -11,7 +11,7 @@ export default function CodeFlyout(props) {
   // console.log('CodeFlyout')
   // console.log('props', props)
 
-  const { classes, lookerContent, clientSideCode, serverSideCode, lookerUser } = props
+  const { classes, lookerContent, clientSideCode, serverSideCode, lookerUser, permissionNeededCode } = props
   return (
     <Grid item sm={12} >
       {/* {lookerContent.length ?
@@ -42,6 +42,10 @@ export default function CodeFlyout(props) {
           </Typography>
           <CodeSnippet code={lookerUser} />
         </> : ''}
+      {/* {Object.keys(permissionNeededCode).length ?
+        <>
+          <CodeSnippet code={permissionNeededCode} />
+        </> : ''} */}
     </Grid>
   )
 }

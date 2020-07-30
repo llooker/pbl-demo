@@ -44,7 +44,7 @@ export default function CustomVis(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
 
-  const { toggleShowPayWallModal } = useContext(AppContext)
+  const { togglePayWallModal } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -320,7 +320,10 @@ export default function CustomVis(props) {
                                       onClick={(day, event) => {
                                         if (!day.value) {
                                         } else if (lookerUser.permission_level === 'basic') {
-                                          toggleShowPayWallModal();
+                                          togglePayWallModal({
+                                            'show': true,
+                                            'permissionNeeded': 'see_drill_overlay'
+                                          });
                                         } else {
                                           handleModalOpen(day)
                                           event.stopPropagation();

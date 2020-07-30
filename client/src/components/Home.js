@@ -209,14 +209,14 @@ class Home extends Component {
       activeUsecase: '',
       appLayout: '',
       highlightShow: false,
-      showPayWallModal: false,
+      payWallModal: {},
       selectedMenuItem: '',
       renderedDemoComponents: []
     }
   }
 
-  toggleShowPayWallModal = () => {
-    this.setState({ showPayWallModal: !this.state.showPayWallModal })
+  togglePayWallModal = (modalContent) => {
+    this.setState({ payWallModal: { ...modalContent } })
   }
 
   toggleHighlightShow = () => {
@@ -224,8 +224,6 @@ class Home extends Component {
   }
 
   handleTabChange = newValue => {
-    // console.log('handleTabChange')
-    // console.log('newValue', newValue)
     this.setState({
       activeTabValue: newValue
     })
@@ -385,8 +383,8 @@ class Home extends Component {
           {
             show: this.state.highlightShow,
             toggleShow: this.toggleHighlightShow,
-            showPayWallModal: this.state.showPayWallModal,
-            toggleShowPayWallModal: this.toggleShowPayWallModal,
+            payWallModal: this.state.payWallModal,
+            togglePayWallModal: this.togglePayWallModal,
             lookerUser,
             userProfile
           }
@@ -440,7 +438,10 @@ class Home extends Component {
                   handleMenuItemSelect={handleMenuItemSelect} /> : ''}
 
               <HighlightSourcesLegend className={classes.highlightLegend} />
-              <MonetizationModal {...{ classes }} />
+              <MonetizationModal
+                // {...{ classes }} 
+                switchLookerUser={switchLookerUser}
+              />
             </Drawer>
             <main
               className={clsx(classes.content, {
@@ -460,7 +461,8 @@ class Home extends Component {
                           className={key === selectedMenuItem ? `` : `${classes.hide}`}
                         >
                           {/* {key === selectedMenuItem ? */}
-                          <DemoComponent key={validIdHelper(`treeItem-${item.type}-${index}`)}
+                          <DemoComponent
+                            key={validIdHelper(`demoComponent-${item.type}-${index}`)}
                             staticContent={item}
                             handleMenuItemSelect={handleMenuItemSelect}
                             activeTabValue={activeTabValue}

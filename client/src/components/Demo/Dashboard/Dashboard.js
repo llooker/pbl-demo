@@ -15,7 +15,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of Dashboard Component
 export default function Dashboard(props) {
-  console.log('Dashboard')
+  // console.log('Dashboard')
   //initialize state using hooks
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(0);
@@ -25,7 +25,7 @@ export default function Dashboard(props) {
   const [serverSideCode, setServerSideCode] = useState('');
   const [toggleValue, setToggleValue] = useState('');
   const [dashboardLayout, setDashboardLayout] = useState({});
-  const { toggleShowPayWallModal } = useContext(AppContext)
+  const { togglePayWallModal } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -82,7 +82,7 @@ export default function Dashboard(props) {
    */
   const performLookerApiCalls = function (lookerContent) {
     // console.log('performLookerApiCalls')
-    // $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
+    $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     setIFrame(0)
     setApiContent([])
     lookerContent.map(async lookerContent => {
@@ -102,7 +102,7 @@ export default function Dashboard(props) {
         .withTheme('atom_fashion')
         .withParams({ 'schedule_modal': 'true' })
         .on('page:property:change', (event) => {
-          console.log('page propert is changing!!!!')
+          // console.log('page property is changing!!!!')
           changeHeight(event)
         }) // dashboards-next
         .on('dashboard:loaded', (event) => {
@@ -162,18 +162,18 @@ export default function Dashboard(props) {
     }
   }
 
-  const drillMenuClick = (event) => {
+  // const drillMenuClick = (event) => {
 
-    const basicLookerUser = lookerUser.permission_level === 'basic' ? true : false;
-    if (basicLookerUser) {
-      toggleShowPayWallModal()
-      return { cancel: (basicLookerUser) ? true : false }
-    }
-  }
+  //   const basicLookerUser = lookerUser.permission_level === 'basic' ? true : false;
+  //   if (basicLookerUser) {
+  //     togglePayWallModal()
+  //     return { cancel: (basicLookerUser) ? true : false }
+  //   }
+  // }
 
   const changeHeight = (event) => {
-    console.log('changeHeight')
-    console.log('event', event)
+    // console.log('changeHeight')
+    // console.log('event', event)
   }
 
   /**
