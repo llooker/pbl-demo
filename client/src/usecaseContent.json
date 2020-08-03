@@ -323,7 +323,6 @@
             "desiredFilterName": "products.brand",
             "dynamicFieldLookUp": {
               "Inventory": [
-                125,
                 118,
                 124,
                 123,
@@ -331,7 +330,6 @@
                 121
               ],
               "Orders": [
-                126,
                 6,
                 7,
                 8,
@@ -362,7 +360,8 @@
                 "order_items.order_count",
                 "order_items.total_sale_price"
               ],
-              "query_timezone": "America/Los_Angeles"
+              "query_timezone": "America/Los_Angeles",
+              "limit": "-1"
             },
             "desiredFilterName": "products.brand",
             "desiredFields": [

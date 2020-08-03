@@ -287,7 +287,7 @@ function FilterBar(props) {
                       <Chip
                         key={item.label}
                         dimensioncounter={dimensionCounter += 1}
-                        className={item.selected ? `${classes.greyPrimary}` : ``}
+                        className={item.selected ? `${classes.bluePrimary}` : ``}
                         label={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
                         datalabel={item.label}
                         onClick={() => handleFieldChipClick(item, index)}
@@ -455,7 +455,7 @@ function EnhancedTable(props) {
                         <TableCell
                           key={validIdHelper(key + '-TableBody-TableCell-' + index)}
                           id={validIdHelper(key + '-TableBody-TableCell-' + index)}
-                          className={lookerContent[0].fieldType[key] === 'dimension' ? classes.greySecondary : classes.orangeSecondary}
+                          className={lookerContent[0].fieldType[key] === 'dimension' ? classes.blueSecondary : classes.orangeSecondary}
                           align="right">
                           {row[key].rendered ? row[key].rendered : row[key].value}
                         </TableCell>

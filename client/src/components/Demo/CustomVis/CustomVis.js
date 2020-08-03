@@ -189,7 +189,8 @@ export default function CustomVis(props) {
         // [Object.keys(inlineQuery.filters)[0]]: lookerUser.user_attributes.time_horizon,
         [lookerContent.desiredFilterName]: lookerUser.user_attributes.brand
       };
-      let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
+      let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery));
+      // console.log('stringifiedQuery', stringifiedQuery)
       let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
         method: 'GET',
         headers: {
@@ -198,6 +199,7 @@ export default function CustomVis(props) {
         }
       })
       let lookerResponseData = await lookerResponse.json();
+      // console.log('lookerResponseData', lookerResponseData)
       lookerResponseData.queryResults = lookerResponseData.queryResults.filter(item => {
         return item[inlineQuery.fields[0]]
       })
@@ -461,6 +463,8 @@ function FilterBar(props) {
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
                     }}
+                    minDate={fromDate}
+                    maxDate={toDate}
                   />
                 </MuiPickersUtilsProvider>
 
@@ -479,6 +483,8 @@ function FilterBar(props) {
                     KeyboardButtonProps={{
                       'aria-label': 'change date',
                     }}
+                    minDate={fromDate}
+                    maxDate={toDate}
                   />
                 </MuiPickersUtilsProvider>
               </Grid>

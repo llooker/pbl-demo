@@ -336,9 +336,9 @@ class App extends React.Component {
 
 
     let lookerUserTimeHorizonMap = {
-      'basic': 'last 6 months',
-      'advanced': 'last 12 months',
-      'premium': 'last 24 months' //before today
+      'basic': 'last 182 days',
+      'advanced': 'last 365 days',
+      'premium': 'last 730 days' //before today
     }
     let userAttributeCopy = { ...this.state.lookerUser.user_attributes }
     userAttributeCopy.time_horizon = lookerUserTimeHorizonMap[newUser];
