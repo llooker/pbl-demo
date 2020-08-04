@@ -35,22 +35,27 @@ module.exports.validateLookerContent = async (req, res, next) => {
 
 module.exports.fetchFolder = async (req, res, next) => {
   const { params } = req;
+
   try {
     const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
     const embedUser = await sdk.ok(sdk.user(userCred.id));
     const sharedFolder = await sdk.ok(sdk.folder(params.folder_id));
-    const embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id));
+    let embeddedUserFolder = {}
+    if (req.session.lookerUser.permission_level === 'premium') embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id));
+
+
 
     for (let h = 0; h < sharedFolder.looks.length; h++) {
       let look = await sdk.ok(sdk.look(sharedFolder.looks[h].id))
       let clientId = look.query.client_id;
       sharedFolder.looks[h].client_id = clientId;
     }
-
-    for (let i = 0; i < embeddedUserFolder.looks.length; i++) {
-      let look = await sdk.ok(sdk.look(embeddedUserFolder.looks[i].id));
-      let clientId = look.query.client_id;
-      embeddedUserFolder.looks[i].client_id = clientId;
+    if (req.session.lookerUser.permission_level === 'premium') {
+      for (let i = 0; i < embeddedUserFolder.looks.length; i++) {
+        let look = await sdk.ok(sdk.look(embeddedUserFolder.looks[i].id));
+        let clientId = look.query.client_id;
+        embeddedUserFolder.looks[i].client_id = clientId;
+      }
     }
 
     let codeAsString = this.fetchFolder.toString();

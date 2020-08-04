@@ -139,7 +139,14 @@ export default function ReportBuilder(props) {
         let lookerResponseData = await lookerResponse.json();
         if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
 
-        let looksToUse = [...lookerResponseData.sharedFolder.looks, ...lookerResponseData.embeddedUserFolder.looks]
+        let looksToUse = [...lookerResponseData.sharedFolder.looks];
+        if (lookerUser.permission_level === 'premium' &&
+          Object.keys(lookerResponseData.embeddedUserFolder).length) {
+          looksToUse = [
+            ...looksToUse, ...lookerResponseData.embeddedUserFolder.looks
+          ]
+
+        }
         let dashboardsToUse = [...lookerResponseData.sharedFolder.dashboards]
         let objToUse = {
           looks: looksToUse,
