@@ -5,7 +5,7 @@ import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import { Typography, Grid, Card, CircularProgress, Box } from '@material-ui/core';
 
-export function EmbeddedDashboard({ lookerContent, classes, id }) {
+export function EmbeddedDashboard({ lookerContent, classes, id, lookerHost }) {
 
   const [iFrameExists, setIFrame] = useState(0);
   const { userProfile, lookerUser } = useContext(AppContext)
@@ -24,6 +24,7 @@ export function EmbeddedDashboard({ lookerContent, classes, id }) {
       .connect()
       .then((look) => {
         setIFrame(1)
+        LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
       })
       .catch((error) => {
         console.error('Connection error', error)

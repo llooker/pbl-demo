@@ -42,7 +42,7 @@ const styles = theme => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     zIndex: 1201,
-    backgroundColor: "#605E57"
+    backgroundColor: "#343D4E"
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -255,7 +255,7 @@ class Home extends Component {
   };
 
   componentDidMount(props) {
-    // console.log('componentDidMount')
+    console.log('componentDidMount')
     let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
     this.setState({
       activeUsecase: usecaseFromUrl,
@@ -266,7 +266,7 @@ class Home extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // console.log('componentDidUpdate')
+    console.log('componentDidUpdate')
     let prevPermissionLevel = prevProps.lookerUser.permission_level;
     let currPermissionLevel = this.props.lookerUser.permission_level;
     let prevUserBrand = prevProps.lookerUser.user_attributes.brand;
@@ -274,8 +274,10 @@ class Home extends Component {
 
     if ((prevPermissionLevel !== currPermissionLevel) || (prevUserBrand !== currUserBrand)) {
       // console.log('we are inside this iffff')
+      LookerEmbedSDK.init(`https://${this.props.lookerHost}.looker.com`, '/auth');
       this.setState({
         renderedDemoComponents: [this.state.selectedMenuItem]
+      }, () => {
       })
     }
   }

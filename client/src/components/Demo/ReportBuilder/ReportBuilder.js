@@ -29,7 +29,7 @@ export default function ReportBuilder(props) {
   //declare constants
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
@@ -100,6 +100,7 @@ export default function ReportBuilder(props) {
         .then((explore) => {
           setIFrame(1)
           setExploreObj(explore)
+          LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
         })
         .catch((error) => {
           console.error('Connection error', error)
@@ -176,6 +177,7 @@ export default function ReportBuilder(props) {
                 .connect()
                 .then((look) => {
                   // setIFrame(1)
+                  LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
                 })
                 .catch((error) => {
                   console.error('Connection error', error)
@@ -211,6 +213,7 @@ export default function ReportBuilder(props) {
                   setTimeout(() => {
                     // setIFrame(1)
                   }, 1000)
+                  LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
                 })
                 .catch((error) => {
                   console.error('Connection error', error)
@@ -237,6 +240,7 @@ export default function ReportBuilder(props) {
           .then((explore) => {
             setTimeout(() => setIFrame(1), 1000)
             setExploreObj(exploreObj)
+            LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
           })
           .catch((error) => {
             console.error('Connection error', error)
@@ -439,8 +443,8 @@ function TreeSideBar(props) {
                           }
                           color="default"
                         >
-                          Explore
-                                                                                            </Button>
+                          {lookerUser.permission_level === 'premium' ? 'Explore' : <div>Explore <Icon className={`fa fa-lock ${classes.faSm}`} /></div>}
+                        </Button>
                       </div>
                       : key === 'looks' ?
                         <div

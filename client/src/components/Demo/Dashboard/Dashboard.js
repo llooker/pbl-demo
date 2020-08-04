@@ -29,7 +29,7 @@ export default function Dashboard(props) {
 
   //declare constants
   const classes = useStyles();
-  const { staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser } = props;
+  const { staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
@@ -116,6 +116,8 @@ export default function Dashboard(props) {
         .then((dashboard) => {
           setIFrame(1)
           setDashboardObj(dashboard)
+          LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+
         })
         .catch((error) => {
           // console.error('Connection error', error)

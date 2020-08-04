@@ -27,7 +27,7 @@ export default function SplashPage(props) {
 
   //declare constants
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, handleMenuItemSelect, lookerUser } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, handleMenuItemSelect, lookerUser, lookerHost } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
@@ -96,19 +96,19 @@ export default function SplashPage(props) {
                           >
                             {/* <Card className={classes.padding30}> */}
                             {(lookerContent.type === 'welcome') && <Welcome
-                              {...{ lookerContent, classes, demoComponentType }}
+                              {...{ lookerContent, classes, demoComponentType, lookerHost }}
                             />}
                             {(lookerContent.type === 'carousel') && <ContentCarousel
-                              {...{ lookerContent, classes, demoComponentType }}
+                              {...{ lookerContent, classes, demoComponentType, lookerHost }}
                             />}
                             {(lookerContent.type === 'single value') && <SingleValueVis
-                              {...{ lookerContent, classes, demoComponentType }}
+                              {...{ lookerContent, classes, demoComponentType, lookerHost }}
                             />}
                             {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
-                              {...{ lookerContent, classes }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                              {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
                             />}
                             {(lookerContent.type === 'popular analysis') && <PopularAnalysis
-                              {...{ lookerContent, classes, demoComponentType, handleMenuItemSelect }}
+                              {...{ lookerContent, classes, demoComponentType, handleMenuItemSelect, lookerHost }}
                             />}
                           </Grid>
                         )

@@ -2,7 +2,7 @@
   "external_user_id": "",
   "first_name": "",
   "last_name": "",
-  "session_length": 3600,
+  "session_length": 86400,
   "force_logout_login": true,
   "external_group_id": "",
   "group_ids": [],
