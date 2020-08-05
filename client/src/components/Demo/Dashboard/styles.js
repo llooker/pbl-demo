@@ -52,4 +52,7 @@ export default makeStyles((theme) => ({
     minWidth: 275,
     minHeight: 800,
   },
+  padding30: {
+    padding: 30
+  }
 }));

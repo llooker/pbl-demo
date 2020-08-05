@@ -11,9 +11,9 @@ module.exports.auth = async (req, res, next) => {
   // console.log('lookerController auth');
   // Authenticate the request is from a valid user here
   const src = req.query.src;
-  console.log('src', src)
+  // console.log('src', src)
   const url = createSignedUrl(src, req.session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
-  console.log('url', url)
+  // console.log('url', url)
   res.json({ url });
 }
 
@@ -99,9 +99,9 @@ module.exports.runQuery = async (req, res, next) => {
 }
 
 module.exports.runInlineQuery = async (req, res, next) => {
-  console.log('runInlineQuery');
+  // console.log('runInlineQuery');
   const { params } = req;
-  console.log('params', params);
+  // console.log('params', params);
   // var start = new Date().getTime();
   try {
     let codeAsString = this.runInlineQuery.toString();
@@ -249,13 +249,13 @@ module.exports.getThumbnail = async (req, res, next) => {
 }
 
 async function createEmbeddedUserSdkSession(req) {
-  console.log('createEmbeddedUserSdkSession')
+  // console.log('createEmbeddedUserSdkSession')
   const src = req.query.src;
   const lookerUser = req.session.lookerUser;
-  console.log('lookerUser', lookerUser)
+  // console.log('lookerUser', lookerUser)
   const url = await createSignedUrl(src, lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
   await rp(url)
-  console.log('url', url)
+  // console.log('url', url)
   //get user id of embedded user
   const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
   //create separate session for embedded user
