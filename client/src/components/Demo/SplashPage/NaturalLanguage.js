@@ -8,7 +8,7 @@ const { validIdHelper, decodeHtml } = require('../../../tools');
 
 export function NaturalLanguage({ lookerContent, item, index, classes }) {
   const [apiContent, setApiContent] = useState(undefined);
-  const { userProfile, lookerUser } = useContext(AppContext)
+  const { userProfile, lookerUser, show } = useContext(AppContext)
 
   useEffect(() => {
     if (item) {
@@ -34,21 +34,30 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
   const upOrDownArrow = apiContent ? apiContent.change > 0 ? `&uarr;` : `&darr;` : '';
 
   return (
-    <Grid item sm={12}>
+    <Grid item sm={12} style={{ position: 'relative' }}>
       {apiContent ?
-        <ApiHighlight>
-          <Typography variant="subtitle1" display="inline">
-            Your {lookerContent.inlineQueriesMap[index]} category, <b>{apiContent['products.category']}</b>, is {apiContent.change > 0 ? 'up ' : 'down '}
-          </Typography>
+        <React.Fragment style={{ position: 'relative' }}>
           <Chip size="small"
-            label={`${decodeHtml(upOrDownArrow)} ${parseInt(apiContent.change * 100).toFixed(0)}% `}
-            className={apiContent.change > 0 ? classes.greenPos : classes.redNeg}
+            label={"API"}
+            className={show ? 'test' : `${classes.hidden}`}
             display="inline"
+            align="right"
+            style={{ backgroundColor: "#A142F4", color: '#fff', top: '0px', left: '0px', position: 'absolute' }}
           />
-          <Typography variant="subtitle1" display="inline">
-            &nbsp;over the past week.
+          <ApiHighlight>
+            <Typography variant="subtitle1" display="inline">
+              Your {lookerContent.inlineQueriesMap[index]} category, <b>{apiContent['products.category']}</b>, is {apiContent.change > 0 ? 'up ' : 'down '}
+            </Typography>
+            <Chip size="small"
+              label={`${decodeHtml(upOrDownArrow)} ${parseInt(apiContent.change * 100).toFixed(0)}% `}
+              className={apiContent.change > 0 ? classes.greenPos : classes.redNeg}
+              display="inline"
+            />
+            <Typography variant="subtitle1" display="inline">
+              &nbsp;over the past week.
         </Typography>
-        </ApiHighlight>
+          </ApiHighlight>
+        </React.Fragment>
         : <div style={{ height: '56px' }}></div>
 
         // <Grid item sm={12} >

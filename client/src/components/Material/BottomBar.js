@@ -16,20 +16,12 @@ export default function BottomBar(props) {
   const { show } = useContext(AppContext)
   const { toggleCodeShow } = useContext(AppContext)
   const { codeShow } = useContext(AppContext)
-
-
   const { lookerUser } = props;
-
-
-  console.log('toggleCodeShow', toggleCodeShow)
-  console.log('codeShow', codeShow)
-
-
 
   return (
     <AppBar
       position="fixed"
-      className={clsx(classes.appBar)}
+      className={clsx(classes.appBarBottom)}
       color="default"
     >
       <Toolbar>

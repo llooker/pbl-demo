@@ -58,11 +58,18 @@ export default makeStyles((theme) => ({
   padding30: {
     padding: 30
   },
-  appBar: {
-    top: 'auto',
-    bottom: 0,
-  },
   minHeight680: {
     minHeight: 680,
+  },
+  positionAbsoluteTopRight: {
+    position: 'absolute',
+    top: -30,
+    right: -30,
+    width: '100%',
+    height: '100%',
+    zIndex: 100
+  },
+  positionRelative: {
+    position: 'relative'
   }
 }));

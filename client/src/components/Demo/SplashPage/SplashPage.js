@@ -15,6 +15,7 @@ import { EmbeddedLook } from './EmbeddedLook';
 import { EmbeddedDashboard } from './EmbeddedDashboard';
 import { ContentCarousel } from './ContentCarousel';
 import BottomBar from '../../Material/BottomBar.js'
+import AppContext from '../../../AppContext';
 const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
@@ -25,6 +26,9 @@ export default function SplashPage(props) {
   const [iFrameExists, setIFrame] = useState(1);
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
+  const { toggleShow } = useContext(AppContext)
+  const { show } = useContext(AppContext)
+  const { codeShow } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -71,24 +75,17 @@ export default function SplashPage(props) {
               </Card>
             </Grid>
           }
-          <Box className={iFrameExists ? `` : `${classes.hidden}`}>
-            {/* <Box className="tabPanelContainer">
-              {tabContent.map((tabContentItem, index) => {
-                return <Grid container
-                  spacing={3}
-                  key={`${validIdHelper(demoComponentType + '-gridContainer-' + index)}`}
-                >
-                  {tabContentItem.type === 'code flyout' ?
-                    <CodeFlyout {...props}
-                      classes={classes}
-                      lookerContent={lookerContent}
-                      clientSideCode={clientSideCode}
-                      serverSideCode={serverSideCode}
-                      lookerUser={lookerUser} />
-                    : */}
+          <Box className={iFrameExists ? `${classes.positionRelative}` : `${classes.hidden}`}>
             <Grid container
               spacing={3}
               key={`${validIdHelper(demoComponentType + '-outerFragment')}`}>
+              {codeShow ? <Grid item sm={6}
+                className={`${classes.positionAbsoluteTopRight}`}
+              >
+                <CodeFlyout {...props}
+                  classes={classes}
+                  lookerUser={lookerUser} />
+              </Grid> : ''}
               {lookerContent.map((lookerContent, innerIndex) => {
                 return (
                   <Grid
@@ -116,12 +113,6 @@ export default function SplashPage(props) {
                 )
               })}
             </Grid>
-            {/* }
-                </Grid>
-                // </TabPanel>
-              })}
-            </Box> */}
-            <BottomBar classes={classes} lookerUser={lookerUser} />
           </Box >
         </div >
       </Grid >

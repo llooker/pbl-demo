@@ -137,8 +137,15 @@ export default makeStyles((theme) => ({
     fontWeight: 800,
     // width: `${25}% !important`,
   },
-  appBar: {
-    top: 'auto',
-    bottom: 0,
+  positionAbsoluteTopRight: {
+    position: 'absolute',
+    top: -30,
+    right: -30,
+    width: '100%',
+    height: '100%',
+    zIndex: 100
+  },
+  positionRelative: {
+    position: 'relative'
   }
 }));

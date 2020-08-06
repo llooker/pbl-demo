@@ -26,6 +26,7 @@ import AppContext from '../AppContext';
 import style from 'react-syntax-highlighter/dist/esm/styles/hljs/agate';
 import './Home.css'; //needed for iframe height
 import { MonetizationModal } from './Demo/MonetizationModal';
+import BottomBar from './Material/BottomBar';
 
 
 
@@ -176,6 +177,10 @@ const styles = theme => ({
   },
   mrAuto: {
     marginRight: 'auto'
+  },
+  appBarBottom: {
+    top: 'auto',
+    bottom: 0,
   }
 });
 
@@ -221,14 +226,13 @@ class Home extends Component {
   }
 
   toggleHighlightShow = () => {
+    if (this.state.codeShow) this.toggleCodeShow()
     this.setState({ highlightShow: !this.state.highlightShow })
   }
 
   toggleCodeShow = () => {
-    this.setState({ codeShow: !this.state.codeShow }, () => {
-      console.log('toggleCodeShow')
-      console.log('this.state.codeShow', this.state.codeShow)
-    })
+    if (this.state.highlightShow) this.toggleHighlightShow()
+    this.setState({ codeShow: !this.state.codeShow })
   }
 
   handleTabChange = newValue => {
@@ -242,6 +246,7 @@ class Home extends Component {
     this.handleTabChange(0)
 
     if (this.state.highlightShow) this.toggleHighlightShow()
+    if (this.state.codeShow) this.toggleCodeShow()
 
     let selectedMenuItemValue = ''
     if (fromSplash) {
@@ -467,6 +472,7 @@ class Home extends Component {
                 ''
               }
             </main >
+            <BottomBar classes={classes} lookerUser={lookerUser} />
           </ThemeProvider>
         </AppContext.Provider>
       </div >
@@ -534,7 +540,7 @@ function MenuList(props) {
           <ListItem button
             key={`${validIdHelper(outerItem + '-outerListItem-' + outerIndex)}`}
           >
-            <ListItemText primary={_.capitalize(outerItem)} />
+            <ListItemText primary={outerItem === 'home' ? '' : _.upperCase(outerItem)} />
           </ListItem>
           < List component="div" disablePadding
             key={`${validIdHelper(outerItem + '-innerList-' + outerIndex)}`}>

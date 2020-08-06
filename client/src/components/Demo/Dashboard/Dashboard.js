@@ -29,6 +29,7 @@ export default function Dashboard(props) {
   // const { togglePayWallModal } = useContext(AppContext)
   const { toggleShow } = useContext(AppContext)
   const { show } = useContext(AppContext)
+  const { codeShow } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -186,133 +187,6 @@ export default function Dashboard(props) {
    * Rendering of actual html elements,
    * this section is necessary but less relevant to looker functionality itself
    */
-  //old as of 8/5
-  // return (
-  //   <div className={`${classes.root} demoComponent`}>
-  //     <Grid container
-  //       spacing={3}
-  //       key={validIdHelper(type)} >
-  //       <div className={classes.root}>
-  //         {iFrameExists ? '' :
-  //           <Grid item sm={12} >
-  //             <Card className={`${classes.card} ${classes.flexCentered}`}>
-  //               <CircularProgress className={classes.circularProgress} />
-  //             </Card>
-  //           </Grid>
-  //         }
-  //         <Box className={iFrameExists ? `` : `${classes.hidden}`}>
-  //           <AppBar position="static">
-  //             <Tabs
-  //               className={classes.tabs}
-  //               value={value}
-  //               onChange={handleChange}
-  //               aria-label="simple tabs example">
-  //               {tabContent.map((item, index) => (
-  //                 <Tab
-  //                   key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
-  //                   label={item.label}
-  //                   className={item.type === 'code flyout' ? `${classes.mlAuto}` : ``}
-  //                   {...a11yProps(index)} />
-  //               ))}
-  //             </Tabs>
-  //           </AppBar>
-  //           <Box className="tabPanelContainer">
-  //             {tabContent.map((tabContentItem, index) => (
-  //               <TabPanel
-  //                 key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
-  //                 value={value}
-  //                 index={index}>
-  //                 <Grid container>
-  //                   {tabContentItem.type === 'code flyout' ?
-  //                     <CodeFlyout {...props}
-  //                       classes={classes}
-  //                       lookerContent={lookerContent}
-  //                       clientSideCode={clientSideCode}
-  //                       serverSideCode={serverSideCode}
-  //                       lookerUser={lookerUser} />
-  //                     :
-  //                     <React.Fragment
-  //                       key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
-  //                       {tabContentItem.filter ?
-
-  //                         <Grid item sm={6}>
-  //                           <ApiHighlight>
-  //                             <Autocomplete
-  //                               id={`combo-box-dashboard-${lookerContent.id}`}
-  //                               options={Array.isArray(apiContent) ?
-  //                                 apiContent :
-  //                                 []}
-  //                               renderOption={(option) => (
-  //                                 <Grid container justify="space-between">
-  //                                   <Grid item>
-  //                                     {option.label}
-  //                                   </Grid>
-  //                                   {option.trend && <Grid item>
-  //                                     <NumberToColoredPercent
-  //                                       val={option.trend}
-  //                                       positive_good={true}
-  //                                       abs_val={Math.abs(option.trend)}
-  //                                     />
-  //                                   </Grid>}
-  //                                 </Grid>
-  //                               )}
-  //                               getOptionLabel={(option) => option.label}
-  //                               style={{ width: 400 }}
-  //                               onChange={(event, newValue) => {
-  //                                 customFilterAction(tabContentItem.id, tabContentItem.filter.filterName, (newValue) ? newValue.label : '')
-  //                               }}
-  //                               renderInput={(params) => <TextField {...params} label={tabContentItem.filter.filterName} variant="outlined" />}
-  //                               loadingText="Loading..."
-  //                             />
-  //                           </ApiHighlight>
-  //                         </Grid> : ''
-  //                       }
-  //                       {tabContentItem.dynamicFieldLookUp ?
-  //                         <Grid item sm={6}>
-  //                           <ApiHighlight>
-  //                             <ToggleButtonGroup
-  //                               value={toggleValue}
-  //                               exclusive
-  //                               onChange={handleToggle}
-  //                               aria-label="text alignment"
-  //                             >
-  //                               {Object.keys(tabContentItem.dynamicFieldLookUp).map(key => {
-  //                                 return (
-  //                                   <ToggleButton
-  //                                     key={validIdHelper(`dynamicDashToggle-${key}`)}
-  //                                     value={key} aria-label="left aligned">
-  //                                     {key}
-  //                                   </ToggleButton>
-  //                                 )
-  //                               })}
-  //                             </ToggleButtonGroup>
-  //                           </ApiHighlight>
-  //                         </Grid>
-  //                         : ''
-  //                       }
-  //                       <Box className={classes.w100} mt={2}>
-  //                         <Grid item sm={12}>
-  //                           <EmbedHighlight>
-  //                             <div
-  //                               className={`embedContainer ${validIdHelper(demoComponentType)}`}
-  //                               id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-  //                               key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-  //                             >
-  //                             </div>
-  //                           </EmbedHighlight>
-  //                         </Grid>
-  //                       </Box>
-  //                     </React.Fragment>
-  //                   }
-  //                 </Grid>
-  //               </TabPanel>
-  //             ))}
-  //           </Box>
-  //         </Box >
-  //       </div>
-  //     </Grid >
-  //   </div >
-  // )
 
   return (
     <div className={`${classes.root} ${classes.minHeight680} ${classes.padding30}  demoComponent`}>
@@ -326,8 +200,8 @@ export default function Dashboard(props) {
               </Card>
             </Grid>
           }
-          <Box className={iFrameExists ? `${classes.padding30}` : `${classes.hidden}`}>
-            <Grid container >
+          <Box className={iFrameExists ? `${classes.padding30} ${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
+            <Grid container>
               {lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ?
                 <Grid container>
                   {lookerContent[0].filter ?
@@ -406,7 +280,17 @@ export default function Dashboard(props) {
                   }
                 </Grid> : ''}
 
+
+              {codeShow ? <Grid item sm={6}
+                className={`${classes.positionAbsoluteTopRight}`}
+              >
+                <CodeFlyout {...props}
+                  classes={classes}
+                  lookerUser={lookerUser} />
+              </Grid> : ''}
+
               <Grid item sm={12}>
+
                 <Box className={classes.w100} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
 
                   <Chip size="small"
@@ -414,7 +298,13 @@ export default function Dashboard(props) {
                     className={show ? 'test' : `${classes.hidden}`}
                     display="inline"
                     align="right"
-                    style={{ backgroundColor: "#12B5CB", color: '#fff', top: '12px', left: '25px', position: 'relative' }}
+                    style={{
+                      backgroundColor: "#12B5CB",
+                      color: '#fff',
+                      top: '12px',
+                      left: '25px',
+                      position: 'relative'
+                    }}
                   />
 
                   <EmbedHighlight>
@@ -428,7 +318,6 @@ export default function Dashboard(props) {
                 </Box>
               </Grid>
             </Grid>
-            <BottomBar classes={classes} lookerUser={lookerUser} />
           </Box>
         </div>
       </Grid>

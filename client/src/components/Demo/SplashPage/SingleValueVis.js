@@ -12,7 +12,7 @@ export function SingleValueVis({ lookerContent, classes }) {
   // console.log('lookerContent', lookerContent)
   // const [svg, setSvg] = useState(undefined)
   const [apiContent, setApiContent] = useState([]);
-  const { userProfile, lookerUser } = useContext(AppContext)
+  const { userProfile, lookerUser, show } = useContext(AppContext)
 
 
 
@@ -63,16 +63,27 @@ export function SingleValueVis({ lookerContent, classes }) {
   return (
     <Card elevation={1} className={classes.padding30}>
       <div
-        className={`${classes.textCenter} ${classes.overflowHidden}`}
+        className={` ${classes.overflowHidden}`}
         style={
           // apiContent.length ? { borderLeft: `solid 3px ${lookerContent.visColor} `, height: lookerContent.height } : 
-          { height: lookerContent.height }
+          {
+            height: lookerContent.height,
+            position: 'relative'
+          }
         }
       >
         {apiContent.length ?
-          <React.Fragment>
+          <React.Fragment style={{ position: 'relative' }}>
+
+            <Chip size="small"
+              label={"API"}
+              className={show ? 'test' : `${classes.hidden}`}
+              display="inline"
+              align="right"
+              style={{ backgroundColor: "#A142F4", color: '#fff', top: '0px', left: '0px', position: 'absolute' }}
+            />
             <ApiHighlight height={150}>
-              <Grid container>
+              <Grid container className={`${classes.textCenter}`}>
                 <Grid item sm={12}>
                   <Typography variant="body2" align="left" color="secondary">
                     {lookerContent.label}

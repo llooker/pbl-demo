@@ -3,12 +3,12 @@ import React, { useEffect, useRef, useCallback, useState, useContext } from 'rea
 import AppContext from '../../../AppContext';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
-import { Typography, Grid, Card, CircularProgress, Box } from '@material-ui/core';
+import { Typography, Grid, Card, CircularProgress, Box, Chip } from '@material-ui/core';
 
 export function EmbeddedDashboard({ lookerContent, classes, id, lookerHost }) {
 
   const [iFrameExists, setIFrame] = useState(0);
-  const { userProfile, lookerUser } = useContext(AppContext)
+  const { userProfile, lookerUser, show } = useContext(AppContext)
 
   useEffect(() => {
     $(`#${id}`).html('')
@@ -52,7 +52,20 @@ export function EmbeddedDashboard({ lookerContent, classes, id, lookerHost }) {
             </Grid>
         }
         <Box >
-          <Grid item sm={12}>
+          <Grid item sm={12} style={{ position: 'relative' }}>
+            <Chip size="small"
+              label={"Embed"}
+              className={show ? 'test' : `${classes.hidden}`}
+              display="inline"
+              align="right"
+              style={{
+                backgroundColor: "#12B5CB",
+                color: '#fff',
+                top: '-10px',
+                left: '25px',
+                position: 'absolute'
+              }}
+            />
             <EmbedHighlight>
               <div
                 className={`embedContainer splashPage`}
