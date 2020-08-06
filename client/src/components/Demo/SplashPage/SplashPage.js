@@ -14,6 +14,7 @@ import { PopularAnalysis } from './PopularAnalysis';
 import { EmbeddedLook } from './EmbeddedLook';
 import { EmbeddedDashboard } from './EmbeddedDashboard';
 import { ContentCarousel } from './ContentCarousel';
+import BottomBar from '../../Material/BottomBar.js'
 const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
@@ -33,7 +34,7 @@ export default function SplashPage(props) {
     lookerContent, lookerUser, clientSideCode, serverSideCode
   }
   // const tabContent = [[...lookerContent], codeTab];
-  const tabContent = [[...lookerContent]];
+  // const tabContent = [[...lookerContent]];
   const demoComponentType = type || 'code flyout';
 
   //handle tab change
@@ -71,7 +72,7 @@ export default function SplashPage(props) {
             </Grid>
           }
           <Box className={iFrameExists ? `` : `${classes.hidden}`}>
-            <Box className="tabPanelContainer">
+            {/* <Box className="tabPanelContainer">
               {tabContent.map((tabContentItem, index) => {
                 return <Grid container
                   spacing={3}
@@ -84,41 +85,43 @@ export default function SplashPage(props) {
                       clientSideCode={clientSideCode}
                       serverSideCode={serverSideCode}
                       lookerUser={lookerUser} />
-                    :
-                    <React.Fragment
-                      key={`${validIdHelper(demoComponentType + '-outerFragment-' + index)}`}>
-                      {tabContentItem.map((lookerContent, innerIndex) => {
-                        return (
-                          <Grid
-                            key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
-                            item
-                            sm={parseInt(lookerContent.gridWidth)}
-                          >
-                            {/* <Card className={classes.padding30}> */}
-                            {(lookerContent.type === 'welcome') && <Welcome
-                              {...{ lookerContent, classes, demoComponentType, lookerHost }}
-                            />}
-                            {(lookerContent.type === 'carousel') && <ContentCarousel
-                              {...{ lookerContent, classes, demoComponentType, lookerHost }}
-                            />}
-                            {(lookerContent.type === 'single value') && <SingleValueVis
-                              {...{ lookerContent, classes, demoComponentType, lookerHost }}
-                            />}
-                            {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
-                              {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
-                            />}
-                            {(lookerContent.type === 'popular analysis') && <PopularAnalysis
-                              {...{ lookerContent, classes, demoComponentType, handleMenuItemSelect, lookerHost }}
-                            />}
-                          </Grid>
-                        )
-                      })}
-                    </React.Fragment>
-                  }
+                    : */}
+            <Grid container
+              spacing={3}
+              key={`${validIdHelper(demoComponentType + '-outerFragment')}`}>
+              {lookerContent.map((lookerContent, innerIndex) => {
+                return (
+                  <Grid
+                    key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
+                    item
+                    sm={parseInt(lookerContent.gridWidth)}
+                  >
+                    {/* <Card className={classes.padding30}> */}
+                    {(lookerContent.type === 'welcome') && <Welcome
+                      {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                    />}
+                    {(lookerContent.type === 'carousel') && <ContentCarousel
+                      {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                    />}
+                    {(lookerContent.type === 'single value') && <SingleValueVis
+                      {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                    />}
+                    {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
+                      {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                    />}
+                    {(lookerContent.type === 'popular analysis') && <PopularAnalysis
+                      {...{ lookerContent, classes, demoComponentType, handleMenuItemSelect, lookerHost }}
+                    />}
+                  </Grid>
+                )
+              })}
+            </Grid>
+            {/* }
                 </Grid>
                 // </TabPanel>
               })}
-            </Box>
+            </Box> */}
+            <BottomBar classes={classes} lookerUser={lookerUser} />
           </Box >
         </div >
       </Grid >

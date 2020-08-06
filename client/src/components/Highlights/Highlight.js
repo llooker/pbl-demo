@@ -20,7 +20,7 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
       border: `3px solid ${color}`,
       backgroundColor: `${backgroundColor}`,
       borderRadius: `4px`,
-      zIndex: 10000000000000000
+      // zIndex: 10000000000000000,
     }
   } else {
     style = {
@@ -43,9 +43,25 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
 }
 
 export function ApiHighlight({ ...props }) {
-  return <Highlight {...props} color={API_COLOR} backgroundColor={API_BACKGROUND_COLOR}></Highlight>
+  // console.log("ApiHighlight")
+  // console.log('props', props)
+  const { show } = useContext(AppContext)
+  console.log('show', show)
+
+  return <Highlight {...props} color={API_COLOR} backgroundColor={API_BACKGROUND_COLOR}>
+    {/* {show ?
+      <span>Api</span> : null} */}
+  </Highlight>
 }
 
 export function EmbedHighlight({ ...props }) {
-  return <Highlight {...props} color={EMBED_COLOR} backgroundColor={EMBED_BACKGROUND_COLOR}></Highlight>
+  console.log('EmbedHighlight')
+  console.log('props', props)
+  const { show } = useContext(AppContext)
+  const { classes } = props
+  console.log('classes', classes)
+
+  return <Highlight {...props} color={EMBED_COLOR} backgroundColor={EMBED_BACKGROUND_COLOR}>
+    {/* <span className={show && classes ? '' : `${classes.hidden}`}>Embed</span> */}
+  </Highlight>
 }

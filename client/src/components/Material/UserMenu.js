@@ -76,8 +76,8 @@ export default function UserMenu(props) {
         <MenuItem autoFocus={false} onClick={() => handleClose('advanced')}>Advanced</MenuItem>
         <MenuItem autoFocus={false} onClick={() => handleClose('premium')}>Premium</MenuItem>
         <Divider className={classes.divider} />
-        <MenuItem onClick={() => { toggleShow() }}>Highlight Source</MenuItem>
-        <Divider className={classes.divider} />
+        {/* <MenuItem onClick={() => { toggleShow() }}>Highlight Source</MenuItem>
+        <Divider className={classes.divider} /> */}
         <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
         <Divider className={classes.divider} />
         <MenuItem>Current brand: {selectedBrand}</MenuItem>

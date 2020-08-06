@@ -12,8 +12,8 @@ export default makeStyles((theme) => ({
   },
   hidden: {
     visibility: 'hidden',
-    position: 'absolute', //hack for obscuring other elements within Box
-    zIndex: -1
+    // position: 'absolute', //hack for obscuring other elements within Box
+    // zIndex: -1
   },
   tabs: {
     backgroundColor: 'white',
@@ -44,6 +44,9 @@ export default makeStyles((theme) => ({
   mlAuto: {
     marginLeft: 'auto'
   },
+  mrAuto: {
+    marginRight: 'auto'
+  },
   skeleton: {
     minWidth: 275,
     minHeight: 600,
@@ -54,5 +57,12 @@ export default makeStyles((theme) => ({
   },
   padding30: {
     padding: 30
+  },
+  appBar: {
+    top: 'auto',
+    bottom: 0,
+  },
+  minHeight680: {
+    minHeight: 680,
   }
 }));

@@ -22,7 +22,7 @@ import CustomVis from './Demo/CustomVis/CustomVis';
 import ReportBuilder from './Demo/ReportBuilder/ReportBuilder';
 import QueryBuilder from './Demo/QueryBuilder/QueryBuilder';
 import AppContext from '../AppContext';
-import { HighlightSourcesLegend } from './HighlightSourcesLegend';
+// import { HighlightSourcesLegend } from './HighlightSourcesLegend';
 import style from 'react-syntax-highlighter/dist/esm/styles/hljs/agate';
 import './Home.css'; //needed for iframe height
 import { MonetizationModal } from './Demo/MonetizationModal';
@@ -211,7 +211,8 @@ class Home extends Component {
       highlightShow: false,
       payWallModal: {},
       selectedMenuItem: '',
-      renderedDemoComponents: []
+      renderedDemoComponents: [],
+      codeShow: false
     }
   }
 
@@ -223,6 +224,13 @@ class Home extends Component {
     this.setState({ highlightShow: !this.state.highlightShow })
   }
 
+  toggleCodeShow = () => {
+    this.setState({ codeShow: !this.state.codeShow }, () => {
+      console.log('toggleCodeShow')
+      console.log('this.state.codeShow', this.state.codeShow)
+    })
+  }
+
   handleTabChange = newValue => {
     this.setState({
       activeTabValue: newValue
@@ -232,6 +240,9 @@ class Home extends Component {
   handleMenuItemSelect = (newValue, fromSplash) => {
     // console.log('handleMenuItemSelect')
     this.handleTabChange(0)
+
+    if (this.state.highlightShow) this.toggleHighlightShow()
+
     let selectedMenuItemValue = ''
     if (fromSplash) {
       UsecaseContent[this.state.activeUsecase].demoComponents.map(item => {
@@ -255,7 +266,6 @@ class Home extends Component {
   };
 
   componentDidMount(props) {
-    console.log('componentDidMount')
     let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
     this.setState({
       activeUsecase: usecaseFromUrl,
@@ -266,7 +276,6 @@ class Home extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate')
     let prevPermissionLevel = prevProps.lookerUser.permission_level;
     let currPermissionLevel = this.props.lookerUser.permission_level;
     let prevUserBrand = prevProps.lookerUser.user_attributes.brand;
@@ -321,7 +330,8 @@ class Home extends Component {
     const { handleTabChange, handleMenuItemSelect } = this;
     const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost, userProfile } = this.props
 
-    let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : []; // Use Lodash to sort array by 'name'
+    // Use Lodash to sort array by 'name'
+    let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : [];
     let orderedDemoComponentsForMenuObj = {};
     let expandedTreeItemsArr = [];
     let cumulativePusher = 0;
@@ -388,38 +398,14 @@ class Home extends Component {
             payWallModal: this.state.payWallModal,
             togglePayWallModal: this.togglePayWallModal,
             lookerUser,
-            userProfile
+            userProfile,
+            codeShow: this.state.codeShow,
+            toggleCodeShow: this.toggleCodeShow
           }
         } >
           <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
             <CssBaseline />
-            <AppBar
-              position="fixed"
-              className={clsx(classes.appBar)}
-            >
-              <Toolbar>
-
-                {activeUsecase ?
-                  <Avatar alt="Icon"
-                    src={require(`../images/${activeUsecase}_logo_white.svg`)}
-                    variant="square"
-                  /> : ''}
-                <Typography align="center" className={`${classes.mr12} ${classes.mlAuto} ${classes.mrAuto}`}>
-                  {lookerUser.user_attributes.brand}
-                </Typography>
-
-                <Badge badgeContent={3} color="error" className={`${classes.mr12} `} >
-                  <AddAlert />
-                </Badge>
-                <UserMenu
-                  lookerUser={lookerUser}
-                  switchLookerUser={switchLookerUser}
-                  onLogoutSuccess={applySession}
-                  lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
-                  switchUserAttributeBrand={switchUserAttributeBrand}
-                />
-              </Toolbar>
-            </AppBar>
+            <TopBar {...this.props} classes={classes} activeUsecase={activeUsecase} lookerUser={lookerUser} switchLookerUser={switchLookerUser} applySession={applySession} lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions} switchUserAttributeBrand={switchUserAttributeBrand} />
             <Drawer
               className={classes.drawer}
               variant="persistent"
@@ -439,7 +425,6 @@ class Home extends Component {
                   selectedMenuItem={selectedMenuItem}
                   handleMenuItemSelect={handleMenuItemSelect} /> : ''}
 
-              <HighlightSourcesLegend className={classes.highlightLegend} />
               <MonetizationModal
                 // {...{ classes }} 
                 switchLookerUser={switchLookerUser}
@@ -489,6 +474,39 @@ class Home extends Component {
   }
 }
 export default withStyles(styles)(Home);
+
+function TopBar(props) {
+  const { classes, activeUsecase, lookerUser, switchLookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand } = props
+  return (
+    <AppBar
+      position="fixed"
+      className={clsx(classes.appBar)}
+    >
+      <Toolbar>
+
+        {activeUsecase ?
+          <Avatar alt="Icon"
+            src={require(`../images/${activeUsecase}_logo_white.svg`)}
+            variant="square"
+          /> : ''}
+        <Typography align="center" className={`${classes.mr12} ${classes.mlAuto} ${classes.mrAuto}`}>
+          {lookerUser.user_attributes.brand}
+        </Typography>
+
+        <Badge badgeContent={3} color="error" className={`${classes.mr12} `} >
+          <AddAlert />
+        </Badge>
+        <UserMenu
+          lookerUser={lookerUser}
+          switchLookerUser={switchLookerUser}
+          onLogoutSuccess={applySession}
+          lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
+          switchUserAttributeBrand={switchUserAttributeBrand}
+        />
+      </Toolbar>
+    </AppBar>
+  )
+}
 
 function MenuList(props) {
   // console.log('MenuList')

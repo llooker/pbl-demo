@@ -1,13 +1,14 @@
 import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import { AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField } from '@material-ui/core'
+import { AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField, Toolbar, FormControlLabel, Switch, Chip } from '@material-ui/core'
 import { Autocomplete, ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./Dashboard.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
+import BottomBar from '../../Material/BottomBar.js'
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent';
 import AppContext from '../../../AppContext';
@@ -25,7 +26,9 @@ export default function Dashboard(props) {
   const [serverSideCode, setServerSideCode] = useState('');
   const [toggleValue, setToggleValue] = useState('');
   const [dashboardLayout, setDashboardLayout] = useState({});
-  const { togglePayWallModal } = useContext(AppContext)
+  // const { togglePayWallModal } = useContext(AppContext)
+  const { toggleShow } = useContext(AppContext)
+  const { show } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -312,12 +315,13 @@ export default function Dashboard(props) {
   // )
 
   return (
-    <div className={`${classes.root}  demoComponent`}>
+    <div className={`${classes.root} ${classes.minHeight680} ${classes.padding30}  demoComponent`}>
       <Grid container spacing={3}>
         <div className={classes.root}>
-          {iFrameExists ? '' :
+          {iFrameExists ? ''
+            :
             <Grid item sm={12} >
-              <Card className={`${classes.card} ${classes.flexCentered}`}>
+              <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
                 <CircularProgress className={classes.circularProgress} />
               </Card>
             </Grid>
@@ -327,66 +331,92 @@ export default function Dashboard(props) {
               {lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ?
                 <Grid container>
                   {lookerContent[0].filter ?
-                    <ApiHighlight>
-                      <Grid item sm={6}>
-                        <Autocomplete
-                          id={`combo-box-dashboard-${lookerContent.id}`}
-                          options={Array.isArray(apiContent) ?
-                            apiContent :
-                            []}
-                          renderOption={(option) => (
-                            <Grid container justify="space-between">
-                              <Grid item>
-                                {option.label}
+                    <>
+                      <Chip size="small"
+                        label={"API"}
+                        className={show ? 'test' : `${classes.hidden}`}
+                        display="inline"
+                        align="right"
+                        style={{ backgroundColor: "#A142F4", color: '#fff', top: '-10px', left: '50px', position: 'relative' }}
+                      />
+                      <ApiHighlight>
+                        <Grid item sm={6}>
+                          <Autocomplete
+                            id={`combo-box-dashboard-${lookerContent.id}`}
+                            options={Array.isArray(apiContent) ?
+                              apiContent :
+                              []}
+                            renderOption={(option) => (
+                              <Grid container justify="space-between">
+                                <Grid item>
+                                  {option.label}
+                                </Grid>
+                                {option.trend && <Grid item>
+                                  <NumberToColoredPercent
+                                    val={option.trend}
+                                    positive_good={true}
+                                    abs_val={Math.abs(option.trend)}
+                                  />
+                                </Grid>}
                               </Grid>
-                              {option.trend && <Grid item>
-                                <NumberToColoredPercent
-                                  val={option.trend}
-                                  positive_good={true}
-                                  abs_val={Math.abs(option.trend)}
-                                />
-                              </Grid>}
-                            </Grid>
-                          )}
-                          getOptionLabel={(option) => option.label}
-                          style={{ width: 400 }}
-                          onChange={(event, newValue) => {
-                            customFilterAction(lookerContent[0].id, lookerContent[0].filter.filterName, (newValue) ? newValue.label : '')
-                          }}
-                          renderInput={(params) => <TextField {...params} label={lookerContent[0].filter.filterName} variant="outlined" />}
-                          loadingText="Loading..."
-                        />
-                      </Grid>
-                    </ApiHighlight> : ''
+                            )}
+                            getOptionLabel={(option) => option.label}
+                            style={{ width: 400 }}
+                            onChange={(event, newValue) => {
+                              customFilterAction(lookerContent[0].id, lookerContent[0].filter.filterName, (newValue) ? newValue.label : '')
+                            }}
+                            renderInput={(params) => <TextField {...params} label={lookerContent[0].filter.filterName} variant="outlined" />}
+                            loadingText="Loading..."
+                          />
+                        </Grid>
+                      </ApiHighlight>
+                    </> : ''
                   }
                   {lookerContent[0].dynamicFieldLookUp ?
-
-                    <ApiHighlight>
-                      <Grid item sm={6}>
-                        <ToggleButtonGroup
-                          value={toggleValue}
-                          exclusive
-                          onChange={handleToggle}
-                          aria-label="text alignment"
-                        >
-                          {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
-                            return (
-                              <ToggleButton
-                                key={validIdHelper(`dynamicDashToggle-${key}`)}
-                                value={key} aria-label="left aligned">
-                                {key}
-                              </ToggleButton>
-                            )
-                          })}
-                        </ToggleButtonGroup>
-                      </Grid>
-                    </ApiHighlight>
+                    <>
+                      <Chip size="small"
+                        label={"API"}
+                        className={show ? 'test' : `${classes.hidden}`}
+                        display="inline"
+                        align="right"
+                        style={{ backgroundColor: "#A142F4", color: '#fff', top: '-10px', left: '50px', position: 'relative' }}
+                      />
+                      <ApiHighlight>
+                        <Grid item sm={6}>
+                          <ToggleButtonGroup
+                            value={toggleValue}
+                            exclusive
+                            onChange={handleToggle}
+                            aria-label="text alignment"
+                          >
+                            {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
+                              return (
+                                <ToggleButton
+                                  key={validIdHelper(`dynamicDashToggle-${key}`)}
+                                  value={key} aria-label="left aligned">
+                                  {key}
+                                </ToggleButton>
+                              )
+                            })}
+                          </ToggleButtonGroup>
+                        </Grid>
+                      </ApiHighlight>
+                    </>
                     : ''
                   }
                 </Grid> : ''}
 
               <Grid item sm={12}>
                 <Box className={classes.w100} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
+
+                  <Chip size="small"
+                    label={"Embed"}
+                    className={show ? 'test' : `${classes.hidden}`}
+                    display="inline"
+                    align="right"
+                    style={{ backgroundColor: "#12B5CB", color: '#fff', top: '12px', left: '25px', position: 'relative' }}
+                  />
+
                   <EmbedHighlight>
                     <div
                       className={`embedContainer ${validIdHelper(demoComponentType)}`}
@@ -398,6 +428,7 @@ export default function Dashboard(props) {
                 </Box>
               </Grid>
             </Grid>
+            <BottomBar classes={classes} lookerUser={lookerUser} />
           </Box>
         </div>
       </Grid>

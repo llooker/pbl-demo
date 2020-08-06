@@ -136,5 +136,9 @@ export default makeStyles((theme) => ({
     opacity: `100 !important`,
     fontWeight: 800,
     // width: `${25}% !important`,
+  },
+  appBar: {
+    top: 'auto',
+    bottom: 0,
   }
 }));
