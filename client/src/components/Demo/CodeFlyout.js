@@ -19,48 +19,25 @@ export default function CodeFlyout(props) {
   return (
 
     <Fade in={codeShow || false}>
-      <Grid item sm={12}
-        className={`${classes.padding30}`}
-        style={{ backgroundColor: 'rgb(40, 42, 54)', height: '100%', zIndex: 50000 }}>
-        {/* {lookerContent.length ?
-        <>
-          <Typography variant="h5" component="h2" className={classes.gridTitle}>
-            Looker Content Array Referenced on Page<br />
-          </Typography>
-          <CodeSnippet code={lookerContent} />
-        </> : ''}
-      {clientSideCode.length ?
-        <>
-          <Typography variant="h5" component="h2" className={classes.gridTitle}>
-            Client Side Code<br />
-          </Typography>
-          <CodeSnippet code={clientSideCode} />
-        </> : ''}
-      {serverSideCode.length ?
-        <>
-          <Typography variant="h5" component="h2" className={classes.gridTitle}>
-            Server Side Code<br />
-          </Typography>
-          <CodeSnippet code={serverSideCode} />
-        </> : ''} */}
-        {Object.keys(lookerUser).length ?
-          <Grid container>
-            <Grid item sm={6}>
-              <Typography variant="h6" className={`${classes.gridTitle} ${classes.mrAuto}`} style={{ color: 'white' }}>
-                Looker User Object
-          </Typography></Grid>
-            <Grid item sm={6} alignContent="center" style={{ textAlign: 'right' }}>
-              <CloseIcon align="right" style={{ color: 'white', cursor: 'pointer' }} onClick={() => toggleCodeShow()} />
-            </Grid>
+      {Object.keys(lookerUser).length ?
+        <Grid container spacing={3}
+          className={classes.padding30}
+          style={{ backgroundColor: 'rgb(40, 42, 54)' }}>
+          <Grid item sm={10}>
+            <Typography variant="h6" className={` ${classes.mrAuto}`} style={{ color: 'white' }}>
+              Looker User Object
+            </Typography>
+          </Grid>
+          <Grid item sm={2} style={{ textAlign: 'right' }}>
+            <CloseIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => toggleCodeShow()} />
+          </Grid>
 
+          <Grid item sm={12}>
             <CodeSnippet code={lookerUser} />
-          </Grid> : ''}
-        {/* {Object.keys(permissionNeededCode).length ?
-        <>
-          <CodeSnippet code={permissionNeededCode} />
-        </> : ''} */}
-      </Grid>
-    </Fade>
+          </Grid>
+        </Grid> : ''
+      }
+    </Fade >
   )
 }
 

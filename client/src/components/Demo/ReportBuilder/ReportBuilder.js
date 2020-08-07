@@ -319,7 +319,7 @@ export default function ReportBuilder(props) {
                             </ApiHighlight>
                           </Grid>
                           <Grid item sm={8} >
-                            <EmbedHighlight>
+                            <EmbedHighlight classes={classes}>
                               <div
                                 className={`embedContainer ${validIdHelper(demoComponentType)}`}
                                 id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
@@ -331,7 +331,7 @@ export default function ReportBuilder(props) {
                         </React.Fragment>
                         :
                         <Grid item sm={12} >
-                          <EmbedHighlight>
+                          <EmbedHighlight classes={classes}>
                             <div
                               className="embedContainer"
                               id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}

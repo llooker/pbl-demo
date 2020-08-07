@@ -61,12 +61,11 @@ export default makeStyles((theme) => ({
   minHeight680: {
     minHeight: 680,
   },
-  positionAbsoluteTopRight: {
+  positionTopRight: {
     position: 'absolute',
     top: -30,
-    right: -30,
-    width: '100%',
-    height: '100%',
+    right: -50,
+    bottom: 0,
     zIndex: 100
   },
   positionRelative: {

@@ -75,12 +75,12 @@ export default function SplashPage(props) {
               </Card>
             </Grid>
           }
-          <Box className={iFrameExists ? `${classes.positionRelative}` : `${classes.hidden}`}>
+          <Box className={iFrameExists ? `${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
             <Grid container
               spacing={3}
               key={`${validIdHelper(demoComponentType + '-outerFragment')}`}>
               {codeShow ? <Grid item sm={6}
-                className={`${classes.positionAbsoluteTopRight}`}
+                className={`${classes.positionTopRight}`}
               >
                 <CodeFlyout {...props}
                   classes={classes}
@@ -93,7 +93,6 @@ export default function SplashPage(props) {
                     item
                     sm={parseInt(lookerContent.gridWidth)}
                   >
-                    {/* <Card className={classes.padding30}> */}
                     {(lookerContent.type === 'welcome') && <Welcome
                       {...{ lookerContent, classes, demoComponentType, lookerHost }}
                     />}

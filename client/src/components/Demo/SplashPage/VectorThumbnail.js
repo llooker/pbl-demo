@@ -39,16 +39,8 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
       {svg ?
         <>
           <Grid item sm={1} />
-          <Grid item sm={6}
-            style={{ position: 'relative' }}>
-            <Chip size="small"
-              label={"API"}
-              className={show ? 'test' : `${classes.hidden}`}
-              display="inline"
-              align="right"
-              style={{ backgroundColor: "#A142F4", color: '#fff', top: '0px', left: '0px', position: 'absolute' }}
-            />
-            <ApiHighlight>
+          <Grid item sm={6}>
+            <ApiHighlight classes={classes}>
               <div
                 className={` ${classes.maxHeight100} ${classes.textCenter} ${classes.cursorPointer} ${classes.overflowHidden}`}
               >

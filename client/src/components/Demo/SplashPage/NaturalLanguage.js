@@ -34,17 +34,10 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
   const upOrDownArrow = apiContent ? apiContent.change > 0 ? `&uarr;` : `&darr;` : '';
 
   return (
-    <Grid item sm={12} style={{ position: 'relative' }}>
+    <Grid item sm={12}>
       {apiContent ?
-        <React.Fragment style={{ position: 'relative' }}>
-          <Chip size="small"
-            label={"API"}
-            className={show ? 'test' : `${classes.hidden}`}
-            display="inline"
-            align="right"
-            style={{ backgroundColor: "#A142F4", color: '#fff', top: '0px', left: '0px', position: 'absolute' }}
-          />
-          <ApiHighlight>
+        <React.Fragment >
+          <ApiHighlight classes={classes} >
             <Typography variant="subtitle1" display="inline">
               Your {lookerContent.inlineQueriesMap[index]} category, <b>{apiContent['products.category']}</b>, is {apiContent.change > 0 ? 'up ' : 'down '}
             </Typography>

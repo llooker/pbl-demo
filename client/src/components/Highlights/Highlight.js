@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import AppContext from '../../AppContext';
 import zIndex from '@material-ui/core/styles/zIndex';
+import { Chip, Fade } from '@material-ui/core';
+
 
 // maybe move this to config?
 export const API_COLOR = '#A142F4'
@@ -21,6 +23,7 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
       backgroundColor: `${backgroundColor}`,
       borderRadius: `4px`,
       // zIndex: 10000000000000000,
+      position: 'relative'
     }
   } else {
     style = {
@@ -44,14 +47,44 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
 
 export function ApiHighlight({ ...props }) {
   const { show } = useContext(AppContext)
+  const { classes } = props
+  const { children } = props
 
   return <Highlight {...props} color={API_COLOR} backgroundColor={API_BACKGROUND_COLOR}>
+
+    <Chip size="small"
+      label={"API"}
+      className={show ? 'test' : `${classes.hidden}`}
+      display="inline"
+      align="right"
+      style={{ backgroundColor: "#A142F4", color: '#fff', top: '-10px', left: '-10px', position: 'absolute' }}
+    />
+    {children}
+
   </Highlight>
 }
 
 export function EmbedHighlight({ ...props }) {
   const { show } = useContext(AppContext)
+  const { classes } = props
+  const { children } = props
 
   return <Highlight {...props} color={EMBED_COLOR} backgroundColor={EMBED_BACKGROUND_COLOR}>
+
+    <Chip size="small"
+      label={"Embed"}
+      className={show ? 'test' : `${classes.hidden}`}
+      display="inline"
+      align="right"
+      style={{
+        backgroundColor: "#12B5CB",
+        color: '#fff',
+        top: '-10px',
+        left: '-10px',
+        position: 'absolute'
+      }}
+    />
+    {children}
+
   </Highlight>
 }

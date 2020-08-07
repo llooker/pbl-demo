@@ -61,28 +61,15 @@ export function SingleValueVis({ lookerContent, classes }) {
   const upOrDownArrow = apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
 
   return (
-    <Card elevation={1} className={classes.padding30}>
+    <Card elevation={1} className={`${classes.padding30} ${classes.overflowHidden}`}>
       <div
-        className={` ${classes.overflowHidden}`}
-        style={
-          // apiContent.length ? { borderLeft: `solid 3px ${lookerContent.visColor} `, height: lookerContent.height } : 
-          {
-            height: lookerContent.height,
-            position: 'relative'
-          }
-        }
+        style={{
+          height: lookerContent.height,
+        }}
       >
         {apiContent.length ?
-          <React.Fragment style={{ position: 'relative' }}>
-
-            <Chip size="small"
-              label={"API"}
-              className={show ? 'test' : `${classes.hidden}`}
-              display="inline"
-              align="right"
-              style={{ backgroundColor: "#A142F4", color: '#fff', top: '0px', left: '0px', position: 'absolute' }}
-            />
-            <ApiHighlight height={150}>
+          <React.Fragment>
+            <ApiHighlight height={150} classes={classes} >
               <Grid container className={`${classes.textCenter}`}>
                 <Grid item sm={12}>
                   <Typography variant="body2" align="left" color="secondary">

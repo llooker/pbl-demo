@@ -537,7 +537,7 @@ function MenuList(props) {
       return (
         < React.Fragment
           key={`${validIdHelper(outerItem + '-menuList-' + outerIndex)}`}>
-          <ListItem button
+          <ListItem
             key={`${validIdHelper(outerItem + '-outerListItem-' + outerIndex)}`}
           >
             <ListItemText primary={outerItem === 'home' ? '' : _.upperCase(outerItem)} />

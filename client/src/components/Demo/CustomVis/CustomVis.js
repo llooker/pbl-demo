@@ -44,7 +44,7 @@ export default function CustomVis(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
 
-  const { togglePayWallModal } = useContext(AppContext)
+  const { togglePayWallModal, show, codeShow } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -180,7 +180,6 @@ export default function CustomVis(props) {
    * and embed SDK to create the experience on this page
    */
   const performLookerApiCalls = function (lookerContent) {
-    console.log('performLookerApiCalls')
     setApiContent([]); //set to empty array to show progress bar and skeleton
     lookerContent.map(async lookerContent => {
       let inlineQuery = lookerContent.inlineQuery;
@@ -222,142 +221,110 @@ export default function CustomVis(props) {
   let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B'];
   let nivoColorScale = ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']
   let googleColorScale = ['#4595EC', '#F3A759', '#E24E3A', '#65AB5A'];
+
   return (
-    <div className={`${classes.root} demoComponent`}>
-      <Grid container
-        spacing={3}
-        key={validIdHelper(type)} >
+    <div className={`${classes.root} ${classes.minHeight680} ${classes.padding30}  demoComponent`}>
+      <Grid container spacing={3}>
         <div className={classes.root}>
-          <Box>
-            <AppBar position="static">
-              <Tabs
-                className={classes.tabs}
-                value={value}
-                onChange={handleChange}
-                aria-label="simple tabs example">
-                {tabContent.map((item, index) => (
-                  <Tab
-                    key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
-                    label={item.label}
-                    className={item.type === 'code flyout' ? `${classes.mlAuto}` : ``}
-                    {...a11yProps(index)} />
-                ))}
-              </Tabs>
-            </AppBar>
-            <Box className="tabPanelContainer">
-              {tabContent.map((tabContentItem, index) => (
-                <TabPanel
-                  key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
-                  value={value}
-                  index={index}>
-                  <Grid container>
-                    {tabContentItem.type === 'code flyout' ?
+          {!apiContent.queryResults ?
+            <Grid item sm={12} >
+              <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                <CircularProgress className={classes.circularProgress} />
+              </Card>
+            </Grid>
 
-                      <CodeFlyout {...props}
-                        classes={classes}
-                        lookerContent={lookerContent}
-                        clientSideCode={clientSideCode}
-                        serverSideCode={serverSideCode}
-                        lookerUser={lookerUser} />
-                      :
-                      <React.Fragment
-                        key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
+            : apiContent.queryResults && apiContent.queryResults.length ?
 
-                        {!apiContent.queryResults ?
-                          <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
-                          :
-                          <FilterBar {...props}
-                            classes={classes}
-                            apiContent={apiContent}
-                            fromDate={fromDate}
-                            toDate={toDate}
-                            category={category}
-                            desiredField={desiredField}
-                            handleFromDate={handleFromDate}
-                            handleToDate={handleToDate}
-                            handleCategory={handleCategory}
-                            handleDesiredField={handleDesiredField}
-                          />
-                        }
-                        <Divider className={classes.divider} />
-                        <Box
-                          className={classes.w100}
-                          mt={2}>
-                          {!apiContent.queryResults ?
-
-                            <Grid item sm={12} >
-                              <Card className={`${classes.card} ${classes.flexCentered}`}>
-                                <CircularProgress className={classes.circularProgress} />
-                              </Card>
-                            </Grid>
-
-                            : apiContent.queryResults && apiContent.queryResults.length ?
-                              <>
-                                <Grid item sm={12} className={classes.height800}>
-                                  <ApiHighlight height={400}>
-                                    <ResponsiveCalendar
-                                      data={filterData}
-                                      align="top"
-                                      from={incrementDate(fromDate, 1)}
-                                      to={incrementDate(toDate, 1)}
-                                      emptyColor="#eeeeee"
-                                      colors={desiredField === lookerContent[0].desiredFields[0] ? googleColorScale : nivoColorScale}
-                                      yearSpacing={40}
-                                      monthBorderColor="#ffffff"
-                                      dayBorderWidth={2}
-                                      dayBorderColor="#ffffff"
-                                      margin={{ bottom: 40, left: 40 }}
-                                      legends={[
-                                        {
-                                          anchor: 'bottom-right',
-                                          direction: 'row',
-                                          translateY: 36,
-                                          itemCount: 4,
-                                          itemWidth: 42,
-                                          itemHeight: 36,
-                                          itemsSpacing: 14,
-                                          itemDirection: 'right-to-left'
-                                        }
-                                      ]}
-                                      onClick={(day, event) => {
-                                        if (!day.value) {
-                                        } else if (lookerUser.permission_level === 'basic') {
-                                          togglePayWallModal({
-                                            'show': true,
-                                            'permissionNeeded': 'see_drill_overlay'
-                                          });
-                                        } else {
-                                          handleModalOpen(day)
-                                          event.stopPropagation();
-                                        }
-                                      }}
-                                    />
-                                  </ApiHighlight>
-                                </Grid>
-                              </> :
-                              ''
-                          }
-                        </Box>
-                      </React.Fragment>
-                    }
+              <Box
+                className={`${classes.positionRelative}`}>
+                <Grid container>
+                  <Grid item sm={12}>
+                    <FilterBar {...props}
+                      classes={classes}
+                      apiContent={apiContent}
+                      fromDate={fromDate}
+                      toDate={toDate}
+                      category={category}
+                      desiredField={desiredField}
+                      handleFromDate={handleFromDate}
+                      handleToDate={handleToDate}
+                      handleCategory={handleCategory}
+                      handleDesiredField={handleDesiredField}
+                    />
                   </Grid>
-                </TabPanel>
-              ))}
 
-            </Box>
-          </Box >
+
+                  {codeShow ? <Grid item sm={6}
+                    className={`${classes.positionTopRight}`}
+                  >
+                    <CodeFlyout {...props}
+                      classes={classes}
+                      lookerUser={lookerUser} />
+                  </Grid> : ''}
+                  <Grid item sm={12} className={classes.height600}>
+
+                    <Divider className={classes.divider} />
+                    <Box className={classes.w100} mt={2}>
+
+                      <ApiHighlight height={400} classes={classes}>
+                        <ResponsiveCalendar
+                          data={filterData}
+                          align="top"
+                          from={incrementDate(fromDate, 1)}
+                          to={incrementDate(toDate, 1)}
+                          emptyColor="#eeeeee"
+                          colors={desiredField === lookerContent[0].desiredFields[0] ? googleColorScale : nivoColorScale}
+                          yearSpacing={40}
+                          monthBorderColor="#ffffff"
+                          dayBorderWidth={2}
+                          dayBorderColor="#ffffff"
+                          margin={{ bottom: 40, left: 40 }}
+                          legends={[
+                            {
+                              anchor: 'bottom-right',
+                              direction: 'row',
+                              translateY: 36,
+                              itemCount: 4,
+                              itemWidth: 42,
+                              itemHeight: 36,
+                              itemsSpacing: 14,
+                              itemDirection: 'right-to-left'
+                            }
+                          ]}
+                          onClick={(day, event) => {
+                            if (!day.value) {
+                            } else if (lookerUser.permission_level === 'basic') {
+                              togglePayWallModal({
+                                'show': true,
+                                'permissionNeeded': 'see_drill_overlay'
+                              });
+                            } else {
+                              handleModalOpen(day)
+                              event.stopPropagation();
+                            }
+                          }}
+                        />
+                      </ApiHighlight>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Box> :
+              ''
+          }
         </div>
       </Grid >
-      {open ?
-        <ModalTable
-          {...props}
-          open={open}
-          onClose={handleModalClose}
-          classes={classes}
-          modalContent={modalContent}
-        />
+      {
+        open ?
+          <ModalTable
+            {...props}
+            open={open}
+            onClose={handleModalClose}
+            classes={classes}
+            modalContent={modalContent}
+          />
 
-        : ''}
+          : ''
+      }
     </div >
   )
 }
@@ -377,7 +344,7 @@ function FilterBar(props) {
   // console.log('toDate', toDate)
 
   return (
-    <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} className={classes.w100}>
+    <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} className={classes.w100} elevation={0}>
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
@@ -391,102 +358,98 @@ function FilterBar(props) {
           {apiContent.queryResults ?
             <>
               <Grid item sm={3}>
-                <FormControl className={classes.formControl}>
-                  <InputLabel
-                    id={`${validIdHelper(type + '-FilterBar-DataPropery-SelectLabel')}`}
-                  >
-                    Metric</InputLabel>
-                  <Select
-                    labelId={`${validIdHelper(type + '-FilterBar-DataPropery-SelectLabel')}`}
-                    id={`${validIdHelper(type + '-FilterBar-DataPropery-Select')}`}
-                    value={desiredField}
-                    onChange={(event) => handleDesiredField(event.target.value)}
-                  >
-                    {lookerContent[0].desiredFields.map((item, index) => (
 
-                      <MenuItem
-                        id={validIdHelper(`${item}-${index}`)}
-                        key={validIdHelper(`${item}-${index}`)}
-                        value={item}
-                      >{item.substring(item.lastIndexOf(".") + 1, item.length).split("_").map(item => item.charAt(0).toUpperCase() + item.substring(1)).join(" ")}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <ApiHighlight classes={classes}>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel
+                      id={`${validIdHelper(type + '-FilterBar-DataPropery-SelectLabel')}`}
+                    >
+                      Metric</InputLabel>
+                    <Select
+                      labelId={`${validIdHelper(type + '-FilterBar-DataPropery-SelectLabel')}`}
+                      id={`${validIdHelper(type + '-FilterBar-DataPropery-Select')}`}
+                      value={desiredField}
+                      onChange={(event) => handleDesiredField(event.target.value)}
+                    >
+                      {lookerContent[0].desiredFields.map((item, index) => (
+
+                        <MenuItem
+                          id={validIdHelper(`${item}-${index}`)}
+                          key={validIdHelper(`${item}-${index}`)}
+                          value={item}
+                        >{item.substring(item.lastIndexOf(".") + 1, item.length).split("_").map(item => item.charAt(0).toUpperCase() + item.substring(1)).join(" ")}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </ApiHighlight>
               </Grid>
               <Grid item sm={3}>
-                <FormControl className={classes.formControl}>
-                  <InputLabel
-                    id={`${validIdHelper(type + '-FilterBar-Category-SelectLabel')}`}
-                  >
-                    Category</InputLabel>
-                  <Select
-                    labelId={`${validIdHelper(type + '-FilterBar-Category-SelectLabel')}`}
-                    id={`${validIdHelper(type + '-FilterBar-Category-Select')}`}
-                    value={category}
-                    onChange={(event) => handleCategory(event.target.value)}
-                  >
-                    {apiContent.uniqueCategories.map((item, index) => (
+                <ApiHighlight classes={classes}>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel
+                      id={`${validIdHelper(type + '-FilterBar-Category-SelectLabel')}`}
+                    >
+                      Category</InputLabel>
+                    <Select
+                      labelId={`${validIdHelper(type + '-FilterBar-Category-SelectLabel')}`}
+                      id={`${validIdHelper(type + '-FilterBar-Category-Select')}`}
+                      value={category}
+                      onChange={(event) => handleCategory(event.target.value)}
+                    >
+                      {apiContent.uniqueCategories.map((item, index) => (
 
-                      <MenuItem
-                        id={validIdHelper(`${item}-${index}`)}
-                        key={validIdHelper(`${item}-${index}`)}
-                        value={item}>{item}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                        <MenuItem
+                          id={validIdHelper(`${item}-${index}`)}
+                          key={validIdHelper(`${item}-${index}`)}
+                          value={item}>{item}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </ApiHighlight>
               </Grid>
 
               <Grid item sm={3}>
-                {/* <form className={classes.container} >
-                  <TextField
-                    id="fromDate"
-                    label="From date"
-                    type="date"
-                    value={fromDate}
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    onChange={(event) => handleFromDate(event.target.value)}
-                  />
-                </form> */}
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    disableToolbar
-                    variant="inline"
-                    format="MM/dd/yyyy"
-                    margin="normal"
-                    id="fromDate"
-                    label="From date"
-                    value={fromDate}
-                    onChange={handleFromDate}
-                    KeyboardButtonProps={{
-                      'aria-label': 'change date',
-                    }}
-                    minDate={fromDate}
-                    maxDate={toDate}
-                  />
-                </MuiPickersUtilsProvider>
 
+                <ApiHighlight classes={classes}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      variant="inline"
+                      format="MM/dd/yyyy"
+                      margin="normal"
+                      id="fromDate"
+                      label="From date"
+                      value={fromDate}
+                      onChange={handleFromDate}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                      minDate={fromDate}
+                      maxDate={toDate}
+                    />
+                  </MuiPickersUtilsProvider>
+                </ApiHighlight>
               </Grid>
               <Grid item sm={3}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <KeyboardDatePicker
-                    disableToolbar
-                    variant="inline"
-                    format="MM/dd/yyyy"
-                    margin="normal"
-                    id="toDate"
-                    label="To date"
-                    value={toDate}
-                    onChange={handleToDate}
-                    KeyboardButtonProps={{
-                      'aria-label': 'change date',
-                    }}
-                    minDate={fromDate}
-                    maxDate={toDate}
-                  />
-                </MuiPickersUtilsProvider>
+                <ApiHighlight classes={classes}>
+                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                      disableToolbar
+                      variant="inline"
+                      format="MM/dd/yyyy"
+                      margin="normal"
+                      id="toDate"
+                      label="To date"
+                      value={toDate}
+                      onChange={handleToDate}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                      minDate={fromDate}
+                      maxDate={toDate}
+                    />
+                  </MuiPickersUtilsProvider>
+                </ApiHighlight>
               </Grid>
             </>
             : ''}

@@ -424,7 +424,7 @@ function EnhancedTable(props) {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-    <ApiHighlight>
+    <ApiHighlight classes={classes} >
       <div className={classes.root}>
         <TableContainer>
           <Table

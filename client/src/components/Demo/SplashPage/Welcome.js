@@ -3,8 +3,6 @@ import AppContext from '../../../AppContext';
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, CircularProgress, Grid, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
-import { ApiHighlight } from '../../Highlights/Highlight';
 import { NaturalLanguage } from './NaturalLanguage';
 const { validIdHelper } = require('../../../tools');
 
@@ -18,7 +16,7 @@ export function Welcome({ lookerContent, classes }) {
 
   return (
     <div
-      className={`${classes.overflowScroll}`}
+      className={`${classes.overflowScroll} ${classes.padding30}`}
       style={{ height: lookerContent.height }}
     >
       <Typography variant="h4">Welcome back</Typography>

@@ -200,123 +200,92 @@ export default function Dashboard(props) {
               </Card>
             </Grid>
           }
-          <Box className={iFrameExists ? `${classes.padding30} ${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
-            <Grid container>
-              {lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ?
-                <Grid container>
-                  {lookerContent[0].filter ?
-                    <>
-                      <Chip size="small"
-                        label={"API"}
-                        className={show ? 'test' : `${classes.hidden}`}
-                        display="inline"
-                        align="right"
-                        style={{ backgroundColor: "#A142F4", color: '#fff', top: '-10px', left: '50px', position: 'relative' }}
+          <Box
+            className={iFrameExists ? ` ${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
+            {lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ?
+              <Grid container>
+                {lookerContent[0].filter ?
+                  <ApiHighlight classes={classes} >
+                    <Grid item sm={6}>
+                      <Autocomplete
+                        id={`combo-box-dashboard-${lookerContent.id}`}
+                        options={Array.isArray(apiContent) ?
+                          apiContent :
+                          []}
+                        renderOption={(option) => (
+                          <Grid container justify="space-between">
+                            <Grid item>
+                              {option.label}
+                            </Grid>
+                            {option.trend && <Grid item>
+                              <NumberToColoredPercent
+                                val={option.trend}
+                                positive_good={true}
+                                abs_val={Math.abs(option.trend)}
+                              />
+                            </Grid>}
+                          </Grid>
+                        )}
+                        getOptionLabel={(option) => option.label}
+                        style={{ width: 400 }}
+                        onChange={(event, newValue) => {
+                          customFilterAction(lookerContent[0].id, lookerContent[0].filter.filterName, (newValue) ? newValue.label : '')
+                        }}
+                        renderInput={(params) => <TextField {...params} label={lookerContent[0].filter.filterName} variant="outlined" />}
+                        loadingText="Loading..."
                       />
-                      <ApiHighlight>
-                        <Grid item sm={6}>
-                          <Autocomplete
-                            id={`combo-box-dashboard-${lookerContent.id}`}
-                            options={Array.isArray(apiContent) ?
-                              apiContent :
-                              []}
-                            renderOption={(option) => (
-                              <Grid container justify="space-between">
-                                <Grid item>
-                                  {option.label}
-                                </Grid>
-                                {option.trend && <Grid item>
-                                  <NumberToColoredPercent
-                                    val={option.trend}
-                                    positive_good={true}
-                                    abs_val={Math.abs(option.trend)}
-                                  />
-                                </Grid>}
-                              </Grid>
-                            )}
-                            getOptionLabel={(option) => option.label}
-                            style={{ width: 400 }}
-                            onChange={(event, newValue) => {
-                              customFilterAction(lookerContent[0].id, lookerContent[0].filter.filterName, (newValue) ? newValue.label : '')
-                            }}
-                            renderInput={(params) => <TextField {...params} label={lookerContent[0].filter.filterName} variant="outlined" />}
-                            loadingText="Loading..."
-                          />
-                        </Grid>
-                      </ApiHighlight>
-                    </> : ''
-                  }
-                  {lookerContent[0].dynamicFieldLookUp ?
-                    <>
-                      <Chip size="small"
-                        label={"API"}
-                        className={show ? 'test' : `${classes.hidden}`}
-                        display="inline"
-                        align="right"
-                        style={{ backgroundColor: "#A142F4", color: '#fff', top: '-10px', left: '50px', position: 'relative' }}
-                      />
-                      <ApiHighlight>
-                        <Grid item sm={6}>
-                          <ToggleButtonGroup
-                            value={toggleValue}
-                            exclusive
-                            onChange={handleToggle}
-                            aria-label="text alignment"
-                          >
-                            {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
-                              return (
-                                <ToggleButton
-                                  key={validIdHelper(`dynamicDashToggle-${key}`)}
-                                  value={key} aria-label="left aligned">
-                                  {key}
-                                </ToggleButton>
-                              )
-                            })}
-                          </ToggleButtonGroup>
-                        </Grid>
-                      </ApiHighlight>
-                    </>
-                    : ''
-                  }
-                </Grid> : ''}
-
-
-              {codeShow ? <Grid item sm={6}
-                className={`${classes.positionAbsoluteTopRight}`}
-              >
-                <CodeFlyout {...props}
-                  classes={classes}
-                  lookerUser={lookerUser} />
+                    </Grid>
+                  </ApiHighlight>
+                  : ''
+                }
+                <Grid item sm={1} />
+                {lookerContent[0].dynamicFieldLookUp ?
+                  <EmbedHighlight classes={classes} >
+                    <Grid item sm={5}>
+                      <ToggleButtonGroup
+                        value={toggleValue}
+                        exclusive
+                        onChange={handleToggle}
+                        aria-label="text alignment"
+                      >
+                        {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
+                          return (
+                            <ToggleButton
+                              key={validIdHelper(`dynamicDashToggle-${key}`)}
+                              value={key} aria-label="left aligned">
+                              {key}
+                            </ToggleButton>
+                          )
+                        })}
+                      </ToggleButtonGroup>
+                    </Grid>
+                  </EmbedHighlight>
+                  : ''
+                }
               </Grid> : ''}
 
-              <Grid item sm={12}>
 
-                <Box className={classes.w100} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
+            {codeShow ? <Grid item sm={6}
+              className={`${classes.positionTopRight}`}
+            >
+              <CodeFlyout {...props}
+                classes={classes}
+                lookerUser={lookerUser} />
+            </Grid> : ''}
+            <Grid item sm={12}>
 
-                  <Chip size="small"
-                    label={"Embed"}
-                    className={show ? 'test' : `${classes.hidden}`}
-                    display="inline"
-                    align="right"
-                    style={{
-                      backgroundColor: "#12B5CB",
-                      color: '#fff',
-                      top: '12px',
-                      left: '25px',
-                      position: 'relative'
-                    }}
-                  />
+              <Box className={classes.w100} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
 
-                  <EmbedHighlight>
-                    <div
-                      className={`embedContainer ${validIdHelper(demoComponentType)}`}
-                      id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                      key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                    >
-                    </div>
-                  </EmbedHighlight>
-                </Box>
-              </Grid>
+
+                <EmbedHighlight classes={classes}>
+                  <div
+                    className={`embedContainer ${validIdHelper(demoComponentType)}`}
+                    id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                    key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                  >
+                  </div>
+                </EmbedHighlight>
+              </Box>
             </Grid>
           </Box>
         </div>

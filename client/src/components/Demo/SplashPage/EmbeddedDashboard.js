@@ -52,21 +52,8 @@ export function EmbeddedDashboard({ lookerContent, classes, id, lookerHost }) {
             </Grid>
         }
         <Box >
-          <Grid item sm={12} style={{ position: 'relative' }}>
-            <Chip size="small"
-              label={"Embed"}
-              className={show ? 'test' : `${classes.hidden}`}
-              display="inline"
-              align="right"
-              style={{
-                backgroundColor: "#12B5CB",
-                color: '#fff',
-                top: '-10px',
-                left: '25px',
-                position: 'absolute'
-              }}
-            />
-            <EmbedHighlight>
+          <Grid item sm={12}>
+            <EmbedHighlight classes={classes}>
               <div
                 className={`embedContainer splashPage`}
                 id={id}
