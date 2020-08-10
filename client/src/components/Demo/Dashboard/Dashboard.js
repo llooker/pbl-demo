@@ -26,6 +26,7 @@ export default function Dashboard(props) {
   const [serverSideCode, setServerSideCode] = useState('');
   const [toggleValue, setToggleValue] = useState('');
   const [dashboardLayout, setDashboardLayout] = useState({});
+  const [regionValue, setRegionValue] = useState('All');
   // const { togglePayWallModal } = useContext(AppContext)
   const { toggleShow } = useContext(AppContext)
   const { show } = useContext(AppContext)
@@ -82,12 +83,7 @@ export default function Dashboard(props) {
     setIFrame(0)
     setApiContent([])
     lookerContent.map(async lookerContent => {
-      console.log('lookerContent map')
-      console.log('lookerContent', lookerContent)
       let dashboardId = lookerContent.id;
-      // console.log('dashboardId ', dashboardId)
-      // console.log('embed container exists??', $('#' + validIdHelper(`embedContainer-${demoComponentType}-${dashboardId}`)).length)
-      // console.log('embed container html??', $('#' + validIdHelper(`embedContainer-${demoComponentType}-${dashboardId}`)).html())
 
 
       //how can test to see if it has content???
@@ -121,7 +117,6 @@ export default function Dashboard(props) {
         })
 
       if (lookerContent.hasOwnProperty('filters')) {
-        console.log("inside iffff")
         //get inline query from usecase file & set user attribute dynamically
 
         lookerContent.filters.map(async (item, index) => {
@@ -131,7 +126,6 @@ export default function Dashboard(props) {
             [item.desiredFilterName]: lookerUser.user_attributes.brand
           };
           // lookerContent.inlineQueries[index] = jsonQuery;
-          console.log('jsonQuery', jsonQuery)
           let stringifiedQuery = encodeURIComponent(JSON.stringify(jsonQuery))
           let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
             method: 'GET',
@@ -141,7 +135,6 @@ export default function Dashboard(props) {
             }
           })
           let lookerResponseData = await lookerResponse.json();
-          console.log('lookerResponseData', lookerResponseData)
           let queryResultsForDropdown = [];
           let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
           for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
@@ -150,8 +143,10 @@ export default function Dashboard(props) {
               'trend': (lookerResponseData.queryResults[i]['trend']) ? lookerResponseData.queryResults[i]['trend'] : undefined
             })
           }
-          console.log('queryResultsForDropdown', queryResultsForDropdown)
-          setApiContent([...apiContent, queryResultsForDropdown]);
+          setApiContent(apiContent => {
+            return [...apiContent, queryResultsForDropdown]
+          });
+
           if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
         })
       }
@@ -189,7 +184,8 @@ export default function Dashboard(props) {
    * this section is necessary but less relevant to looker functionality itself
    */
 
-  console.log('apiContent', apiContent)
+  // console.log('apiContent', apiContent)
+
   return (
     <div className={`${classes.root} ${classes.minHeight680} ${classes.padding30}  demoComponent`}>
       <Grid container spacing={3}>
@@ -247,7 +243,33 @@ export default function Dashboard(props) {
                           />
                         </Grid>
                       </ApiHighlight>
-                      : 'oooop')
+                      : lookerContent[0].filterComponents[index] === 'togglebutton' ?
+
+                        <ApiHighlight classes={classes}
+                          key={validIdHelper(`dashEmbed-${demoComponentType}${lookerContent.id}-${index}`)} >
+                          <Grid item sm={12}>
+                            <ToggleButtonGroup
+                              value={regionValue}
+                              exclusive
+                              onChange={(event, newValue) => {
+                                setRegionValue(newValue)
+                                customFilterAction(lookerContent[0].id,
+                                  lookerContent[0].filters[index].filterName,
+                                  (newValue) ? newValue : '')
+                              }}
+                              aria-label="region"
+                            >
+                              {apiContent[index].map(region => {
+                                return (
+                                  <ToggleButton value={region.label} aria-label={region.label}>
+                                    {region.label}
+                                  </ToggleButton>
+                                )
+                              })}
+                            </ToggleButtonGroup>
+                          </Grid>
+                        </ApiHighlight>
+                        : 'ooooopppp')
                 })}
                 <Grid item sm={1} />
                 {lookerContent[0].dynamicFieldLookUp ?
