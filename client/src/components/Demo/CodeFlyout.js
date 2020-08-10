@@ -8,12 +8,8 @@ import AppContext from '../../AppContext'
 
 //helper function for rendering content in code tab
 export default function CodeFlyout(props) {
-
-  console.log('CodeFlyout')
-  // console.log('props', props)
   const { toggleCodeShow } = useContext(AppContext);
   const { codeShow } = useContext(AppContext);
-  console.log('toggleCodeShow', toggleCodeShow)
 
   const { classes, lookerContent, clientSideCode, serverSideCode, lookerUser, permissionNeededCode } = props
   return (

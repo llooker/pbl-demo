@@ -49,12 +49,12 @@ export default function CustomVis(props) {
   //declare constants
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
-  const codeTab = {
-    type: 'code flyout', label: 'Code', id: 'codeFlyout',
-    lookerContent, lookerUser, clientSideCode, serverSideCode
-  }
-  const tabContent = [...lookerContent, codeTab]
-  const demoComponentType = type || 'code flyout';
+  // const codeTab = {
+  //   type: 'code flyout', label: 'Code', id: 'codeFlyout',
+  //   lookerContent, lookerUser, clientSideCode, serverSideCode
+  // }
+  // const tabContent = [...lookerContent, codeTab]
+  // const demoComponentType = type || 'code flyout';
 
   //handle opening of modal for advanced and premium users
   const handleModalOpen = async ({ day }) => {
@@ -224,8 +224,24 @@ export default function CustomVis(props) {
 
   return (
     <div className={`${classes.root} ${classes.minHeight680} ${classes.padding30}  demoComponent`}>
-      <Grid container spacing={3}>
+      <Grid container
+        spacing={3}
+        key={validIdHelper(type)} >
         <div className={classes.root}>
+          {/* <Grid item sm={12}>
+            <FilterBar {...props}
+              classes={classes}
+              apiContent={apiContent || ''}
+              fromDate={fromDate || ''}
+              toDate={toDate || ''}
+              category={category || ''}
+              desiredField={desiredField || ''}
+              handleFromDate={handleFromDate || ''}
+              handleToDate={handleToDate || ''}
+              handleCategory={handleCategory || ''}
+              handleDesiredField={handleDesiredField || ''}
+            />
+          </Grid> */}
           {!apiContent.queryResults ?
             <Grid item sm={12} >
               <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
@@ -252,8 +268,6 @@ export default function CustomVis(props) {
                       handleDesiredField={handleDesiredField}
                     />
                   </Grid>
-
-
                   {codeShow ? <Grid item sm={6}
                     className={`${classes.positionTopRight}`}
                   >
@@ -261,9 +275,9 @@ export default function CustomVis(props) {
                       classes={classes}
                       lookerUser={lookerUser} />
                   </Grid> : ''}
+                  <Divider className={classes.divider} />
                   <Grid item sm={12} className={classes.height600}>
 
-                    <Divider className={classes.divider} />
                     <Box className={classes.w100} mt={2}>
 
                       <ApiHighlight height={400} classes={classes}>

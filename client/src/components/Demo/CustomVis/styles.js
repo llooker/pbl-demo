@@ -46,7 +46,7 @@ export default makeStyles((theme) => ({
   },
   card: {
     minWidth: 275,
-    minHeight: 800,
+    minHeight: 600,
   },
   height500: {
     height: 500

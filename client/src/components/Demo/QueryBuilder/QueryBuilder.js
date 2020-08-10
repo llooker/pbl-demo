@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import _ from 'lodash';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   AppBar, Tabs, Tab, Typography, Box, Grid, Icon, CircularProgress, Card, Button,
@@ -15,6 +15,7 @@ import rawSampleCode from '!!raw-loader!./QueryBuilder.js'; // eslint-disable-li
 import useStyles from './styles.js';
 import { ApiHighlight } from '../../Highlights/Highlight';
 import { TabPanel, a11yProps, descendingComparator, getComparator, stableSort } from './helpers.js';
+import AppContext from '../../../AppContext';
 const { validIdHelper, prettifyString } = require('../../../tools');
 
 //start of QueryBuilder Component
@@ -27,16 +28,11 @@ export default function QueryBuilder(props) {
   const [apiContent, setApiContent] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
+  const { togglePayWallModal, show, codeShow } = useContext(AppContext)
   //declare constants
 
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser } = props;
-  const codeTab = {
-    type: 'code flyout', label: 'Code', id: 'codeFlyout',
-    lookerContent, lookerUser, clientSideCode, serverSideCode
-  }
-  const tabContent = [...lookerContent, codeTab];
-  const demoComponentType = type || 'code flyout';
 
   //handle tab change
   const handleChange = (event, newValue) => {
@@ -50,13 +46,13 @@ export default function QueryBuilder(props) {
   */
   useEffect(() => {
     lookerContent.map(lookerContent => {
-      setTimeout(() => action(lookerContent.queryBody, lookerContent.resultFormat), 100);
+      setTimeout(() => performLookerApiCalls(lookerContent.queryBody, lookerContent.resultFormat), 100);
     })
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser])
 
-  const action = async (newQuery, resultFormat) => {
-    // console.log('action')
+  const performLookerApiCalls = async (newQuery, resultFormat) => {
+    // console.log('performLookerApiCalls')
     let apiContentCopy = { ...apiContent }
     apiContentCopy.status = 'running';
     setApiContent(apiContentCopy)
@@ -88,82 +84,54 @@ export default function QueryBuilder(props) {
   }
 
   return (
-    <div className={`${classes.root} demoComponent`}>
+    <div className={`${classes.root} ${classes.padding30} demoComponent`}>
       <Grid container
         spacing={3}
         key={validIdHelper(type)} >
-        <div className={classes.root}>
-          <Box>
-            <AppBar position="static">
-              <Tabs
-                className={classes.tabs}
-                value={value}
-                onChange={handleChange}
-                aria-label="simple tabs example">
-                {tabContent.map((item, index) => (
-                  <Tab
-                    key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
-                    label={item.label}
-                    className={item.type === 'code flyout' ? `${classes.mlAuto}` : ``}
-                    {...a11yProps(index)} />
-                ))}
-              </Tabs>
-            </AppBar>
-            <Box className="tabPanelContainer">
-              {tabContent.map((tabContentItem, index) => (
-                <TabPanel
-                  key={`${validIdHelper(demoComponentType + '-tabPanel-' + index)}`}
-                  value={value}
-                  index={index}>
-                  <Grid container>
-                    {tabContentItem.type === 'code flyout' ?
-                      <CodeFlyout {...props}
+        <div className={`${classes.root} ${classes.positionRelative}`}>
+          <Grid item sm={12}>
+            <FilterBar {...props}
+              classes={classes}
+              action={performLookerApiCalls}
+            />
+          </Grid>
+          {apiContent.status === 'running' ?
+            <Grid item sm={12} >
+              <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                <CircularProgress className={classes.circularProgress} />
+              </Card>
+            </Grid >
+            : apiContent.data && apiContent.data.length ?
+              <Box
+              >
+                <Grid container>
+                  {codeShow ? <Grid item sm={6}
+                    className={`${classes.positionTopRight}`}
+                  >
+                    <CodeFlyout {...props}
+                      classes={classes}
+                      lookerUser={lookerUser} />
+                  </Grid> : ''}
+                  <Divider className={classes.divider} />
+                  <Grid item sm={12}>
+                    <Box className={`${classes.w100} ${classes.maxHeight600} ${classes.padding30}`} mt={2}>
+                      <EnhancedTable
+                        {...props}
                         classes={classes}
+                        rows={apiContent.data}
                         lookerContent={lookerContent}
-                        clientSideCode={clientSideCode}
-                        serverSideCode={serverSideCode}
-                        lookerUser={lookerUser} />
-                      :
-                      <React.Fragment
-                        key={`${validIdHelper(demoComponentType + '-innerFragment-' + index)}`}>
-                        <FilterBar {...props}
-                          classes={classes}
-                          action={action}
-                        />
-                        <Divider className={classes.divider} />
-                        <Box
-                          className={classes.w100}
-                          mt={2}>
-                          {apiContent.status === 'running' ?
-                            <Grid item sm={12} >
-                              <Card className={`${classes.card} ${classes.flexCentered}`}>
-                                <CircularProgress className={classes.circularProgress} />
-                              </Card>
-                            </Grid >
-                            : apiContent.data && apiContent.data.length ?
-                              <Grid item sm={12}>
-                                <EnhancedTable
-                                  {...props}
-                                  classes={classes}
-                                  rows={apiContent.data}
-                                  lookerContent={lookerContent}
-                                />
-                              </Grid>
-                              :
-                              <Grid item sm={12} >
-                                <Typography variant="h6" component="h6" className={`${classes.gridTitle} ${classes.textCenter}`}>
-                                  No results found, try a new query<br />
-                                </Typography>
-                              </Grid>
-                          }
-                        </Box >
-                      </React.Fragment >
-                    }
-                  </Grid >
-                </TabPanel >
-              ))}
-            </Box >
-          </Box >
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Box>
+              :
+              <Grid item sm={12} >
+                <Typography variant="h6" component="h6" className={`${classes.gridTitle} ${classes.textCenter}`}>
+                  No results found, try a new query<br />
+                </Typography>
+              </Grid>
+          }
         </div >
       </Grid >
     </div >
@@ -186,6 +154,7 @@ function FilterBar(props) {
       fieldType: lookerContent[0].fieldType[item]
     }
   }) : '');
+
   const [queryModified, setQueryModified] = useState(false);
   const [filtersData, setFilterData] = useState(lookerContent[0].queryBody ? Object.keys(lookerContent[0].queryBody.filters).map((key, index) => {
     return {
@@ -245,7 +214,7 @@ function FilterBar(props) {
   }, [lookerUser]);
 
   return (
-    <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel}>
+    <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} elevation={0}>
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
@@ -266,7 +235,7 @@ function FilterBar(props) {
                         key={item.label}
                         // key={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
                         measurecounter={measureCounter += 1}
-                        className={item.selected ? `${classes.orangePrimary}` : ``}
+                        className={item.selected ? `${classes.orangePrimary} ${classes.m6}` : `${classes.m6}`}
                         label={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
                         datalabel={item.label}
                         onClick={() => handleFieldChipClick(item, index)}
@@ -287,7 +256,7 @@ function FilterBar(props) {
                       <Chip
                         key={item.label}
                         dimensioncounter={dimensionCounter += 1}
-                        className={item.selected ? `${classes.bluePrimary}` : ``}
+                        className={item.selected ? `${classes.bluePrimary} ${classes.m6}` : `${classes.m6}`}
                         label={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
                         datalabel={item.label}
                         onClick={() => handleFieldChipClick(item, index)}
@@ -422,10 +391,9 @@ function EnhancedTable(props) {
   };
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
   return (
-    <ApiHighlight classes={classes} >
-      <div className={classes.root}>
+    <div className={classes.root}>
+      <ApiHighlight classes={classes} >
         <TableContainer>
           <Table
             className={classes.table}
@@ -441,7 +409,6 @@ function EnhancedTable(props) {
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
-
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -471,20 +438,25 @@ function EnhancedTable(props) {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25, 50]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Compact"
-        />
-      </div>
-    </ApiHighlight>
+      </ApiHighlight>
+      <Grid container>
+        <Grid item sm={6}>
+          <FormControlLabel
+            control={<Switch checked={dense} onChange={handleChangeDense} />}
+            label="Compact"
+          /></Grid>
+        <Grid item sm={6}>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          /></Grid>
+      </Grid>
+      <div className={classes.bottomBarSpacer} />
+    </div>
   );
 }

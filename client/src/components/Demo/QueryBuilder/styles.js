@@ -101,4 +101,35 @@ export default makeStyles((theme) => ({
   orangeSecondary: {
     backgroundColor: 'rgba(243, 167, 89, .5)'
   },
+  positionTopRight: {
+    position: 'absolute',
+    top: -30,
+    right: -50,
+    bottom: 0,
+    zIndex: 100
+  },
+  positionRelative: {
+    position: 'relative'
+  },
+  bottomBarSpacer: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  },
+  maxHeight600: {
+    maxHeight: 600,
+    overflow: 'scroll'
+  },
+  padding30: {
+    padding: 30
+  },
+  m12: {
+    margin: 12
+  },
+  m6: {
+    margin: 6
+  }
 }));
