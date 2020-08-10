@@ -34,11 +34,6 @@ export default function Dashboard(props) {
   //declare constants
   const classes = useStyles();
   const { staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
-  const codeTab = {
-    type: 'code flyout', label: 'Code', id: 'codeFlyout',
-    lookerContent, lookerUser, clientSideCode, serverSideCode
-  }
-  const tabContent = [...lookerContent, codeTab];
   const demoComponentType = type || 'code flyout';
 
   //handle tab change
@@ -64,11 +59,8 @@ export default function Dashboard(props) {
    * performLookerApiCalls and setSampleCode
   */
   useEffect(() => {
-    // console.log('validIdHelper(demoComponentType + lookerContent[0].id)', validIdHelper(demoComponentType + lookerContent[0].id))
-    // if (validIdHelper(demoComponentType + lookerContent[0].id) === selectedMenuItem) {
     setTimeout(() => performLookerApiCalls([...lookerContent]), 1000)
     setClientSideCode(rawSampleCode)
-    // }
   }, [lookerContent, lookerUser]);
 
 
@@ -90,7 +82,8 @@ export default function Dashboard(props) {
     setIFrame(0)
     setApiContent([])
     lookerContent.map(async lookerContent => {
-      // console.log('lookerContent map')
+      console.log('lookerContent map')
+      console.log('lookerContent', lookerContent)
       let dashboardId = lookerContent.id;
       // console.log('dashboardId ', dashboardId)
       // console.log('embed container exists??', $('#' + validIdHelper(`embedContainer-${demoComponentType}-${dashboardId}`)).length)
@@ -127,34 +120,42 @@ export default function Dashboard(props) {
           // console.error('Connection error', error)
         })
 
-      if (lookerContent.hasOwnProperty('filter')) {
+      if (lookerContent.hasOwnProperty('filters')) {
+        console.log("inside iffff")
         //get inline query from usecase file & set user attribute dynamically
-        let jsonQuery = lookerContent.inlineQuery;
-        jsonQuery.filters = {
-          ...jsonQuery.filters,
-          [lookerContent.desiredFilterName]: lookerUser.user_attributes.brand
-        };
-        lookerContent.inlineQuery = jsonQuery;
-        let stringifiedQuery = encodeURIComponent(JSON.stringify(lookerContent.inlineQuery))
-        let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          }
-        })
-        let lookerResponseData = await lookerResponse.json();
-        let queryResultsForDropdown = [];
-        let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
-        for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
-          queryResultsForDropdown.push({
-            'label': lookerResponseData.queryResults[i][desiredProperty],
-            'trend': (lookerResponseData.queryResults[i]['trend']) ? lookerResponseData.queryResults[i]['trend'] : undefined
+
+        lookerContent.filters.map(async (item, index) => {
+          let jsonQuery = lookerContent.inlineQueries[index];
+          jsonQuery.filters = {
+            ...jsonQuery.filters,
+            [item.desiredFilterName]: lookerUser.user_attributes.brand
+          };
+          // lookerContent.inlineQueries[index] = jsonQuery;
+          console.log('jsonQuery', jsonQuery)
+          let stringifiedQuery = encodeURIComponent(JSON.stringify(jsonQuery))
+          let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            }
           })
-        }
-        setApiContent(queryResultsForDropdown);
-        if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
+          let lookerResponseData = await lookerResponse.json();
+          console.log('lookerResponseData', lookerResponseData)
+          let queryResultsForDropdown = [];
+          let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
+          for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
+            queryResultsForDropdown.push({
+              'label': lookerResponseData.queryResults[i][desiredProperty],
+              'trend': (lookerResponseData.queryResults[i]['trend']) ? lookerResponseData.queryResults[i]['trend'] : undefined
+            })
+          }
+          console.log('queryResultsForDropdown', queryResultsForDropdown)
+          setApiContent([...apiContent, queryResultsForDropdown]);
+          if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
+        })
       }
+
     })
   }
 
@@ -188,56 +189,66 @@ export default function Dashboard(props) {
    * this section is necessary but less relevant to looker functionality itself
    */
 
+  console.log('apiContent', apiContent)
   return (
     <div className={`${classes.root} ${classes.minHeight680} ${classes.padding30}  demoComponent`}>
       <Grid container spacing={3}>
         <div className={classes.root}>
-          {iFrameExists ? ''
-            :
-            <Grid item sm={12} >
-              <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
-                <CircularProgress className={classes.circularProgress} />
-              </Card>
-            </Grid>
+          {
+            //apiContent.length
+            iFrameExists
+              ? ''
+              :
+              <Grid item sm={12} >
+                <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                  <CircularProgress className={classes.circularProgress} />
+                </Card>
+              </Grid>
           }
           <Box
             className={iFrameExists ? ` ${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
-            {lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ?
-              <Grid container>
-                {lookerContent[0].filter ?
-                  <ApiHighlight classes={classes} >
-                    <Grid item sm={6}>
-                      <Autocomplete
-                        id={`combo-box-dashboard-${lookerContent.id}`}
-                        options={Array.isArray(apiContent) ?
-                          apiContent :
-                          []}
-                        renderOption={(option) => (
-                          <Grid container justify="space-between">
-                            <Grid item>
-                              {option.label}
-                            </Grid>
-                            {option.trend && <Grid item>
-                              <NumberToColoredPercent
-                                val={option.trend}
-                                positive_good={true}
-                                abs_val={Math.abs(option.trend)}
-                              />
-                            </Grid>}
-                          </Grid>
-                        )}
-                        getOptionLabel={(option) => option.label}
-                        style={{ width: 400 }}
-                        onChange={(event, newValue) => {
-                          customFilterAction(lookerContent[0].id, lookerContent[0].filter.filterName, (newValue) ? newValue.label : '')
-                        }}
-                        renderInput={(params) => <TextField {...params} label={lookerContent[0].filter.filterName} variant="outlined" />}
-                        loadingText="Loading..."
-                      />
-                    </Grid>
-                  </ApiHighlight>
-                  : ''
-                }
+            {lookerContent[0].filters || lookerContent[0].dynamicFieldLookUp ?
+              <Grid
+                container>
+                {apiContent.map((item, index) => {
+                  return (
+                    lookerContent[0].filterComponents[index] === 'autocomplete' ?
+                      <ApiHighlight classes={classes}
+                        key={validIdHelper(`dashEmbed-${demoComponentType}${lookerContent.id}-${index}`)} >
+                        <Grid item sm={6}>
+                          <Autocomplete
+                            id={`combo-box-dashboard-${lookerContent.id}`}
+                            options={Array.isArray(apiContent[index]) ?
+                              apiContent[index] :
+                              []}
+                            renderOption={(option) => (
+                              <Grid container justify="space-between">
+                                <Grid item>
+                                  {option.label}
+                                </Grid>
+                                {option.trend && <Grid item>
+                                  <NumberToColoredPercent
+                                    val={option.trend}
+                                    positive_good={true}
+                                    abs_val={Math.abs(option.trend)}
+                                  />
+                                </Grid>}
+                              </Grid>
+                            )}
+                            getOptionLabel={(option) => option.label}
+                            style={{ width: 400 }}
+                            onChange={(event, newValue) => {
+                              customFilterAction(lookerContent[0].id,
+                                lookerContent[0].filters[index].filterName,
+                                (newValue) ? newValue.label : '')
+                            }}
+                            renderInput={(params) => <TextField {...params} label={lookerContent[0].filters[index].filterName} variant="outlined" />}
+                            loadingText="Loading..."
+                          />
+                        </Grid>
+                      </ApiHighlight>
+                      : 'oooop')
+                })}
                 <Grid item sm={1} />
                 {lookerContent[0].dynamicFieldLookUp ?
                   <EmbedHighlight classes={classes} >
