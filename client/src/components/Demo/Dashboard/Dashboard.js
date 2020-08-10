@@ -103,7 +103,7 @@ export default function Dashboard(props) {
         .withClassName('iframe')
         .withNext()
         // .withNext(lookerContent.isNext || false) //how can I make this dynamic based on prop??
-        .withTheme('atom_fashion')
+        .withTheme(lookerContent.theme || 'atom_fashion')
         .withParams({ 'schedule_modal': 'true' })
         .on('page:property:change', (event) => {
           // console.log('page property is changing!!!!')
