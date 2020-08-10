@@ -24,22 +24,15 @@ export default function ReportBuilder(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
 
-  const { togglePayWallModal } = useContext(AppContext)
+  const { togglePayWallModal, codeShow } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
-  const codeTab = {
-    type: 'code flyout', label: 'Code', id: 'codeFlyout',
-    lookerContent, lookerUser, clientSideCode, serverSideCode
-  }
-  const demoComponentType = type || 'code flyout';
-  // const tabContent = lookerUser.permission_level === 'premium' ?
-  //   [...lookerContent, codeTab] :
-  //   [lookerContent[0], codeTab];
-  const tabContent =
-    [...lookerContent, codeTab]
+
+  const demoComponentType = type;
+  const tabContent = [...lookerContent]
 
   //handle tab change
   const handleChange = (event, newValue) => {
@@ -115,7 +108,7 @@ export default function ReportBuilder(props) {
         }
       });
       if (lookerResponse.status === 200) {
-        performLookerApiCalls(lookerContent)
+        performLookerApiCalls(lookerContent, 1)
       }
     }
   }
@@ -251,22 +244,22 @@ export default function ReportBuilder(props) {
 
 
   return (
-    <div className={`${classes.root} demoComponent`}>
+    <div className={`${classes.root} ${classes.padding30} demoComponent`}>
       <Grid container
         spacing={3}
         key={validIdHelper(type)} >
         <div className={classes.root}>
           {iFrameExists ? '' :
             <Grid item sm={12} >
-              <Card className={`${classes.card} ${classes.flexCentered}`}>
+              <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
                 <CircularProgress className={classes.circularProgress} />
               </Card>
             </Grid>
           }
 
           {/* additional loading logic, need embedContainer to exist but want it hidden until iFrame has content...*/}
-          <Box className={iFrameExists ? `` : `${classes.hidden}`}>
-            <AppBar position="static">
+          <Box className={iFrameExists ? `${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
+            <AppBar position="static" elevation={0}>
               <Tabs
                 className={classes.tabs}
                 value={value}
@@ -275,36 +268,47 @@ export default function ReportBuilder(props) {
                 {tabContent.map((item, index) => (
                   <Tab
                     key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
-                    label={index == 1 && lookerUser.permission_level != 'premium' ?
-                      <div>{item.label} <Icon className={`fa fa-lock ${classes.faSm}`} /></div> :
+                    label={index == 1 ?
+                      <div>
+                        <Icon className={`fa fa-plus ${classes.faSm} ${classes.mr12}`} />
+                        {item.label}
+                        {lookerUser.permission_level != 'premium' ?
+                          <Icon className={`fa fa-lock ${classes.faSm}`} /> : ''}
+                      </div> :
                       item.label}
-                    className={item.type === 'code flyout' ? `${classes.mlAuto}` : ``}
+                    className={index == 1 ? `${classes.mlAuto}` : ``}
+                    style={index === 1 ? {
+                      backgroundColor: '#5896E6',
+                      borderRadius: '4px',
+                      color: '#fff',
+                      opacity: '1.0'
+                    } : {}}
                     {...a11yProps(index)} />
                 ))}
               </Tabs>
             </AppBar>
 
             <Box className="tabPanelContainer">
+              {codeShow ? <Grid item sm={6}
+                className={`${classes.positionTopRight}`}
+              >
+                <CodeFlyout {...props}
+                  classes={classes}
+                  lookerUser={lookerUser} />
+              </Grid> : ''}
               {tabContent.map((tabContentItem, tabContentItemIndex) => (
                 <TabPanel
                   key={`${validIdHelper(demoComponentType + '-tabPanel-' + tabContentItemIndex)}`}
                   value={value}
                   index={tabContentItemIndex}>
                   <Grid container>
-                    {tabContentItem.type === 'code flyout' ?
-                      <CodeFlyout {...props}
-                        classes={classes}
-                        lookerContent={lookerContent}
-                        clientSideCode={clientSideCode}
-                        serverSideCode={serverSideCode}
-                        lookerUser={lookerUser} />
-                      :
+                    {
                       tabContentItemIndex === 0
                         ?
                         <React.Fragment
                           key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
                           <Grid item sm={4} >
-                            <ApiHighlight height={400}>
+                            <ApiHighlight height={500} classes={classes}>
                               <TreeSideBar {...{
                                 togglePayWallModal,
                                 classes,
@@ -412,13 +416,13 @@ function TreeSideBar(props) {
                         id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                         key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                         className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
-                        {item.title.length > 30 ? item.title.substring(0, 30) + '...' : item.title}
+                        {item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title}
 
                         <Button
                           id={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
                           key={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
                           size="small"
-                          className={`${classes.ml24} ${classes.childHoverVisibility}`}
+                          className={`${classes.ml12} ${classes.childHoverVisibility}`}
                           onClick={(event) => {
                             if (lookerUser.permission_level === 'premium') {
                               // setSelected(treeCounter);
@@ -452,11 +456,11 @@ function TreeSideBar(props) {
                           key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                           className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
 
-                          {item.title.length > 30 ? item.title.substring(0, 30) + '...' : item.title}                          <Button
+                          {item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title}                          <Button
                             id={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
                             key={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
                             size="small"
-                            className={`${classes.ml24} ${classes.childHoverVisibility}`}
+                            className={`${classes.ml12} ${classes.childHoverVisibility}`}
                             onClick={(event) => {
                               if (lookerUser.permission_level === 'premium') {
                                 // setSelected(treeCounter);
@@ -487,7 +491,7 @@ function TreeSideBar(props) {
                             id={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
                             key={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
                             size="small"
-                            className={`${classes.ml24} ${classes.childHoverVisibility}`}
+                            className={`${classes.ml12} ${classes.childHoverVisibility}`}
                             onClick={(event) => {
                               if (lookerUser.permission_level === 'premium') {
                                 // setSelected(treeCounter);
@@ -515,7 +519,7 @@ function TreeSideBar(props) {
                             Delete
                                                                                             </Button>
                         </div>
-                        : item.title.length > 30 ? item.title.substring(0, 30) + '...' : item.title
+                        : item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title
                     }
                     onClick={() => {
                       // setSelected(treeCounter)

@@ -66,5 +66,24 @@ export default makeStyles((theme) => ({
   },
   faSm: {
     fontSize: '.75em'
+  },
+  positionTopRight: {
+    position: 'absolute',
+    top: -30,
+    right: -50,
+    bottom: 0,
+    zIndex: 100
+  },
+  positionRelative: {
+    position: 'relative'
+  },
+  padding30: {
+    padding: 30
+  },
+  mr12: {
+    marginRight: 12
+  },
+  ml12: {
+    marginLeft: 12
   }
 }));
