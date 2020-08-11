@@ -273,10 +273,10 @@ export default function ReportBuilder(props) {
                         <Icon className={`fa fa-plus ${classes.faSm} ${classes.mr12}`} />
                         {item.label}
                         {lookerUser.permission_level != 'premium' ?
-                          <Icon className={`fa fa-lock ${classes.faSm}`} /> : ''}
+                          <Icon className={`fa fa-lock ${classes.faSm} ${classes.ml12}`} /> : ''}
                       </div> :
                       item.label}
-                    className={index == 1 ? `${classes.mlAuto}` : ``}
+                    className={value === 1 && index === 1 ? `${classes.hidden}` : index == 1 ? `${classes.mlAuto}` : ``}
                     style={index === 1 ? {
                       backgroundColor: '#5896E6',
                       borderRadius: '4px',

@@ -1,8 +1,12 @@
 import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import { AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField, Toolbar, FormControlLabel, Switch, Chip } from '@material-ui/core'
-import { Autocomplete, ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
+import {
+  AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField, Toolbar, FormControlLabel, Switch, Chip,
+  ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails
+} from '@material-ui/core'
+import { Autocomplete, ToggleButton, ToggleButtonGroup, Skeleton } from '@material-ui/lab'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./Dashboard.js'; // eslint-disable-line import/no-webpack-loader-syntax
@@ -30,7 +34,7 @@ export default function Dashboard(props) {
   // const { togglePayWallModal } = useContext(AppContext)
   const { toggleShow } = useContext(AppContext)
   const { show } = useContext(AppContext)
-  const { codeShow } = useContext(AppContext)
+  const { codeShow, toggleCodeShow } = useContext(AppContext)
 
   //declare constants
   const classes = useStyles();
@@ -119,7 +123,10 @@ export default function Dashboard(props) {
       if (lookerContent.hasOwnProperty('filters')) {
         //get inline query from usecase file & set user attribute dynamically
 
+        //iterating over filters
+        let orderedArrayForApiContent = []
         lookerContent.filters.map(async (item, index) => {
+          // console.log('item', item)
           let jsonQuery = lookerContent.inlineQueries[index];
           jsonQuery.filters = {
             ...jsonQuery.filters,
@@ -137,15 +144,22 @@ export default function Dashboard(props) {
           let lookerResponseData = await lookerResponse.json();
           let queryResultsForDropdown = [];
           let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
+
           for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
             queryResultsForDropdown.push({
               'label': lookerResponseData.queryResults[i][desiredProperty],
               'trend': (lookerResponseData.queryResults[i]['trend']) ? lookerResponseData.queryResults[i]['trend'] : undefined
             })
           }
-          setApiContent(apiContent => {
-            return [...apiContent, queryResultsForDropdown]
-          });
+
+
+          // setApiContent(apiContent => {
+          //   return [...apiContent, queryResultsForDropdown]
+          // });
+          //needed solution for ordering apiContent to match order
+          //of content from usecaseContent
+          orderedArrayForApiContent[index] = queryResultsForDropdown
+          setApiContent([...orderedArrayForApiContent])
 
           if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
         })
@@ -189,9 +203,30 @@ export default function Dashboard(props) {
   return (
     <div className={`${classes.root} ${classes.minHeight680} ${classes.padding30}  demoComponent`}>
       <Grid container spacing={3}>
-        <div className={classes.root}>
+        <div className={`${classes.root} ${classes.positionRelative}`}>
+
+          {lookerContent[0].hasOwnProperty("filters") &&
+            apiContent.length === lookerContent[0].filters.length ?
+            <Grid item
+              sm={12}
+              key={validIdHelper(`${demoComponentType}-FilterBar-${lookerContent[0].id}`)}
+            >
+              <FilterBar {...props}
+                classes={classes}
+                apiContent={apiContent}
+                customFilterAction={customFilterAction}
+                regionValue={regionValue}
+                setRegionValue={setRegionValue}
+                toggleValue={toggleValue}
+                handleToggle={handleToggle}
+              />
+            </Grid> :
+            lookerContent[0].hasOwnProperty("filters") ?
+              <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> :
+              ''}
+
+
           {
-            //apiContent.length
             iFrameExists
               ? ''
               :
@@ -202,109 +237,16 @@ export default function Dashboard(props) {
               </Grid>
           }
           <Box
-            className={iFrameExists ? ` ${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
-            {lookerContent[0].filters || lookerContent[0].dynamicFieldLookUp ?
-              <Grid
-                container>
-                {apiContent.map((item, index) => {
-                  return (
-                    lookerContent[0].filterComponents[index] === 'autocomplete' ?
-                      <ApiHighlight classes={classes}
-                        key={validIdHelper(`dashEmbed-${demoComponentType}${lookerContent.id}-${index}`)} >
-                        <Grid item sm={6}>
-                          <Autocomplete
-                            id={`combo-box-dashboard-${lookerContent.id}`}
-                            options={Array.isArray(apiContent[index]) ?
-                              apiContent[index] :
-                              []}
-                            renderOption={(option) => (
-                              <Grid container justify="space-between">
-                                <Grid item>
-                                  {option.label}
-                                </Grid>
-                                {option.trend && <Grid item>
-                                  <NumberToColoredPercent
-                                    val={option.trend}
-                                    positive_good={true}
-                                    abs_val={Math.abs(option.trend)}
-                                  />
-                                </Grid>}
-                              </Grid>
-                            )}
-                            getOptionLabel={(option) => option.label}
-                            style={{ width: 400 }}
-                            onChange={(event, newValue) => {
-                              customFilterAction(lookerContent[0].id,
-                                lookerContent[0].filters[index].filterName,
-                                (newValue) ? newValue.label : '')
-                            }}
-                            renderInput={(params) => <TextField {...params} label={lookerContent[0].filters[index].filterName} variant="outlined" />}
-                            loadingText="Loading..."
-                          />
-                        </Grid>
-                      </ApiHighlight>
-                      : lookerContent[0].filterComponents[index] === 'togglebutton' ?
-
-                        <ApiHighlight classes={classes}
-                          key={validIdHelper(`dashEmbed-${demoComponentType}${lookerContent.id}-${index}`)} >
-                          <Grid item sm={12}>
-                            <ToggleButtonGroup
-                              value={regionValue}
-                              exclusive
-                              onChange={(event, newValue) => {
-                                setRegionValue(newValue)
-                                customFilterAction(lookerContent[0].id,
-                                  lookerContent[0].filters[index].filterName,
-                                  (newValue) ? newValue : '')
-                              }}
-                              aria-label="region"
-                            >
-                              {apiContent[index].map(region => {
-                                return (
-                                  <ToggleButton value={region.label} aria-label={region.label}>
-                                    {region.label}
-                                  </ToggleButton>
-                                )
-                              })}
-                            </ToggleButtonGroup>
-                          </Grid>
-                        </ApiHighlight>
-                        : 'ooooopppp')
-                })}
-                <Grid item sm={1} />
-                {lookerContent[0].dynamicFieldLookUp ?
-                  <EmbedHighlight classes={classes} >
-                    <Grid item sm={5}>
-                      <ToggleButtonGroup
-                        value={toggleValue}
-                        exclusive
-                        onChange={handleToggle}
-                        aria-label="text alignment"
-                      >
-                        {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
-                          return (
-                            <ToggleButton
-                              key={validIdHelper(`dynamicDashToggle-${key}`)}
-                              value={key} aria-label="left aligned">
-                              {key}
-                            </ToggleButton>
-                          )
-                        })}
-                      </ToggleButtonGroup>
-                    </Grid>
-                  </EmbedHighlight>
-                  : ''
-                }
-              </Grid> : ''}
-
-
-            {codeShow ? <Grid item sm={6}
-              className={`${classes.positionTopRight}`}
-            >
-              <CodeFlyout {...props}
-                classes={classes}
-                lookerUser={lookerUser} />
-            </Grid> : ''}
+            className={iFrameExists ? ` ` : `${classes.hidden} `}>
+            {codeShow ?
+              <Grid item sm={6}
+                className={`${classes.positionTopRight}`}
+              >
+                <CodeFlyout {...props}
+                  classes={classes}
+                  lookerUser={lookerUser} />
+              </Grid>
+              : ''}
             <Grid item sm={12}>
 
               <Box className={classes.w100} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
@@ -324,5 +266,131 @@ export default function Dashboard(props) {
         </div>
       </Grid>
     </div>
+  )
+}
+
+
+
+
+function FilterBar(props) {
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
+    apiContent, customFilterAction, regionValue, setRegionValue, toggleValue, handleToggle } = props;
+
+  const [expanded, setExpanded] = useState(true);
+
+  const handleExpansionPanel = (event, newValue) => {
+    setExpanded(expanded ? false : true);
+  };
+  return (
+
+    <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} className={classes.w100} elevation={0}>
+      <ExpansionPanelSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+        <Typography className={classes.heading}>Filter Data</Typography>
+
+      </ExpansionPanelSummary>
+      <ExpansionPanelDetails>
+        {
+          lookerContent[0].filters || lookerContent[0].dynamicFieldLookUp ?
+            <Grid
+              container>
+              {apiContent.map((item, index) => {
+                return (
+                  lookerContent[0].filterComponents[index] === 'autocomplete' ?
+                    <ApiHighlight classes={classes}
+                      key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
+                      <Grid item sm={6}>
+                        <Autocomplete
+                          id={`combo-box-dashboard-${lookerContent.id}`}
+                          options={Array.isArray(apiContent[index]) ?
+                            apiContent[index] :
+                            []}
+                          renderOption={(option) => (
+                            <Grid container justify="space-between">
+                              <Grid item>
+                                {option.label}
+                              </Grid>
+                              {option.trend && <Grid item>
+                                <NumberToColoredPercent
+                                  val={option.trend}
+                                  positive_good={true}
+                                  abs_val={Math.abs(option.trend)}
+                                />
+                              </Grid>}
+                            </Grid>
+                          )}
+                          getOptionLabel={(option) => option.label}
+                          style={{ width: 400 }}
+                          onChange={(event, newValue) => {
+                            customFilterAction(lookerContent[0].id,
+                              lookerContent[0].filters[index].filterName,
+                              (newValue) ? newValue.label : '')
+                          }}
+                          renderInput={(params) => <TextField {...params} label={lookerContent[0].filters[index].filterName} variant="outlined" />}
+                          loadingText="Loading..."
+                        />
+                      </Grid>
+                    </ApiHighlight>
+                    : lookerContent[0].filterComponents[index] === 'togglebutton' ?
+
+                      <ApiHighlight classes={classes}
+                        key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
+                        <Grid item sm={12}>
+                          <ToggleButtonGroup
+                            value={regionValue}
+                            exclusive
+                            onChange={(event, newValue) => {
+                              setRegionValue(newValue)
+                              customFilterAction(lookerContent[0].id,
+                                lookerContent[0].filters[index].filterName,
+                                (newValue) ? newValue : '')
+                            }}
+                            aria-label="region"
+                          >
+                            {apiContent[index].map((region, index) => {
+                              return (
+                                <ToggleButton
+                                  key={validIdHelper(`${type}-FilterBar-ToggleButton-${lookerContent[0].id}-${index}`)}
+                                  value={region.label} aria-label={region.label}>
+                                  {region.label}
+                                </ToggleButton>
+                              )
+                            })}
+                          </ToggleButtonGroup>
+                        </Grid>
+                      </ApiHighlight>
+                      : 'ooooopppp')
+              })}
+              <Grid item sm={1} />
+              {lookerContent[0].dynamicFieldLookUp ?
+                <EmbedHighlight classes={classes} >
+                  <Grid item sm={5}>
+                    <ToggleButtonGroup
+                      value={toggleValue}
+                      exclusive
+                      onChange={handleToggle}
+                      aria-label="text alignment"
+                    >
+                      {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
+                        return (
+                          <ToggleButton
+                            key={validIdHelper(`dynamicDashToggle-${key}`)}
+                            value={key} aria-label="left aligned">
+                            {key}
+                          </ToggleButton>
+                        )
+                      })}
+                    </ToggleButtonGroup>
+                  </Grid>
+                </EmbedHighlight>
+                : ''
+              }
+            </Grid> : ''
+        }
+      </ExpansionPanelDetails>
+    </ExpansionPanel >
   )
 }

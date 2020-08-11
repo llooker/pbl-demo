@@ -33,7 +33,7 @@ export function EmbeddedDashboard({ lookerContent, classes, id, lookerHost }) {
 
   return (
 
-    <Card elevation={1} className={classes.padding30}>
+    <Card className={classes.padding30} variant="outlined">
 
       <div
         className={`${classes.textCenter} ${classes.overflowVisible}`}

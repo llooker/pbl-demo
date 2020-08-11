@@ -227,21 +227,26 @@ export default function CustomVis(props) {
       <Grid container
         spacing={3}
         key={validIdHelper(type)} >
-        <div className={classes.root}>
-          {/* <Grid item sm={12}>
+        <div className={`${classes.root} ${classes.positionRelative}`}>
+
+          {!apiContent.queryResults ?
+            <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
+            :
             <FilterBar {...props}
               classes={classes}
-              apiContent={apiContent || ''}
-              fromDate={fromDate || ''}
-              toDate={toDate || ''}
-              category={category || ''}
-              desiredField={desiredField || ''}
-              handleFromDate={handleFromDate || ''}
-              handleToDate={handleToDate || ''}
-              handleCategory={handleCategory || ''}
-              handleDesiredField={handleDesiredField || ''}
+              apiContent={apiContent}
+              fromDate={fromDate}
+              toDate={toDate}
+              category={category}
+              desiredField={desiredField}
+              handleFromDate={handleFromDate}
+              handleToDate={handleToDate}
+              handleCategory={handleCategory}
+              handleDesiredField={handleDesiredField}
             />
-          </Grid> */}
+          }
+
+
           {!apiContent.queryResults ?
             <Grid item sm={12} >
               <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
@@ -252,22 +257,8 @@ export default function CustomVis(props) {
             : apiContent.queryResults && apiContent.queryResults.length ?
 
               <Box
-                className={`${classes.positionRelative}`}>
+                className={``}>
                 <Grid container>
-                  <Grid item sm={12}>
-                    <FilterBar {...props}
-                      classes={classes}
-                      apiContent={apiContent}
-                      fromDate={fromDate}
-                      toDate={toDate}
-                      category={category}
-                      desiredField={desiredField}
-                      handleFromDate={handleFromDate}
-                      handleToDate={handleToDate}
-                      handleCategory={handleCategory}
-                      handleDesiredField={handleDesiredField}
-                    />
-                  </Grid>
                   {codeShow ? <Grid item sm={6}
                     className={`${classes.positionTopRight}`}
                   >

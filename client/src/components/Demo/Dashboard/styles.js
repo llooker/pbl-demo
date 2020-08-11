@@ -53,7 +53,7 @@ export default makeStyles((theme) => ({
   },
   card: {
     minWidth: 275,
-    minHeight: 800,
+    minHeight: 600,
   },
   padding30: {
     padding: 30
@@ -70,5 +70,9 @@ export default makeStyles((theme) => ({
   },
   positionRelative: {
     position: 'relative'
+  },
+  skeleton: {
+    height: 160,
+    width: '100%'
   }
 }));

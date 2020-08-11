@@ -17,7 +17,7 @@
           {
             "id": "19",
             "gridWidth": 6,
-            "height": 200,
+            "height": 225,
             "type": "welcome",
             "inlineQueries": [
               {
@@ -80,7 +80,7 @@
           {
             "id": "17",
             "gridWidth": 6,
-            "height": 200,
+            "height": 225,
             "type": "carousel"
           },
           {
@@ -105,7 +105,7 @@
                 "order_items.created_week desc"
               ],
               "limit": "500",
-              "dynamic_fields": "[{\"table_calculation\":\"week_over_week_change\",\"label\":\"Week over Week %25 Change\",\"expression\":\"(${order_items.total_gross_margin}-offset(${order_items.total_gross_margin},1))/offset(${order_items.total_gross_margin},1)\",\"value_format\":null,\"value_format_name\":\"percent_2\",\"_kind_hint\":\"measure\",\"_type_hint\":\"number\"}]"
+              "dynamic_fields": "[{\"table_calculation\":\"change\",\"label\":\"Week over Week %25 Change\",\"expression\":\"(${order_items.total_gross_margin}-offset(${order_items.total_gross_margin},1))/offset(${order_items.total_gross_margin},1)\",\"value_format\":null,\"value_format_name\":\"percent_2\",\"_kind_hint\":\"measure\",\"_type_hint\":\"number\"}]"
             },
             "resultFormat": "json",
             "label": "Revenue by Week",

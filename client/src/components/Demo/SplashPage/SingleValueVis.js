@@ -26,7 +26,6 @@ export function SingleValueVis({ lookerContent, classes }) {
 
 
   const runInlineQuery = async () => {
-    // console.log('runInlineQuery')
     setApiContent([])
     let stringifiedQuery = encodeURIComponent(JSON.stringify(lookerContent.inlineQuery))
     let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
@@ -37,7 +36,6 @@ export function SingleValueVis({ lookerContent, classes }) {
       }
     })
     let lookerResponseData = await lookerResponse.json();
-    // console.log('lookerResponseData', lookerResponseData)
     dataObjForSparkline.id = validIdHelper(`singleVisValue-${lookerContent.id}`);
     dataObjForSparkline.data = [];
 
@@ -61,7 +59,7 @@ export function SingleValueVis({ lookerContent, classes }) {
   const upOrDownArrow = apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
 
   return (
-    <Card elevation={1} className={`${classes.padding30} ${classes.overflowHidden}`}>
+    <Card className={`${classes.padding30} ${classes.overflowHidden}`} variant="outlined">
       <div
         style={{
           height: lookerContent.height,
@@ -78,7 +76,7 @@ export function SingleValueVis({ lookerContent, classes }) {
                 </Grid>
                 <Grid item sm={6}>
                   <Typography variant="subtitle1" align="left">
-                    <b>{apiContent[0].data && apiContent[0].data[0] ? parseInt(apiContent[0].data[0].y).toFixed(2) : ''}</b>
+                    <b>{apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : ''}</b>
                   </Typography>
                 </Grid>
                 <Grid item sm={6}>

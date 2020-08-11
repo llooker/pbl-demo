@@ -9,6 +9,7 @@ import {
   TableSortLabel, FormControlLabel, Switch, Chip, Divider
 } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandMore';
 import DoneIcon from '@material-ui/icons/Done';
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./QueryBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
@@ -194,12 +195,13 @@ function FilterBar(props) {
       newQueryObj.fields = newFields;
       newQueryObj.filters = currentFilters;
       action(newQueryObj, lookerContent[0].resultFormat);
+      setQueryModified(false)
     }
   }
 
-  useEffect(() => {
-    handleQuerySubmit()
-  }, [fieldsChipData, filtersData]);
+  // useEffect(() => {
+  //   handleQuerySubmit()
+  // }, [fieldsChipData, filtersData]);
 
   const datePermissionMap = {
     'basic': ["1 week", "1 month", "3 months", "6 months"]
@@ -226,7 +228,7 @@ function FilterBar(props) {
         <Grid container spacing={3}>
           <Grid item sm={12}>
             <Typography variant="subtitle1">
-              Select Fields:
+              Select Metrics:
       {fieldsChipData.length ?
                 fieldsChipData.map((item, index) => {
                   return (
@@ -248,7 +250,7 @@ function FilterBar(props) {
           </Grid>
           <Grid item sm={12}>
             <Typography variant="subtitle1">
-              Totals:
+              Group By:
                           {fieldsChipData.length ?
                 fieldsChipData.map((item, index) => {
                   return (
@@ -311,6 +313,14 @@ function FilterBar(props) {
               )
             }) : ''}
           </Grid>
+          <Grid item sm={12}>
+            <Button
+              color="primary"
+              variant="contained"
+              size="large"
+              onClick={handleQuerySubmit}
+              disabled={queryModified ? false : true}
+            >Run Query</Button></Grid>
         </Grid>
       </ExpansionPanelDetails>
     </ExpansionPanel>

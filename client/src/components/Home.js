@@ -181,6 +181,9 @@ const styles = theme => ({
   appBarBottom: {
     top: 'auto',
     bottom: 0,
+  },
+  hidden: {
+    visibility: 'hidden'
   }
 });
 
@@ -491,10 +494,22 @@ function TopBar(props) {
       <Toolbar>
 
         {activeUsecase ?
-          <Avatar alt="Icon"
-            src={require(`../images/${activeUsecase}_logo_white.svg`)}
-            variant="square"
-          /> : ''}
+          <>
+            <Avatar alt="Icon"
+              src={require(`../images/${activeUsecase}_logo_white.svg`)}
+              variant="square"
+            />
+            {/* hack */}
+            <Avatar alt="Icon"
+              src={require(`../images/${activeUsecase}_logo_white.svg`)}
+              variant="square"
+              className={`${classes.hidden}`}
+            />
+            <Avatar alt="Icon"
+              src={require(`../images/${activeUsecase}_logo_white.svg`)}
+              variant="square"
+              className={`${classes.hidden}`}
+            /> </> : ''}
         <Typography align="center" className={`${classes.mr12} ${classes.mlAuto} ${classes.mrAuto}`}>
           {lookerUser.user_attributes.brand}
         </Typography>
