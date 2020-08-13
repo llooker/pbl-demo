@@ -59,7 +59,7 @@ export function SingleValueVis({ lookerContent, classes }) {
   const upOrDownArrow = apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
 
   return (
-    <Card className={`${classes.padding30} ${classes.overflowHidden}`} variant="outlined">
+    <Card className={`${classes.padding15} ${classes.overflowHidden}`} variant="outlined">
       <div
         style={{
           height: lookerContent.height,
@@ -67,10 +67,10 @@ export function SingleValueVis({ lookerContent, classes }) {
       >
         {apiContent.length ?
           <React.Fragment>
-            <ApiHighlight height={150} classes={classes} >
+            <ApiHighlight height={140} classes={classes} >
               <Grid container className={`${classes.textCenter}`}>
                 <Grid item sm={12}>
-                  <Typography variant="body2" align="left" color="secondary">
+                  <Typography variant="body2" align="left" color="secondary dark">
                     {lookerContent.label}
                   </Typography>
                 </Grid>

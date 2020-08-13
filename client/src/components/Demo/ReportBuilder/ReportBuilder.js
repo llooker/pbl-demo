@@ -270,10 +270,10 @@ export default function ReportBuilder(props) {
                     key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
                     label={index == 1 ?
                       <div>
-                        <Icon className={`fa fa-plus ${classes.faSm} ${classes.mr12}`} />
-                        {item.label}
+
                         {lookerUser.permission_level != 'premium' ?
-                          <Icon className={`fa fa-lock ${classes.faSm} ${classes.ml12}`} /> : ''}
+                          <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} /> : <Icon className={`fa fa-plus ${classes.faSm} ${classes.mr12}`} />}
+                        {item.label}
                       </div> :
                       item.label}
                     className={value === 1 && index === 1 ? `${classes.hidden}` : index == 1 ? `${classes.mlAuto}` : ``}
@@ -447,7 +447,7 @@ function TreeSideBar(props) {
                           }
                           color="default"
                         >
-                          {lookerUser.permission_level === 'premium' ? 'Explore' : <div>Explore <Icon className={`fa fa-lock ${classes.faSm}`} /></div>}
+                          {lookerUser.permission_level === 'premium' ? 'Explore' : <div> <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} />Explore</div>}
                         </Button>
                       </div>
                       : key === 'looks' ?

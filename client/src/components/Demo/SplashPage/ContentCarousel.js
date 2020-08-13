@@ -20,8 +20,10 @@ export function ContentCarousel({ lookerContent, classes }) {
 
   return (
     <div
-      className={`${classes.overflowScroll}`}
-      style={{ height: lookerContent.height }}
+      className={`${classes.overflowScroll} MuiPaper-rounded`}
+      style={{
+        height: lookerContent.height
+      }}
     >
 
       <Carousel infiniteLoop={true} autoPlay={true} showThumbs={false}>
