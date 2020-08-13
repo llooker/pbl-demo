@@ -270,7 +270,7 @@ function FilterBar(props) {
             </Typography>
           </Grid>
 
-          <Grid item sm={12}>
+          <Grid item sm={3}>
             <Typography variant="subtitle1">
               Filter By:
                       </Typography>
@@ -313,7 +313,8 @@ function FilterBar(props) {
               )
             }) : ''}
           </Grid>
-          <Grid item sm={12}>
+          <Grid item sm={9}>
+            <br />
             <Button
               color="primary"
               variant="contained"

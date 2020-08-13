@@ -446,6 +446,7 @@ function TreeSideBar(props) {
                           }
                           }
                           color="default"
+                          icon="hidden"
                         >
                           {lookerUser.permission_level === 'premium' ? 'Explore' : <div> <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} />Explore</div>}
                         </Button>
