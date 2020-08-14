@@ -70,7 +70,7 @@ export function SingleValueVis({ lookerContent, classes }) {
             <ApiHighlight height={140} classes={classes} >
               <Grid container className={`${classes.textCenter}`}>
                 <Grid item sm={12}>
-                  <Typography variant="body2" align="left" color="secondary dark">
+                  <Typography variant="body2" align="left" color="secondary">
                     {lookerContent.label}
                   </Typography>
                 </Grid>

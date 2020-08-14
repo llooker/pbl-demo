@@ -37,6 +37,7 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
     >
       {svg ?
         <>
+          <Grid item sm={1} />
           <Grid item sm={6}>
             <ApiHighlight classes={classes}>
               <div

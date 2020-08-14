@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
     width: 1000,
-    height: 560,
+    height: 580,
     overflow: 'scroll',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    height: 500,
+    height: 520,
     overflow: 'scroll',
     cursor: 'pointer',
     '&:hover': {
@@ -55,11 +55,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#5F6BD8',
     color: '#ffffff'
   },
-  font875: {
+  font75: {
     fontSize: '.75em'
   },
-  font75: {
-    fontSize: '.875em'
+  font875: {
+    // fontSize: '.875em'
   },
   padding30: {
     padding: 30
@@ -85,13 +85,21 @@ export function MonetizationModal({ props, switchLookerUser }) {
   const classes = useStyles();
 
   const modalListMap = {
-    'basic': ['Atom Merchant Dashboards', 'Download PDFs, CSVs', '6 months of order data history'],
-    'advanced': [' Drill to row level information', 'Download row level information', 'Schedule dashboards for delivery (to you or others)', 'Set alerts and key threshold notifications', 'Full year of order data history'],
+    'basic': [
+      '6 months of order data history',
+      'Atom Merchant Dashboards',
+      'Download PDFs, CSVs'
+    ],
+    'advanced': [
+      'Full year of order data history',
+      'Drill to row level information',
+      'Download row level information',
+      'Schedule dashboards for delivery (to you or others)',
+      'Set alerts and key threshold notifications'],
     'premium': [
       '2 Full years of order data history',
-      'Analyze your own data',
+      'Analyze your own data and save custom reports',
       'View premium level, productivity enhancing reports',
-      'Save your own custom reports',
       'Share your reports with colleagues in Atom',
       'Text message alerts',
       'Notify active shoppers on Atom',
@@ -107,8 +115,9 @@ export function MonetizationModal({ props, switchLookerUser }) {
       onClose={togglePayWallModal}
     >
       <Fade in={payWallModal.show || false}>
-        <div style={modalStyle}
-          className={`${classes.paper}`}>
+        <div
+          style={modalStyle}
+          className={`${classes.paper} ${classes.padding30}`}>
           <Grid container
             spacing={3}>
             {Object.keys(LookerUserPermissions).map(key => {
@@ -121,7 +130,11 @@ export function MonetizationModal({ props, switchLookerUser }) {
                     style={key === lookerUser.permission_level ? {
                       transform: 'scale(1.05)',
                       transition: 'transform .2s'
-                    } : {}}>
+                    } : {}}
+                    onClick={() => {
+                      switchLookerUser(key)
+                      togglePayWallModal()
+                    }}>
                     <CardContent>
                       <Typography variant="h6">
                         {_.capitalize(key)}
@@ -136,16 +149,6 @@ export function MonetizationModal({ props, switchLookerUser }) {
 
                       <Divider className={`${classes.divider} `} />
 
-                      {/* <Typography>
-                        {key === 'basic' ?
-                          <Typography variant="subtitle" gutterBottom>Basic user permissions plus</Typography>
-                          : key === 'advanced' ?
-                            <Typography variant="subtitle" gutterBottom>...Basic user permissions plus</Typography> :
-                            key === 'premium' ?
-                              <Typography variant="subtitle" gutterBottom>...Advanced user permissions plus</Typography> :
-                              ''}
-                      </Typography> */}
-
                       <List className={classes.root}>
                         {
                           modalListMap[key].map(item => (
@@ -153,19 +156,17 @@ export function MonetizationModal({ props, switchLookerUser }) {
                               className={classes.font875}
                             >
                               <ListItemIcon disableTypography={true}>
-                                <CheckIcon />
+                                <CheckIcon fontSize="small" />
                               </ListItemIcon>
                               <ListItemText primary={item} disableTypography={true} />
                             </ListItem>
                           ))
                         }
                       </List>
-
                     </CardContent>
-
                     <CardActions disableSpacing={false}>
                       <Button
-                        // color="primary"
+                        color="primary"
                         variant="outlined"
                         disabled={key === lookerUser.permission_level ? true : false}
                         fullWidth
