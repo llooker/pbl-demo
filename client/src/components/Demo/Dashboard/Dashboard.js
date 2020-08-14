@@ -88,10 +88,9 @@ export default function Dashboard(props) {
     setApiContent([])
     lookerContent.map(async lookerContent => {
       let dashboardId = lookerContent.id;
+      // let dashboardSlug = lookerContent.slug;
 
-
-      //how can test to see if it has content???
-      LookerEmbedSDK.createDashboardWithId(dashboardId)
+      LookerEmbedSDK.createDashboardWithId(dashboardId) //dashboardSlug
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
         .withClassName('iframe')
         .withNext()

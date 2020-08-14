@@ -202,7 +202,8 @@
             "gridWidth": 8,
             "height": 400,
             "type": "dashboard",
-            "id": "12"
+            "id": "12",
+            "slug": "3ytMWYFKKbofCDFkpAG46z"
           },
           {
             "gridWidth": 4,
@@ -485,7 +486,14 @@
           }
         ]
       }
-    ]
+    ],
+    "groupIds": {
+      "Calvin Klein": 4,
+      "Carhartt": 5,
+      "Columbia": 6,
+      "Levi’s": 7,
+      "Dockers": 8
+    }
   },
   "vidly": {
     "label": "Vidly Media",

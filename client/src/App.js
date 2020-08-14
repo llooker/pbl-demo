@@ -373,10 +373,18 @@ class App extends React.Component {
     let userAttributeCopy = { ...this.state.lookerUser.user_attributes }
     userAttributeCopy.brand = newAttribute;
 
+    let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
+    if (!usecaseFromUrl.length) {     //no usecase
+      window.location.href = window.location.href + 'atom'
+    } else if (!UsecaseContent.hasOwnProperty(usecaseFromUrl)) {     //usecase param isn't in JSON file
+      window.location.href = window.location.href.replace(usecaseFromUrl, 'atom')
+    }
+
     this.setState(prevState => ({
       lookerUser: {
         ...prevState.lookerUser,
-        user_attributes: userAttributeCopy
+        user_attributes: userAttributeCopy,
+        group_ids: [UsecaseContent[usecaseFromUrl].groupIds[newAttribute]]
       }
     }), async () => {
 

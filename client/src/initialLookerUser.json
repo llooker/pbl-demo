@@ -5,7 +5,9 @@
   "session_length": 86400,
   "force_logout_login": true,
   "external_group_id": "",
-  "group_ids": [],
+  "group_ids": [
+    4
+  ],
   "permissions": [
     "access_data",
     "see_looks",
