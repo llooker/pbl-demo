@@ -302,7 +302,7 @@ function FilterBar(props) {
                             value={item.value || '6 months'}
                             onChange={(event) => handleSelectChange(index, event.target.value)}
                           >
-                            {lookerUser.permission_level ? datePermissionMap[lookerUser.permission_level].map(item => (
+                            {lookerUser.user_attributes.permission_level ? datePermissionMap[lookerUser.user_attributes.permission_level].map(item => (
                               <MenuItem key={validIdHelper(item)} value={item}>{_.capitalize(item)}</MenuItem>
                             )) : ''}
                           </Select>

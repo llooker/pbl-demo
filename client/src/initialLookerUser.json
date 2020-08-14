@@ -20,6 +20,7 @@
     "locale": "en_US",
     "country": "USA",
     "brand": "Calvin Klein",
-    "time_horizon": "last 182 days"
+    "time_horizon": "last 182 days",
+    "permission_level": "basic"
   }
 }

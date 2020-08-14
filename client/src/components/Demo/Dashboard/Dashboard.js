@@ -180,7 +180,7 @@ export default function Dashboard(props) {
 
   // const drillMenuClick = (event) => {
 
-  //   const basicLookerUser = lookerUser.permission_level === 'basic' ? true : false;
+  //   const basicLookerUser = lookerUser.user_attributes.permission_level === 'basic' ? true : false;
   //   if (basicLookerUser) {
   //     togglePayWallModal()
   //     return { cancel: (basicLookerUser) ? true : false }

@@ -127,7 +127,7 @@ export function MonetizationModal({ props, switchLookerUser }) {
                 >
                   <Card className={`${classes.card} ${classes[key]}`}
                     elevation={1}
-                    style={key === lookerUser.permission_level ? {
+                    style={key === lookerUser.user_attributes.permission_level ? {
                       transform: 'scale(1.05)',
                       transition: 'transform .2s'
                     } : {}}
@@ -140,9 +140,9 @@ export function MonetizationModal({ props, switchLookerUser }) {
                         {_.capitalize(key)}
                       </Typography>
                       <Typography variant="subtitle">
-                        {lookerUser.permission_level === 'basic' ?
+                        {lookerUser.user_attributes.permission_level === 'basic' ?
                           'Drive your business with clear KPIs' :
-                          lookerUser.permission_level === 'advanced' ?
+                          lookerUser.user_attributes.permission_level === 'advanced' ?
                             'Deeper insights, operations' : 'Drive your business with Atom'
                         }
                       </Typography>
@@ -168,7 +168,7 @@ export function MonetizationModal({ props, switchLookerUser }) {
                       <Button
                         color="primary"
                         variant="outlined"
-                        disabled={key === lookerUser.permission_level ? true : false}
+                        disabled={key === lookerUser.user_attributes.permission_level ? true : false}
                         fullWidth
                         onClick={() => {
                           switchLookerUser(key)

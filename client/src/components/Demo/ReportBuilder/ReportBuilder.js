@@ -37,7 +37,7 @@ export default function ReportBuilder(props) {
   //handle tab change
   const handleChange = (event, newValue) => {
 
-    if (newValue == 1 && lookerUser.permission_level != 'premium') {
+    if (newValue == 1 && lookerUser.user_attributes.permission_level != 'premium') {
       // togglePayWallModal()
 
       togglePayWallModal({
@@ -134,7 +134,7 @@ export default function ReportBuilder(props) {
         if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
 
         let looksToUse = [...lookerResponseData.sharedFolder.looks];
-        if (lookerUser.permission_level === 'premium' &&
+        if (lookerUser.user_attributes.permission_level === 'premium' &&
           Object.keys(lookerResponseData.embeddedUserFolder).length) {
           looksToUse = [
             ...looksToUse, ...lookerResponseData.embeddedUserFolder.looks
@@ -220,7 +220,7 @@ export default function ReportBuilder(props) {
           })
         }
         setApiContent(objToUse)
-      } else if (lookerContent.type === 'explore' && lookerUser.permission_level === 'premium') {
+      } else if (lookerContent.type === 'explore' && lookerUser.user_attributes.permission_level === 'premium') {
         let exploreId = lookerContent.id;
         $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).html('')
         LookerEmbedSDK.createExploreWithId(exploreId)
@@ -271,7 +271,7 @@ export default function ReportBuilder(props) {
                     label={index == 1 ?
                       <div>
 
-                        {lookerUser.permission_level != 'premium' ?
+                        {lookerUser.user_attributes.permission_level != 'premium' ?
                           <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} /> : <Icon className={`fa fa-plus ${classes.faSm} ${classes.mr12}`} />}
                         {item.label}
                       </div> :
@@ -424,7 +424,7 @@ function TreeSideBar(props) {
                           size="small"
                           className={`${classes.ml12} ${classes.childHoverVisibility}`}
                           onClick={(event) => {
-                            if (lookerUser.permission_level === 'premium') {
+                            if (lookerUser.user_attributes.permission_level === 'premium') {
                               // setSelected(treeCounter);
                               action(
                                 key.substring(0, key.length - 1),
@@ -447,7 +447,7 @@ function TreeSideBar(props) {
                           }
                           color="default"
                         >
-                          {lookerUser.permission_level === 'premium' ? 'Explore' : <div> <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} />Explore</div>}
+                          {lookerUser.user_attributes.permission_level === 'premium' ? 'Explore' : <div> <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} />Explore</div>}
                         </Button>
                       </div>
                       : key === 'looks' ?
@@ -462,7 +462,7 @@ function TreeSideBar(props) {
                             size="small"
                             className={`${classes.ml12} ${classes.childHoverVisibility}`}
                             onClick={(event) => {
-                              if (lookerUser.permission_level === 'premium') {
+                              if (lookerUser.user_attributes.permission_level === 'premium') {
                                 // setSelected(treeCounter);
                                 action(
                                   key.substring(0, key.length - 1),
@@ -493,7 +493,7 @@ function TreeSideBar(props) {
                             size="small"
                             className={`${classes.ml12} ${classes.childHoverVisibility}`}
                             onClick={(event) => {
-                              if (lookerUser.permission_level === 'premium') {
+                              if (lookerUser.user_attributes.permission_level === 'premium') {
                                 // setSelected(treeCounter);
                                 action(
                                   key.substring(0, key.length - 1),

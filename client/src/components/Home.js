@@ -284,8 +284,8 @@ class Home extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    let prevPermissionLevel = prevProps.lookerUser.permission_level;
-    let currPermissionLevel = this.props.lookerUser.permission_level;
+    let prevPermissionLevel = prevProps.lookerUser.user_attributes.permission_level;
+    let currPermissionLevel = this.props.lookerUser.user_attributes.permission_level;
     let prevUserBrand = prevProps.lookerUser.user_attributes.brand;
     let currUserBrand = this.props.lookerUser.user_attributes.brand;
 

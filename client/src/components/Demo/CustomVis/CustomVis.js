@@ -298,7 +298,7 @@ export default function CustomVis(props) {
                           ]}
                           onClick={(day, event) => {
                             if (!day.value) {
-                            } else if (lookerUser.permission_level === 'basic') {
+                            } else if (lookerUser.user_attributes.permission_level === 'basic') {
                               togglePayWallModal({
                                 'show': true,
                                 'permissionNeeded': 'see_drill_overlay'
