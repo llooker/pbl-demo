@@ -60,8 +60,8 @@ export default function UserMenu(props) {
         <Avatar alt={userProfile.name} src={userProfile.imageUrl} className={classes.mr12} />
 
         <Typography>
-          {typeof lookerUser.permission_level === 'string' ?
-            lookerUser.permission_level.charAt(0).toUpperCase() + lookerUser.permission_level.substring(1) : ''}
+          {typeof lookerUser.user_attributes.permission_level === 'string' ?
+            lookerUser.user_attributes.permission_level.charAt(0).toUpperCase() + lookerUser.user_attributes.permission_level.substring(1) : ''}
         </Typography>
       </IconButton>
       <Menu

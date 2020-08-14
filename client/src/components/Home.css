@@ -140,3 +140,15 @@ hr {
   align-self: stretch;
   height: auto;
 }
+/* material overrides */
+.MuiListItemIcon-root {
+  min-width: 40px !important;
+}
+
+/* .MuiTreeItem-iconContainer{
+  width: 0px !important;
+} */
+
+.MuiTreeItem-group{
+  margin-left: 0px !important;
+}

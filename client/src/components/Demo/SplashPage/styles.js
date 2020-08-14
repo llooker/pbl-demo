@@ -146,5 +146,16 @@ export default makeStyles((theme) => ({
   },
   positionRelative: {
     position: 'relative'
-  }
+  },
+  padding15: {
+    padding: 15
+  },
+  maxHeight75: {
+    maxHeight: 75,
+    height: 75,
+  },
+  overflowYScroll: {
+    overflowY: 'scroll',
+    overflowX: 'hidden'
+  },
 }));

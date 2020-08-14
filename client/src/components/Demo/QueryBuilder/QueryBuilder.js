@@ -270,7 +270,7 @@ function FilterBar(props) {
             </Typography>
           </Grid>
 
-          <Grid item sm={12}>
+          <Grid item sm={3}>
             <Typography variant="subtitle1">
               Filter By:
                       </Typography>
@@ -302,7 +302,7 @@ function FilterBar(props) {
                             value={item.value || '6 months'}
                             onChange={(event) => handleSelectChange(index, event.target.value)}
                           >
-                            {lookerUser.permission_level ? datePermissionMap[lookerUser.permission_level].map(item => (
+                            {lookerUser.user_attributes.permission_level ? datePermissionMap[lookerUser.user_attributes.permission_level].map(item => (
                               <MenuItem key={validIdHelper(item)} value={item}>{_.capitalize(item)}</MenuItem>
                             )) : ''}
                           </Select>
@@ -313,7 +313,8 @@ function FilterBar(props) {
               )
             }) : ''}
           </Grid>
-          <Grid item sm={12}>
+          <Grid item sm={9}>
+            <br />
             <Button
               color="primary"
               variant="contained"

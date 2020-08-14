@@ -152,13 +152,13 @@ class App extends React.Component {
           external_user_id: userProfile.googleId,
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
-          permissions: LookerUserPermissions[lookerUser.permission_level] || LookerUserPermissions['basic'],
-          permission_level: lookerUser.permission_level || 'basic',
+          permissions: LookerUserPermissions[lookerUser.user_attributes.permission_level] || LookerUserPermissions['basic'],
           user_attributes: {
             ...lookerUser.user_attributes || {
               "locale": "en_US",
               "country": "USA",
-              "brand": "Calvin Klein"
+              "brand": "Calvin Klein",
+              "permission_level": "basic"
             }
           }
         },
@@ -212,14 +212,14 @@ class App extends React.Component {
           external_user_id: userProfile.googleId,
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
-          permissions: LookerUserPermissions[lookerUser.permission_level] || LookerUserPermissions['basic'], //assume good initially,
-          permission_level: lookerUser.permission_level || 'basic',
+          permissions: LookerUserPermissions[lookerUser.user_attributes.permission_level] || LookerUserPermissions['basic'], //assume good initially,
           user_attributes: {
             ...lookerUser.user_attributes || {
               "locale": "en_US",
               "country": "USA",
               "brand": "Calvin Klein",
-              "time_horizon": "last 6 months"
+              "time_horizon": "last 6 months",
+              "permission_level": "basic",
             }
           }
         },
@@ -340,7 +340,7 @@ class App extends React.Component {
       'advanced': 'last 365 days',
       'premium': 'last 730 days' //before today
     }
-    let userAttributeCopy = { ...this.state.lookerUser.user_attributes }
+    let userAttributeCopy = { ...this.state.lookerUser.user_attributes, "permission_level": newUser }
     userAttributeCopy.time_horizon = lookerUserTimeHorizonMap[newUser];
 
 
@@ -348,7 +348,6 @@ class App extends React.Component {
       lookerUser: {
         ...prevState.lookerUser,
         permissions: LookerUserPermissions[newUser],
-        permission_level: newUser,
         user_attributes: userAttributeCopy
       }
     }), async () => {
@@ -374,10 +373,18 @@ class App extends React.Component {
     let userAttributeCopy = { ...this.state.lookerUser.user_attributes }
     userAttributeCopy.brand = newAttribute;
 
+    let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
+    if (!usecaseFromUrl.length) {     //no usecase
+      window.location.href = window.location.href + 'atom'
+    } else if (!UsecaseContent.hasOwnProperty(usecaseFromUrl)) {     //usecase param isn't in JSON file
+      window.location.href = window.location.href.replace(usecaseFromUrl, 'atom')
+    }
+
     this.setState(prevState => ({
       lookerUser: {
         ...prevState.lookerUser,
-        user_attributes: userAttributeCopy
+        user_attributes: userAttributeCopy,
+        group_ids: [UsecaseContent[usecaseFromUrl].groupIds[newAttribute]]
       }
     }), async () => {
 

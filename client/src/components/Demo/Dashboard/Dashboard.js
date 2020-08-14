@@ -88,10 +88,9 @@ export default function Dashboard(props) {
     setApiContent([])
     lookerContent.map(async lookerContent => {
       let dashboardId = lookerContent.id;
+      // let dashboardSlug = lookerContent.slug;
 
-
-      //how can test to see if it has content???
-      LookerEmbedSDK.createDashboardWithId(dashboardId)
+      LookerEmbedSDK.createDashboardWithId(dashboardId) //dashboardSlug
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
         .withClassName('iframe')
         .withNext()
@@ -180,7 +179,7 @@ export default function Dashboard(props) {
 
   // const drillMenuClick = (event) => {
 
-  //   const basicLookerUser = lookerUser.permission_level === 'basic' ? true : false;
+  //   const basicLookerUser = lookerUser.user_attributes.permission_level === 'basic' ? true : false;
   //   if (basicLookerUser) {
   //     togglePayWallModal()
   //     return { cancel: (basicLookerUser) ? true : false }

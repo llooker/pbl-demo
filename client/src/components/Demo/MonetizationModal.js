@@ -2,7 +2,10 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppContext from '../../AppContext';
-import { Modal, Fade, Grid, Paper, Card, CardContent, CardActions, Button, Typography, Chip } from '@material-ui/core';
+import { Modal, Fade, Grid, Paper, Card, CardContent, CardActions, Button, Typography, Chip, Divider, List, ListItem, ListItemAvatar, Avatar, ImageIcon, ListItemText } from '@material-ui/core';
+
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import CheckIcon from '@material-ui/icons/Check';
 import LookerUserPermissions from '../../lookerUserPermissions.json';
 const { validIdHelper } = require('../../tools');
 
@@ -10,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
     width: 1000,
-    maxHeight: 450,
+    height: 580,
     overflow: 'scroll',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
@@ -21,8 +24,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    maxHeight: 300,
-    minHeight: 300,
+    height: 520,
     overflow: 'scroll',
     cursor: 'pointer',
     '&:hover': {
@@ -37,6 +39,30 @@ const useStyles = makeStyles((theme) => ({
   },
   padding15: {
     padding: 15
+  },
+  divider: {
+    marginTop: 15,
+    marginBottom: 15,
+    color: '#fff'
+  },
+  basic: {
+
+  },
+  advanced: {
+
+  },
+  premium: {
+    backgroundColor: '#5F6BD8',
+    color: '#ffffff'
+  },
+  font75: {
+    fontSize: '.75em'
+  },
+  font875: {
+    // fontSize: '.875em'
+  },
+  padding30: {
+    padding: 30
   }
 }));
 
@@ -58,17 +84,40 @@ export function MonetizationModal({ props, switchLookerUser }) {
   const [modalStyle] = React.useState(getModalStyle);
   const classes = useStyles();
 
+  const modalListMap = {
+    'basic': [
+      '6 months of order data history',
+      'Atom Merchant Dashboards',
+      'Download PDFs, CSVs'
+    ],
+    'advanced': [
+      'Full year of order data history',
+      'Drill to row level information',
+      'Download row level information',
+      'Schedule dashboards for delivery (to you or others)',
+      'Set alerts and key threshold notifications'],
+    'premium': [
+      '2 Full years of order data history',
+      'Analyze your own data and save custom reports',
+      'View premium level, productivity enhancing reports',
+      'Share your reports with colleagues in Atom',
+      'Text message alerts',
+      'Notify active shoppers on Atom',
+      'Apply Atom’s advanced AI insights to stay ahead of trends'
+    ]
+  }
+
 
   return (
     < Modal
-      className={`${classes.modal} ${classes.padding15}`}
+      className={`${classes.modal} `}
       open={payWallModal.show || false}
       onClose={togglePayWallModal}
     >
       <Fade in={payWallModal.show || false}>
-        <div style={modalStyle} className={classes.paper}>
-          <h2 id="simple-modal-title">Upgrade user account to {payWallModal.permissionNeeded}</h2>
-
+        <div
+          style={modalStyle}
+          className={`${classes.paper} ${classes.padding30}`}>
           <Grid container
             spacing={3}>
             {Object.keys(LookerUserPermissions).map(key => {
@@ -76,51 +125,55 @@ export function MonetizationModal({ props, switchLookerUser }) {
                 <Grid item sm={4}
                   key={validIdHelper(`monetizationModal-gridItem-${key}`)}
                 >
-
-                  <Card className={`${classes.card} `} elevation={1}
-                    style={key === lookerUser.permission_level ? {
+                  <Card className={`${classes.card} ${classes[key]}`}
+                    elevation={1}
+                    style={key === lookerUser.user_attributes.permission_level ? {
                       transform: 'scale(1.05)',
                       transition: 'transform .2s'
-                    } : {}}>
+                    } : {}}
+                    onClick={() => {
+                      switchLookerUser(key)
+                      togglePayWallModal()
+                    }}>
                     <CardContent>
-
                       <Typography variant="h6">
-                        {_.capitalize(key)} user permissions
-                      {key === lookerUser.permission_level ? <Chip
-                          label="Active" /> : ''}
+                        {_.capitalize(key)}
+                      </Typography>
+                      <Typography variant="subtitle">
+                        {lookerUser.user_attributes.permission_level === 'basic' ?
+                          'Drive your business with clear KPIs' :
+                          lookerUser.user_attributes.permission_level === 'advanced' ?
+                            'Deeper insights, operations' : 'Drive your business with Atom'
+                        }
                       </Typography>
 
+                      <Divider className={`${classes.divider} `} />
 
-                      {key === 'advanced' ?
-                        <Typography variant="subtitle2" gutterBottom>...Basic user permissions plus</Typography> :
-                        key === 'premium' ?
-                          <Typography variant="subtitle2" gutterBottom>...Advanced user permissions plus</Typography> :
-                          ''}
-
-                      {LookerUserPermissions[key] ? LookerUserPermissions[key].map(permission => (
-                        <Typography variant="subtitle2"
-                          gutterBottom
-                          color="secondary"
-                          key={validIdHelper(`monetizationModal-${key}-permissionItem-${permission}`)}
-                          style={permission === payWallModal.permissionNeeded ? { backgroundColor: 'yellow' } : {}}>
-                          {key === 'basic' ?
-                            permission :
-                            key === 'advanced' && LookerUserPermissions['basic'].indexOf(permission) == -1 ?
-                              permission :
-                              key === 'premium' && LookerUserPermissions['advanced'].indexOf(permission) == -1 ? permission : ''}
-                        </Typography>
-                      )) : ''}
-
+                      <List className={classes.root}>
+                        {
+                          modalListMap[key].map(item => (
+                            <ListItem dense={true}
+                              className={classes.font875}
+                            >
+                              <ListItemIcon disableTypography={true}>
+                                <CheckIcon fontSize="small" />
+                              </ListItemIcon>
+                              <ListItemText primary={item} disableTypography={true} />
+                            </ListItem>
+                          ))
+                        }
+                      </List>
                     </CardContent>
-
                     <CardActions disableSpacing={false}>
-                      {key === lookerUser.permission_level ? '' :
-                        <Button color="primary"
-                          onClick={() => {
-                            switchLookerUser(key)
-                            togglePayWallModal()
-                          }}>{'Upgrade'}</Button>
-                      }
+                      <Button
+                        color="primary"
+                        variant="outlined"
+                        disabled={key === lookerUser.user_attributes.permission_level ? true : false}
+                        fullWidth
+                        onClick={() => {
+                          switchLookerUser(key)
+                          togglePayWallModal()
+                        }}>{'Upgrade'}</Button>
                     </CardActions>
                   </Card>
                 </Grid>

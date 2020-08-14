@@ -15,9 +15,9 @@ export function PopularAnalysis({ lookerContent, classes, handleMenuItemSelect }
 
   return (
 
-    <Card className={classes.padding30} variant="outlined">
+    <Card className={classes.padding15} variant="outlined">
       <div
-        className={`${classes.overflowScroll}`}
+        className={`${classes.overflowYScroll}`}
         style={{ height: lookerContent.height }}
       >
         <Grid container
@@ -30,7 +30,7 @@ export function PopularAnalysis({ lookerContent, classes, handleMenuItemSelect }
             return (
               <VectorThumbnail
                 key={`${validIdHelper('vectorThumbnail-splashPage-' + index)}`}
-                {...{ lookerContent, item, classes, handleMenuItemSelect }}
+                {...{ lookerContent, item, classes, handleMenuItemSelect, index }}
               />
             )
           }
