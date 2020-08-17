@@ -79,8 +79,9 @@ function getModalStyle() {
 
 
 export function MonetizationModal({ props, switchLookerUser }) {
-  // console.log('MonetizationModal')
+  console.log('MonetizationModal')
   const { payWallModal, togglePayWallModal, lookerUser } = useContext(AppContext);
+  console.log('lookerUser', lookerUser.user_attributes.permission_level)
   const [modalStyle] = React.useState(getModalStyle);
   const classes = useStyles();
 
@@ -140,10 +141,11 @@ export function MonetizationModal({ props, switchLookerUser }) {
                         {_.capitalize(key)}
                       </Typography>
                       <Typography variant="subtitle">
-                        {lookerUser.user_attributes.permission_level === 'basic' ?
+                        {key === 'basic' ?
                           'Drive your business with clear KPIs' :
-                          lookerUser.user_attributes.permission_level === 'advanced' ?
-                            'Deeper insights, operations' : 'Drive your business with Atom'
+                          key === 'advanced' ?
+                            'Deeper insights, operations' :
+                            'Drive your business with Atom'
                         }
                       </Typography>
 
