@@ -141,7 +141,7 @@ export function MonetizationModal({ props, switchLookerUser }) {
                       <Typography variant="h6">
                         {_.capitalize(key)}
                       </Typography>
-                      <Typography variant="subtitle" style={{ fontStyle: 'italic' }}>
+                      <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}>
                         {key === 'basic' ?
                           'Drive your business with clear KPIs' :
                           key === 'advanced' ?
@@ -154,14 +154,16 @@ export function MonetizationModal({ props, switchLookerUser }) {
 
                       <List className={classes.root}>
                         {
-                          modalListMap[key].map(item => (
+                          modalListMap[key].map((item, index) => (
                             <ListItem dense={true}
                               className={classes.font875}
+                              key={`monetizationModal-ListItem-${key}-${index}`}
                             >
-                              <ListItemIcon disableTypography={true}>
+                              <ListItemIcon
+                              >
                                 <CheckIcon fontSize="small" />
                               </ListItemIcon>
-                              <ListItemText primary={item} disableTypography={true} />
+                              <ListItemText primary={item} />
                             </ListItem>
                           ))
                         }
@@ -176,7 +178,10 @@ export function MonetizationModal({ props, switchLookerUser }) {
                         onClick={() => {
                           switchLookerUser(key)
                           togglePayWallModal()
-                        }}>{'Upgrade'}</Button>
+                        }}>
+                        {Object.keys(modalListMap).indexOf(lookerUser.user_attributes.permission_level) < Object.keys(modalListMap).indexOf(key) ? 'Upgrade' : 'Switch'}
+                        {/* {'Upgrade'} */}
+                      </Button>
                     </CardActions>
                   </Card>
                 </Grid>
