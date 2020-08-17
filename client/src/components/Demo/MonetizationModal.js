@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    height: 520,
+    // height: 520,
     overflow: 'scroll',
     cursor: 'pointer',
     '&:hover': {
@@ -79,9 +79,7 @@ function getModalStyle() {
 
 
 export function MonetizationModal({ props, switchLookerUser }) {
-  console.log('MonetizationModal')
   const { payWallModal, togglePayWallModal, lookerUser } = useContext(AppContext);
-  console.log('lookerUser', lookerUser.user_attributes.permission_level)
   const [modalStyle] = React.useState(getModalStyle);
   const classes = useStyles();
 
@@ -103,8 +101,8 @@ export function MonetizationModal({ props, switchLookerUser }) {
       'View premium level, productivity enhancing reports',
       'Share your reports with colleagues in Atom',
       'Text message alerts',
-      'Notify active shoppers on Atom',
-      'Apply Atom’s advanced AI insights to stay ahead of trends'
+      // 'Notify active shoppers on Atom',
+      // 'Apply Atom’s advanced AI insights to stay ahead of trends'
     ]
   }
 
@@ -130,8 +128,11 @@ export function MonetizationModal({ props, switchLookerUser }) {
                     elevation={1}
                     style={key === lookerUser.user_attributes.permission_level ? {
                       transform: 'scale(1.05)',
-                      transition: 'transform .2s'
-                    } : {}}
+                      transition: 'transform .2s',
+                      height: 495
+                    } : {
+                        height: 495
+                      }}
                     onClick={() => {
                       switchLookerUser(key)
                       togglePayWallModal()
@@ -140,7 +141,7 @@ export function MonetizationModal({ props, switchLookerUser }) {
                       <Typography variant="h6">
                         {_.capitalize(key)}
                       </Typography>
-                      <Typography variant="subtitle">
+                      <Typography variant="subtitle" style={{ fontStyle: 'italic' }}>
                         {key === 'basic' ?
                           'Drive your business with clear KPIs' :
                           key === 'advanced' ?

@@ -158,4 +158,12 @@ export default makeStyles((theme) => ({
     overflowY: 'scroll',
     overflowX: 'hidden'
   },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  },
 }));

@@ -17,7 +17,7 @@ export function Welcome({ lookerContent, classes }) {
   return (
     <div
       className={`${classes.overflowScroll} ${classes.padding15}`}
-      style={{ height: lookerContent.height }}
+      style={{ maxHeight: lookerContent.height }}
     >
       <Typography variant="h4">Welcome back</Typography>
       <br />

@@ -46,7 +46,7 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
                 <img
                   onClick={() => handleMenuItemSelect(item.id, 1)}
                   src={svg}
-                // style={{ width: '100%' }}
+                  style={{ width: '100%' }}
                 />
 
               </div>
