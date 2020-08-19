@@ -22,8 +22,7 @@ export default function UserMenu(props) {
 
   const { lookerUser, switchLookerUser, onLogoutSuccess, lookerUserAttributeBrandOptions, switchUserAttributeBrand } = props
   const classes = useStyles();
-  const { toggleShow } = useContext(AppContext)
-  const { userProfile } = useContext(AppContext);
+  const { togglePayWallModal, codeShow, toggleShow, userProfile } = useContext(AppContext)
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedBrand, setSelectedBrand] = React.useState(lookerUser.user_attributes.brand || '');
@@ -40,7 +39,13 @@ export default function UserMenu(props) {
       onLogoutSuccess({})
     } else if (newValue === 'basic' || newValue === 'advanced' || newValue === 'premium') {
       switchLookerUser(newValue)
-    } else if (typeof newValue === 'string') {
+    } else if (newValue === 'modal') {
+      togglePayWallModal({
+        'show': true,
+        'permissionNeeded': 'explore'
+      })
+    }
+    else if (typeof newValue === 'string') {
       switchUserAttributeBrand(newValue)
       setSelectedBrand(newValue);
     }
@@ -80,9 +85,10 @@ export default function UserMenu(props) {
         <Divider className={classes.divider} /> */}
         <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
         <Divider className={classes.divider} />
+        <MenuItem onClick={() => handleClose('modal')}>Show Modal</MenuItem>
+        <Divider className={classes.divider} />
         <MenuItem>Current brand: {selectedBrand}</MenuItem>
         <MenuItem>
-
           <Autocomplete
             id="combo-box-usermenu"
             options={lookerUserAttributeBrandOptions}
