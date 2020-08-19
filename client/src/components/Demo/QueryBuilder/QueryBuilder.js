@@ -85,56 +85,58 @@ export default function QueryBuilder(props) {
   }
 
   return (
-    <div className={`${classes.root} ${classes.padding30} demoComponent`}>
-      <Grid container
-        spacing={3}
-        key={validIdHelper(type)} >
-        <div className={`${classes.root} ${classes.positionRelative}`}>
-          <Grid item sm={12}>
-            <FilterBar {...props}
-              classes={classes}
-              action={performLookerApiCalls}
-            />
-          </Grid>
-          {apiContent.status === 'running' ?
-            <Grid item sm={12} >
-              <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
-                <CircularProgress className={classes.circularProgress} />
-              </Card>
-            </Grid >
-            : apiContent.data && apiContent.data.length ?
-              <Box
-              >
-                <Grid container>
-                  {codeShow ? <Grid item sm={6}
-                    className={`${classes.positionTopRight}`}
-                  >
-                    <CodeFlyout {...props}
-                      classes={classes}
-                      lookerUser={lookerUser} />
-                  </Grid> : ''}
-                  <Divider className={classes.divider} />
-                  <Grid item sm={12}>
-                    <Box className={`${classes.w100} ${classes.maxHeight600} ${classes.padding30}`} mt={2}>
-                      <EnhancedTable
-                        {...props}
-                        classes={classes}
-                        rows={apiContent.data}
-                        lookerContent={lookerContent}
-                      />
-                    </Box>
-                  </Grid>
-                </Grid>
-              </Box>
-              :
+    <div className={`${classes.root} ${classes.minHeight680}   demoComponent`}>
+      <Card elevation={1} className={`${classes.padding30} `}>
+        <Grid container
+          spacing={3}
+          key={validIdHelper(type)} >
+          <div className={`${classes.root} ${classes.positionRelative}`}>
+            <Grid item sm={12}>
+              <FilterBar {...props}
+                classes={classes}
+                action={performLookerApiCalls}
+              />
+            </Grid>
+            {apiContent.status === 'running' ?
               <Grid item sm={12} >
-                <Typography variant="h6" component="h6" className={`${classes.gridTitle} ${classes.textCenter}`}>
-                  No results found, try a new query<br />
-                </Typography>
-              </Grid>
-          }
-        </div >
-      </Grid >
+                <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                  <CircularProgress className={classes.circularProgress} />
+                </Card>
+              </Grid >
+              : apiContent.data && apiContent.data.length ?
+                <Box
+                >
+                  <Grid container>
+                    {codeShow ? <Grid item sm={6}
+                      className={`${classes.positionTopRight}`}
+                    >
+                      <CodeFlyout {...props}
+                        classes={classes}
+                        lookerUser={lookerUser} />
+                    </Grid> : ''}
+                    <Divider className={classes.divider} />
+                    <Grid item sm={12}>
+                      <Box className={`${classes.w100} ${classes.maxHeight600} ${classes.padding30}`} mt={2}>
+                        <EnhancedTable
+                          {...props}
+                          classes={classes}
+                          rows={apiContent.data}
+                          lookerContent={lookerContent}
+                        />
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Box>
+                :
+                <Grid item sm={12} >
+                  <Typography variant="h6" component="h6" className={`${classes.gridTitle} ${classes.textCenter}`}>
+                    No results found, try a new query<br />
+                  </Typography>
+                </Grid>
+            }
+          </div >
+        </Grid >
+      </Card>
     </div >
   )
 }

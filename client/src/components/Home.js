@@ -6,10 +6,10 @@ import {
   Drawer, CssBaseline, AppBar, Toolbar, Typography,
   Divider, IconButton, Tabs, Tab, Icon, Box, Avatar,
   ListSubheader, List, ListItem, ListItemIcon, ListItemText,
-  Badge
+  Badge, FormControlLabel, Switch, Button
 } from '@material-ui/core/';
 
-import { AddAlert, Speed, TrendingUp, StoreMallDirectory, DateRange, Search, FindInPage } from '@material-ui/icons';
+import { AddAlert, Speed, TrendingUp, StoreMallDirectory, DateRange, Search, FindInPage, Code } from '@material-ui/icons';
 import HomeIcon from '@material-ui/icons/Home'; //can't reuse home name
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { blue, grey } from '@material-ui/core/colors';
@@ -54,9 +54,13 @@ const styles = theme => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+    borderRight: 'none',
+    backgroundColor: 'transparent'
   },
   drawerPaper: {
     width: drawerWidth,
+    borderRight: 'none',
+    backgroundColor: 'transparent'
   },
   drawerHeader: {
     display: 'flex',
@@ -167,7 +171,8 @@ const styles = theme => ({
   list: {
     width: '100%',
     maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: 'transparent'
+    // theme.palette.background.paper,
   },
   nested: {
     paddingLeft: theme.spacing(4),
@@ -181,9 +186,16 @@ const styles = theme => ({
   appBarBottom: {
     top: 'auto',
     bottom: 0,
+    // backgroundColor: 'transparent'
   },
   hidden: {
     visibility: 'hidden'
+  },
+  roundedTab: {
+    borderRadius: '0 100px 100px 0'
+  },
+  paddingBottom30: {
+    paddingBottom: 30
   }
 });
 
@@ -437,6 +449,7 @@ class Home extends Component {
                 // {...{ classes }} 
                 switchLookerUser={switchLookerUser}
               />
+              <BottomBar classes={classes} lookerUser={lookerUser} />
             </Drawer>
             <main
               className={clsx(classes.content, {
@@ -475,7 +488,7 @@ class Home extends Component {
                 ''
               }
             </main >
-            <BottomBar classes={classes} lookerUser={lookerUser} />
+            {/* <BottomBar classes={classes} lookerUser={lookerUser} /> */}
           </ThemeProvider>
         </AppContext.Provider>
       </div >
@@ -494,27 +507,12 @@ function TopBar(props) {
       <Toolbar>
 
         {activeUsecase ?
-          <>
-            <Avatar alt="Icon"
-              src={require(`../images/${activeUsecase}_logo_white.svg`)}
-              variant="square"
-            />
-            {/* hack */}
-            <Avatar alt="Icon"
-              src={require(`../images/${activeUsecase}_logo_white.svg`)}
-              variant="square"
-              className={`${classes.hidden}`}
-            />
-            <Avatar alt="Icon"
-              src={require(`../images/${activeUsecase}_logo_white.svg`)}
-              variant="square"
-              className={`${classes.hidden}`}
-            /> </> : ''}
-        <Typography align="center" className={`${classes.mr12} ${classes.mlAuto} ${classes.mrAuto}`}>
-          {lookerUser.user_attributes.brand}
-        </Typography>
+          <Avatar alt="Icon"
+            src={require(`../images/${activeUsecase}_logo_white.svg`)}
+            variant="square"
+          /> : ''}
 
-        <Badge badgeContent={3} color="error" className={`${classes.mr12} `} >
+        <Badge badgeContent={3} color="error" className={`${classes.mlAuto} ${classes.mr12} `} >
           <AddAlert />
         </Badge>
         <UserMenu
@@ -554,6 +552,7 @@ function MenuList(props) {
           key={`${validIdHelper(outerItem + '-menuList-' + outerIndex)}`}>
           <ListItem
             key={`${validIdHelper(outerItem + '-outerListItem-' + outerIndex)}`}
+          // className={'roundedTab'}
           >
             <ListItemText primary={outerItem === 'home' ? '' : _.upperCase(outerItem)} />
           </ListItem>
@@ -564,7 +563,9 @@ function MenuList(props) {
               const MatchingIconComponent = demoComponentIconMap[key]
 
               return (
-                <ListItem button className={classes.nested}
+                <ListItem
+                  button
+                  className={`${classes.nested} ${classes.roundedTab}`}
                   key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
                   onClick={
                     () => handleMenuItemSelect(validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type))

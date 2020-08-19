@@ -223,113 +223,115 @@ export default function CustomVis(props) {
   let googleColorScale = ['#4595EC', '#F3A759', '#E24E3A', '#65AB5A'];
 
   return (
-    <div className={`${classes.root} ${classes.minHeight680} ${classes.padding30}  demoComponent`}>
-      <Grid container
-        spacing={3}
-        key={validIdHelper(type)} >
-        <div className={`${classes.root} ${classes.positionRelative}`}>
+    <div className={`${classes.root} ${classes.minHeight680}   demoComponent`}>
+      <Card elevation={1} className={`${classes.padding30} `}>
+        <Grid container
+          spacing={3}
+          key={validIdHelper(type)} >
+          <div className={`${classes.root} ${classes.positionRelative}`}>
 
-          {!apiContent.queryResults ?
-            <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
-            :
-            <FilterBar {...props}
-              classes={classes}
-              apiContent={apiContent}
-              fromDate={fromDate}
-              toDate={toDate}
-              category={category}
-              desiredField={desiredField}
-              handleFromDate={handleFromDate}
-              handleToDate={handleToDate}
-              handleCategory={handleCategory}
-              handleDesiredField={handleDesiredField}
-            />
-          }
+            {!apiContent.queryResults ?
+              <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
+              :
+              <FilterBar {...props}
+                classes={classes}
+                apiContent={apiContent}
+                fromDate={fromDate}
+                toDate={toDate}
+                category={category}
+                desiredField={desiredField}
+                handleFromDate={handleFromDate}
+                handleToDate={handleToDate}
+                handleCategory={handleCategory}
+                handleDesiredField={handleDesiredField}
+              />
+            }
 
 
-          {!apiContent.queryResults ?
-            <Grid item sm={12} >
-              <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
-                <CircularProgress className={classes.circularProgress} />
-              </Card>
-            </Grid>
+            {!apiContent.queryResults ?
+              <Grid item sm={12} >
+                <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                  <CircularProgress className={classes.circularProgress} />
+                </Card>
+              </Grid>
 
-            : apiContent.queryResults && apiContent.queryResults.length ?
+              : apiContent.queryResults && apiContent.queryResults.length ?
 
-              <Box
-                className={``}>
-                <Grid container>
-                  {codeShow ? <Grid item sm={6}
-                    className={`${classes.positionTopRight}`}
-                  >
-                    <CodeFlyout {...props}
-                      classes={classes}
-                      lookerUser={lookerUser} />
-                  </Grid> : ''}
-                  <Divider className={classes.divider} />
-                  <Grid item sm={12} className={classes.height600}>
+                <Box
+                  className={``}>
+                  <Grid container>
+                    {codeShow ? <Grid item sm={6}
+                      className={`${classes.positionTopRight}`}
+                    >
+                      <CodeFlyout {...props}
+                        classes={classes}
+                        lookerUser={lookerUser} />
+                    </Grid> : ''}
+                    <Divider className={classes.divider} />
+                    <Grid item sm={12} className={classes.height600}>
 
-                    <Box className={classes.w100} mt={2}>
+                      <Box className={classes.w100} mt={2}>
 
-                      <ApiHighlight height={400} classes={classes}>
-                        <ResponsiveCalendar
-                          data={filterData}
-                          align="top"
-                          from={incrementDate(fromDate, 1)}
-                          to={incrementDate(toDate, 1)}
-                          emptyColor="#eeeeee"
-                          colors={desiredField === lookerContent[0].desiredFields[0] ? googleColorScale : nivoColorScale}
-                          yearSpacing={40}
-                          monthBorderColor="#ffffff"
-                          dayBorderWidth={2}
-                          dayBorderColor="#ffffff"
-                          margin={{ bottom: 40, left: 40 }}
-                          legends={[
-                            {
-                              anchor: 'bottom-right',
-                              direction: 'row',
-                              translateY: 36,
-                              itemCount: 4,
-                              itemWidth: 42,
-                              itemHeight: 36,
-                              itemsSpacing: 14,
-                              itemDirection: 'right-to-left'
-                            }
-                          ]}
-                          onClick={(day, event) => {
-                            if (!day.value) {
-                            } else if (lookerUser.user_attributes.permission_level === 'basic') {
-                              togglePayWallModal({
-                                'show': true,
-                                'permissionNeeded': 'see_drill_overlay'
-                              });
-                            } else {
-                              handleModalOpen(day)
-                              event.stopPropagation();
-                            }
-                          }}
-                        />
-                      </ApiHighlight>
-                    </Box>
+                        <ApiHighlight height={400} classes={classes}>
+                          <ResponsiveCalendar
+                            data={filterData}
+                            align="top"
+                            from={incrementDate(fromDate, 1)}
+                            to={incrementDate(toDate, 1)}
+                            emptyColor="#eeeeee"
+                            colors={desiredField === lookerContent[0].desiredFields[0] ? googleColorScale : nivoColorScale}
+                            yearSpacing={40}
+                            monthBorderColor="#ffffff"
+                            dayBorderWidth={2}
+                            dayBorderColor="#ffffff"
+                            margin={{ bottom: 40, left: 40 }}
+                            legends={[
+                              {
+                                anchor: 'bottom-right',
+                                direction: 'row',
+                                translateY: 36,
+                                itemCount: 4,
+                                itemWidth: 42,
+                                itemHeight: 36,
+                                itemsSpacing: 14,
+                                itemDirection: 'right-to-left'
+                              }
+                            ]}
+                            onClick={(day, event) => {
+                              if (!day.value) {
+                              } else if (lookerUser.user_attributes.permission_level === 'basic') {
+                                togglePayWallModal({
+                                  'show': true,
+                                  'permissionNeeded': 'see_drill_overlay'
+                                });
+                              } else {
+                                handleModalOpen(day)
+                                event.stopPropagation();
+                              }
+                            }}
+                          />
+                        </ApiHighlight>
+                      </Box>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </Box> :
-              ''
-          }
-        </div>
-      </Grid >
-      {
-        open ?
-          <ModalTable
-            {...props}
-            open={open}
-            onClose={handleModalClose}
-            classes={classes}
-            modalContent={modalContent}
-          />
+                </Box> :
+                ''
+            }
+          </div>
+        </Grid >
+        {
+          open ?
+            <ModalTable
+              {...props}
+              open={open}
+              onClose={handleModalClose}
+              classes={classes}
+              modalContent={modalContent}
+            />
 
-          : ''
-      }
+            : ''
+        }
+      </Card>
     </div >
   )
 }

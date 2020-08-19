@@ -244,114 +244,116 @@ export default function ReportBuilder(props) {
 
 
   return (
-    <div className={`${classes.root} ${classes.padding30} demoComponent`}>
-      <Grid container
-        spacing={3}
-        key={validIdHelper(type)} >
-        <div className={classes.root}>
-          {iFrameExists ? '' :
-            <Grid item sm={12} >
-              <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
-                <CircularProgress className={classes.circularProgress} />
-              </Card>
-            </Grid>
-          }
+    <div className={`${classes.root} ${classes.minHeight680}   demoComponent`}>
+      <Card elevation={1} className={`${classes.padding30} `}>
+        <Grid container
+          spacing={3}
+          key={validIdHelper(type)} >
+          <div className={classes.root}>
+            {iFrameExists ? '' :
+              <Grid item sm={12} >
+                <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                  <CircularProgress className={classes.circularProgress} />
+                </Card>
+              </Grid>
+            }
 
-          {/* additional loading logic, need embedContainer to exist but want it hidden until iFrame has content...*/}
-          <Box className={iFrameExists ? `${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
-            <AppBar position="static" elevation={0}>
-              <Tabs
-                className={classes.tabs}
-                value={value}
-                onChange={handleChange}
-                aria-label="simple tabs example">
-                {tabContent.map((item, index) => (
-                  <Tab
-                    key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
-                    label={index == 1 ?
-                      <div>
-
-                        {lookerUser.user_attributes.permission_level != 'premium' ?
-                          <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} /> : <Icon className={`fa fa-plus ${classes.faSm} ${classes.mr12}`} />}
-                        {item.label}
-                      </div> :
-                      item.label}
-                    className={value === 1 && index === 1 ? `${classes.hidden}` : index == 1 ? `${classes.mlAuto}` : ``}
-                    style={index === 1 ? {
-                      backgroundColor: '#5896E6',
-                      borderRadius: '4px',
-                      color: '#fff',
-                      opacity: '1.0'
-                    } : {}}
-                    {...a11yProps(index)} />
-                ))}
-              </Tabs>
-            </AppBar>
-
-            <Box className="tabPanelContainer">
-              {codeShow ? <Grid item sm={6}
-                className={`${classes.positionTopRight}`}
-              >
-                <CodeFlyout {...props}
-                  classes={classes}
-                  lookerUser={lookerUser} />
-              </Grid> : ''}
-              {tabContent.map((tabContentItem, tabContentItemIndex) => (
-                <TabPanel
-                  key={`${validIdHelper(demoComponentType + '-tabPanel-' + tabContentItemIndex)}`}
+            {/* additional loading logic, need embedContainer to exist but want it hidden until iFrame has content...*/}
+            <Box className={iFrameExists ? `${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
+              <AppBar position="static" elevation={0}>
+                <Tabs
+                  className={classes.tabs}
                   value={value}
-                  index={tabContentItemIndex}>
-                  <Grid container>
-                    {
-                      tabContentItemIndex === 0
-                        ?
-                        <React.Fragment
-                          key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
-                          <Grid item sm={4} >
-                            <ApiHighlight height={500} classes={classes}>
-                              <TreeSideBar {...{
-                                togglePayWallModal,
-                                classes,
-                                demoComponentType,
-                                tabContent,
-                                tabContentItemIndex,
-                                action,
-                                apiContent,
-                                ...props
-                              }}
-                              />
-                            </ApiHighlight>
-                          </Grid>
-                          <Grid item sm={8} >
+                  onChange={handleChange}
+                  aria-label="simple tabs example">
+                  {tabContent.map((item, index) => (
+                    <Tab
+                      key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
+                      label={index == 1 ?
+                        <div>
+
+                          {lookerUser.user_attributes.permission_level != 'premium' ?
+                            <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} /> : <Icon className={`fa fa-plus ${classes.faSm} ${classes.mr12}`} />}
+                          {item.label}
+                        </div> :
+                        item.label}
+                      className={value === 1 && index === 1 ? `${classes.hidden}` : index == 1 ? `${classes.mlAuto}` : ``}
+                      style={index === 1 ? {
+                        backgroundColor: '#5896E6',
+                        borderRadius: '4px',
+                        color: '#fff',
+                        opacity: '1.0'
+                      } : {}}
+                      {...a11yProps(index)} />
+                  ))}
+                </Tabs>
+              </AppBar>
+
+              <Box className="tabPanelContainer">
+                {codeShow ? <Grid item sm={6}
+                  className={`${classes.positionTopRight}`}
+                >
+                  <CodeFlyout {...props}
+                    classes={classes}
+                    lookerUser={lookerUser} />
+                </Grid> : ''}
+                {tabContent.map((tabContentItem, tabContentItemIndex) => (
+                  <TabPanel
+                    key={`${validIdHelper(demoComponentType + '-tabPanel-' + tabContentItemIndex)}`}
+                    value={value}
+                    index={tabContentItemIndex}>
+                    <Grid container>
+                      {
+                        tabContentItemIndex === 0
+                          ?
+                          <React.Fragment
+                            key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
+                            <Grid item sm={4} >
+                              <ApiHighlight height={500} classes={classes}>
+                                <TreeSideBar {...{
+                                  togglePayWallModal,
+                                  classes,
+                                  demoComponentType,
+                                  tabContent,
+                                  tabContentItemIndex,
+                                  action,
+                                  apiContent,
+                                  ...props
+                                }}
+                                />
+                              </ApiHighlight>
+                            </Grid>
+                            <Grid item sm={8} >
+                              <EmbedHighlight classes={classes}>
+                                <div
+                                  className={`embedContainer ${validIdHelper(demoComponentType)}`}
+                                  id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                  key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                >
+                                </div>
+                              </EmbedHighlight>
+                            </Grid>
+                          </React.Fragment>
+                          :
+                          <Grid item sm={12} >
                             <EmbedHighlight classes={classes}>
                               <div
-                                className={`embedContainer ${validIdHelper(demoComponentType)}`}
+                                className="embedContainer"
                                 id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                                 key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                               >
                               </div>
                             </EmbedHighlight>
                           </Grid>
-                        </React.Fragment>
-                        :
-                        <Grid item sm={12} >
-                          <EmbedHighlight classes={classes}>
-                            <div
-                              className="embedContainer"
-                              id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                              key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                            >
-                            </div>
-                          </EmbedHighlight>
-                        </Grid>
-                    }
-                  </Grid>
-                </TabPanel>
-              ))}
-            </Box>
-          </Box >
-        </div>
-      </Grid >
+                      }
+                    </Grid>
+                  </TabPanel>
+                ))}
+              </Box>
+            </Box >
+          </div>
+        </Grid >
+      </Card>
     </div >
   )
 }

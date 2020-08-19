@@ -63,58 +63,60 @@ export default function SplashPage(props) {
    * this section is necessary but less relevant to looker functionality itself
    */
   return (
-    <div className={`${classes.root} ${classes.minHeight680} ${classes.padding30} demoComponent`}>
-      <Grid container
-        spacing={3}
-        key={validIdHelper(type)} >
-        <div className={classes.root}>
-          {iFrameExists ? '' :
-            <Grid item sm={12} >
-              <Card className={`${classes.card} ${classes.flexCentered}`}>
-                <CircularProgress className={classes.circularProgress} />
-              </Card>
-            </Grid>
-          }
-          <Box className={iFrameExists ? `${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
-            <Grid container
-              spacing={3}
-              key={`${validIdHelper(demoComponentType + '-outerFragment')}`}>
-              {codeShow ? <Grid item sm={6}
-                className={`${classes.positionTopRight}`}
-              >
-                <CodeFlyout {...props}
-                  classes={classes}
-                  lookerUser={lookerUser} />
-              </Grid> : ''}
-              {lookerContent.map((lookerContent, innerIndex) => {
-                return (
-                  <Grid
-                    key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
-                    item
-                    sm={parseInt(lookerContent.gridWidth)}
-                  >
-                    {(lookerContent.type === 'welcome') && <Welcome
-                      {...{ lookerContent, classes, demoComponentType, lookerHost }}
-                    />}
-                    {(lookerContent.type === 'carousel') && <ContentCarousel
-                      {...{ lookerContent, classes, demoComponentType, lookerHost }}
-                    />}
-                    {(lookerContent.type === 'single value') && <SingleValueVis
-                      {...{ lookerContent, classes, demoComponentType, lookerHost }}
-                    />}
-                    {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
-                      {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
-                    />}
-                    {(lookerContent.type === 'popular analysis') && <PopularAnalysis
-                      {...{ lookerContent, classes, demoComponentType, handleMenuItemSelect, lookerHost }}
-                    />}
-                  </Grid>
-                )
-              })}
-            </Grid>
-          </Box >
-        </div >
-      </Grid >
+    <div className={`${classes.root} ${classes.minHeight680}   demoComponent`}>
+      <Card elevation={1} className={`${classes.padding30} `}>
+        <Grid container
+          spacing={3}
+          key={validIdHelper(type)} >
+          <div className={classes.root}>
+            {iFrameExists ? '' :
+              <Grid item sm={12} >
+                <Card className={`${classes.card} ${classes.flexCentered}`}>
+                  <CircularProgress className={classes.circularProgress} />
+                </Card>
+              </Grid>
+            }
+            <Box className={iFrameExists ? `${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
+              <Grid container
+                spacing={3}
+                key={`${validIdHelper(demoComponentType + '-outerFragment')}`}>
+                {codeShow ? <Grid item sm={6}
+                  className={`${classes.positionTopRight}`}
+                >
+                  <CodeFlyout {...props}
+                    classes={classes}
+                    lookerUser={lookerUser} />
+                </Grid> : ''}
+                {lookerContent.map((lookerContent, innerIndex) => {
+                  return (
+                    <Grid
+                      key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
+                      item
+                      sm={parseInt(lookerContent.gridWidth)}
+                    >
+                      {(lookerContent.type === 'welcome') && <Welcome
+                        {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                      />}
+                      {(lookerContent.type === 'carousel') && <ContentCarousel
+                        {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                      />}
+                      {(lookerContent.type === 'single value') && <SingleValueVis
+                        {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                      />}
+                      {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
+                        {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                      />}
+                      {(lookerContent.type === 'popular analysis') && <PopularAnalysis
+                        {...{ lookerContent, classes, demoComponentType, handleMenuItemSelect, lookerHost }}
+                      />}
+                    </Grid>
+                  )
+                })}
+              </Grid>
+            </Box >
+          </div >
+        </Grid >
+      </Card>
     </div >
   )
 }

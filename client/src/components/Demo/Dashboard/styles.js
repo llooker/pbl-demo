@@ -53,7 +53,7 @@ export default makeStyles((theme) => ({
   },
   card: {
     minWidth: 275,
-    minHeight: 600,
+    minHeight: 680,
   },
   padding30: {
     padding: 30

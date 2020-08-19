@@ -22,15 +22,16 @@ export default function BottomBar(props) {
     <AppBar
       position="fixed"
       className={clsx(classes.appBarBottom)}
-      color="default"
+      color="transparent"
+      elevation={0}
     >
       <Toolbar>
         <FormControlLabel
           control={<Switch checked={show} onChange={toggleShow} />}
           label="Show source"
-          className={`${classes.mlAuto}`}
         />
         <Button variant="outlined"
+          className={`${classes.mrAuto}`}
           startIcon={<CodeIcon />}
           onClick={toggleCodeShow}>Code
           </Button>

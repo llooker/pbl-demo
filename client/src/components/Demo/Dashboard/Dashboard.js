@@ -200,70 +200,72 @@ export default function Dashboard(props) {
   // console.log('apiContent', apiContent)
 
   return (
-    <div className={`${classes.root} ${classes.minHeight680} ${classes.padding30}  demoComponent`}>
-      <Grid container spacing={3}>
-        <div className={`${classes.root} ${classes.positionRelative}`}>
+    <div className={`${classes.root} ${classes.minHeight680}   demoComponent`}>
+      <Card elevation={1} className={`${classes.padding30} `}>
+        <Grid container spacing={3}>
+          <div className={`${classes.root} ${classes.positionRelative}`}>
 
-          {lookerContent[0].hasOwnProperty("filters") &&
-            apiContent.length === lookerContent[0].filters.length ?
-            <Grid item
-              sm={12}
-              key={validIdHelper(`${demoComponentType}-FilterBar-${lookerContent[0].id}`)}
-            >
-              <FilterBar {...props}
-                classes={classes}
-                apiContent={apiContent}
-                customFilterAction={customFilterAction}
-                regionValue={regionValue}
-                setRegionValue={setRegionValue}
-                toggleValue={toggleValue}
-                handleToggle={handleToggle}
-              />
-            </Grid> :
-            lookerContent[0].hasOwnProperty("filters") ?
-              <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> :
-              ''}
-
-
-          {
-            iFrameExists
-              ? ''
-              :
-              <Grid item sm={12} >
-                <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
-                  <CircularProgress className={classes.circularProgress} />
-                </Card>
-              </Grid>
-          }
-          <Box
-            className={iFrameExists ? ` ` : `${classes.hidden} `}>
-            {codeShow ?
-              <Grid item sm={6}
-                className={`${classes.positionTopRight}`}
+            {lookerContent[0].hasOwnProperty("filters") &&
+              apiContent.length === lookerContent[0].filters.length ?
+              <Grid item
+                sm={12}
+                key={validIdHelper(`${demoComponentType}-FilterBar-${lookerContent[0].id}`)}
               >
-                <CodeFlyout {...props}
+                <FilterBar {...props}
                   classes={classes}
-                  lookerUser={lookerUser} />
+                  apiContent={apiContent}
+                  customFilterAction={customFilterAction}
+                  regionValue={regionValue}
+                  setRegionValue={setRegionValue}
+                  toggleValue={toggleValue}
+                  handleToggle={handleToggle}
+                />
+              </Grid> :
+              lookerContent[0].hasOwnProperty("filters") ?
+                <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> :
+                ''}
+
+
+            {
+              iFrameExists
+                ? ''
+                :
+                <Grid item sm={12} >
+                  <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                    <CircularProgress className={classes.circularProgress} />
+                  </Card>
+                </Grid>
+            }
+            <Box
+              className={iFrameExists ? ` ` : `${classes.hidden} `}>
+              {codeShow ?
+                <Grid item sm={6}
+                  className={`${classes.positionTopRight}`}
+                >
+                  <CodeFlyout {...props}
+                    classes={classes}
+                    lookerUser={lookerUser} />
+                </Grid>
+                : ''}
+              <Grid item sm={12}>
+
+                <Box className={classes.w100} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
+
+
+                  <EmbedHighlight classes={classes}>
+                    <div
+                      className={`embedContainer ${validIdHelper(demoComponentType)}`}
+                      id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                      key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                    >
+                    </div>
+                  </EmbedHighlight>
+                </Box>
               </Grid>
-              : ''}
-            <Grid item sm={12}>
-
-              <Box className={classes.w100} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
-
-
-                <EmbedHighlight classes={classes}>
-                  <div
-                    className={`embedContainer ${validIdHelper(demoComponentType)}`}
-                    id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                    key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                  >
-                  </div>
-                </EmbedHighlight>
-              </Box>
-            </Grid>
-          </Box>
-        </div>
-      </Grid>
+            </Box>
+          </div>
+        </Grid>
+      </Card>
     </div>
   )
 }
