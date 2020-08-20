@@ -508,7 +508,7 @@ function TopBar(props) {
 
         {activeUsecase ?
           <Avatar alt="Icon"
-            src={require(`../images/${activeUsecase}_logo_white.svg`)}
+            src={require(`../images/${activeUsecase}.svg`)}
             variant="square"
           /> : ''}
 
