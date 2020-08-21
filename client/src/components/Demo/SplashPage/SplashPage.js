@@ -51,10 +51,10 @@ export default function SplashPage(props) {
    * listen for lookerContent and call 
    * setSampleCode
   */
-  useEffect(() => {
-    // console.log('useEffect')
-    setClientSideCode(rawSampleCode)
-  }, [lookerContent]);
+  // useEffect(() => {
+  //   // console.log('useEffect')
+  //   // setClientSideCode(rawSampleCode)
+  // }, [lookerContent]);
 
 
   /**

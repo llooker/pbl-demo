@@ -151,8 +151,8 @@ html {
 }
 /* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-  /* background: transparent; */
-  background: #FF0000;
+  background: transparent;
+  /* background: #FF0000; */
 }
 
 /* material overrides */

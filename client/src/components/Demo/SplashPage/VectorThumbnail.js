@@ -10,10 +10,14 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
   const { userProfile, lookerUser, show } = useContext(AppContext)
 
   useEffect(() => {
-    if (item) {
-      getThumbnail();
-    }
-  }, [item, lookerUser])
+    let isSubscribed = true
+    getThumbnail().then(response => {
+      if (isSubscribed) {
+        setSvg(response)
+      }
+    })
+    return () => isSubscribed = false
+  }, [item, lookerUser]);
 
   const getThumbnail = async () => {
     let lookerResponse = await fetch(`/getthumbnail/${item.resourceType}/${item.id}`, {
@@ -26,7 +30,8 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
     let lookerResponseData = await lookerResponse.json();
     const blob = new Blob([lookerResponseData.svg], { type: 'image/svg+xml' });
     let url = URL.createObjectURL(blob);
-    setSvg(url)
+    // setSvg(url)
+    return url;
   }
 
   return (

@@ -296,6 +296,7 @@ class Home extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    // console.log('componentDidUpdate')
     let prevPermissionLevel = prevProps.lookerUser.user_attributes.permission_level;
     let currPermissionLevel = this.props.lookerUser.user_attributes.permission_level;
     let prevUserBrand = prevProps.lookerUser.user_attributes.brand;
@@ -306,12 +307,13 @@ class Home extends Component {
       LookerEmbedSDK.init(`https://${this.props.lookerHost}.looker.com`, '/auth');
       this.setState({
         renderedDemoComponents: [this.state.selectedMenuItem]
-      }, () => {
       })
     }
   }
 
   render() {
+
+    // console.log('this.state.renderedDemoComponents', this.state.renderedDemoComponents ? this.state.renderedDemoComponents : '')
 
     //how to make this dynamic????
     const demoComponentMap = {

@@ -11,10 +11,14 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
   const { userProfile, lookerUser, show } = useContext(AppContext)
 
   useEffect(() => {
-    if (item) {
-      runInlineQuery();
-    }
-  }, [item, lookerUser])
+    let isSubscribed = true
+    runInlineQuery().then(response => {
+      if (isSubscribed) {
+        setApiContent(response)
+      }
+    })
+    return () => isSubscribed = false
+  }, [item, lookerUser]);
 
   const runInlineQuery = async () => {
     setApiContent(undefined)
@@ -28,7 +32,8 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
       }
     })
     let lookerResponseData = await lookerResponse.json();
-    setApiContent(lookerResponseData.queryResults[0])
+    // setApiContent(lookerResponseData.queryResults[0])
+    return lookerResponseData.queryResults[0];
   }
 
   const upOrDownArrow = apiContent ? apiContent.change > 0 ? `&uarr;` : `&darr;` : '';

@@ -14,16 +14,17 @@ export function SingleValueVis({ lookerContent, classes }) {
   const [apiContent, setApiContent] = useState([]);
   const { userProfile, lookerUser, show } = useContext(AppContext)
 
-
-
   let dataObjForSparkline = {}
+
   useEffect(() => {
-    if (lookerContent || lookerUser) {
-      setTimeout(() => runInlineQuery(), 1000);
-    }
-  }, [lookerContent, lookerUser])
-
-
+    let isSubscribed = true
+    runInlineQuery().then(response => {
+      if (isSubscribed) {
+        setApiContent(response)
+      }
+    })
+    return () => isSubscribed = false
+  }, [lookerContent, lookerUser]);
 
   const runInlineQuery = async () => {
     setApiContent([])
@@ -53,7 +54,8 @@ export function SingleValueVis({ lookerContent, classes }) {
       }
     })
     dataObjForSparkline.data = [...dataArrForDataObj]
-    setApiContent([dataObjForSparkline])
+    //setApiContent([dataObjForSparkline])
+    return [dataObjForSparkline]
   }
 
   const upOrDownArrow = apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
