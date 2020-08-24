@@ -17,10 +17,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function UserMenu(props) {
-  // console.log('UserMenu')
-  // console.log('props', props)
+  console.log('UserMenu')
+  console.log('props', props)
 
-  const { lookerUser, switchLookerUser, onLogoutSuccess, lookerUserAttributeBrandOptions, switchUserAttributeBrand } = props
+  const { lookerUser,
+    //switchLookerUser, 
+    onLogoutSuccess, lookerUserAttributeBrandOptions,
+    //switchUserAttributeBrand, 
+    handleUserMenuSwitch } = props
   const classes = useStyles();
   const { togglePayWallModal, codeShow, toggleShow, userProfile } = useContext(AppContext)
 
@@ -31,26 +35,19 @@ export default function UserMenu(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (newValue) => {
-
-
+  const handleClose = (newValue, property) => {
     setAnchorEl(null);
     if (newValue == null) {
-      onLogoutSuccess({})
-    } else if (newValue === 'basic' || newValue === 'advanced' || newValue === 'premium') {
-      switchLookerUser(newValue)
+      onLogoutSuccess();
     } else if (newValue === 'modal') {
       togglePayWallModal({
         'show': true,
         'permissionNeeded': 'explore'
       })
-    }
-    else if (typeof newValue === 'string') {
-      switchUserAttributeBrand(newValue)
-      setSelectedBrand(newValue);
+    } else if (typeof newValue === 'string') {
+      handleUserMenuSwitch(newValue, property)
     }
   };
-
 
   return (
     <div className={`${classes.zIndex1500}`}>
@@ -61,7 +58,6 @@ export default function UserMenu(props) {
         onClick={handleClick}
         color="inherit"
       >
-        {/* <Avatar className={`${classes.mr12}`}>{userProfile.givenName.substring(0, 1)}</Avatar> */}
         <Avatar alt={userProfile.name} src={userProfile.imageUrl} className={classes.mr12} />
 
         <Typography>
@@ -77,12 +73,10 @@ export default function UserMenu(props) {
         onClose={handleClose}
       >
         <MenuItem autoFocus={false}>Select User Level</MenuItem>
-        <MenuItem autoFocus={false} onClick={() => handleClose('basic')}>Basic</MenuItem>
-        <MenuItem autoFocus={false} onClick={() => handleClose('advanced')}>Advanced</MenuItem>
-        <MenuItem autoFocus={false} onClick={() => handleClose('premium')}>Premium</MenuItem>
+        <MenuItem autoFocus={false} onClick={() => handleClose('basic', 'permission')}>Basic</MenuItem>
+        <MenuItem autoFocus={false} onClick={() => handleClose('advanced', 'permission')}>Advanced</MenuItem>
+        <MenuItem autoFocus={false} onClick={() => handleClose('premium', 'permission')}>Premium</MenuItem>
         <Divider className={classes.divider} />
-        {/* <MenuItem onClick={() => { toggleShow() }}>Highlight Source</MenuItem>
-        <Divider className={classes.divider} /> */}
         <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
         <Divider className={classes.divider} />
         <MenuItem onClick={() => handleClose('modal')}>Show Modal</MenuItem>
@@ -94,7 +88,7 @@ export default function UserMenu(props) {
             options={lookerUserAttributeBrandOptions}
             getOptionLabel={(option) => option.label}
             style={{ width: 300 }}
-            onChange={(event) => handleClose(event.target.innerText || '')}
+            onChange={(event) => handleClose((event.target.innerText || ''), 'brand')}
             renderInput={(params) => <TextField {...params}
               label="Change merchant brand"
               variant="outlined"

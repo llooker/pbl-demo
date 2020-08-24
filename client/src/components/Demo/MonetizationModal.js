@@ -134,7 +134,7 @@ export function MonetizationModal({ props, switchLookerUser }) {
                         height: 495
                       }}
                     onClick={() => {
-                      switchLookerUser(key)
+                      switchLookerUser(key, 'permission')
                       togglePayWallModal()
                     }}>
                     <CardContent>
@@ -176,7 +176,7 @@ export function MonetizationModal({ props, switchLookerUser }) {
                         disabled={key === lookerUser.user_attributes.permission_level ? true : false}
                         fullWidth
                         onClick={() => {
-                          switchLookerUser(key)
+                          switchLookerUser(key, 'permission')
                           togglePayWallModal()
                         }}>
                         {Object.keys(modalListMap).indexOf(lookerUser.user_attributes.permission_level) < Object.keys(modalListMap).indexOf(key) ? 'Upgrade' : 'Switch'}

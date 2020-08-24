@@ -36,6 +36,7 @@ const { validIdHelper } = require('../tools');
 const styles = theme => ({
   root: {
     display: 'flex',
+    backgroundColor: 'rgb(229, 229, 229)'
   },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
@@ -311,6 +312,23 @@ class Home extends Component {
     }
   }
 
+  handleUserMenuSwitch = (newValue, property) => {
+    // console.log('handleUserMenuSwitch')
+    // console.log('newValue', newValue)
+    // console.log('property', property)
+    console.log('gfy')
+    this.setState({
+      renderedDemoComponents: [this.state.selectedMenuItem]
+    }, () => {
+      if (property === 'brand') {
+        this.props.switchUserAttributeBrand(newValue);
+      } else if (property === 'permission') {
+        this.props.switchLookerUser(newValue);
+      }
+    })
+
+  }
+
   render() {
 
     // console.log('this.state.renderedDemoComponents', this.state.renderedDemoComponents ? this.state.renderedDemoComponents : '')
@@ -350,7 +368,7 @@ class Home extends Component {
 
     const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedMenuItem, renderedDemoComponents } = this.state;
     const { handleTabChange, handleMenuItemSelect } = this;
-    const { classes, activeCustomization, switchLookerUser, lookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand, lookerHost, userProfile } = this.props
+    const { classes, activeCustomization, lookerUser, applySession, lookerUserAttributeBrandOptions, lookerHost, userProfile } = this.props
 
     // Use Lodash to sort array by 'name'
     let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : [];
@@ -427,7 +445,13 @@ class Home extends Component {
         } >
           <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
             <CssBaseline />
-            <TopBar {...this.props} classes={classes} activeUsecase={activeUsecase} lookerUser={lookerUser} switchLookerUser={switchLookerUser} applySession={applySession} lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions} switchUserAttributeBrand={switchUserAttributeBrand} />
+            <TopBar {...this.props}
+              classes={classes}
+              activeUsecase={activeUsecase}
+              lookerUser={lookerUser}
+              applySession={applySession}
+              lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
+              handleUserMenuSwitch={this.handleUserMenuSwitch} />
             <Drawer
               className={classes.drawer}
               variant="persistent"
@@ -448,8 +472,7 @@ class Home extends Component {
                   handleMenuItemSelect={handleMenuItemSelect} /> : ''}
 
               <MonetizationModal
-                // {...{ classes }} 
-                switchLookerUser={switchLookerUser}
+                switchLookerUser={this.handleUserMenuSwitch}
               />
               <BottomBar classes={classes} lookerUser={lookerUser} />
             </Drawer>
@@ -500,7 +523,10 @@ class Home extends Component {
 export default withStyles(styles)(Home);
 
 function TopBar(props) {
-  const { classes, activeUsecase, lookerUser, switchLookerUser, applySession, lookerUserAttributeBrandOptions, switchUserAttributeBrand } = props
+  // console.log('TopBar')
+  // console.log('props', props)
+  const { classes, activeUsecase, lookerUser, applySession, lookerUserAttributeBrandOptions, handleUserMenuSwitch } = props
+
   return (
     <AppBar
       position="fixed"
@@ -519,10 +545,9 @@ function TopBar(props) {
         </Badge>
         <UserMenu
           lookerUser={lookerUser}
-          switchLookerUser={switchLookerUser}
           onLogoutSuccess={applySession}
           lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
-          switchUserAttributeBrand={switchUserAttributeBrand}
+          handleUserMenuSwitch={handleUserMenuSwitch}
         />
       </Toolbar>
     </AppBar>
@@ -530,9 +555,7 @@ function TopBar(props) {
 }
 
 function MenuList(props) {
-  // console.log('MenuList')
   const { classes, activeUsecase, orderedDemoComponentsForMenuObj, selectedMenuItem, handleMenuItemSelect } = props
-  // console.log('orderedDemoComponentsForMenuObj', orderedDemoComponentsForMenuObj)
   const demoComponentIconMap = {
     "splashpage19": HomeIcon,
     "simpledashboard5": TrendingUp,
