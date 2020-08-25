@@ -167,3 +167,13 @@ html {
 .MuiTreeItem-group{
   margin-left: 0px !important;
 }
+/* 
+.embedContainerNoHeader {
+  position: relative;
+}
+.embedContainerNoHeader > iframe {
+  position: absolute;
+  top: -75px;
+  width: 100%;
+  height: calc(100% + 75px);
+} */

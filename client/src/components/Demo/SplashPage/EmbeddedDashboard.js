@@ -51,18 +51,24 @@ export function EmbeddedDashboard({ lookerContent, classes, id, lookerHost }) {
               </Card>
             </Grid>
         }
-        <Box >
+        {/* <Box > */}
+        <Grid container >
+          {/* <Grid item sm={12}>
+            <Typography variant="h6" align="center" color="secondary">
+              Profitability by Category
+          </Typography>
+          </Grid> */}
           <Grid item sm={12}>
-            <EmbedHighlight classes={classes}>
+            <EmbedHighlight classes={classes} height={400}>
               <div
-                className={`embedContainer splashPage`}
+                className={`embedContainer embedContainerNoHeader splashPage`}
                 id={id}
                 key={id}
               >
               </div>
             </EmbedHighlight>
-          </Grid>
-        </Box>
+          </Grid></Grid>
+        {/* </Box> */}
       </div >
     </Card >
   );
