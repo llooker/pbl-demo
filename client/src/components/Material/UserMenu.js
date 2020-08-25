@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Menu, MenuItem, Typography, Divider, TextField, Avatar } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -17,14 +17,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function UserMenu(props) {
-  console.log('UserMenu')
-  console.log('props', props)
 
-  const { lookerUser,
-    //switchLookerUser, 
-    onLogoutSuccess, lookerUserAttributeBrandOptions,
-    //switchUserAttributeBrand, 
-    handleUserMenuSwitch } = props
+  const { lookerUser, onLogoutSuccess, lookerUserAttributeBrandOptions, handleUserMenuSwitch } = props
   const classes = useStyles();
   const { togglePayWallModal, codeShow, toggleShow, userProfile } = useContext(AppContext)
 
@@ -38,7 +32,7 @@ export default function UserMenu(props) {
   const handleClose = (newValue, property) => {
     setAnchorEl(null);
     if (newValue == null) {
-      onLogoutSuccess();
+      onLogoutSuccess({})
     } else if (newValue === 'modal') {
       togglePayWallModal({
         'show': true,
@@ -48,6 +42,10 @@ export default function UserMenu(props) {
       handleUserMenuSwitch(newValue, property)
     }
   };
+  useEffect(() => {
+    // console.log('useEffect')
+    setSelectedBrand(lookerUser.user_attributes.brand || '')
+  }, [lookerUser]);
 
   return (
     <div className={`${classes.zIndex1500}`}>

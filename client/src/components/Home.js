@@ -316,7 +316,7 @@ class Home extends Component {
     // console.log('handleUserMenuSwitch')
     // console.log('newValue', newValue)
     // console.log('property', property)
-    console.log('gfy')
+
     this.setState({
       renderedDemoComponents: [this.state.selectedMenuItem]
     }, () => {

@@ -379,15 +379,13 @@ class App extends React.Component {
     } else if (!UsecaseContent.hasOwnProperty(usecaseFromUrl)) {     //usecase param isn't in JSON file
       window.location.href = window.location.href.replace(usecaseFromUrl, 'atom')
     }
-
     this.setState(prevState => ({
       lookerUser: {
         ...prevState.lookerUser,
         user_attributes: userAttributeCopy,
-        group_ids: [UsecaseContent[usecaseFromUrl].groupIds[newAttribute]]
+        group_ids: [UsecaseContent[usecaseFromUrl].groupIds[newAttribute.replace("'", "")]] //needed to replace apostrophe
       }
     }), async () => {
-
       let lookerUserResponse = await fetch('/updatelookeruser', {
         method: 'POST',
         headers: {
