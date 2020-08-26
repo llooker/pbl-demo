@@ -89,9 +89,6 @@ export default makeStyles((theme) => ({
     maxHeight: 400,
     height: 400,
   },
-  minHeight680: {
-    minHeight: 680,
-  },
   minHeight200: {
     minHeight: 200,
     overflow: 'scroll'

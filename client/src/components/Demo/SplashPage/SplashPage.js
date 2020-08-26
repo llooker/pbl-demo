@@ -22,13 +22,17 @@ const { validIdHelper } = require('../../../tools');
 export default function SplashPage(props) {
   // console.log('SplashPage')
   //intialize state using hooks
+  const topBarBottomBarHeight = 112;
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(1);
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
+  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+
   const { toggleShow } = useContext(AppContext)
   const { show } = useContext(AppContext)
   const { codeShow } = useContext(AppContext)
+
 
   //declare constants
   const classes = useStyles();
@@ -37,8 +41,6 @@ export default function SplashPage(props) {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
   }
-  // const tabContent = [[...lookerContent], codeTab];
-  // const tabContent = [[...lookerContent]];
   const demoComponentType = type || 'code flyout';
 
   //handle tab change
@@ -51,11 +53,9 @@ export default function SplashPage(props) {
    * listen for lookerContent and call 
    * setSampleCode
   */
-  // useEffect(() => {
-  //   // console.log('useEffect')
-  //   // setClientSideCode(rawSampleCode)
-  // }, [lookerContent]);
-
+  useEffect(() => {
+    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+  }, [lookerContent]);
 
   /**
    * What this return  does:
@@ -63,8 +63,15 @@ export default function SplashPage(props) {
    * this section is necessary but less relevant to looker functionality itself
    */
   return (
-    <div className={`${classes.root} ${classes.minHeight680}   demoComponent`}>
-      <Card elevation={1} className={`${classes.padding30} `}>
+    <div className={`${classes.root} demoComponent`}
+      style={{
+        height: height,
+        overflow: 'scroll',
+        // minHeight: '600px'
+        borderRadius: '8px'
+      }}
+    >
+      <Card elevation={1} className={`${classes.padding30}`} >
         <Grid container
           spacing={3}
           key={validIdHelper(type)} >

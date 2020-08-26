@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, FormControlLabel, Switch, Typography, Button } from '@material-ui/core';
-import CodeIcon from '@material-ui/icons/Code';
+import { Button, Grid } from '@material-ui/core';
+import { Code, HighlightOutlined } from '@material-ui/icons';
 import clsx from 'clsx';
 
 import AppContext from '../../AppContext';
@@ -13,30 +13,26 @@ export default function BottomBar(props) {
 
   const { classes } = props
   const { toggleShow } = useContext(AppContext)
-  const { show } = useContext(AppContext)
   const { toggleCodeShow } = useContext(AppContext)
-  const { codeShow } = useContext(AppContext)
-  const { lookerUser } = props;
 
   return (
-    <AppBar
-      position="fixed"
-      className={clsx(classes.appBarBottom)}
-      color="transparent"
-      elevation={0}
-    >
-      <Toolbar>
-        <FormControlLabel
-          control={<Switch checked={show} onChange={toggleShow} />}
-          label="Show source"
-        />
-        <Button variant="outlined"
-          className={`${classes.mrAuto}`}
-          startIcon={<CodeIcon />}
+    <Grid container
+      className={`${classes.mtAuto} ${classes.mb20}`}>
+      <Grid item sm={6}>
+        <Button
+          display="inline"
+          startIcon={<HighlightOutlined />}
+          onClick={toggleShow}>Source
+      </Button>
+      </Grid>
+      <Grid item sm={6}>
+        <Button
+          className={`${classes.ml12}`}
+          display="inline"
+          startIcon={<Code />}
           onClick={toggleCodeShow}>Code
-          </Button>
-
-      </Toolbar>
-    </AppBar>
+      </Button>
+      </Grid>
+    </Grid >
   );
 }

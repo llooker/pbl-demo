@@ -167,8 +167,8 @@ html {
 .MuiTreeItem-group{
   margin-left: 0px !important;
 }
-/* 
-.embedContainerNoHeader {
+
+/* .embedContainerNoHeader {
   position: relative;
 }
 .embedContainerNoHeader > iframe {

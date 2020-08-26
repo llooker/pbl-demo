@@ -22,6 +22,7 @@ const { validIdHelper } = require('../../../tools');
 export default function Dashboard(props) {
   // console.log('Dashboard')
   //initialize state using hooks
+  const topBarBottomBarHeight = 112;
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState([]);
@@ -35,6 +36,8 @@ export default function Dashboard(props) {
   const { toggleShow } = useContext(AppContext)
   const { show } = useContext(AppContext)
   const { codeShow, toggleCodeShow } = useContext(AppContext)
+  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+
 
   //declare constants
   const classes = useStyles();
@@ -74,6 +77,10 @@ export default function Dashboard(props) {
       handleToggle(null, Object.keys(lookerContent[0].dynamicFieldLookUp)[0])
     }
   }, [dashboardLayout]);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+  })
 
   /** 
    * What this function does:
@@ -200,7 +207,12 @@ export default function Dashboard(props) {
   // console.log('apiContent', apiContent)
 
   return (
-    <div className={`${classes.root} ${classes.minHeight680}   demoComponent`}>
+    <div className={`${classes.root} demoComponent`}
+      style={{
+        height: height,
+        overflow: 'scroll',
+        borderRadius: '8px'
+      }}>
       <Card elevation={1} className={`${classes.padding30} `}>
         <Grid container spacing={3}>
           <div className={`${classes.root} ${classes.positionRelative}`}>

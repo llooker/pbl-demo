@@ -9,7 +9,7 @@ import {
   Badge, FormControlLabel, Switch, Button
 } from '@material-ui/core/';
 
-import { AddAlert, Speed, TrendingUp, StoreMallDirectory, DateRange, Search, FindInPage, Code } from '@material-ui/icons';
+import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, FindInPage, Code, TableChartOutlined, LibraryBooksOutlined } from '@material-ui/icons';
 import HomeIcon from '@material-ui/icons/Home'; //can't reuse home name
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { blue, grey } from '@material-ui/core/colors';
@@ -197,6 +197,12 @@ const styles = theme => ({
   },
   paddingBottom30: {
     paddingBottom: 30
+  },
+  mtAuto: {
+    marginTop: 'auto'
+  },
+  mb20: {
+    marginBottom: 20
   }
 });
 
@@ -469,7 +475,13 @@ class Home extends Component {
                   activeUsecase={activeUsecase}
                   orderedDemoComponentsForMenuObj={orderedDemoComponentsForMenuObj}
                   selectedMenuItem={selectedMenuItem}
-                  handleMenuItemSelect={handleMenuItemSelect} /> : ''}
+                  handleMenuItemSelect={handleMenuItemSelect}
+                // lookerUser={lookerUser}
+                // show={show}
+                // toggleShow={toggleShow}
+                // codeShow={codeShow}
+                // toggleCodeShow={toggleCodeShow}
+                /> : ''}
 
               <MonetizationModal
                 switchLookerUser={this.handleUserMenuSwitch}
@@ -555,15 +567,20 @@ function TopBar(props) {
 }
 
 function MenuList(props) {
-  const { classes, activeUsecase, orderedDemoComponentsForMenuObj, selectedMenuItem, handleMenuItemSelect } = props
+  // const { toggleShow } = useContext(AppContext)
+  // const { show } = useContext(AppContext)
+  // const { toggleCodeShow } = useContext(AppContext)
+  // const { codeShow } = useContext(AppContext)
+  const { classes, activeUsecase, orderedDemoComponentsForMenuObj, selectedMenuItem, handleMenuItemSelect,
+    lookerUser, show, toggleShow, codeShow, toggleCodeShow } = props
   const demoComponentIconMap = {
     "splashpage19": HomeIcon,
-    "simpledashboard5": TrendingUp,
-    "simpledashboard9": Speed,
-    "customfilter1": StoreMallDirectory,
-    "customvis": DateRange,
+    "simpledashboard5": VisibilityOutlined,
+    "simpledashboard9": ShowChart,
+    "customfilter1": TableChartOutlined,
+    "customvis": DateRangeOutlined,
     "querybuilderexplorelite": Search,
-    "reportbuilder14": FindInPage,
+    "reportbuilder14": LibraryBooksOutlined,
   }
 
   return (<List
@@ -579,7 +596,7 @@ function MenuList(props) {
             key={`${validIdHelper(outerItem + '-outerListItem-' + outerIndex)}`}
           // className={'roundedTab'}
           >
-            <ListItemText primary={outerItem === 'home' ? '' : _.upperCase(outerItem)} />
+            <ListItemText primary={outerItem === 'home' ? '' : _.capitalize(outerItem)} />
           </ListItem>
           < List component="div" disablePadding
             key={`${validIdHelper(outerItem + '-innerList-' + outerIndex)}`}>
@@ -607,8 +624,6 @@ function MenuList(props) {
           </List>
         </React.Fragment>
       )
-
-
     }) : ''
     }
   </List >
