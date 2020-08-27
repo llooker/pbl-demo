@@ -1,34 +1,35 @@
 {
   "files": {
-    "main.css": "/static/css/main.13de8110.chunk.css",
-    "main.js": "/static/js/main.b6d8df1f.chunk.js",
-    "main.js.map": "/static/js/main.b6d8df1f.chunk.js.map",
+    "main.css": "/static/css/main.0e1d15c5.chunk.css",
+    "main.js": "/static/js/main.b60096f4.chunk.js",
+    "main.js.map": "/static/js/main.b60096f4.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.8c40394c.js",
     "runtime-main.js.map": "/static/js/runtime-main.8c40394c.js.map",
     "static/css/2.fb346933.chunk.css": "/static/css/2.fb346933.chunk.css",
-    "static/js/2.9b139857.chunk.js": "/static/js/2.9b139857.chunk.js",
-    "static/js/2.9b139857.chunk.js.map": "/static/js/2.9b139857.chunk.js.map",
+    "static/js/2.c703e3c7.chunk.js": "/static/js/2.c703e3c7.chunk.js",
+    "static/js/2.c703e3c7.chunk.js.map": "/static/js/2.c703e3c7.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.e6dcac4a013fac16d6cd57a021a073c1.js": "/precache-manifest.e6dcac4a013fac16d6cd57a021a073c1.js",
+    "precache-manifest.f5490bb8e24229cbdf05bc49276cde46.js": "/precache-manifest.f5490bb8e24229cbdf05bc49276cde46.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.fb346933.chunk.css.map": "/static/css/2.fb346933.chunk.css.map",
-    "static/css/main.13de8110.chunk.css.map": "/static/css/main.13de8110.chunk.css.map",
-    "static/js/2.9b139857.chunk.js.LICENSE.txt": "/static/js/2.9b139857.chunk.js.LICENSE.txt",
+    "static/css/main.0e1d15c5.chunk.css.map": "/static/css/main.0e1d15c5.chunk.css.map",
+    "static/js/2.c703e3c7.chunk.js.LICENSE.txt": "/static/js/2.c703e3c7.chunk.js.LICENSE.txt",
+    "static/media/atom.svg": "/static/media/atom.e208988c.svg",
     "static/media/atom_background1.jpg": "/static/media/atom_background1.9ed7593f.jpg",
     "static/media/atom_background2.jpg": "/static/media/atom_background2.c5efc290.jpg",
     "static/media/atom_background3.jpg": "/static/media/atom_background3.b9aecb61.jpg",
     "static/media/atom_background4.jpg": "/static/media/atom_background4.1acd6c1b.jpg",
     "static/media/atom_logo_black.svg": "/static/media/atom_logo_black.a213ea2a.svg",
     "static/media/atom_logo_white.svg": "/static/media/atom_logo_white.89cfe3df.svg",
-    "static/media/atom_splash_blog.jpg": "/static/media/atom_splash_blog.89cd1730.jpg",
-    "static/media/atom_splash_inventory.jpg": "/static/media/atom_splash_inventory.5ac8518d.jpg",
-    "static/media/atom_splash_trends.jpg": "/static/media/atom_splash_trends.3591acf3.jpg"
+    "static/media/atom_splash_blog.jpg": "/static/media/atom_splash_blog.57457a86.jpg",
+    "static/media/atom_splash_inventory.jpg": "/static/media/atom_splash_inventory.6bbb655e.jpg",
+    "static/media/atom_splash_trends.jpg": "/static/media/atom_splash_trends.dbd4fdc6.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.8c40394c.js",
     "static/css/2.fb346933.chunk.css",
-    "static/js/2.9b139857.chunk.js",
-    "static/css/main.13de8110.chunk.css",
-    "static/js/main.b6d8df1f.chunk.js"
+    "static/js/2.c703e3c7.chunk.js",
+    "static/css/main.0e1d15c5.chunk.css",
+    "static/js/main.b60096f4.chunk.js"
   ]
 }
