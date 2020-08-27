@@ -49,7 +49,7 @@ export default makeStyles((theme) => ({
   },
   card: {
     minWidth: 275,
-    minHeight: 400,
+    // minHeight: 400,
   },
   padding30: {
     padding: 30
@@ -73,5 +73,8 @@ export default makeStyles((theme) => ({
   },
   height100Percent: {
     height: '100%'
+  },
+  ml12: {
+    marginLeft: 12
   }
 }));

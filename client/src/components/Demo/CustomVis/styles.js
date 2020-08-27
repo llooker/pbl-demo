@@ -91,5 +91,6 @@ export default makeStyles((theme) => ({
   },
   height100Percent: {
     height: '100%'
-  }
+  },
+  ml12: { marginLeft: 12 }
 }));

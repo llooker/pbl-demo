@@ -6,7 +6,8 @@ import {
   ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails
 } from '@material-ui/core'
 import { Autocomplete, ToggleButton, ToggleButtonGroup, Skeleton } from '@material-ui/lab'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { ExpandMore, FilterList } from '@material-ui/icons';
+
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./Dashboard.js'; // eslint-disable-line import/no-webpack-loader-syntax
@@ -209,10 +210,11 @@ export default function Dashboard(props) {
               iFrameExists
                 ? ''
                 :
-                <Grid item sm={12} >
+                <Grid item sm={12} style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
                   <Card className={`${classes.card} ${classes.flexCentered}`}
                     elevation={0}
-                    mt={2}>
+                    mt={2}
+                    style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
                     <CircularProgress className={classes.circularProgress} />
                   </Card>
                 </Grid>
@@ -267,11 +269,11 @@ function FilterBar(props) {
 
     <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} className={classes.w100} elevation={0}>
       <ExpansionPanelSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMore />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography className={classes.heading}>Filter Data</Typography>
+        <FilterList /><Typography className={`${classes.heading} ${classes.ml12}`}>Filter:</Typography>
 
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>

@@ -261,10 +261,11 @@ export default function ReportBuilder(props) {
           key={validIdHelper(type)} >
           <div className={classes.root}>
             {iFrameExists ? '' :
-              <Grid item sm={12} >
+              <Grid item sm={12} style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
                 <Card className={`${classes.card} ${classes.flexCentered}`}
                   elevation={0}
-                  mt={2}>
+                  mt={2}
+                  style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
                   <CircularProgress className={classes.circularProgress} />
                 </Card>
               </Grid>

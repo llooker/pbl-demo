@@ -8,9 +8,7 @@ import {
   Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
   TableSortLabel, FormControlLabel, Switch, Chip, Divider
 } from '@material-ui/core'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandMore';
-import DoneIcon from '@material-ui/icons/Done';
+import { ExpandMore, Search, Done } from '@material-ui/icons';
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./QueryBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
@@ -100,14 +98,14 @@ export default function QueryBuilder(props) {
               />
             </Grid>
             {apiContent.status === 'running' ?
-              <Grid item sm={12} >
+              <Grid item sm={12} style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
                 <Card className={`${classes.card} ${classes.flexCentered}`}
                   elevation={0}
                   mt={2}
-                >
+                  style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
                   <CircularProgress className={classes.circularProgress} />
                 </Card>
-              </Grid >
+              </Grid>
               : apiContent.data && apiContent.data.length ?
                 <Box
                 >
@@ -227,11 +225,12 @@ function FilterBar(props) {
   return (
     <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} elevation={0}>
       <ExpansionPanelSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMore />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography className={classes.heading}>Build Query</Typography>
+        <Search /><Typography className={`${classes.heading} ${classes.ml12}`}>Build Query:</Typography>
+        {/* <Typography className={classes.heading}>Build Query:</Typography> */}
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Grid container spacing={3}>
@@ -250,7 +249,7 @@ function FilterBar(props) {
                         label={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
                         datalabel={item.label}
                         onClick={() => handleFieldChipClick(item, index)}
-                        icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
+                        icon={item.selected ? <Done className={classes.dBlock} /> : <Done className={classes.dNone} />}
                       /> : ''
                   )
                 }) : ''
@@ -271,7 +270,7 @@ function FilterBar(props) {
                         label={prettifyString(item.label.substring(item.label.lastIndexOf('.') + 1, item.label.length))}
                         datalabel={item.label}
                         onClick={() => handleFieldChipClick(item, index)}
-                        icon={item.selected ? <DoneIcon className={classes.dBlock} /> : <DoneIcon className={classes.dNone} />}
+                        icon={item.selected ? <Done className={classes.dBlock} /> : <Done className={classes.dNone} />}
                       /> : ''
                   )
                 }) : ''

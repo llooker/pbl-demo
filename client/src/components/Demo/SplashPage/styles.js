@@ -128,11 +128,18 @@ export default makeStyles((theme) => ({
   },
   carouselLegend: {
     backgroundColor: 'rgb(192,192,192, .5)	 !important',
-    fontSize: '24px !important',
     textAlign: 'center !important',
     opacity: `100 !important`,
     fontWeight: 800,
     // width: `${25}% !important`,
+  },
+  carouselLegendTitle: {
+    fontSize: '24px !important',
+
+  },
+  carouselLegendBody: {
+    fontSize: '16px !important',
+
   },
   positionTopRight: {
     position: 'absolute',
