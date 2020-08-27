@@ -19,7 +19,7 @@ export function ContentCarousel({ lookerContent, classes }) {
   }, [lookerContent, lookerUser]);
 
   const blogImage = require(`../../../images/atom_splash_blog.jpg`)
-  const blogTitle = 'Blog...'
+  const blogTitle = 'Blog'
   const blogBody = 'Read our latest thoguhts on the ecommerce landscape'
   const inventoryImage = require(`../../../images/atom_splash_inventory.jpg`)
   const inventoryTitle = 'Inventory Best Practices'
@@ -49,7 +49,7 @@ export function ContentCarousel({ lookerContent, classes }) {
           <p className={`legend ${classes.carouselLegend}`}>
             <span className={`${classes.carouselLegendTitle}`}>{blogTitle}</span>
             <br />
-            <span className={`${classes.carouselLegendBody}`}>{`${blogBody.substring(0, 20)}...`}</span>
+            <span className={`${classes.carouselLegendBody}`}>{`${blogBody.substring(0, 50)}...`}</span>
           </p>
         </div>
         <div
@@ -63,7 +63,7 @@ export function ContentCarousel({ lookerContent, classes }) {
           <p className={`legend ${classes.carouselLegend}`}>
             <span className={`${classes.carouselLegendTitle}`}>{inventoryTitle}</span>
             <br />
-            <span className={`${classes.carouselLegendBody}`}>{`${inventoryBody.substring(0, 20)}...`}</span>
+            <span className={`${classes.carouselLegendBody}`}>{`${inventoryBody.substring(0, 50)}...`}</span>
           </p>
         </div>
         <div
@@ -77,7 +77,7 @@ export function ContentCarousel({ lookerContent, classes }) {
           <p className={`legend ${classes.carouselLegend}`}>
             <span className={`${classes.carouselLegendTitle}`}>{trendsTitle}</span>
             <br />
-            <span className={`${classes.carouselLegendBody}`}>{`${trendsBody.substring(0, 20)}...`}</span>
+            <span className={`${classes.carouselLegendBody}`}>{`${trendsBody.substring(0, 50)}...`}</span>
           </p>
         </div>
       </Carousel>
