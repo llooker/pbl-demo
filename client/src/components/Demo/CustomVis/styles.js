@@ -46,7 +46,7 @@ export default makeStyles((theme) => ({
   },
   card: {
     minWidth: 275,
-    minHeight: 600,
+    minHeight: 400
   },
   height500: {
     height: 500
@@ -88,5 +88,8 @@ export default makeStyles((theme) => ({
   },
   positionRelative: {
     position: 'relative'
+  },
+  height100Percent: {
+    height: '100%'
   }
 }));

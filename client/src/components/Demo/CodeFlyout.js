@@ -26,9 +26,12 @@ export default function CodeFlyout(props) {
                 Looker User Object
             </Typography>
             </Grid>
-            <Grid item sm={2} style={{ textAlign: 'right' }}>
+            <Grid item sm={2}
+            // style={{ textAlign: 'right' }}
+            >
               <CloseIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => toggleCodeShow()} />
             </Grid>
+            {/* <Grid item sm={1}></Grid> */}
 
             <Grid item sm={12}>
               <CodeSnippet code={lookerUser} />

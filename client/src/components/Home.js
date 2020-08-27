@@ -201,8 +201,8 @@ const styles = theme => ({
   mtAuto: {
     marginTop: 'auto'
   },
-  mb20: {
-    marginBottom: 20
+  mb10: {
+    marginBottom: 10
   }
 });
 

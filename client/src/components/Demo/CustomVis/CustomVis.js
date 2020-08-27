@@ -12,27 +12,17 @@ import { ResponsiveCalendar } from '@nivo/calendar'
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./CustomVis.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
-import { TabPanel, a11yProps } from './helpers.js';
 import { ApiHighlight } from '../../Highlights/Highlight';
-
 //new date pickers
 import { format, endOfDay, addDays } from 'date-fns';
-// import React from 'react';
-// import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import AppContext from '../../../AppContext';
 const { validIdHelper } = require('../../../tools');
 
-//start of Custom Viz Calendar Component
 export default function CustomVis(props) {
   // console.log('CustomVis')
-  //initialize state using hooks
+  const topBarBottomBarHeight = 112;
   const [value, setValue] = useState(0);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
@@ -43,18 +33,12 @@ export default function CustomVis(props) {
   const [modalContent, setModalContent] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
-
   const { togglePayWallModal, show, codeShow } = useContext(AppContext)
+  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
 
   //declare constants
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
-  // const codeTab = {
-  //   type: 'code flyout', label: 'Code', id: 'codeFlyout',
-  //   lookerContent, lookerUser, clientSideCode, serverSideCode
-  // }
-  // const tabContent = [...lookerContent, codeTab]
-  // const demoComponentType = type || 'code flyout';
 
   //handle opening of modal for advanced and premium users
   const handleModalOpen = async ({ day }) => {
@@ -109,9 +93,11 @@ export default function CustomVis(props) {
       setToDate(newValueAsDate);
     }
   }
+
   const handleCategory = newValue => {
     setCategory(newValue)
   }
+
   const handleDesiredField = newValue => {
     setDesiredField(newValue)
   }
@@ -161,10 +147,6 @@ export default function CustomVis(props) {
     }
   }
 
-  /**
-   * listen for lookerContent and call 
-   * performLookerApiCalls and setSampleCode
-  */
   useEffect(() => {
     if (lookerContent.length) {
       setTimeout(() => performLookerApiCalls(lookerContent), 100);
@@ -173,12 +155,10 @@ export default function CustomVis(props) {
     }
   }, [lookerContent, lookerUser])
 
-  /** 
-   * What this function does:
-   * iterate over Looker Content array referenced above and
-   * calls specific endpoints and methods available from Looker Node SDK
-   * and embed SDK to create the experience on this page
-   */
+  useEffect(() => {
+    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+  })
+
   const performLookerApiCalls = function (lookerContent) {
     setApiContent([]); //set to empty array to show progress bar and skeleton
     lookerContent.map(async lookerContent => {
@@ -217,14 +197,17 @@ export default function CustomVis(props) {
     })
   }
 
-  let redToBlueColorScale = ['#0302FC', '#2A00D5', '#63009E', '#A1015D', '#D80027', '#FE0002'];
-  let yellowToGreenColorScale = ['#FEFE69', '#DDF969', '#A9F36A', '#A1015D', '#78EC6C', '#57E86B'];
   let nivoColorScale = ['#61cdbb', '#97e3d5', '#e8c1a0', '#f47560']
   let googleColorScale = ['#4595EC', '#F3A759', '#E24E3A', '#65AB5A'];
 
   return (
-    <div className={`${classes.root} ${classes.minHeight680}   demoComponent`}>
-      <Card elevation={1} className={`${classes.padding30} `}>
+    <div className={`${classes.root} demoComponent`}
+      style={{
+        height: height,
+        overflow: 'scroll',
+        borderRadius: '8px'
+      }}>
+      <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
         <Grid container
           spacing={3}
           key={validIdHelper(type)} >
@@ -250,7 +233,9 @@ export default function CustomVis(props) {
 
             {!apiContent.queryResults ?
               <Grid item sm={12} >
-                <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                <Card className={`${classes.card} ${classes.flexCentered}`}
+                  elevation={0}
+                  mt={2}>
                   <CircularProgress className={classes.circularProgress} />
                 </Card>
               </Grid>

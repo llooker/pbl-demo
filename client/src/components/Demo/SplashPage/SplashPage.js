@@ -67,7 +67,6 @@ export default function SplashPage(props) {
       style={{
         height: height,
         overflow: 'scroll',
-        // minHeight: '600px'
         borderRadius: '8px'
       }}
     >

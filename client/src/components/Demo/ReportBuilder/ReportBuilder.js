@@ -17,13 +17,13 @@ const { validIdHelper } = require('../../../tools');
 
 //start of ReportBuilder Component
 export default function ReportBuilder(props) {
-  //initialize state using hooks
+  const topBarBottomBarHeight = 112;
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState([]);
   const [exploreObj, setExploreObj] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
-
+  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const { togglePayWallModal, codeShow } = useContext(AppContext)
 
   //declare constants
@@ -62,6 +62,11 @@ export default function ReportBuilder(props) {
     setTimeout(() => performLookerApiCalls(lookerContent, 1), 100)
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser]);
+
+
+  useEffect(() => {
+    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+  })
 
   const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
     let iFrameArray = $(".embedContainer:visible > iframe")
@@ -244,7 +249,12 @@ export default function ReportBuilder(props) {
 
 
   return (
-    <div className={`${classes.root} ${classes.minHeight680}   demoComponent`}>
+    <div className={`${classes.root} demoComponent`}
+      style={{
+        height: height,
+        overflow: 'scroll',
+        borderRadius: '8px'
+      }}>
       <Card elevation={1} className={`${classes.padding30} `}>
         <Grid container
           spacing={3}
@@ -252,7 +262,9 @@ export default function ReportBuilder(props) {
           <div className={classes.root}>
             {iFrameExists ? '' :
               <Grid item sm={12} >
-                <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                <Card className={`${classes.card} ${classes.flexCentered}`}
+                  elevation={0}
+                  mt={2}>
                   <CircularProgress className={classes.circularProgress} />
                 </Card>
               </Grid>

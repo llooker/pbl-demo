@@ -47,13 +47,9 @@ export default makeStyles((theme) => ({
   mrAuto: {
     marginRight: 'auto'
   },
-  skeleton: {
-    minWidth: 275,
-    minHeight: 600,
-  },
   card: {
     minWidth: 275,
-    minHeight: 680,
+    minHeight: 400,
   },
   padding30: {
     padding: 30
@@ -74,5 +70,8 @@ export default makeStyles((theme) => ({
   skeleton: {
     height: 160,
     width: '100%'
+  },
+  height100Percent: {
+    height: '100%'
   }
 }));

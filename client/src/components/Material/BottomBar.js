@@ -17,7 +17,7 @@ export default function BottomBar(props) {
 
   return (
     <Grid container
-      className={`${classes.mtAuto} ${classes.mb20}`}>
+      className={`${classes.mtAuto} ${classes.mb10}`}>
       <Grid item sm={6}>
         <Button
           display="inline"

@@ -84,7 +84,7 @@ export default makeStyles((theme) => ({
   },
   card: {
     minWidth: 275,
-    minHeight: 600,
+    minHeight: 400
   },
   textCenter: {
     textAlign: 'center'
@@ -131,5 +131,8 @@ export default makeStyles((theme) => ({
   },
   m6: {
     margin: 6
+  },
+  height100Percent: {
+    height: '100%'
   }
 }));

@@ -7,7 +7,7 @@ export default makeStyles((theme) => ({
   },
   card: {
     minWidth: 275,
-    minHeight: 800,
+    minHeight: 400,
   },
   flexCentered: {
     display: 'flex',
@@ -85,5 +85,8 @@ export default makeStyles((theme) => ({
   },
   ml12: {
     marginLeft: 12
+  },
+  height100Percent: {
+    height: '100%'
   }
 }));

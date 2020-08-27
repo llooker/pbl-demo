@@ -19,38 +19,34 @@ import { TabPanel, a11yProps, descendingComparator, getComparator, stableSort } 
 import AppContext from '../../../AppContext';
 const { validIdHelper, prettifyString } = require('../../../tools');
 
-//start of QueryBuilder Component
 export default function QueryBuilder(props) {
   // console.log('QueryBuilder')
-  // console.log('props', props)
 
-  //initialize state using hooks
+  const topBarBottomBarHeight = 112;
   const [value, setValue] = useState(0);
   const [apiContent, setApiContent] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
-  const { togglePayWallModal, show, codeShow } = useContext(AppContext)
-  //declare constants
-
+  const { togglePayWallModal, show, codeShow } = useContext(AppContext);
+  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser } = props;
 
-  //handle tab change
   const handleChange = (event, newValue) => {
     handleTabChange(0);
     setValue(newValue);
   };
 
-  /**
-   * listen for lookerContent and call 
-   * performLookerApiCalls and setSampleCode
-  */
   useEffect(() => {
     lookerContent.map(lookerContent => {
       setTimeout(() => performLookerApiCalls(lookerContent.queryBody, lookerContent.resultFormat), 100);
     })
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser])
+
+  useEffect(() => {
+    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+  })
 
   const performLookerApiCalls = async (newQuery, resultFormat) => {
     // console.log('performLookerApiCalls')
@@ -85,8 +81,14 @@ export default function QueryBuilder(props) {
   }
 
   return (
-    <div className={`${classes.root} ${classes.minHeight680}   demoComponent`}>
-      <Card elevation={1} className={`${classes.padding30} `}>
+    <div className={`${classes.root} demoComponent`}
+      style={{
+        height: height,
+        minHeight: height,
+        overflow: 'scroll',
+        borderRadius: '8px'
+      }}>
+      <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
         <Grid container
           spacing={3}
           key={validIdHelper(type)} >
@@ -99,7 +101,10 @@ export default function QueryBuilder(props) {
             </Grid>
             {apiContent.status === 'running' ?
               <Grid item sm={12} >
-                <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                <Card className={`${classes.card} ${classes.flexCentered}`}
+                  elevation={0}
+                  mt={2}
+                >
                   <CircularProgress className={classes.circularProgress} />
                 </Card>
               </Grid >
@@ -116,7 +121,9 @@ export default function QueryBuilder(props) {
                     </Grid> : ''}
                     <Divider className={classes.divider} />
                     <Grid item sm={12}>
-                      <Box className={`${classes.w100} ${classes.maxHeight600} ${classes.padding30}`} mt={2}>
+                      <Box className={`${classes.w100} ${classes.maxHeight600}`}
+                        mt={2}
+                      >
                         <EnhancedTable
                           {...props}
                           classes={classes}

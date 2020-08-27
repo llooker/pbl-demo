@@ -18,10 +18,7 @@ import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent
 import AppContext from '../../../AppContext';
 const { validIdHelper } = require('../../../tools');
 
-//start of Dashboard Component
 export default function Dashboard(props) {
-  // console.log('Dashboard')
-  //initialize state using hooks
   const topBarBottomBarHeight = 112;
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(0);
@@ -32,14 +29,9 @@ export default function Dashboard(props) {
   const [toggleValue, setToggleValue] = useState('');
   const [dashboardLayout, setDashboardLayout] = useState({});
   const [regionValue, setRegionValue] = useState('All');
-  // const { togglePayWallModal } = useContext(AppContext)
-  const { toggleShow } = useContext(AppContext)
-  const { show } = useContext(AppContext)
   const { codeShow, toggleCodeShow } = useContext(AppContext)
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
 
-
-  //declare constants
   const classes = useStyles();
   const { staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
   const demoComponentType = type || 'code flyout';
@@ -62,10 +54,6 @@ export default function Dashboard(props) {
     dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
   };
 
-  /**
-   * listen for lookerContent and call 
-   * performLookerApiCalls and setSampleCode
-  */
   useEffect(() => {
     setTimeout(() => performLookerApiCalls([...lookerContent]), 1000)
     setClientSideCode(rawSampleCode)
@@ -82,21 +70,13 @@ export default function Dashboard(props) {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   })
 
-  /** 
-   * What this function does:
-   * iterate over Looker Content array referenced above and
-   * calls specific endpoints and methods available from Looker Node SDK
-   * and embed SDK to create the experience on this page
-   */
   const performLookerApiCalls = function (lookerContent) {
-    // console.log('performLookerApiCalls')
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     setIFrame(0)
     setApiContent([])
     lookerContent.map(async lookerContent => {
       let dashboardId = lookerContent.id;
       // let dashboardSlug = lookerContent.slug;
-
       LookerEmbedSDK.createDashboardWithId(dashboardId) //dashboardSlug
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
         .withClassName('iframe')
@@ -128,7 +108,6 @@ export default function Dashboard(props) {
 
       if (lookerContent.hasOwnProperty('filters')) {
         //get inline query from usecase file & set user attribute dynamically
-
         //iterating over filters
         let orderedArrayForApiContent = []
         lookerContent.filters.map(async (item, index) => {
@@ -138,7 +117,6 @@ export default function Dashboard(props) {
             ...jsonQuery.filters,
             [item.desiredFilterName]: lookerUser.user_attributes.brand
           };
-          // lookerContent.inlineQueries[index] = jsonQuery;
           let stringifiedQuery = encodeURIComponent(JSON.stringify(jsonQuery))
           let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
             method: 'GET',
@@ -164,6 +142,7 @@ export default function Dashboard(props) {
           // });
           //needed solution for ordering apiContent to match order
           //of content from usecaseContent
+
           orderedArrayForApiContent[index] = queryResultsForDropdown
           setApiContent([...orderedArrayForApiContent])
 
@@ -174,9 +153,6 @@ export default function Dashboard(props) {
     })
   }
 
-  /**
-   * update dashboard when custom filter changed
-  */
   const customFilterAction = (dashboardId, filterName, newFilterValue) => {
     if (Object.keys(dashboardObj).length) {
       dashboardObj.updateFilters({ [filterName]: newFilterValue })
@@ -185,7 +161,6 @@ export default function Dashboard(props) {
   }
 
   // const drillMenuClick = (event) => {
-
   //   const basicLookerUser = lookerUser.user_attributes.permission_level === 'basic' ? true : false;
   //   if (basicLookerUser) {
   //     togglePayWallModal()
@@ -198,14 +173,6 @@ export default function Dashboard(props) {
     // console.log('event', event)
   }
 
-  /**
-   * What this return  does:
-   * Rendering of actual html elements,
-   * this section is necessary but less relevant to looker functionality itself
-   */
-
-  // console.log('apiContent', apiContent)
-
   return (
     <div className={`${classes.root} demoComponent`}
       style={{
@@ -213,7 +180,7 @@ export default function Dashboard(props) {
         overflow: 'scroll',
         borderRadius: '8px'
       }}>
-      <Card elevation={1} className={`${classes.padding30} `}>
+      <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
         <Grid container spacing={3}>
           <div className={`${classes.root} ${classes.positionRelative}`}>
 
@@ -243,7 +210,9 @@ export default function Dashboard(props) {
                 ? ''
                 :
                 <Grid item sm={12} >
-                  <Card className={`${classes.card} ${classes.flexCentered}`} elevation={0}>
+                  <Card className={`${classes.card} ${classes.flexCentered}`}
+                    elevation={0}
+                    mt={2}>
                     <CircularProgress className={classes.circularProgress} />
                   </Card>
                 </Grid>
