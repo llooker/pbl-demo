@@ -251,7 +251,7 @@ export default function ReportBuilder(props) {
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
-      <Card elevation={1} className={`${classes.padding30} `}>
+      <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
         <Grid container
           spacing={3}
           key={validIdHelper(type)} >
@@ -424,119 +424,134 @@ function TreeSideBar(props) {
                     nodeId={"" + (treeCounter += 1)}
                     treecounter={treeCounter}
                     selected={selected === treeCounter}
-                    className={selected === treeCounter ? `Mui-selected innerTreeItem` : `innerTreeItem`}
+                    className={selected === treeCounter ? `Mui-selected innerTreeItem ${classes.whiteSpaceNoWrap} ` : `innerTreeItem ${classes.whiteSpaceNoWrap} `}
                     contentid={item.id}
                     label={item.folder_id === sharedFolderId &&
                       key === 'looks' ?
-
-                      < div
+                      <div
                         id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                         key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                        className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
-                        {item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title}
+                        className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}
+                      >
+                        {/* {item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title} */}
+                        <Grid container>
+                          <Grid item sm={8} className={`${classes.overflowHidden}`}>
+                            {item.title}</Grid>
+                          <Grid item sm={4}>
+                            <Button
+                              id={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
+                              key={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
+                              size="small"
+                              className={`${classes.ml12} ${classes.childHoverVisibility}`}
+                              onClick={(event) => {
+                                if (lookerUser.user_attributes.permission_level === 'premium') {
+                                  // setSelected(treeCounter);
+                                  action(
+                                    key.substring(0, key.length - 1),
+                                    item.id,
+                                    'explore',
+                                    item.client_id,
+                                    tabContent[tabContentItemIndex + 1].id,
+                                    validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                                  );
+                                  event.stopPropagation();
+                                } else {
+                                  // togglePayWallModal();
 
-                        <Button
-                          id={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
-                          key={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
-                          size="small"
-                          className={`${classes.ml12} ${classes.childHoverVisibility}`}
-                          onClick={(event) => {
-                            if (lookerUser.user_attributes.permission_level === 'premium') {
-                              // setSelected(treeCounter);
-                              action(
-                                key.substring(0, key.length - 1),
-                                item.id,
-                                'explore',
-                                item.client_id,
-                                tabContent[tabContentItemIndex + 1].id,
-                                validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                              );
-                              event.stopPropagation();
-                            } else {
-                              // togglePayWallModal();
+                                  togglePayWallModal({
+                                    'show': true,
+                                    'permissionNeeded': 'explore'
+                                  });
+                                }
+                              }
+                              }
+                              color="default"
+                            >
+                              {lookerUser.user_attributes.permission_level === 'premium' ? 'Explore' : <div> <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} />Explore</div>}
+                            </Button>
+                          </Grid>
+                        </Grid>
 
-                              togglePayWallModal({
-                                'show': true,
-                                'permissionNeeded': 'explore'
-                              });
-                            }
-                          }
-                          }
-                          color="default"
-                        >
-                          {lookerUser.user_attributes.permission_level === 'premium' ? 'Explore' : <div> <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} />Explore</div>}
-                        </Button>
+
                       </div>
                       : key === 'looks' ?
                         <div
                           id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                           key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
                           className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
+                          <Grid container>
+                            <Grid item sm={6} className={`${classes.overflowHidden}`}>
+                              {/* {item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title} */}
+                              {item.title}
+                            </Grid>
+                            <Grid item sm={6}>
+                              <Button
+                                id={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
+                                key={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
+                                size="small"
+                                className={`${classes.ml12} ${classes.childHoverVisibility}`}
+                                onClick={(event) => {
+                                  if (lookerUser.user_attributes.permission_level === 'premium') {
+                                    // setSelected(treeCounter);
+                                    action(
+                                      key.substring(0, key.length - 1),
+                                      item.id,
+                                      'edit',
+                                      item.client_id,
+                                      tabContent[tabContentItemIndex + 1].id,
+                                      validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                                    );
+                                    event.stopPropagation();
+                                  } else {
+                                    // togglePayWallModal();
 
-                          {item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title}                          <Button
-                            id={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
-                            key={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
-                            size="small"
-                            className={`${classes.ml12} ${classes.childHoverVisibility}`}
-                            onClick={(event) => {
-                              if (lookerUser.user_attributes.permission_level === 'premium') {
-                                // setSelected(treeCounter);
-                                action(
-                                  key.substring(0, key.length - 1),
-                                  item.id,
-                                  'edit',
-                                  item.client_id,
-                                  tabContent[tabContentItemIndex + 1].id,
-                                  validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                                );
-                                event.stopPropagation();
-                              } else {
-                                // togglePayWallModal();
-
-                                togglePayWallModal({
-                                  'show': true,
-                                  'permissionNeeded': 'explore'
-                                });
-                              }
-                            }
-                            }
-                            color="primary"
-                          >
-                            Edit
+                                    togglePayWallModal({
+                                      'show': true,
+                                      'permissionNeeded': 'explore'
+                                    });
+                                  }
+                                }
+                                }
+                                color="primary"
+                              >
+                                Edit
                                                                                             </Button>
-                          <Button
-                            id={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
-                            key={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
-                            size="small"
-                            className={`${classes.ml12} ${classes.childHoverVisibility}`}
-                            onClick={(event) => {
-                              if (lookerUser.user_attributes.permission_level === 'premium') {
-                                // setSelected(treeCounter);
-                                action(
-                                  key.substring(0, key.length - 1),
-                                  item.id,
-                                  'delete',
-                                  item.client_id,
-                                  tabContent[tabContentItemIndex + 1].id,
-                                  validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                                );
-                                event.stopPropagation();
-                              } else {
-                                // togglePayWallModal();
+                              <Button
+                                id={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
+                                key={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
+                                size="small"
+                                className={`${classes.ml12} ${classes.childHoverVisibility}`}
+                                onClick={(event) => {
+                                  if (lookerUser.user_attributes.permission_level === 'premium') {
+                                    // setSelected(treeCounter);
+                                    action(
+                                      key.substring(0, key.length - 1),
+                                      item.id,
+                                      'delete',
+                                      item.client_id,
+                                      tabContent[tabContentItemIndex + 1].id,
+                                      validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
+                                    );
+                                    event.stopPropagation();
+                                  } else {
+                                    // togglePayWallModal();
 
-                                togglePayWallModal({
-                                  'show': true,
-                                  'permissionNeeded': 'explore'
-                                });
-                              }
-                            }
-                            }
-                            color="secondary"
-                          >
-                            Delete
+                                    togglePayWallModal({
+                                      'show': true,
+                                      'permissionNeeded': 'explore'
+                                    });
+                                  }
+                                }
+                                }
+                                color="secondary"
+                              >
+                                Delete
                                                                                             </Button>
+                            </Grid>
+                          </Grid>
+
                         </div>
-                        : item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title
+                        : <Grid container><Grid item sm={12}>{item.title}</Grid></Grid>
                     }
                     onClick={() => {
                       // setSelected(treeCounter)

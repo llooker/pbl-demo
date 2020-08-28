@@ -59,9 +59,16 @@ export function SingleValueVis({ lookerContent, classes }) {
   }
 
   const upOrDownArrow = apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
-
+  const labelText = !apiContent.length ? '' : lookerContent.chipFormat === "revenue" ?
+    `$${(apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '').replace(/\d(?=(\d{3})+\.)/g, '$&,')}` :
+    lookerContent.chipFormat === "integer" ? parseInt(apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '') : lookerContent.chipFormat === 'percent' ?
+      `${((apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '') * 100)
+      }% `
+      : '';
   return (
-    <Card className={`${classes.padding15} ${classes.overflowHidden}`} variant="outlined">
+    <Card className={`${classes.padding15} ${classes.overflowHidden} `}
+      variant="outlined"
+    >
       <div
         style={{
           height: lookerContent.height,
@@ -70,7 +77,7 @@ export function SingleValueVis({ lookerContent, classes }) {
         {apiContent.length ?
           <React.Fragment>
             <ApiHighlight height={140} classes={classes} >
-              <Grid container className={`${classes.textCenter}`}>
+              <Grid container className={`${classes.textCenter} `}>
                 <Grid item sm={12}>
                   <Typography variant="body2" align="left" color="secondary">
                     {lookerContent.label}
@@ -78,7 +85,7 @@ export function SingleValueVis({ lookerContent, classes }) {
                 </Grid>
                 <Grid item sm={6}>
                   <Typography variant="subtitle1" align="left">
-                    <b>{apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : ''}</b>
+                    <b>{labelText}</b>
                   </Typography>
                 </Grid>
                 <Grid item sm={6}>
@@ -126,7 +133,7 @@ export function SingleValueVis({ lookerContent, classes }) {
             </ApiHighlight>
           </React.Fragment>
           :
-          <Grid item sm={12} className={`${classes.flexCentered}`} style={{ height: lookerContent.height }}>
+          <Grid item sm={12} className={`${classes.flexCentered} `} style={{ height: lookerContent.height }}>
             <CircularProgress className={classes.circularProgress}
               style={{ color: `${lookerContent.visColor} ` }} />
           </Grid>

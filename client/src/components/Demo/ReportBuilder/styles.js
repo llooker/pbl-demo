@@ -105,5 +105,11 @@ export default makeStyles((theme) => ({
     backgroundColor: 'rgb(40, 42, 54)',
     overflow: 'scroll',
     borderRadius: '0 8px 8px 0'
+  },
+  whiteSpaceNoWrap: {
+    whiteSpace: 'nowrap'
+  },
+  overflowHidden: {
+    overflow: 'hidden'
   }
 }));

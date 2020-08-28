@@ -109,7 +109,8 @@
             },
             "resultFormat": "json",
             "label": "Revenue by Week",
-            "visColor": "#4595EC"
+            "visColor": "#4595EC",
+            "chipFormat": "revenue"
           },
           {
             "id": "20",
@@ -137,7 +138,8 @@
             },
             "resultFormat": "json",
             "label": "Visits by Week",
-            "visColor": "#F3A759"
+            "visColor": "#F3A759",
+            "chipFormat": "integer"
           },
           {
             "id": "21",
@@ -166,7 +168,8 @@
             },
             "resultFormat": "json",
             "label": "Bounce Rate by Week",
-            "visColor": "#E24E3A"
+            "visColor": "#E24E3A",
+            "chipFormat": "percent"
           },
           {
             "id": "22",
@@ -196,7 +199,8 @@
             },
             "resultFormat": "json",
             "label": "Average Time on Site by Week",
-            "visColor": "#65AB5A"
+            "visColor": "#65AB5A",
+            "chipFormat": "integer"
           },
           {
             "gridWidth": 8,
