@@ -176,15 +176,10 @@ export default function Dashboard(props) {
 
   return (
     <div className={`${classes.root} demoComponent`}
-      style={{
-        height: height,
-        overflow: 'scroll',
-        borderRadius: '8px'
-      }}>
-      <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
+      style={{ height }}>
+      <Card elevation={1} className={`${classes.padding30}`}>
         <Grid container spacing={3}>
-          <div className={`${classes.root} ${classes.positionRelative}`}>
-
+          <div className={`${classes.root}`}>
             {lookerContent[0].hasOwnProperty("filters") &&
               apiContent.length === lookerContent[0].filters.length ?
               <Grid item
@@ -221,29 +216,34 @@ export default function Dashboard(props) {
             }
             <Box
               className={iFrameExists ? ` ` : `${classes.hidden} `}>
-              {codeShow ?
-                <Grid item sm={6}
-                  className={`${classes.positionTopRight}`}
-                >
-                  <CodeFlyout {...props}
-                    classes={classes}
-                    lookerUser={lookerUser} />
+              <Grid container
+                spacing={3}>
+                {codeShow ?
+                  <Grid item sm={6}
+                    className={`${classes.positionFixedTopRight}`}
+                  >
+                    <CodeFlyout {...props}
+                      classes={classes}
+                      lookerUser={lookerUser}
+                      height={height}
+                    />
+                  </Grid>
+                  : ''}
+                <Grid item sm={12}>
+
+                  <Box className={`${classes.w100} ${classes.padding10}`} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
+
+
+                    <EmbedHighlight classes={classes}>
+                      <div
+                        className={`embedContainer ${validIdHelper(demoComponentType)}`}
+                        id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                        key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                      >
+                      </div>
+                    </EmbedHighlight>
+                  </Box>
                 </Grid>
-                : ''}
-              <Grid item sm={12}>
-
-                <Box className={classes.w100} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
-
-
-                  <EmbedHighlight classes={classes}>
-                    <div
-                      className={`embedContainer ${validIdHelper(demoComponentType)}`}
-                      id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                      key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                    >
-                    </div>
-                  </EmbedHighlight>
-                </Box>
               </Grid>
             </Box>
           </div>

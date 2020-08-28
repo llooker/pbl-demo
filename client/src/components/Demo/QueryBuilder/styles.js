@@ -10,6 +10,8 @@ export default makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+    overflow: 'scroll',
+    borderRadius: '8px'
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -57,12 +59,12 @@ export default makeStyles((theme) => ({
   mlAuto: {
     marginLeft: 'auto'
   },
-  table: {
-    minWidth: 650,
-  },
-  tableContainer: {
-    maxHeight: 650,
-  },
+  // table: {
+  //   minWidth: 650,
+  // },
+  // tableContainer: {
+  //   maxHeight: 650,
+  // },
   visuallyHidden: {
     border: 0,
     clip: 'rect(0 0 0 0)',
@@ -134,5 +136,23 @@ export default makeStyles((theme) => ({
   },
   height100Percent: {
     height: '100%'
-  }
+  },
+  padding20: {
+    padding: 20
+  },
+  positionFixedTopRight: {
+    position: 'fixed',
+    top: 88,
+    right: 24,
+    bottom: 0,
+    zIndex: 100,
+  },
+  codeFlyoutContainer: {
+    backgroundColor: 'rgb(40, 42, 54)',
+    overflow: 'scroll',
+    borderRadius: '0 8px 8px 0'
+  },
+  padding10: {
+    padding: 10
+  },
 }));

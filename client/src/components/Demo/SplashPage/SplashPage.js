@@ -64,12 +64,7 @@ export default function SplashPage(props) {
    */
   return (
     <div className={`${classes.root} demoComponent`}
-      style={{
-        height: height,
-        overflow: 'scroll',
-        borderRadius: '8px'
-      }}
-    >
+      style={{ height }}>
       <Card elevation={1} className={`${classes.padding30}`} >
         <Grid container
           spacing={3}
@@ -82,16 +77,18 @@ export default function SplashPage(props) {
                 </Card>
               </Grid>
             }
-            <Box className={iFrameExists ? `${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
+            <Box className={iFrameExists ? `` : `${classes.hidden}`}>
               <Grid container
                 spacing={3}
                 key={`${validIdHelper(demoComponentType + '-outerFragment')}`}>
                 {codeShow ? <Grid item sm={6}
-                  className={`${classes.positionTopRight}`}
+                  className={`${classes.positionFixedTopRight}`}
                 >
                   <CodeFlyout {...props}
                     classes={classes}
-                    lookerUser={lookerUser} />
+                    lookerUser={lookerUser}
+                    height={height}
+                  />
                 </Grid> : ''}
                 {lookerContent.map((lookerContent, innerIndex) => {
                   return (

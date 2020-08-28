@@ -10,7 +10,9 @@ const greenLight = green[100];
 export default makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
+    overflow: 'scroll',
+    borderRadius: 8
   },
   flexCentered: {
     display: 'flex',
@@ -141,13 +143,6 @@ export default makeStyles((theme) => ({
     fontSize: '16px !important',
 
   },
-  positionTopRight: {
-    position: 'absolute',
-    top: -30,
-    right: -50,
-    bottom: 0,
-    zIndex: 100
-  },
   positionRelative: {
     position: 'relative'
   },
@@ -170,15 +165,19 @@ export default makeStyles((theme) => ({
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
   },
-  // .container {
-  //   position: relative;
-  //   width: 100vw;
-  //   height: 100vh;
-  // }
-  // .container > iframe {
-  //   position: absolute;
-  //   top: -60px;
-  //   width: 100%;
-  //   height: calc(100% + 60px);
-  // }
+  padding20: {
+    padding: 20
+  },
+  positionFixedTopRight: {
+    position: 'fixed',
+    top: 88,
+    right: 24,
+    bottom: 0,
+    zIndex: 100,
+  },
+  codeFlyoutContainer: {
+    backgroundColor: 'rgb(40, 42, 54)',
+    overflow: 'scroll',
+    borderRadius: '0 8px 8px 0'
+  }
 }));

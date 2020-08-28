@@ -23,12 +23,14 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
       backgroundColor: `${backgroundColor}`,
       borderRadius: `4px`,
       // zIndex: 10000000000000000,
-      position: 'relative'
+      position: 'relative',
+      // padding: '10px'
     }
   } else {
     style = {
       border: `3px solid transparent`,
       backgroundColor: `transparent`,
+      // padding: '10px'
     }
   }
 

@@ -4,6 +4,8 @@ export default makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+    overflow: 'scroll',
+    borderRadius: '8px'
   },
   card: {
     minWidth: 275,
@@ -88,5 +90,20 @@ export default makeStyles((theme) => ({
   },
   height100Percent: {
     height: '100%'
+  },
+  padding20: {
+    padding: 20
+  },
+  positionFixedTopRight: {
+    position: 'fixed',
+    top: 88,
+    right: 24,
+    bottom: 0,
+    zIndex: 100,
+  },
+  codeFlyoutContainer: {
+    backgroundColor: 'rgb(40, 42, 54)',
+    overflow: 'scroll',
+    borderRadius: '0 8px 8px 0'
   }
 }));

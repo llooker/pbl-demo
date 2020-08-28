@@ -21,12 +21,14 @@ export default function QueryBuilder(props) {
   // console.log('QueryBuilder')
 
   const topBarBottomBarHeight = 112;
+  const sideBarWidth = 240 + 116;
   const [value, setValue] = useState(0);
   const [apiContent, setApiContent] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
   const { togglePayWallModal, show, codeShow } = useContext(AppContext);
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const [width, setWidth] = useState((window.innerWidth - sideBarWidth));
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser } = props;
 
@@ -43,7 +45,10 @@ export default function QueryBuilder(props) {
   }, [lookerContent, lookerUser])
 
   useEffect(() => {
-    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+    window.addEventListener("resize", () => {
+      setHeight((window.innerHeight - topBarBottomBarHeight))
+      setWidth((window.innerWidth - sideBarWidth))
+    });
   })
 
   const performLookerApiCalls = async (newQuery, resultFormat) => {
@@ -80,17 +85,12 @@ export default function QueryBuilder(props) {
 
   return (
     <div className={`${classes.root} demoComponent`}
-      style={{
-        height: height,
-        minHeight: height,
-        overflow: 'scroll',
-        borderRadius: '8px'
-      }}>
-      <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
+      style={{ height }}>
+      <Card elevation={1} className={`${classes.padding30}`}>
         <Grid container
           spacing={3}
           key={validIdHelper(type)} >
-          <div className={`${classes.root} ${classes.positionRelative}`}>
+          <div className={`${classes.root}`}>
             <Grid item sm={12}>
               <FilterBar {...props}
                 classes={classes}
@@ -107,26 +107,29 @@ export default function QueryBuilder(props) {
                 </Card>
               </Grid>
               : apiContent.data && apiContent.data.length ?
-                <Box
-                >
-                  <Grid container>
-                    {codeShow ? <Grid item sm={6}
-                      className={`${classes.positionTopRight}`}
-                    >
-                      <CodeFlyout {...props}
-                        classes={classes}
-                        lookerUser={lookerUser} />
-                    </Grid> : ''}
+                <Box>
+                  <Grid container
+                    spacing={3}>
+                    {codeShow ?
+                      <Grid item sm={6}
+                        className={`${classes.positionFixedTopRight}`}
+                      >
+                        <CodeFlyout {...props}
+                          classes={classes}
+                          lookerUser={lookerUser}
+                          height={height}
+                        />
+                      </Grid> : ''}
                     <Divider className={classes.divider} />
                     <Grid item sm={12}>
-                      <Box className={`${classes.w100} ${classes.maxHeight600}`}
-                        mt={2}
+                      <Box className={classes.w100} mt={2}
                       >
-                        <EnhancedTable
+                        < EnhancedTable
                           {...props}
                           classes={classes}
                           rows={apiContent.data}
                           lookerContent={lookerContent}
+                          width={width}
                         />
                       </Box>
                     </Grid>
@@ -383,7 +386,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTable(props) {
-  const { rows, classes, lookerContent } = props;
+  const { rows, classes, lookerContent, width } = props;
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState(Object.keys(rows[0])[0]);
   const [page, setPage] = React.useState(0);
@@ -411,9 +414,9 @@ function EnhancedTable(props) {
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} ${classes.padding10}`}>
       <ApiHighlight classes={classes} >
-        <TableContainer>
+        <TableContainer style={{ maxWidth: width }}>
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"

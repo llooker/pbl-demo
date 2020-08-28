@@ -11,7 +11,7 @@ export default function CodeFlyout(props) {
   const { toggleCodeShow } = useContext(AppContext);
   const { codeShow } = useContext(AppContext);
 
-  const { classes, lookerContent, clientSideCode, serverSideCode, lookerUser, permissionNeededCode } = props
+  const { classes, lookerContent, clientSideCode, serverSideCode, lookerUser, permissionNeededCode, height } = props
   return (
     <ClickAwayListener onClickAway={() => {
       toggleCodeShow()
@@ -19,15 +19,15 @@ export default function CodeFlyout(props) {
       <Fade in={codeShow || false}>
         {Object.keys(lookerUser).length ?
           <Grid container spacing={3}
-            className={classes.padding30}
-            style={{ backgroundColor: 'rgb(40, 42, 54)' }}>
-            <Grid item sm={10}>
+            className={`${classes.padding20} ${classes.codeFlyoutContainer}`}
+            style={{ height }}>
+            <Grid item sm={11}>
               <Typography variant="h6" className={` ${classes.mrAuto}`} style={{ color: 'white' }}>
                 Looker User Object
             </Typography>
             </Grid>
-            <Grid item sm={2}
-            // style={{ textAlign: 'right' }}
+            <Grid item sm={1}
+              style={{ textAlign: 'right' }}
             >
               <CloseIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => toggleCodeShow()} />
             </Grid>

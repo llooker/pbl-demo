@@ -250,11 +250,7 @@ export default function ReportBuilder(props) {
 
   return (
     <div className={`${classes.root} demoComponent`}
-      style={{
-        height: height,
-        overflow: 'scroll',
-        borderRadius: '8px'
-      }}>
+      style={{ height }}>
       <Card elevation={1} className={`${classes.padding30} `}>
         <Grid container
           spacing={3}
@@ -272,7 +268,7 @@ export default function ReportBuilder(props) {
             }
 
             {/* additional loading logic, need embedContainer to exist but want it hidden until iFrame has content...*/}
-            <Box className={iFrameExists ? `${classes.positionRelative}` : `${classes.hidden} ${classes.positionRelative}`}>
+            <Box className={iFrameExists ? `` : `${classes.hidden}`}>
               <AppBar position="static" elevation={0}>
                 <Tabs
                   className={classes.tabs}
@@ -301,67 +297,73 @@ export default function ReportBuilder(props) {
                   ))}
                 </Tabs>
               </AppBar>
-
               <Box className="tabPanelContainer">
-                {codeShow ? <Grid item sm={6}
-                  className={`${classes.positionTopRight}`}
-                >
-                  <CodeFlyout {...props}
-                    classes={classes}
-                    lookerUser={lookerUser} />
-                </Grid> : ''}
-                {tabContent.map((tabContentItem, tabContentItemIndex) => (
-                  <TabPanel
-                    key={`${validIdHelper(demoComponentType + '-tabPanel-' + tabContentItemIndex)}`}
-                    value={value}
-                    index={tabContentItemIndex}>
-                    <Grid container>
-                      {
-                        tabContentItemIndex === 0
-                          ?
-                          <React.Fragment
-                            key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
-                            <Grid item sm={4} >
-                              <ApiHighlight height={500} classes={classes}>
-                                <TreeSideBar {...{
-                                  togglePayWallModal,
-                                  classes,
-                                  demoComponentType,
-                                  tabContent,
-                                  tabContentItemIndex,
-                                  action,
-                                  apiContent,
-                                  ...props
-                                }}
-                                />
-                              </ApiHighlight>
-                            </Grid>
-                            <Grid item sm={8} >
+                <Grid container
+                  spacing={3}>
+                  {codeShow ?
+                    <Grid item sm={6}
+                      className={`${classes.positionFixedTopRight}`}
+                    >
+                      <CodeFlyout {...props}
+                        classes={classes}
+                        lookerUser={lookerUser}
+                        height={height}
+                      />
+                    </Grid> : ''}
+                  {tabContent.map((tabContentItem, tabContentItemIndex) => (
+                    <TabPanel
+                      key={`${validIdHelper(demoComponentType + '-tabPanel-' + tabContentItemIndex)}`}
+                      value={value}
+                      index={tabContentItemIndex}
+                      style={{ width: '100%' }} //weird
+                    >
+                      <Grid container>
+                        {
+                          tabContentItemIndex === 0
+                            ?
+                            <React.Fragment
+                              key={`${validIdHelper(demoComponentType + '-outerFragment-' + tabContentItemIndex)}`}>
+                              <Grid item sm={4} >
+                                <ApiHighlight height={500} classes={classes}>
+                                  <TreeSideBar {...{
+                                    togglePayWallModal,
+                                    classes,
+                                    demoComponentType,
+                                    tabContent,
+                                    tabContentItemIndex,
+                                    action,
+                                    apiContent,
+                                    ...props
+                                  }}
+                                  />
+                                </ApiHighlight>
+                              </Grid>
+                              <Grid item sm={8} >
+                                <EmbedHighlight classes={classes}>
+                                  <div
+                                    className={`embedContainer ${validIdHelper(demoComponentType)}`}
+                                    id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                    key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                  >
+                                  </div>
+                                </EmbedHighlight>
+                              </Grid>
+                            </React.Fragment>
+                            :
+                            <Grid item sm={12} >
                               <EmbedHighlight classes={classes}>
                                 <div
-                                  className={`embedContainer ${validIdHelper(demoComponentType)}`}
+                                  className="embedContainer"
                                   id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                                   key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
                                 >
                                 </div>
                               </EmbedHighlight>
                             </Grid>
-                          </React.Fragment>
-                          :
-                          <Grid item sm={12} >
-                            <EmbedHighlight classes={classes}>
-                              <div
-                                className="embedContainer"
-                                id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                                key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                              >
-                              </div>
-                            </EmbedHighlight>
-                          </Grid>
-                      }
-                    </Grid>
-                  </TabPanel>
-                ))}
+                        }
+                      </Grid>
+                    </TabPanel>
+                  ))}</Grid>
               </Box>
             </Box >
           </div>

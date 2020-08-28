@@ -203,16 +203,12 @@ export default function CustomVis(props) {
 
   return (
     <div className={`${classes.root} demoComponent`}
-      style={{
-        height: height,
-        overflow: 'scroll',
-        borderRadius: '8px'
-      }}>
-      <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
+      style={{ height }}>
+      <Card elevation={1} className={`${classes.padding30}`}>
         <Grid container
           spacing={3}
           key={validIdHelper(type)} >
-          <div className={`${classes.root} ${classes.positionRelative}`}>
+          <div className={`${classes.root} `}>
 
             {!apiContent.queryResults ?
               <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
@@ -243,21 +239,23 @@ export default function CustomVis(props) {
               </Grid>
 
               : apiContent.queryResults && apiContent.queryResults.length ?
-
-                <Box
-                  className={``}>
-                  <Grid container>
-                    {codeShow ? <Grid item sm={6}
-                      className={`${classes.positionTopRight}`}
-                    >
-                      <CodeFlyout {...props}
-                        classes={classes}
-                        lookerUser={lookerUser} />
-                    </Grid> : ''}
+                <Box>
+                  <Grid container
+                    spacing={3}>
+                    {codeShow ?
+                      <Grid item sm={6}
+                        className={`${classes.positionFixedTopRight}`}
+                      >
+                        <CodeFlyout {...props}
+                          classes={classes}
+                          lookerUser={lookerUser}
+                          height={height}
+                        />
+                      </Grid> : ''}
                     <Divider className={classes.divider} />
                     <Grid item sm={12} className={classes.height600}>
 
-                      <Box className={classes.w100} mt={2}>
+                      <Box className={`${classes.w100} ${classes.padding10}`} mt={2}>
 
                         <ApiHighlight height={400} classes={classes}>
                           <ResponsiveCalendar

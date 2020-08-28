@@ -4,6 +4,8 @@ export default makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+    overflow: 'scroll',
+    borderRadius: '8px'
   },
   flexCentered: {
     display: 'flex',
@@ -57,13 +59,6 @@ export default makeStyles((theme) => ({
   minHeight680: {
     minHeight: 680,
   },
-  positionTopRight: {
-    position: 'absolute',
-    top: -30,
-    right: -50,
-    bottom: 0,
-    zIndex: 100
-  },
   positionRelative: {
     position: 'relative'
   },
@@ -76,5 +71,23 @@ export default makeStyles((theme) => ({
   },
   ml12: {
     marginLeft: 12
-  }
+  },
+  padding20: {
+    padding: 20
+  },
+  positionFixedTopRight: {
+    position: 'fixed',
+    top: 88,
+    right: 24,
+    bottom: 0,
+    zIndex: 100,
+  },
+  codeFlyoutContainer: {
+    backgroundColor: 'rgb(40, 42, 54)',
+    overflow: 'scroll',
+    borderRadius: '0 8px 8px 0'
+  },
+  padding10: {
+    padding: 10
+  },
 }));
