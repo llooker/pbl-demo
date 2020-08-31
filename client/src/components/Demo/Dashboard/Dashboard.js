@@ -177,7 +177,7 @@ export default function Dashboard(props) {
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
-      <Card elevation={1} className={`${classes.padding30}`}>
+      <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
         <Grid container spacing={3}>
           <div className={`${classes.root}`}>
             {lookerContent[0].hasOwnProperty("filters") &&
@@ -215,7 +215,9 @@ export default function Dashboard(props) {
                 </Grid>
             }
             <Box
-              className={iFrameExists ? ` ` : `${classes.hidden} `}>
+              className={iFrameExists ? ` ` : `${classes.hidden} `}
+              style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}
+            >
               <Grid container
                 spacing={3}>
                 {codeShow ?

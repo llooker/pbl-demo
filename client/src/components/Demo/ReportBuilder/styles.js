@@ -111,5 +111,12 @@ export default makeStyles((theme) => ({
   },
   overflowHidden: {
     overflow: 'hidden'
-  }
+  },
+  overflowScroll: {
+    overflow: 'scroll'
+  },
+  overflowYScroll: {
+    overflowY: 'scroll',
+    overflowX: 'hidden'
+  },
 }));

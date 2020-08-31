@@ -204,7 +204,12 @@ export default function CustomVis(props) {
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
-      <Card elevation={1} className={`${classes.padding30}`}>
+      <Card elevation={1} className={`
+      ${classes.padding30} 
+      ${classes.height100Percent}
+      ${classes.overflowScroll}`
+      }
+      >
         <Grid container
           spacing={3}
           key={validIdHelper(type)} >
@@ -253,7 +258,7 @@ export default function CustomVis(props) {
                         />
                       </Grid> : ''}
                     <Divider className={classes.divider} />
-                    <Grid item sm={12} className={classes.height600}>
+                    <Grid item sm={12} >
 
                       <Box className={`${classes.w100} ${classes.padding10}`} mt={2}>
 

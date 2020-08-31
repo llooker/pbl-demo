@@ -135,7 +135,8 @@ export default makeStyles((theme) => ({
     margin: 6
   },
   height100Percent: {
-    height: '100%'
+    height: '100%',
+    overflow: 'scroll'
   },
   padding20: {
     padding: 20
@@ -154,5 +155,12 @@ export default makeStyles((theme) => ({
   },
   padding10: {
     padding: 10
+  },
+  overflowScroll: {
+    overflow: 'scroll'
+  },
+  overflowYScroll: {
+    overflowY: 'scroll',
+    overflowX: 'hidden'
   },
 }));
