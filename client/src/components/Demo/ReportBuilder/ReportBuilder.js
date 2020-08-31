@@ -251,7 +251,12 @@ export default function ReportBuilder(props) {
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
-      <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
+      <Card elevation={1} className={`
+      ${classes.padding30} 
+      ${classes.height100Percent}
+      ${classes.overflowYScroll}`
+      }
+      >
         <Grid container
           spacing={3}
           key={validIdHelper(type)} >

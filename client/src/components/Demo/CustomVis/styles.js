@@ -115,4 +115,7 @@ export default makeStyles((theme) => ({
   padding10: {
     padding: 10
   },
+  overflowScroll: {
+    overflow: 'scroll'
+  }
 }));

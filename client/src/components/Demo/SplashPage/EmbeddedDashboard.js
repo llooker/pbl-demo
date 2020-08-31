@@ -36,27 +36,23 @@ export function EmbeddedDashboard({ lookerContent, classes, id, lookerHost }) {
     <Card className={classes.padding15}
       variant="outlined"
     >
-
       <div
-        className={`${classes.textCenter} ${classes.overflowVisible}`}
-        style={
-          { height: lookerContent.height }
-        }
+        // className={`${classes.overflowYScroll}`}
+        style={{ height: lookerContent.height }}
       >
         {
           iFrameExists ? '' :
 
             <Grid item sm={12} >
-              <Card className={`${classes.card} ${classes.flexCentered} ${classes.maxHeight400} `} elevation={0}>
+              <Card className={`${classes.card} ${classes.flexCentered} ${classes.maxHeight400} ${classes.overflowHidden}`} elevation={0}>
                 <CircularProgress className={classes.circularProgress}
                 />
               </Card>
             </Grid>
         }
-        {/* <Box > */}
         <Grid container spacing={3}>
           <Grid item sm={12}>
-            <EmbedHighlight classes={classes} height={380}>
+            <EmbedHighlight classes={classes} height={iFrameExists ? 380 : 0}>
               <div
                 className={`embedContainer embedContainerNoHeader splashPage`}
                 id={id}

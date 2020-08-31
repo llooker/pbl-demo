@@ -179,5 +179,14 @@ export default makeStyles((theme) => ({
     backgroundColor: 'rgb(40, 42, 54)',
     overflow: 'scroll',
     borderRadius: '0 8px 8px 0'
-  }
+  },
+  overflowScroll: {
+    overflow: 'scroll'
+  },
+  overflowHidden: {
+    overflow: 'hidden'
+  },
+  height100Percent: {
+    height: '100%'
+  },
 }));
