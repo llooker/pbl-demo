@@ -55,12 +55,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn(props) {
 
-  // console.log('SignIn')
+  console.log('SignIn')
   // console.log('props', props)
 
-  const { googleClientId, onSuccess, onFailure, } = props;
+  const { googleClientId, onSuccess, onFailure, usecaseFromUrl } = props;
+  console.log('usecaseFromUrl', usecaseFromUrl)
   const classes = useStyles();
-  let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
   const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
   const backgroundImage = require(`../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`);
   const logoImage = require(`../images/${usecaseFromUrl}_logo_black.svg`)

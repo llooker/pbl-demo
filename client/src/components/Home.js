@@ -293,7 +293,7 @@ class Home extends Component {
   };
 
   componentDidMount(props) {
-    let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
+    let { usecaseFromUrl } = this.props || 'atom';
     this.setState({
       activeUsecase: usecaseFromUrl,
       appLayout: UsecaseContent[usecaseFromUrl].layout || 'left-sidebar'
@@ -336,8 +336,6 @@ class Home extends Component {
   }
 
   render() {
-
-    // console.log('this.state.renderedDemoComponents', this.state.renderedDemoComponents ? this.state.renderedDemoComponents : '')
 
     //how to make this dynamic????
     const demoComponentMap = {

@@ -30,8 +30,8 @@ class Login extends React.Component {
   }
 
   render() {
-    // console.log("Login render")
-    const { from } = this.props.location.state || { from: { pathname: '/home' } } //needs work?
+
+    const { from } = this.props.location.state || { from: { pathname: '/analytics' } } //needs work?
     const { pathname } = this.props.location
     const { activeCustomization } = this.props
     const { userProfile } = this.props
@@ -49,6 +49,7 @@ class Login extends React.Component {
           googleClientId={googleClientId}
           onSuccess={this.responseGoogle}
           onFailure={this.responseGoogle}
+          usecaseFromUrl={usecaseHelper()}
         />
       )
     }
@@ -73,6 +74,7 @@ const PrivateRoute = ({
   applySession,
   lookerUserAttributeBrandOptions,
   switchUserAttributeBrand,
+  usecaseFromUrl,
   ...rest }) => (
     < Route {...rest} render={(props) => (
       Object.keys(userProfile).length ?
@@ -93,6 +95,7 @@ const PrivateRoute = ({
           applySession={applySession}
           lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
           switchUserAttributeBrand={switchUserAttributeBrand}
+          usecaseFromUrl={usecaseFromUrl}
         />
         : <Redirect to={{
           pathname: '/',
@@ -373,12 +376,8 @@ class App extends React.Component {
     let userAttributeCopy = { ...this.state.lookerUser.user_attributes }
     userAttributeCopy.brand = newAttribute;
 
-    let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
-    if (!usecaseFromUrl.length) {     //no usecase
-      window.location.href = window.location.href + 'atom'
-    } else if (!UsecaseContent.hasOwnProperty(usecaseFromUrl)) {     //usecase param isn't in JSON file
-      window.location.href = window.location.href.replace(usecaseFromUrl, 'atom')
-    }
+    let usecaseFromUrl = usecaseHelper();
+
     this.setState(prevState => ({
       lookerUser: {
         ...prevState.lookerUser,
@@ -407,14 +406,10 @@ class App extends React.Component {
     // const { activeIndustry } = this.state;
     // console.log('activeCustomization', activeCustomization);
 
-    let usecaseFromUrl = window.location.pathname.replace(/^\/([^\/]*).*$/, '$1');
-    if (!usecaseFromUrl.length) {     //no usecase
-      window.location.href = window.location.href + 'atom'
-    } else if (!UsecaseContent.hasOwnProperty(usecaseFromUrl)) {     //usecase param isn't in JSON file
-      window.location.href = window.location.href.replace(usecaseFromUrl, 'atom')
-    }
+    let usecaseFromUrl = usecaseHelper();
+
     return (
-      <Router basename={usecaseFromUrl}>
+      <Router>
         <div>
           <Route path='' render={(props) => <Login
             {...props}
@@ -426,7 +421,7 @@ class App extends React.Component {
             lookerHost={lookerHost}
           />}
           />
-          <PrivateRoute path='*/home' component={Home}
+          <PrivateRoute path='/analytics' component={Home}
             activeCustomization={activeCustomization}
             lookerContent={lookerContent}
             saveLookerContent={this.saveLookerContent}
@@ -437,6 +432,7 @@ class App extends React.Component {
             switchLookerUser={this.switchLookerUser}
             lookerUserAttributeBrandOptions={LookerUserAttributeBrandOptions}
             switchUserAttributeBrand={this.switchUserAttributeBrand}
+            usecaseFromUrl={usecaseFromUrl}
           />
         </div>
       </Router>
@@ -444,4 +440,15 @@ class App extends React.Component {
   }
 }
 export default App
+
+export function usecaseHelper() {
+  let keyArr = Object.keys(UsecaseContent);
+  let url = window.location.href;
+  for (let i = 0; i < keyArr.length; i++) {
+    if (url.indexOf(keyArr[i]) > -1) {
+      return keyArr[i];
+    }
+  }
+  return 'atom';
+}
 
