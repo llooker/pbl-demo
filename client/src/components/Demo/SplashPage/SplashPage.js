@@ -65,15 +65,12 @@ export default function SplashPage(props) {
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
-      <Card elevation={1} className={`
-      ${classes.padding30} 
+      <Card elevation={1} className={`${classes.padding30} 
       ${classes.height100Percent}
-      ${classes.overflowScroll}`
-      }
+      ${classes.overflowScroll}`}
       >
         <Grid container
-          spacing={3}
-          key={validIdHelper(type)} >
+          key={validIdHelper(type)}>
           <div className={classes.root}>
             {iFrameExists ? '' :
               <Grid item sm={12} >
@@ -85,16 +82,19 @@ export default function SplashPage(props) {
             <Box className={iFrameExists ? `` : `${classes.hidden}`}>
               <Grid container
                 spacing={3}
-                key={`${validIdHelper(demoComponentType + '-outerFragment')}`}>
-                {codeShow ? <Grid item sm={6}
-                  className={`${classes.positionFixedTopRight}`}
-                >
-                  <CodeFlyout {...props}
-                    classes={classes}
-                    lookerUser={lookerUser}
-                    height={height}
-                  />
-                </Grid> : ''}
+                key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
+                className={`${classes.noContainerScroll}`}
+              >
+                {
+                  codeShow ? <Grid item sm={6}
+                    className={`${classes.positionFixedTopRight}`}
+                  >
+                    <CodeFlyout {...props}
+                      classes={classes}
+                      lookerUser={lookerUser}
+                      height={height}
+                    />
+                  </Grid> : ''}
                 {lookerContent.map((lookerContent, innerIndex) => {
                   return (
                     <Grid
@@ -124,7 +124,7 @@ export default function SplashPage(props) {
             </Box >
           </div >
         </Grid >
-      </Card>
+      </Card >
     </div >
   )
 }

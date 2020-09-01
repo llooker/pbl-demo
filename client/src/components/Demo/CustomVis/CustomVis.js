@@ -211,7 +211,6 @@ export default function CustomVis(props) {
       }
       >
         <Grid container
-          spacing={3}
           key={validIdHelper(type)} >
           <div className={`${classes.root} `}>
 
@@ -246,7 +245,8 @@ export default function CustomVis(props) {
               : apiContent.queryResults && apiContent.queryResults.length ?
                 <Box>
                   <Grid container
-                    spacing={3}>
+                    spacing={3}
+                    className={`${classes.noContainerScroll}`}>
                     {codeShow ?
                       <Grid item sm={6}
                         className={`${classes.positionFixedTopRight}`}

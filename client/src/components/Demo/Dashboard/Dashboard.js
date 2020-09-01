@@ -178,7 +178,7 @@ export default function Dashboard(props) {
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
       <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
-        <Grid container spacing={3}>
+        <Grid container>
           <div className={`${classes.root}`}>
             {lookerContent[0].hasOwnProperty("filters") &&
               apiContent.length === lookerContent[0].filters.length ?
@@ -219,7 +219,8 @@ export default function Dashboard(props) {
               style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}
             >
               <Grid container
-                spacing={3}>
+                spacing={3}
+                className={`${classes.noContainerScroll}`}>
                 {codeShow ?
                   <Grid item sm={6}
                     className={`${classes.positionFixedTopRight}`}

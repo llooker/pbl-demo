@@ -21,7 +21,7 @@ export default function QueryBuilder(props) {
   // console.log('QueryBuilder')
 
   const topBarBottomBarHeight = 112;
-  const sideBarWidth = 240 + 116;
+  const sideBarWidth = 240 + 152; //24 + 24 + 30 + 30 + 12 + 12 + 10 + 10
   const [value, setValue] = useState(0);
   const [apiContent, setApiContent] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
@@ -93,7 +93,6 @@ export default function QueryBuilder(props) {
       }
       >
         <Grid container
-          spacing={3}
           key={validIdHelper(type)} >
           <div className={`${classes.root}`}>
             <Grid item sm={12}>
@@ -114,7 +113,8 @@ export default function QueryBuilder(props) {
               : apiContent.data && apiContent.data.length ?
                 <Box>
                   <Grid container
-                    spacing={3}>
+                    spacing={3}
+                    className={`${classes.noContainerScroll}`}>
                     {codeShow ?
                       <Grid item sm={6}
                         className={`${classes.positionFixedTopRight}`}
@@ -127,8 +127,7 @@ export default function QueryBuilder(props) {
                       </Grid> : ''}
                     <Divider className={classes.divider} />
                     <Grid item sm={12}>
-                      <Box className={classes.w100} mt={2}
-                      >
+                      <Box className={`${classes.w100}`} mt={2}>
                         < EnhancedTable
                           {...props}
                           classes={classes}

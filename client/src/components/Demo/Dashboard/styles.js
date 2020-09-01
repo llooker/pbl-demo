@@ -90,4 +90,8 @@ export default makeStyles((theme) => ({
   padding10: {
     padding: 10
   },
+  noContainerScroll: {
+    width: '100%',
+    margin: 0
+  }
 }));

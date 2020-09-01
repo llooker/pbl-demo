@@ -119,4 +119,8 @@ export default makeStyles((theme) => ({
     overflowY: 'scroll',
     overflowX: 'hidden'
   },
+  noContainerScroll: {
+    width: '100%',
+    margin: 0
+  }
 }));

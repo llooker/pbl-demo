@@ -189,4 +189,8 @@ export default makeStyles((theme) => ({
   height100Percent: {
     height: '100%'
   },
+  noContainerScroll: {
+    width: '100%',
+    margin: 0
+  }
 }));

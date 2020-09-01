@@ -258,7 +258,6 @@ export default function ReportBuilder(props) {
       }
       >
         <Grid container
-          spacing={3}
           key={validIdHelper(type)} >
           <div className={classes.root}>
             {iFrameExists ? '' :
@@ -304,7 +303,8 @@ export default function ReportBuilder(props) {
               </AppBar>
               <Box className="tabPanelContainer">
                 <Grid container
-                  spacing={3}>
+                  spacing={3}
+                  className={`${classes.noContainerScroll}`}>
                   {codeShow ?
                     <Grid item sm={6}
                       className={`${classes.positionFixedTopRight}`}
