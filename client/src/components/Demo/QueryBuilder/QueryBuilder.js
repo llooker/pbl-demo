@@ -38,9 +38,10 @@ export default function QueryBuilder(props) {
   };
 
   useEffect(() => {
-    lookerContent.map(lookerContent => {
-      setTimeout(() => performLookerApiCalls(lookerContent.queryBody, lookerContent.resultFormat), 100);
-    })
+    // call this is filterBar instead to make field chip dynamic
+    // lookerContent.map(lookerContent => {
+    //   setTimeout(() => performLookerApiCalls(lookerContent.queryBody, lookerContent.resultFormat), 100);
+    // })
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser])
 
@@ -165,12 +166,13 @@ function FilterBar(props) {
       key: 'fieldChipData' + index,
       label: prettifyString(item.substring(item.lastIndexOf('.') + 1, item.length)),
       datalabel: item,
-      selected: true,
+      selected: index < 3 || index > 5 ? true : false,  //true
       fieldType: lookerContent[0].fieldType[item]
     }
   }) : '');
 
   const [queryModified, setQueryModified] = useState(false);
+  const [isOnload, setIsOnload] = useState(true);
   const [filtersData, setFilterData] = useState(lookerContent[0].queryBody ? Object.keys(lookerContent[0].queryBody.filters).map((key, index) => {
     return {
       key: 'filter' + index,
@@ -199,7 +201,7 @@ function FilterBar(props) {
   }
 
   const handleQuerySubmit = (event) => {
-    if (queryModified) {
+    if (queryModified || isOnload) {
       let newFields = fieldsChipData.filter(chip => chip.selected).map(item => item.datalabel);
       let currentFilters = {}; //needs to be object
       filtersData.map((item, index) => {
@@ -210,12 +212,16 @@ function FilterBar(props) {
       newQueryObj.filters = currentFilters;
       action(newQueryObj, lookerContent[0].resultFormat);
       setQueryModified(false)
+      setIsOnload(false)
     }
   }
 
-  // useEffect(() => {
-  //   handleQuerySubmit()
-  // }, [fieldsChipData, filtersData]);
+  useEffect(() => {
+    if (isOnload) {
+      handleQuerySubmit()
+      // isOnload = false;
+    }
+  }, [fieldsChipData]);
 
   const datePermissionMap = {
     'basic': ["1 week", "1 month", "3 months", "6 months"]
