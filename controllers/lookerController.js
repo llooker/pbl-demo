@@ -6,6 +6,8 @@ const settings = new NodeSettingsIniFile()
 const session = new NodeSession(settings)
 const sdk = new Looker40SDK(session)
 const rp = require('request-promise');
+// RG 9/4 added User model for retriving API session data from Mongo
+const User = require('../models/User');
 
 module.exports.auth = async (req, res, next) => {
   // console.log('lookerController auth');
@@ -73,9 +75,11 @@ module.exports.fetchFolder = async (req, res, next) => {
   }
 }
 
-module.exports.updateLookerUser = (req, res, next) => {
+module.exports.updateLookerUser = async (req, res, next) => {
   const lookerUser = req.body;
   let { session } = req;
+  const url = createSignedUrl('/alive', session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
+  await rp(url)
   session.lookerUser = lookerUser;
   res.status(200).send({ session });
 }
@@ -131,7 +135,7 @@ module.exports.runInlineQuery = async (req, res, next) => {
 module.exports.createQueryTask = async (req, res, next) => {
   // console.log('lookerController createQueryTask');
   const { params } = req;
-
+  // console.log(params)
   try {
     let codeAsString = this.createQueryTask.toString();
     let embeddedUserSdkSession = await createEmbeddedUserSdkSession(req);
@@ -140,6 +144,8 @@ module.exports.createQueryTask = async (req, res, next) => {
       body: {
         query_id: create_query_response.id,
         result_format: params.result_format,
+        // generate_drill_links: false
+        // result_format: 'json',
       }
     }));
     // console.log('query_task', query_task)
@@ -248,23 +254,17 @@ module.exports.getThumbnail = async (req, res, next) => {
   }
 }
 
+
+
+
 async function createEmbeddedUserSdkSession(req) {
-  // console.log('createEmbeddedUserSdkSession')
-  const src = req.query.src;
-  const lookerUser = req.session.lookerUser;
-  // console.log('lookerUser', lookerUser)
-  const url = await createSignedUrl(src, lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
-  await rp(url)
-  // console.log('url', url)
-  //get user id of embedded user
-  const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
-  //create separate session for embedded user
-  const embeddedUserSession = new NodeSession(settings)
-  //instantiate new sdk client based on embedded session
-  const embeddedUserSdk = new Looker40SDK(embeddedUserSession)
-  //ensure service account connected before sudoing
-  await embeddedUserSdk.ok(embeddedUserSdk.me())
-  //sudo as embedded user
-  await embeddedUserSdk.authSession.login(userCred.id.toString())
-  return embeddedUserSdk
+  class SudoNodeSession extends NodeSession {
+    async getToken() {
+      const r = await User.findOne({google_id: req.session.lookerUser.external_user_id});
+      return r.api_user_token
+    }
+  }
+
+  const embeddedUserSession = new SudoNodeSession(settings)
+  return new Looker40SDK(embeddedUserSession)
 }

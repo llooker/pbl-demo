@@ -28,6 +28,9 @@ import './Home.css'; //needed for iframe height
 import { MonetizationModal } from './Demo/MonetizationModal';
 import BottomBar from './Material/BottomBar';
 
+import LookerUserPermissions from '../lookerUserPermissions.json';
+import { lookerUserTimeHorizonMap } from '../App';
+
 
 
 const drawerWidth = 240;
@@ -318,10 +321,30 @@ class Home extends Component {
     }
   }
 
-  handleUserMenuSwitch = (newValue, property) => {
+  handleUserMenuSwitch = async (newValue, property) => {
     // console.log('handleUserMenuSwitch')
     // console.log('newValue', newValue)
     // console.log('property', property)
+    //eg to review this 9/8
+    let newLookerUser = { ...this.props.lookerUser }
+    // console.log('new looker user',newLookerUser)
+    if (property === 'brand') {
+      newLookerUser.user_attributes.brand = newValue
+    } else if (property === 'permission') {
+      // console.log('permission',newValue)
+      newLookerUser.permissions = LookerUserPermissions[newValue] || LookerUserPermissions['basic']
+      newLookerUser.user_attributes.permission_level = newValue
+      newLookerUser.user_attributes.time_horizon = lookerUserTimeHorizonMap[newValue]
+    }
+    const x = await fetch('/updatelookeruser', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newLookerUser)
+    })
+    // console.log(x)
 
     this.setState({
       renderedDemoComponents: [this.state.selectedMenuItem]
