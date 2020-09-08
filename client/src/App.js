@@ -15,6 +15,12 @@ import InitialLookerUser from './initialLookerUser.json';
 import UsecaseContent from './usecaseContent.json';
 import LookerUserAttributeBrandOptions from './lookerUserAttributeBrandOptions.json';
 
+export const lookerUserTimeHorizonMap = {
+  'basic': 'last 182 days',
+  'advanced': 'last 365 days',
+  'premium': 'last 730 days' //before today
+}
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -338,11 +344,6 @@ class App extends React.Component {
     // console.log('LookerUserPermissions[newUser]', LookerUserPermissions[newUser])
 
 
-    let lookerUserTimeHorizonMap = {
-      'basic': 'last 182 days',
-      'advanced': 'last 365 days',
-      'premium': 'last 730 days' //before today
-    }
     let userAttributeCopy = { ...this.state.lookerUser.user_attributes, "permission_level": newUser }
     userAttributeCopy.time_horizon = lookerUserTimeHorizonMap[newUser];
 

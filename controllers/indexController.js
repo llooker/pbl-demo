@@ -3,9 +3,16 @@
 //const lookerHost = process.env.LOOKER_HOST;
 const lookerHostNameToUse = process.env.LOOKER_HOST.substr(0, process.env.LOOKER_HOST.indexOf('.')) //lookerHost.substr(0, lookerHost.indexOf('.'));
 const Customization = require('../models/Customization');
+const User = require('../models/User');
 const { makeid } = require('../tools');
 
-
+// RG 9/4 adding import for server-side iframe request
+const { createSignedUrl, accessToken } = require('../server_utils/auth_utils')
+const { Looker40SDK, Looker31SDK, NodeSession, NodeSettingsIniFile } = require('@looker/sdk')
+const settings = new NodeSettingsIniFile()
+const session = new NodeSession(settings)
+const sdk = new Looker40SDK(session)
+const rp = require('request-promise');
 
 module.exports.readSession = async (req, res, next) => {
     // console.log('readSession')
@@ -26,6 +33,43 @@ module.exports.writeSession = async (req, res, next) => {
     session.lookerUser.first_name = session.userProfile.givenName;
     session.lookerUser.last_name = session.userProfile.familyName;
     /**/
+
+    /*
+        RG 9/4:
+        1) Added an iframe call to the looker server to ensure state is posted for any subsequent API calls
+        2) Added a super-user call to the api to log in the api session for the user
+        3) Saving the resulting bearer token into the datastore for future retrieval
+    */
+
+    // Calling the iframe url to ensure the embed user exists
+    const url = await createSignedUrl('/alive', session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
+    await rp(url)
+
+    // Initialize the API session, sudo and retrieve the bearer token
+    const userCred = await sdk.ok(sdk.user_for_credential('embed', session.userProfile.googleId));
+    
+    const embeddedUserSession = new NodeSession(settings) // node wrapper
+    ////instantiate new sdk client based on embedded session
+    const embeddedUserSdk = new Looker40SDK(embeddedUserSession)
+    ////ensure service account connected before sudoing
+    const me = await embeddedUserSdk.ok(embeddedUserSdk.me())
+    const embed_user_token = await embeddedUserSdk.login_user(userCred.id.toString())
+    const u = {
+         looker_user_id: userCred.id.toString()
+        ,google_id: session.userProfile.googleId
+        // ,api_user_token: embed_user_token.value.access_token
+        ,api_user_token: embed_user_token.value
+        ,api_token_last_refreshed: Date.now()
+    }
+    // Save the bearer token in Mongo for future retrieval
+    let r = await User.findOneAndUpdate({google_id: session.userProfile.googleId}, u, {
+        new: true,
+        upsert: true,
+        rawResult: true // Return the raw result from the MongoDB driver
+      });
+    // console.log(r)
+
+    /* end RG 9/4 Changes */
     session = await checkForCustomizations(session)
     res.status(200).send({ session });
 }
