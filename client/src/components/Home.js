@@ -325,12 +325,13 @@ class Home extends Component {
     // console.log('handleUserMenuSwitch')
     // console.log('newValue', newValue)
     // console.log('property', property)
-    let newLookerUser = {...this.props.lookerUser}
-    console.log('new looker user',newLookerUser)
-    if (property==='brand') {
+    //eg to review this 9/8
+    let newLookerUser = { ...this.props.lookerUser }
+    // console.log('new looker user',newLookerUser)
+    if (property === 'brand') {
       newLookerUser.user_attributes.brand = newValue
-    } else if (property==='permission') {
-      console.log('permission',newValue)
+    } else if (property === 'permission') {
+      // console.log('permission',newValue)
       newLookerUser.permissions = LookerUserPermissions[newValue] || LookerUserPermissions['basic']
       newLookerUser.user_attributes.permission_level = newValue
       newLookerUser.user_attributes.time_horizon = lookerUserTimeHorizonMap[newValue]
@@ -343,7 +344,7 @@ class Home extends Component {
       },
       body: JSON.stringify(newLookerUser)
     })
-    console.log(x)
+    // console.log(x)
 
     this.setState({
       renderedDemoComponents: [this.state.selectedMenuItem]
