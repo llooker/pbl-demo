@@ -134,7 +134,7 @@ class App extends React.Component {
   clientTimer = () => {
     let clientInterval = setInterval(async () => {
       let currentTime = Date.now();
-      let expiresInBuffer = 3480000; //58 minutes
+      let expiresInBuffer = 58 * 60 * 1000; //3480000; //58 minutes
       if (currentTime > (this.state.loginTimer + expiresInBuffer)) {
         this.applySession({})
         clearInterval(clientInterval);
