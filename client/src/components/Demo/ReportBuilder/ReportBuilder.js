@@ -45,9 +45,10 @@ export default function ReportBuilder(props) {
         'permissionNeeded': 'explore'
       });
     } else {
-      handleTabChange(newValue);
+      handleTabChange(newValue); //this could go
       setValue(newValue);
-      if (value > 0 && newValue === 0) performLookerApiCalls(lookerContent)
+      //if (value > 0 && newValue === 0) 
+      performLookerApiCalls(lookerContent);//, 1)
     }
   };
 
@@ -105,6 +106,7 @@ export default function ReportBuilder(props) {
         })
       handleChange('edit', 1)
     } else if (secondaryAction === 'delete') {
+      // $(`#${newReportEmbedContainer}`).empty(); //added
       let lookerResponse = await fetch('/deletelook/' + contentId, {
         method: 'GET',
         headers: {
@@ -118,7 +120,7 @@ export default function ReportBuilder(props) {
     }
   }
 
-  const performLookerApiCalls = function (lookerContent, animateLoad) {
+  const performLookerApiCalls = function (lookerContent, animateLoad, contentToSplice) {
     if (animateLoad) {
       handleChange('refresh', 0)
       setIFrame(0)
@@ -152,35 +154,36 @@ export default function ReportBuilder(props) {
           dashboards: dashboardsToUse
         }
         let iFrameArray = $(`.embedContainer.${validIdHelper(demoComponentType)} > iframe`);
+        $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).html('')
         if (objToUse.looks.length) {
           objToUse.looks.map((item, index) => {
 
             let lookId = item.id;
-            let lookIsRendered = false;
-            for (let i = 0; i < iFrameArray.length; i++) {
-              if (iFrameArray[i].classList.contains('look') && iFrameArray[i].classList.contains(lookId)) {
-                lookIsRendered = true;
-              }
-            }
+            // let lookIsRendered = false;
+            // for (let i = 0; i < iFrameArray.length; i++) {
+            //   if (iFrameArray[i].classList.contains('look') && iFrameArray[i].classList.contains(lookId)) {
+            //     lookIsRendered = true;
+            //   }
+            // }
 
-            if (!lookIsRendered) {
-              LookerEmbedSDK.createLookWithId(lookId)
-                .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
-                .withClassName('iframe')
-                .withClassName('look')
-                .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
-                .withClassName(index > 0 ? 'dNone' : 'oops')
-                .withClassName(lookId)
-                .build()
-                .connect()
-                .then((look) => {
-                  // setIFrame(1)
-                  LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
-                })
-                .catch((error) => {
-                  console.error('Connection error', error)
-                })
-            }
+            // if (!lookIsRendered) {
+            LookerEmbedSDK.createLookWithId(lookId)
+              .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+              .withClassName('iframe')
+              .withClassName('look')
+              .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
+              .withClassName(index > 0 ? 'dNone' : 'oops')
+              .withClassName(lookId)
+              .build()
+              .connect()
+              .then((look) => {
+                // setIFrame(1)
+                LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+              })
+              .catch((error) => {
+                console.error('Connection error', error)
+              })
+            // }
 
             if (index === objToUse.looks.length - 1) {
               setTimeout(() => setIFrame(1), 1000)
@@ -191,32 +194,32 @@ export default function ReportBuilder(props) {
         if (objToUse.dashboards.length) {
           objToUse.dashboards.map((item, index) => {
             let dashboardId = item.id
-            let dashboardIsRendered = false;
-            for (let i = 0; i < iFrameArray.length; i++) {
-              if (iFrameArray[i].classList.contains('dashboard') && iFrameArray[i].classList.contains(dashboardId)) {
-                dashboardIsRendered = true;
-              }
-            }
-            if (!dashboardIsRendered) {
-              LookerEmbedSDK.createDashboardWithId(dashboardId)
-                .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
-                .withClassName('iframe')
-                .withClassName('dashboard')
-                .withClassName(lookerResponseData.sharedFolder.dashboards.indexOf(item) > -1 ? "shared" : "personal")
-                .withClassName('dNone')
-                .withClassName(dashboardId)
-                .build()
-                .connect()
-                .then((dashboard) => {
-                  setTimeout(() => {
-                    // setIFrame(1)
-                  }, 1000)
-                  LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
-                })
-                .catch((error) => {
-                  console.error('Connection error', error)
-                })
-            }
+            // let dashboardIsRendered = false;
+            // for (let i = 0; i < iFrameArray.length; i++) {
+            //   if (iFrameArray[i].classList.contains('dashboard') && iFrameArray[i].classList.contains(dashboardId)) {
+            //     dashboardIsRendered = true;
+            //   }
+            // }
+            // if (!dashboardIsRendered) {
+            LookerEmbedSDK.createDashboardWithId(dashboardId)
+              .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+              .withClassName('iframe')
+              .withClassName('dashboard')
+              .withClassName(lookerResponseData.sharedFolder.dashboards.indexOf(item) > -1 ? "shared" : "personal")
+              .withClassName('dNone')
+              .withClassName(dashboardId)
+              .build()
+              .connect()
+              .then((dashboard) => {
+                setTimeout(() => {
+                  // setIFrame(1)
+                }, 1000)
+                LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+              })
+              .catch((error) => {
+                console.error('Connection error', error)
+              })
+            // }
 
 
             if (index === objToUse.dashboards.length - 1) {

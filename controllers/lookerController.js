@@ -196,7 +196,6 @@ module.exports.deleteLook = async (req, res, next) => {
 
   try {
     let delete_look = await sdk.ok(sdk.delete_look(params.look_id));
-    console.log('delete_look', delete_look)
     let resObj = {
       message: delete_look
     };
