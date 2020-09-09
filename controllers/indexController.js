@@ -69,6 +69,8 @@ module.exports.writeSession = async (req, res, next) => {
   });
   // console.log(r)
 
+  session.mongoInfo = { ...u }
+
   /* end RG 9/4 Changes */
   session = await checkForCustomizations(session)
   res.status(200).send({ session });

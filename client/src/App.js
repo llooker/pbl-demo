@@ -124,8 +124,22 @@ class App extends React.Component {
       },
       lookerHost: '',
       activeUsecase: '',
-      // clientTimer: new Date.now()
+      loginTimer: Date.now()
     }
+  }
+
+  // keep track of when user logs in
+  // keep track of current time 
+  // if current time > initial log in time plus buffer, logout
+  clientTimer = () => {
+    let clientInterval = setInterval(async () => {
+      let currentTime = Date.now();
+      let expiresInBuffer = 3480000; //58 minutes
+      if (currentTime > (this.state.loginTimer + expiresInBuffer)) {
+        this.applySession({})
+        clearInterval(clientInterval);
+      }
+    }, 1000)
   }
 
   componentDidMount() {
@@ -145,7 +159,6 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
-    // console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
     const activeCustomization = sessionResponseData.session.activeCustomization ? sessionResponseData.session.activeCustomization : 0;
@@ -172,10 +185,12 @@ class App extends React.Component {
             }
           }
         },
-        lookerHost
+        lookerHost,
+        loginTimer: Date.now()
       }), () => {
         // console.log('checkSession callback 1111 this.state.lookerUser', this.state.lookerUser)
         this.applyCustomization(activeCustomization)
+        this.clientTimer()
       })
     }
   }
@@ -233,9 +248,11 @@ class App extends React.Component {
             }
           }
         },
-        lookerHost
+        lookerHost,
+        loginTimer: Date.now()
       }), () => {
         this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
+        this.clientTimer()
       });
     }
   }

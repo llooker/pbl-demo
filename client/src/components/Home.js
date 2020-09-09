@@ -242,7 +242,7 @@ class Home extends Component {
       payWallModal: {},
       selectedMenuItem: '',
       renderedDemoComponents: [],
-      codeShow: false
+      codeShow: false,
     }
   }
 

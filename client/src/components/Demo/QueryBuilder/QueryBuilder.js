@@ -166,7 +166,7 @@ function FilterBar(props) {
       key: 'fieldChipData' + index,
       label: prettifyString(item.substring(item.lastIndexOf('.') + 1, item.length)),
       datalabel: item,
-      selected: index < 3 || index > 5 ? true : false,  //true
+      selected: item === 'users.state' || item === 'users.country' || item === 'order_items.total_sale_price' ? true : false,
       fieldType: lookerContent[0].fieldType[item]
     }
   }) : '');
@@ -234,6 +234,8 @@ function FilterBar(props) {
     updatedFiltersData[3].value = "6 months";
     setFilterData(updatedFiltersData)
   }, [lookerUser]);
+
+  console.log('fieldsChipData', fieldsChipData)
 
   return (
     <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} elevation={0}>

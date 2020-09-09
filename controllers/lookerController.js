@@ -74,7 +74,7 @@ module.exports.fetchFolder = async (req, res, next) => {
     res.status(400).send(errorObj);
   }
 }
-
+// can I call this to refresh token???
 module.exports.updateLookerUser = async (req, res, next) => {
   const lookerUser = req.body;
   let { session } = req;
@@ -300,7 +300,7 @@ async function tokenRefreshHelper(session) {
   const embeddedUserSdk = new Looker40SDK(embeddedUserSession)
   ////ensure service account connected before sudoing
   const me = await embeddedUserSdk.ok(embeddedUserSdk.me())
-  const embed_user_token = await embeddedUserSdk.login_user(userCred.id.toString())
+  const embed_user_token = await embeddedUserSdk.login_user(userCred.id.toString()) //this is what I am going to want to use for token refresh
   const u = {
     looker_user_id: userCred.id.toString()
     , google_id: session.userProfile.googleId
