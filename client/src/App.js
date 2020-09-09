@@ -123,7 +123,8 @@ class App extends React.Component {
         ...InitialLookerUser
       },
       lookerHost: '',
-      activeUsecase: ''
+      activeUsecase: '',
+      // clientTimer: new Date.now()
     }
   }
 

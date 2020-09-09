@@ -19,6 +19,7 @@ var sess = {
   cookie: {
     // expires: new Date(Date.now() + 3600000), //hour
     maxAge: 14 * 24 * 3600000 //two weeks
+    // maxAge: 5000 //58 * 60 * 1000
   },
   saveUninitialized: false,
   resave: false,
