@@ -124,18 +124,18 @@ class App extends React.Component {
       },
       lookerHost: '',
       activeUsecase: '',
-      loginTimer: Date.now()
+      tokenLastRefreshed: ''
     }
   }
 
   // keep track of when user logs in
   // keep track of current time 
   // if current time > initial log in time plus buffer, logout
-  clientTimer = () => {
+  logoutTimer = () => {
     let clientInterval = setInterval(async () => {
       let currentTime = Date.now();
       let expiresInBuffer = 58 * 60 * 1000; //3480000; //58 minutes
-      if (currentTime > (this.state.loginTimer + expiresInBuffer)) {
+      if (currentTime > (this.state.tokenLastRefreshed + expiresInBuffer)) {
         this.applySession({})
         clearInterval(clientInterval);
       }
@@ -186,11 +186,11 @@ class App extends React.Component {
           }
         },
         lookerHost,
-        loginTimer: Date.now()
+        tokenLastRefreshed: sessionResponseData.session.mongoInfo.api_token_last_refreshed || Date.now()
       }), () => {
         // console.log('checkSession callback 1111 this.state.lookerUser', this.state.lookerUser)
         this.applyCustomization(activeCustomization)
-        this.clientTimer()
+        this.logoutTimer()
       })
     }
   }
@@ -249,10 +249,10 @@ class App extends React.Component {
           }
         },
         lookerHost,
-        loginTimer: Date.now()
+        tokenLastRefreshed: sessionResponseData.session.mongoInfo.api_token_last_refreshed || Date.now()
       }), () => {
         this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
-        this.clientTimer()
+        this.logoutTimer()
       });
     }
   }

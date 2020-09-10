@@ -25,8 +25,6 @@ export default function ReportBuilder(props) {
   const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const { togglePayWallModal, codeShow } = useContext(AppContext)
-
-  //declare constants
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
@@ -47,8 +45,7 @@ export default function ReportBuilder(props) {
     } else {
       handleTabChange(newValue); //this could go
       setValue(newValue);
-      //if (value > 0 && newValue === 0) 
-      performLookerApiCalls(lookerContent);//, 1)
+      if (value > 0 && newValue === 0) performLookerApiCalls(lookerContent);//, 1)
     }
   };
 
@@ -70,7 +67,15 @@ export default function ReportBuilder(props) {
   })
 
   const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
+
+    // console.log('action')
+    // console.log('contentType', contentType)
+    // console.log('contentId', contentId)
+    // console.log('secondaryAction', secondaryAction)
+    // console.log('newReportEmbedContainer', newReportEmbedContainer)
     let iFrameArray = $(".embedContainer:visible > iframe")
+    // console.log('iFrameArray', iFrameArray)
+    // console.log('iFrameArray.length', iFrameArray.length)
 
     let matchingIndex = 0;
     for (let i = 0; i < iFrameArray.length; i++) {
@@ -84,6 +89,7 @@ export default function ReportBuilder(props) {
 
     if (secondaryAction === 'edit' || secondaryAction === 'explore') {
       $(`#${newReportEmbedContainer}`).empty();
+      // $(`#${newReportEmbedContainer}`).html("");
 
       LookerEmbedSDK.createExploreWithId(exploreId)
         .appendTo(`#${newReportEmbedContainer}`)
@@ -106,7 +112,27 @@ export default function ReportBuilder(props) {
         })
       handleChange('edit', 1)
     } else if (secondaryAction === 'delete') {
-      // $(`#${newReportEmbedContainer}`).empty(); //added
+      //remove iframe associated with content that was deleted
+      let indexOfDeletedContent;
+      for (let i = 0; i < iFrameArray.length; i++) {
+        if (iFrameArray[i].classList.contains(contentId)) {
+          indexOfDeletedContent = i;
+        }
+      }
+      let updatedIFrameArray = iFrameArray.slice()
+      updatedIFrameArray.splice(indexOfDeletedContent, 1)
+      for (let i = 0; i < updatedIFrameArray.length; i++) {
+        if (i === 0) {
+          updatedIFrameArray[i].classList.remove('dNone')
+          matchingIndex = i;
+        } else {
+          updatedIFrameArray[i].classList.add('dNone')
+        }
+      }
+      //append updated array
+      $(`#embedContainer-reportbuilder-14`).empty();
+      $(`#embedContainer-reportbuilder-14`).html(updatedIFrameArray);
+
       let lookerResponse = await fetch('/deletelook/' + contentId, {
         method: 'GET',
         headers: {
@@ -154,36 +180,35 @@ export default function ReportBuilder(props) {
           dashboards: dashboardsToUse
         }
         let iFrameArray = $(`.embedContainer.${validIdHelper(demoComponentType)} > iframe`);
-        $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).html('')
         if (objToUse.looks.length) {
           objToUse.looks.map((item, index) => {
 
             let lookId = item.id;
-            // let lookIsRendered = false;
-            // for (let i = 0; i < iFrameArray.length; i++) {
-            //   if (iFrameArray[i].classList.contains('look') && iFrameArray[i].classList.contains(lookId)) {
-            //     lookIsRendered = true;
-            //   }
-            // }
+            let lookIsRendered = false;
+            for (let i = 0; i < iFrameArray.length; i++) {
+              if (iFrameArray[i].classList.contains('look') && iFrameArray[i].classList.contains(lookId)) {
+                lookIsRendered = true;
+              }
+            }
 
-            // if (!lookIsRendered) {
-            LookerEmbedSDK.createLookWithId(lookId)
-              .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
-              .withClassName('iframe')
-              .withClassName('look')
-              .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
-              .withClassName(index > 0 ? 'dNone' : 'oops')
-              .withClassName(lookId)
-              .build()
-              .connect()
-              .then((look) => {
-                // setIFrame(1)
-                LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
-              })
-              .catch((error) => {
-                console.error('Connection error', error)
-              })
-            // }
+            if (!lookIsRendered) {
+              LookerEmbedSDK.createLookWithId(lookId)
+                .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+                .withClassName('iframe')
+                .withClassName('look')
+                .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
+                .withClassName(index > 0 ? 'dNone' : 'oops')
+                .withClassName(lookId)
+                .build()
+                .connect()
+                .then((look) => {
+                  // setIFrame(1)
+                  LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+                })
+                .catch((error) => {
+                  console.error('Connection error', error)
+                })
+            }
 
             if (index === objToUse.looks.length - 1) {
               setTimeout(() => setIFrame(1), 1000)
@@ -194,32 +219,32 @@ export default function ReportBuilder(props) {
         if (objToUse.dashboards.length) {
           objToUse.dashboards.map((item, index) => {
             let dashboardId = item.id
-            // let dashboardIsRendered = false;
-            // for (let i = 0; i < iFrameArray.length; i++) {
-            //   if (iFrameArray[i].classList.contains('dashboard') && iFrameArray[i].classList.contains(dashboardId)) {
-            //     dashboardIsRendered = true;
-            //   }
-            // }
-            // if (!dashboardIsRendered) {
-            LookerEmbedSDK.createDashboardWithId(dashboardId)
-              .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
-              .withClassName('iframe')
-              .withClassName('dashboard')
-              .withClassName(lookerResponseData.sharedFolder.dashboards.indexOf(item) > -1 ? "shared" : "personal")
-              .withClassName('dNone')
-              .withClassName(dashboardId)
-              .build()
-              .connect()
-              .then((dashboard) => {
-                setTimeout(() => {
-                  // setIFrame(1)
-                }, 1000)
-                LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
-              })
-              .catch((error) => {
-                console.error('Connection error', error)
-              })
-            // }
+            let dashboardIsRendered = false;
+            for (let i = 0; i < iFrameArray.length; i++) {
+              if (iFrameArray[i].classList.contains('dashboard') && iFrameArray[i].classList.contains(dashboardId)) {
+                dashboardIsRendered = true;
+              }
+            }
+            if (!dashboardIsRendered) {
+              LookerEmbedSDK.createDashboardWithId(dashboardId)
+                .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+                .withClassName('iframe')
+                .withClassName('dashboard')
+                .withClassName(lookerResponseData.sharedFolder.dashboards.indexOf(item) > -1 ? "shared" : "personal")
+                .withClassName('dNone')
+                .withClassName(dashboardId)
+                .build()
+                .connect()
+                .then((dashboard) => {
+                  setTimeout(() => {
+                    // setIFrame(1)
+                  }, 1000)
+                  LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+                })
+                .catch((error) => {
+                  console.error('Connection error', error)
+                })
+            }
 
 
             if (index === objToUse.dashboards.length - 1) {
@@ -231,6 +256,7 @@ export default function ReportBuilder(props) {
       } else if (lookerContent.type === 'explore' && lookerUser.user_attributes.permission_level === 'premium') {
         let exploreId = lookerContent.id;
         $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).html('')
+        $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).empty()
         LookerEmbedSDK.createExploreWithId(exploreId)
           .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
           .withClassName('iframe')
@@ -387,9 +413,12 @@ function TreeSideBar(props) {
   const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser, togglePayWallModal } = props
   const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
   let treeCounter = 0;
-  const [selected, setSelected] = useState(2)
+  const [selected, setSelected] = useState(2);
+
   const expandedArr = Object.keys(apiContent).length ? ["1", "" + (2 + apiContent[Object.keys(apiContent)[0]].length)] : [];
   const [expanded, setExpanded] = useState(expandedArr);
+
+  // console.log('selected', selected)
 
   const handleToggle = (event, nodeIds) => {
     setExpanded(nodeIds);
@@ -401,8 +430,19 @@ function TreeSideBar(props) {
 
 
   useEffect(() => {
-    setExpanded(expandedArr)
+    setExpanded(expandedArr);
+    if (selected !== 2) setSelected(2)
+    // let innerTreeItemArray = $(".innerTreeItem");
+    // console.log('innerTreeItemArray', innerTreeItemArray)
+    // for (let i = 0; i < innerTreeItemArray.length; i++) {
+    //   console.log('inside forrr', i)
+    //   if (innerTreeItemArray[i].classList.contains('Mui-selected')) {
+    //     console.log('inside iffff')
+    //     innerTreeItemArray[i].classList.remove('Mui-selected')
+    //   } else console.log('elllse')
+    // }
   }, [apiContent]);
+
 
   return (
     <TreeView
@@ -412,6 +452,7 @@ function TreeSideBar(props) {
       expanded={expanded}
       onNodeToggle={handleToggle}
       onNodeSelect={handleSelect}
+    // multiSelect={false}
     >
       {apiContent ? Object.keys(apiContent).map((key, outerIndex) => (
         <React.Fragment
@@ -432,7 +473,7 @@ function TreeSideBar(props) {
                     nodeId={"" + (treeCounter += 1)}
                     treecounter={treeCounter}
                     selected={selected === treeCounter}
-                    className={selected === treeCounter ? `Mui-selected innerTreeItem ${classes.whiteSpaceNoWrap} ` : `innerTreeItem ${classes.whiteSpaceNoWrap} `}
+                    className={selected === treeCounter ? `Mui-selected innerTreeItem ${classes.whiteSpaceNoWrap}` : `innerTreeItem ${classes.whiteSpaceNoWrap}`}
                     contentid={item.id}
                     label={item.folder_id === sharedFolderId &&
                       key === 'looks' ?
@@ -453,7 +494,6 @@ function TreeSideBar(props) {
                               className={`${classes.ml12} ${classes.childHoverVisibility}`}
                               onClick={(event) => {
                                 if (lookerUser.user_attributes.permission_level === 'premium') {
-                                  // setSelected(treeCounter);
                                   action(
                                     key.substring(0, key.length - 1),
                                     item.id,
