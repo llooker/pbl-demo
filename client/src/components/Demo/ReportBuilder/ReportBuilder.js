@@ -27,32 +27,16 @@ export default function ReportBuilder(props) {
   const { togglePayWallModal, codeShow } = useContext(AppContext)
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  const [qid, setQid] = useState(null);
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
 
   const demoComponentType = type;
   const tabContent = [...lookerContent]
 
-  //handle tab change
   const handleChange = (event, newValue) => {
-
-    if (newValue == 1 && lookerUser.user_attributes.permission_level != 'premium') {
-      // togglePayWallModal()
-
-      togglePayWallModal({
-        'show': true,
-        'permissionNeeded': 'explore'
-      });
-    } else {
-      handleTabChange(newValue); //this could go
-      setValue(newValue);
-      if (value > 0 && newValue === 0) performLookerApiCalls(lookerContent);//, 1)
-    }
+    setValue(newValue);
   };
 
-  /**
-   * listen for lookerContent and call 
-   * performLookerApiCalls and setSampleCode
-  */
   useEffect(() => {
     if (activeTabValue > value) {
       setValue(activeTabValue)
@@ -61,21 +45,25 @@ export default function ReportBuilder(props) {
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser]);
 
-
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   })
 
+  useEffect(() => {
+    if (value == 1 && lookerUser.user_attributes.permission_level != 'premium') {
+      togglePayWallModal({
+        'show': true,
+        'permissionNeeded': 'explore'
+      });
+    } else {
+      handleTabChange(value); //this could go
+      performLookerApiCalls(lookerContent);
+    }
+  }, [value])
+
   const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
 
-    // console.log('action')
-    // console.log('contentType', contentType)
-    // console.log('contentId', contentId)
-    // console.log('secondaryAction', secondaryAction)
-    // console.log('newReportEmbedContainer', newReportEmbedContainer)
     let iFrameArray = $(".embedContainer:visible > iframe")
-    // console.log('iFrameArray', iFrameArray)
-    // console.log('iFrameArray.length', iFrameArray.length)
 
     let matchingIndex = 0;
     for (let i = 0; i < iFrameArray.length; i++) {
@@ -88,28 +76,8 @@ export default function ReportBuilder(props) {
     }
 
     if (secondaryAction === 'edit' || secondaryAction === 'explore') {
-      $(`#${newReportEmbedContainer}`).empty();
-      // $(`#${newReportEmbedContainer}`).html("");
-
-      LookerEmbedSDK.createExploreWithId(exploreId)
-        .appendTo(`#${newReportEmbedContainer}`)
-        .withClassName('iframe')
-        .on('explore:state:changed', (event) => {
-        })
-        .withClassName("exploreIframe")
-        .withParams({
-          qid: qid
-        })
-        .build()
-        .connect()
-        .then((explore) => {
-          setIFrame(1)
-          setExploreObj(explore)
-          LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
-        })
-        .catch((error) => {
-          console.error('Connection error', error)
-        })
+      //save qid to state and use in perform looker api calls
+      setQid(qid);
       handleChange('edit', 1)
     } else if (secondaryAction === 'delete') {
       //remove iframe associated with content that was deleted
@@ -146,7 +114,8 @@ export default function ReportBuilder(props) {
     }
   }
 
-  const performLookerApiCalls = function (lookerContent, animateLoad, contentToSplice) {
+  const performLookerApiCalls = function (lookerContent, animateLoad) {
+    // console.log('performLookerApiCalls')
     if (animateLoad) {
       handleChange('refresh', 0)
       setIFrame(0)
@@ -154,7 +123,7 @@ export default function ReportBuilder(props) {
     }
 
     lookerContent.map(async lookerContent => {
-      if (lookerContent.type === 'folder') {
+      if (lookerContent.type === 'folder' && value === 0) {
         let lookerResponse = await fetch('/fetchfolder/' + lookerContent.id, {
           method: 'GET',
           headers: {
@@ -253,13 +222,17 @@ export default function ReportBuilder(props) {
           })
         }
         setApiContent(objToUse)
-      } else if (lookerContent.type === 'explore' && lookerUser.user_attributes.permission_level === 'premium') {
+      } else if (lookerContent.type === 'explore' &&
+        lookerUser.user_attributes.permission_level === 'premium' &&
+        value === 1) {
         let exploreId = lookerContent.id;
-        $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).html('')
-        $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).empty()
+        $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).html('');
         LookerEmbedSDK.createExploreWithId(exploreId)
           .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
-          .withClassName('iframe')
+          .withClassName('exploreIframe')
+          .withParams({
+            qid: qid || ''
+          })
           .on('explore:state:changed', (event) => {
           })
           .build()
@@ -268,6 +241,7 @@ export default function ReportBuilder(props) {
             setTimeout(() => setIFrame(1), 1000)
             setExploreObj(exploreObj)
             LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+            setQid(null)
           })
           .catch((error) => {
             console.error('Connection error', error)
@@ -275,7 +249,6 @@ export default function ReportBuilder(props) {
       }
     })
   }
-
 
   return (
     <div className={`${classes.root} demoComponent`}
@@ -409,16 +382,12 @@ export default function ReportBuilder(props) {
 
 
 function TreeSideBar(props) {
-  // console.log('TreeSideBar')
   const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser, togglePayWallModal } = props
   const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
   let treeCounter = 0;
   const [selected, setSelected] = useState(2);
-
   const expandedArr = Object.keys(apiContent).length ? ["1", "" + (2 + apiContent[Object.keys(apiContent)[0]].length)] : [];
   const [expanded, setExpanded] = useState(expandedArr);
-
-  // console.log('selected', selected)
 
   const handleToggle = (event, nodeIds) => {
     setExpanded(nodeIds);
