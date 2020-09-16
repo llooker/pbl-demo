@@ -235,7 +235,6 @@ function FilterBar(props) {
     setFilterData(updatedFiltersData)
   }, [lookerUser]);
 
-  console.log('fieldsChipData', fieldsChipData)
 
   return (
     <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} elevation={0}>

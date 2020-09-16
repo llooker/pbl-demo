@@ -164,7 +164,7 @@ class App extends React.Component {
     const activeCustomization = sessionResponseData.session.activeCustomization ? sessionResponseData.session.activeCustomization : 0;
     const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
     const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-    console.log('lookerUser', lookerUser)
+    // console.log('lookerUser', lookerUser)
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
       this.setState((prevState) => ({
@@ -198,8 +198,8 @@ class App extends React.Component {
   // called by responseGoogle once it gets response
   // since login can assume activeCustomization will be default..
   applySession = async (userProfile) => {
-    console.log('applySession')
-    console.log('userProfile', userProfile)
+    // console.log('applySession')
+    // console.log('userProfile', userProfile)
 
     if (Object.keys(userProfile).length === 0) {
       // console.log('inside ifff')
