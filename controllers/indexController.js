@@ -29,7 +29,8 @@ module.exports.writeSession = async (req, res, next) => {
   session.lookerUser = req.body.lookerUser;
   session.lookerHost = lookerHostNameToUse; //lookerHostNameToUse;
   /**/
-  session.lookerUser.external_user_id = session.userProfile.googleId;
+  //9/16 change external_user_id to emal instead of googleId to perform analysis
+  session.lookerUser.external_user_id = session.userProfile.email; //.googleId;
   session.lookerUser.first_name = session.userProfile.givenName;
   session.lookerUser.last_name = session.userProfile.familyName;
   /**/
