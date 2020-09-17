@@ -42,7 +42,8 @@ export default function QueryBuilder(props) {
     // lookerContent.map(lookerContent => {
     //   setTimeout(() => performLookerApiCalls(lookerContent.queryBody, lookerContent.resultFormat), 100);
     // })
-    setClientSideCode(rawSampleCode)
+    setClientSideCode(rawSampleCode);
+    // setApiContent([])
   }, [lookerContent, lookerUser])
 
   useEffect(() => {
@@ -57,6 +58,9 @@ export default function QueryBuilder(props) {
     let apiContentCopy = { ...apiContent }
     apiContentCopy.status = 'running';
     setApiContent(apiContentCopy)
+
+    let timer = Date.now();
+    console.log('timer', timer);
 
     let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
       method: 'GET',
@@ -81,7 +85,17 @@ export default function QueryBuilder(props) {
         setApiContent(lookerCheckTaskResponseData.queryResults)
         setServerSideCode(lookerCreateTaskResponseData.code)
       }
+
+      //time out after 30 seconds
+      if ((timer + (30 * 1000)) < Date.now()) {
+        clearInterval()
+        setApiContent([])
+      }
+
     }, 5000)
+
+
+
   }
 
   return (
@@ -156,23 +170,29 @@ export default function QueryBuilder(props) {
 
 
 function FilterBar(props) {
+  // console.log('FilterBar');
   const { staticContent, staticContent: { lookerContent }, classes, action, lookerUser } = props;
   let measureCounter = 0;
   let dimensionCounter = 0;
 
-  const [expanded, setExpanded] = useState(true);
-  const [fieldsChipData, setFieldsChipData] = useState(lookerContent[0].queryBody ? lookerContent[0].queryBody.fields.map((item, index) => {
-    return {
-      key: 'fieldChipData' + index,
-      label: prettifyString(item.substring(item.lastIndexOf('.') + 1, item.length)),
-      datalabel: item,
-      selected: item === 'users.state' || item === 'users.country' || item === 'order_items.total_sale_price' ? true : false,
-      fieldType: lookerContent[0].fieldType[item]
-    }
-  }) : '');
 
-  const [queryModified, setQueryModified] = useState(false);
-  const [isOnload, setIsOnload] = useState(true);
+  const initializeFieldChipDataHelper = () => {
+    let initializedFields = lookerContent[0].queryBody.fields.map((item, index) => {
+      return {
+        key: 'fieldChipData' + index,
+        label: prettifyString(item.substring(item.lastIndexOf('.') + 1, item.length)),
+        datalabel: item,
+        selected: item === 'users.state' || item === 'users.country' || item === 'order_items.total_sale_price' ? true : false,
+        fieldType: lookerContent[0].fieldType[item]
+      }
+    })
+    return initializedFields;
+  }
+
+  const [expanded, setExpanded] = useState(true);
+  const [fieldsChipData, setFieldsChipData] = useState(lookerContent[0].queryBody ? initializeFieldChipDataHelper() : '');
+  const [queryModified, setQueryModified] = useState(true); //set to true initially
+  const [queryShouldRun, setQueryShouldRun] = useState(false); //for lookerUser useEffect
   const [filtersData, setFilterData] = useState(lookerContent[0].queryBody ? Object.keys(lookerContent[0].queryBody.filters).map((key, index) => {
     return {
       key: 'filter' + index,
@@ -201,40 +221,55 @@ function FilterBar(props) {
   }
 
   const handleQuerySubmit = (event) => {
-    if (queryModified || isOnload) {
+    if (queryModified || queryShouldRun) {
       let newFields = fieldsChipData.filter(chip => chip.selected).map(item => item.datalabel);
       let currentFilters = {}; //needs to be object
       filtersData.map((item, index) => {
         currentFilters[item.label] = item.value
       })
-      let newQueryObj = lookerContent[0].queryBody;
+      let newQueryObj = { ...lookerContent[0].queryBody };
       newQueryObj.fields = newFields;
       newQueryObj.filters = currentFilters;
+
       action(newQueryObj, lookerContent[0].resultFormat);
+
       setQueryModified(false)
-      setIsOnload(false)
-    }
+      setQueryShouldRun(false)
+    } //else console.log('elllse')
   }
 
+
+
   useEffect(() => {
-    if (isOnload) {
-      handleQuerySubmit()
-      // isOnload = false;
+    // console.log('useEffect lookerUser')
+    const lookerUserTimeHorizonMap = {
+      'basic': 'last 182 days',
+      'advanced': 'last 365 days',
+      'premium': 'last 730 days' //before today
     }
-  }, [fieldsChipData]);
-
-  const datePermissionMap = {
-    'basic': ["1 week", "1 month", "3 months", "6 months"]
-  }
-  datePermissionMap.advanced = [...datePermissionMap.basic, "1 year"]
-  datePermissionMap.premium = [...datePermissionMap.advanced, "before today"]
-
-  useEffect(() => {
     let updatedFiltersData = [...filtersData]
-    updatedFiltersData[3].value = "6 months";
-    setFilterData(updatedFiltersData)
+    updatedFiltersData[3].value = lookerUserTimeHorizonMap[lookerUser.user_attributes.permission_level] || "182 days";
+    setFilterData(updatedFiltersData);
+    setFieldsChipData(initializeFieldChipDataHelper())
+
+    setQueryShouldRun(true);
   }, [lookerUser]);
 
+  useEffect(() => {
+    // console.log('useEffect queryShouldRun')
+    if (queryShouldRun) {
+      handleQuerySubmit();
+      setQueryModified(false);
+      setQueryShouldRun(false);
+    }
+  }, [queryShouldRun])
+
+
+  const datePermissionMap = {
+    'basic': ["1 week", "1 month", "3 months", "last 182 days"]
+  }
+  datePermissionMap.advanced = [...datePermissionMap.basic, "last 365 days"]
+  datePermissionMap.premium = [...datePermissionMap.advanced, "last 730 days"]
 
   return (
     <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} elevation={0}>

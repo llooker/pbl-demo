@@ -81,6 +81,8 @@ const styles = theme => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
+    // backgroundColor: '#343D4E',
+    // color: '#ffff'
   },
   content: {
     flexGrow: 1,
@@ -313,12 +315,19 @@ class Home extends Component {
 
   componentDidMount(props) {
     let { usecaseFromUrl } = this.props || 'atom';
+
     this.setState({
       activeUsecase: usecaseFromUrl,
       appLayout: UsecaseContent[usecaseFromUrl].layout || 'left-sidebar'
     }, () => {
       LookerEmbedSDK.init(`https://${this.props.lookerHost}.looker.com`, '/auth');
     })
+
+    window.addEventListener("resize", () => {
+      // console.log('resize event')
+      this.setState({ drawerOpen: window.innerWidth > 768 ? true : false })
+    });
+
   }
 
   componentDidUpdate(prevProps) {
@@ -373,6 +382,7 @@ class Home extends Component {
     })
 
   }
+
 
   render() {
 
@@ -578,17 +588,15 @@ class Home extends Component {
 export default withStyles(styles)(Home);
 
 function TopBar(props) {
-  console.log('TopBar')
-  console.log('props', props)
   const { classes, activeUsecase, lookerUser, applySession, lookerUserAttributeBrandOptions, handleUserMenuSwitch, drawerOpen, handleDrawerChange } = props
 
   return (
     <AppBar
       position="fixed"
-      // className={clsx(classes.appBar)}
-      className={clsx(classes.appBar, {
-        [classes.appBarShift]: drawerOpen,
-      })}
+      className={clsx(classes.appBar)}
+    // className={clsx(classes.appBar, {
+    //   [classes.appBarShift]: drawerOpen,
+    // })}
     >
       <Toolbar>
 
@@ -597,10 +605,10 @@ function TopBar(props) {
           aria-label="open drawer"
           onClick={() => handleDrawerChange(!drawerOpen)}
           edge="start"
-          className={clsx(classes.menuButton, drawerOpen && classes.hide)}
+        // className={clsx(classes.menuButton, drawerOpen && classes.hide)}
         >
-          {/* {drawerOpen ? <ChevronLeft /> : <Menu />} */}
-          <Menu />
+          {drawerOpen ? <ChevronLeft /> : <Menu />}
+          {/* <Menu /> */}
         </IconButton>
 
         {activeUsecase ?

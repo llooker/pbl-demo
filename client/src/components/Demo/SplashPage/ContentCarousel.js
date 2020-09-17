@@ -20,7 +20,7 @@ export function ContentCarousel({ lookerContent, classes }) {
 
   const blogImage = require(`../../../images/atom_splash_blog.jpg`)
   const blogTitle = 'Blog'
-  const blogBody = 'Read our latest thoguhts on the ecommerce landscape'
+  const blogBody = 'Read our latest thoughts on the ecommerce landscape'
   const inventoryImage = require(`../../../images/atom_splash_inventory.jpg`)
   const inventoryTitle = 'Inventory Best Practices'
   const inventoryBody = 'McKinsey & Co found in a recent study that retailers who implement JIT inventory and fulfillment practices can result in 5 - 15% longer run operating margin vs similar competitors that don’t while maintaining similar CSAT scores'

@@ -47,7 +47,7 @@ module.exports.writeSession = async (req, res, next) => {
   await rp(url)
 
   // Initialize the API session, sudo and retrieve the bearer token
-  const userCred = await sdk.ok(sdk.user_for_credential('embed', session.userProfile.googleId));
+  const userCred = await sdk.ok(sdk.user_for_credential('embed', session.userProfile.email)); //googleId
 
   const embeddedUserSession = new NodeSession(settings) // node wrapper
   ////instantiate new sdk client based on embedded session
@@ -57,13 +57,13 @@ module.exports.writeSession = async (req, res, next) => {
   const embed_user_token = await embeddedUserSdk.login_user(userCred.id.toString())
   const u = {
     looker_user_id: userCred.id.toString()
-    , google_id: session.userProfile.googleId
+    , google_id: session.userProfile.email //googleId
     // ,api_user_token: embed_user_token.value.access_token
     , api_user_token: embed_user_token.value
     , api_token_last_refreshed: Date.now()
   }
   // Save the bearer token in Mongo for future retrieval
-  let r = await User.findOneAndUpdate({ google_id: session.userProfile.googleId }, u, {
+  let r = await User.findOneAndUpdate({ google_id: session.userProfile.email }, u, { //googleId
     new: true,
     upsert: true,
     rawResult: true // Return the raw result from the MongoDB driver

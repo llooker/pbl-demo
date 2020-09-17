@@ -118,7 +118,7 @@ class App extends React.Component {
       customizations: [],
       activeCustomization: {},
       indexOfCustomizationToEdit: null,
-      lookerContent: [],
+      // lookerContent: [UsecaseContent[activeUsecase]],
       lookerUser: {
         ...InitialLookerUser
       },
@@ -172,7 +172,7 @@ class App extends React.Component {
         customizations,
         lookerUser: {
           ...prevState.lookerUser,
-          external_user_id: userProfile.googleId,
+          external_user_id: userProfile.email, //googleId
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
           permissions: LookerUserPermissions[lookerUser.user_attributes.permission_level] || LookerUserPermissions['basic'],
@@ -234,7 +234,7 @@ class App extends React.Component {
         customizations,
         lookerUser: {
           ...prevState.lookerUser,
-          external_user_id: userProfile.googleId,
+          external_user_id: userProfile.email, //googleId
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
           permissions: LookerUserPermissions[lookerUser.user_attributes.permission_level] || LookerUserPermissions['basic'], //assume good initially,
