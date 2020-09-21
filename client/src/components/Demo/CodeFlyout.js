@@ -31,7 +31,6 @@ export default function CodeFlyout(props) {
             >
               <CloseIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => toggleCodeShow()} />
             </Grid>
-            {/* <Grid item sm={1}></Grid> */}
 
             <Grid item sm={12}>
               <CodeSnippet code={lookerUser} />

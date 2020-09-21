@@ -87,7 +87,7 @@
             "id": "18",
             "gridWidth": 3,
             "type": "single value",
-            "height": 150,
+            "height": 120,
             "inlineQuery": {
               "model": "atom_fashion",
               "view": "order_items",
@@ -116,7 +116,7 @@
             "id": "20",
             "gridWidth": 3,
             "type": "single value",
-            "height": 150,
+            "height": 120,
             "inlineQuery": {
               "model": "atom_fashion",
               "view": "web_events",
@@ -145,7 +145,7 @@
             "id": "21",
             "gridWidth": 3,
             "type": "single value",
-            "height": 150,
+            "height": 120,
             "inlineQuery": {
               "model": "atom_fashion",
               "view": "web_events",
@@ -175,7 +175,7 @@
             "id": "22",
             "gridWidth": 3,
             "type": "single value",
-            "height": 150,
+            "height": 120,
             "inlineQuery": {
               "model": "atom_fashion",
               "view": "web_events",
