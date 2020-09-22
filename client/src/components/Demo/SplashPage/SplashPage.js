@@ -16,6 +16,7 @@ import { EmbeddedDashboard } from './EmbeddedDashboard';
 import { ContentCarousel } from './ContentCarousel';
 import BottomBar from '../../Material/BottomBar.js'
 import AppContext from '../../../AppContext';
+import { EmbeddedQuery } from './EmbeddedQuery';
 const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
@@ -111,7 +112,10 @@ export default function SplashPage(props) {
                       {(lookerContent.type === 'single value') && <SingleValueVis
                         {...{ lookerContent, classes, demoComponentType, lookerHost }}
                       />}
-                      {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
+                      {/* {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
+                        {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                      />} */}
+                      {(lookerContent.type === 'dashboard') && <EmbeddedQuery
                         {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
                       />}
                       {(lookerContent.type === 'popular analysis') && <PopularAnalysis
