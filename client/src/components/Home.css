@@ -177,3 +177,7 @@ html {
   width: 100%;
   height: calc(100% + 75px);
 } */
+
+lk-expandable-sidebar{
+  boder-right: '0px transparent solid'
+}

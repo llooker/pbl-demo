@@ -317,3 +317,20 @@ async function tokenRefreshHelper(session) {
 
   /* end RG 9/4 Changes */
 }
+
+module.exports.validateAccessToken = async (req, res, next) => {
+  console.log('lookerController validateAccessToken');
+
+  console.log('req.session', req.session);
+
+  // //from shared folder
+  // const userCred = await sdk.ok(sdk.user_for_credential('embed', req.session.lookerUser.external_user_id));
+  // console.log('userCred', userCred)
+  // // const embedUser = await sdk.ok(sdk.user(userCred.id));
+
+  // const new_token = await sdk.ok(sdk.login_user(req.session.lookerUser.external_user_id)) //user with specific permissions created by Bryan
+  // // console.log('me', me)
+  // res.set('Access-Control-Allow-Origin', "*")
+  // res.set('Access-Control-Allow-Methods', 'GET, POST')
+  // res.status(200).send(new_token)
+}

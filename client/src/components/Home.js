@@ -421,7 +421,9 @@ class Home extends Component {
 
     const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedMenuItem, renderedDemoComponents } = this.state;
     const { handleTabChange, handleMenuItemSelect, handleDrawerChange } = this;
-    const { classes, activeCustomization, lookerUser, applySession, lookerUserAttributeBrandOptions, lookerHost, userProfile } = this.props
+    const { classes, activeCustomization, lookerUser, applySession, lookerUserAttributeBrandOptions, lookerHost, userProfile, accessToken } = this.props
+
+    // console.log('accessToken', accessToken)
 
     // Use Lodash to sort array by 'name'
     let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : [];
@@ -493,7 +495,9 @@ class Home extends Component {
             lookerUser,
             userProfile,
             codeShow: this.state.codeShow,
-            toggleCodeShow: this.toggleCodeShow
+            toggleCodeShow: this.toggleCodeShow,
+            accessToken,
+            lookerHost
           }
         } >
           <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>

@@ -81,6 +81,7 @@ const PrivateRoute = ({
   lookerUserAttributeBrandOptions,
   switchUserAttributeBrand,
   usecaseFromUrl,
+  accessToken,
   ...rest }) => (
     < Route {...rest} render={(props) => (
       Object.keys(userProfile).length ?
@@ -102,6 +103,7 @@ const PrivateRoute = ({
           lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
           switchUserAttributeBrand={switchUserAttributeBrand}
           usecaseFromUrl={usecaseFromUrl}
+          accessToken={accessToken}
         />
         : <Redirect to={{
           pathname: '/',
@@ -124,7 +126,8 @@ class App extends React.Component {
       },
       lookerHost: '',
       activeUsecase: '',
-      tokenLastRefreshed: ''
+      tokenLastRefreshed: '',
+      accessToken: ''
     }
   }
 
@@ -159,6 +162,7 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
+    // console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
     const activeCustomization = sessionResponseData.session.activeCustomization ? sessionResponseData.session.activeCustomization : 0;
@@ -186,7 +190,8 @@ class App extends React.Component {
           }
         },
         lookerHost,
-        tokenLastRefreshed: sessionResponseData.session.mongoInfo.api_token_last_refreshed || Date.now()
+        tokenLastRefreshed: sessionResponseData.session.mongoInfo.api_token_last_refreshed || Date.now(),
+        accessToken: sessionResponseData.session.mongoInfo.api_user_token || ''
       }), () => {
         // console.log('checkSession callback 1111 this.state.lookerUser', this.state.lookerUser)
         this.applyCustomization(activeCustomization)
@@ -249,7 +254,8 @@ class App extends React.Component {
           }
         },
         lookerHost,
-        tokenLastRefreshed: sessionResponseData.session.mongoInfo.api_token_last_refreshed || Date.now()
+        tokenLastRefreshed: sessionResponseData.session.mongoInfo.api_token_last_refreshed || Date.now(),
+        accessToken: sessionResponseData.session.mongoInfo.api_user_token || ''
       }), () => {
         this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
         this.logoutTimer()
@@ -421,7 +427,8 @@ class App extends React.Component {
   render() {
     // console.log('App render');
     // console.log('this.props', this.props);
-    const { userProfile, customizations, activeCustomization, indexOfCustomizationToEdit, lookerContent, lookerUser, lookerHost } = this.state
+    const { userProfile, customizations, activeCustomization, indexOfCustomizationToEdit, lookerContent, lookerUser, lookerHost, accessToken } = this.state;
+    // console.log('accessToken', accessToken)
     // const { activeIndustry } = this.state;
     // console.log('activeCustomization', activeCustomization);
 
@@ -452,6 +459,7 @@ class App extends React.Component {
             lookerUserAttributeBrandOptions={LookerUserAttributeBrandOptions}
             switchUserAttributeBrand={this.switchUserAttributeBrand}
             usecaseFromUrl={usecaseFromUrl}
+            accessToken={accessToken}
           />
         </div>
       </Router>

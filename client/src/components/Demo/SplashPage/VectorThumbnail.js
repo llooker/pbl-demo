@@ -5,9 +5,34 @@ import { ApiHighlight } from '../../Highlights/Highlight';
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress, Divider, Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { Looker40SDK, DefaultSettings, AuthToken, AuthSession, BrowserTransport } from "@looker/sdk";
+
+
+
+
 export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSelect, index }) {
   const [svg, setSvg] = useState(undefined)
-  const { userProfile, lookerUser, show } = useContext(AppContext)
+  const { userProfile, lookerUser, show, accessToken, lookerHost } = useContext(AppContext);
+
+  class PblSessionEmbed extends PblSession {
+    fetchToken() {
+      return accessToken;
+    }
+
+    async getToken() {
+      if (!this.isAuthenticated()) {
+        this.activeToken.setToken(this.fetchToken());
+      }
+      return this.activeToken;
+    }
+  }
+
+  const session = new PblSessionEmbed({
+    ...DefaultSettings(),
+    base_url: `https://${lookerHost}.looker.com:19999`
+  });
+
+  let sdk = new Looker40SDK(session);
 
   useEffect(() => {
     let isSubscribed = true
@@ -20,17 +45,10 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
   }, [item, lookerUser]);
 
   const getThumbnail = async () => {
-    let lookerResponse = await fetch(`/getthumbnail/${item.resourceType}/${item.id}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    let lookerResponseData = await lookerResponse.json();
-    const blob = new Blob([lookerResponseData.svg], { type: 'image/svg+xml' });
+    let clientLookerResponse = await sdk.ok(sdk.content_thumbnail({ type: item.resourceType, resource_id: item.id }));
+    const blob = new Blob([clientLookerResponse], { type: 'image/svg+xml' });
     let url = URL.createObjectURL(blob);
-    // setSvg(url)
+
     return url;
   }
 
@@ -71,4 +89,38 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
     </Grid >
 
   );
+}
+
+class PblSession extends AuthSession {
+  fetchToken() {
+    return fetch("");
+  }
+  activeToken = new AuthToken();
+  constructor(settings, transport) {
+    super(settings, transport || new BrowserTransport(settings));
+  }
+  isAuthenticated() {
+    const token = this.activeToken;
+    if (!(token && token.access_token)) return false;
+    return token.isActive();
+  }
+  async getToken() {
+    if (!this.isAuthenticated()) {
+      const token = await this.fetchToken();
+      this.activeToken.setToken(await token.json());
+    }
+    return this.activeToken;
+  }
+  async authenticate(props) {
+    const token = await this.getToken();
+    if (token && token.access_token) {
+      props.mode = "cors";
+      delete props.credentials;
+      props.headers = {
+        ...props.headers,
+        Authorization: `Bearer ${this.activeToken.access_token}`
+      };
+    }
+    return props;
+  }
 }
