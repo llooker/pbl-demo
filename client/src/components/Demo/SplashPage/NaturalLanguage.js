@@ -4,11 +4,22 @@ import { ApiHighlight } from '../../Highlights/Highlight';
 
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress, Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { Looker40SDK, DefaultSettings } from "@looker/sdk";
+import { PblSessionEmbed } from '../../../LookerHelpers/pblsession'
 const { validIdHelper, decodeHtml } = require('../../../tools');
+
 
 export function NaturalLanguage({ lookerContent, item, index, classes }) {
   const [apiContent, setApiContent] = useState(undefined);
-  const { userProfile, lookerUser, show } = useContext(AppContext)
+  const { userProfile, lookerUser, show, accessToken, lookerHost } = useContext(AppContext);
+
+  const session = new PblSessionEmbed({
+    ...DefaultSettings(),
+    base_url: `https://${lookerHost}.looker.com:19999`,
+    accessToken
+  });
+
+  let sdk = new Looker40SDK(session);
 
   useEffect(() => {
     let isSubscribed = true
@@ -23,17 +34,8 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
   const runInlineQuery = async () => {
     setApiContent(undefined)
     let inlineQuery = item;
-    let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery))
-    let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    let lookerResponseData = await lookerResponse.json();
-    // setApiContent(lookerResponseData.queryResults[0])
-    return lookerResponseData.queryResults[0];
+    let clientLookerResponse = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: inlineQuery }));
+    return clientLookerResponse[0];
   }
 
   const upOrDownArrow = apiContent ? apiContent.change > 0 ? `&uarr;` : `&darr;` : '';

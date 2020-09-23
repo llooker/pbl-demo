@@ -1,35 +1,19 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
 import AppContext from '../../../AppContext';
 import { ApiHighlight } from '../../Highlights/Highlight';
-
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress, Divider, Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
-import { Looker40SDK, DefaultSettings, AuthToken, AuthSession, BrowserTransport } from "@looker/sdk";
-
-
-
+import { Looker40SDK, DefaultSettings } from "@looker/sdk";
+import { PblSessionEmbed } from '../../../LookerHelpers/pblsession'
 
 export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSelect, index }) {
   const [svg, setSvg] = useState(undefined)
   const { userProfile, lookerUser, show, accessToken, lookerHost } = useContext(AppContext);
 
-  class PblSessionEmbed extends PblSession {
-    fetchToken() {
-      return accessToken;
-    }
-
-    async getToken() {
-      if (!this.isAuthenticated()) {
-        this.activeToken.setToken(this.fetchToken());
-      }
-      return this.activeToken;
-    }
-  }
-
   const session = new PblSessionEmbed({
     ...DefaultSettings(),
-    base_url: `https://${lookerHost}.looker.com:19999`
+    base_url: `https://${lookerHost}.looker.com:19999`,
+    accessToken
   });
 
   let sdk = new Looker40SDK(session);
@@ -89,38 +73,4 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
     </Grid >
 
   );
-}
-
-class PblSession extends AuthSession {
-  fetchToken() {
-    return fetch("");
-  }
-  activeToken = new AuthToken();
-  constructor(settings, transport) {
-    super(settings, transport || new BrowserTransport(settings));
-  }
-  isAuthenticated() {
-    const token = this.activeToken;
-    if (!(token && token.access_token)) return false;
-    return token.isActive();
-  }
-  async getToken() {
-    if (!this.isAuthenticated()) {
-      const token = await this.fetchToken();
-      this.activeToken.setToken(await token.json());
-    }
-    return this.activeToken;
-  }
-  async authenticate(props) {
-    const token = await this.getToken();
-    if (token && token.access_token) {
-      props.mode = "cors";
-      delete props.credentials;
-      props.headers = {
-        ...props.headers,
-        Authorization: `Bearer ${this.activeToken.access_token}`
-      };
-    }
-    return props;
-  }
 }

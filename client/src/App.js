@@ -162,7 +162,7 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
-    // console.log('sessionResponseData', sessionResponseData)
+    console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const { customizations } = sessionResponseData.session
     const activeCustomization = sessionResponseData.session.activeCustomization ? sessionResponseData.session.activeCustomization : 0;
