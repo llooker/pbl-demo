@@ -28,7 +28,7 @@ export default function Dashboard(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
   const [toggleValue, setToggleValue] = useState('');
-  const [dashboardLayout, setDashboardLayout] = useState({});
+  const [dashboardOptions, setDashboardOptions] = useState({});
   const [regionValue, setRegionValue] = useState('All');
   const { codeShow, toggleCodeShow } = useContext(AppContext)
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
@@ -44,12 +44,15 @@ export default function Dashboard(props) {
   };
 
   const handleToggle = (event, newValue) => {
+    // console.log('handleToggle')
+    // console.log('newValue', newValue)
     setToggleValue(newValue)
-    const filteredLayout = _.filter(dashboardLayout.dashboard_layout_components, (row) => {
-      return (lookerContent[0].dynamicFieldLookUp[newValue].indexOf(row.dashboard_element_id) > -1)
+    const filteredLayout = _.filter(dashboardOptions.layouts[0].dashboard_layout_components, (row) => {
+      return (lookerContent[0].dynamicFieldLookUp[newValue].indexOf(dashboardOptions.elements[row.dashboard_element_id].title) > -1)
     })
+
     const newDashboardLayout = {
-      ...dashboardLayout,
+      ...dashboardOptions.layouts[0],
       dashboard_layout_components: filteredLayout
     }
     dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
@@ -62,10 +65,10 @@ export default function Dashboard(props) {
 
 
   useEffect(() => {
-    if (Object.keys(dashboardLayout).length && Object.keys(dashboardObj).length && lookerContent[0].dynamicFieldLookUp) {
+    if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length && lookerContent[0].dynamicFieldLookUp) {
       handleToggle(null, Object.keys(lookerContent[0].dynamicFieldLookUp)[0])
     }
-  }, [dashboardLayout]);
+  }, [dashboardOptions]);
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
@@ -90,7 +93,7 @@ export default function Dashboard(props) {
           changeHeight(event)
         }) // dashboards-next
         .on('dashboard:loaded', (event) => {
-          setDashboardLayout(event.dashboard.options.layouts[0])
+          setDashboardOptions(event.dashboard.options)
         })
         // .on('drillmenu:click', (event) => {
         //   drillMenuClick(event)
