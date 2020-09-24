@@ -363,18 +363,18 @@
             ],
             "dynamicFieldLookUp": {
               "Inventory": [
-                118,
-                124,
-                123,
-                122,
-                121
+                "Inventory On Hand",
+                "# of Items on Hand",
+                "Most Popular Out of Stock Items",
+                "Overstocked Items",
+                "Aging Inventory"
               ],
               "Orders": [
-                6,
-                7,
-                8,
-                2,
-                127
+                "# Orders Processing",
+                "Total Amount Processing",
+                "# Orders In Transit",
+                "Order Shipment Status",
+                "Open Orders to be Shipped"
               ]
             },
             "theme": "atom_fashion"
