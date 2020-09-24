@@ -15,6 +15,9 @@ import InitialLookerUser from './initialLookerUser.json';
 import UsecaseContent from './usecaseContent.json';
 import LookerUserAttributeBrandOptions from './lookerUserAttributeBrandOptions.json';
 
+import { Looker40SDK, DefaultSettings } from "@looker/sdk";
+import { PblSessionEmbed } from './LookerHelpers/pblsession'
+
 export const lookerUserTimeHorizonMap = {
   'basic': 'last 182 days',
   'advanced': 'last 365 days',
@@ -81,7 +84,7 @@ const PrivateRoute = ({
   lookerUserAttributeBrandOptions,
   switchUserAttributeBrand,
   usecaseFromUrl,
-  accessToken,
+  sdk,
   ...rest }) => (
     < Route {...rest} render={(props) => (
       Object.keys(userProfile).length ?
@@ -103,7 +106,7 @@ const PrivateRoute = ({
           lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
           switchUserAttributeBrand={switchUserAttributeBrand}
           usecaseFromUrl={usecaseFromUrl}
-          accessToken={accessToken}
+          sdk={sdk}
         />
         : <Redirect to={{
           pathname: '/',
@@ -127,7 +130,7 @@ class App extends React.Component {
       lookerHost: '',
       activeUsecase: '',
       tokenLastRefreshed: '',
-      accessToken: ''
+      sdk: ''
     }
   }
 
@@ -168,9 +171,19 @@ class App extends React.Component {
     const activeCustomization = sessionResponseData.session.activeCustomization ? sessionResponseData.session.activeCustomization : 0;
     const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
     const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-    // console.log('lookerUser', lookerUser)
+    const accessToken = sessionResponseData.session.mongoInfo ? sessionResponseData.session.mongoInfo.api_user_token : '';
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
+
+      const session = new PblSessionEmbed({
+        ...DefaultSettings(),
+        base_url: `https://${lookerHost}.looker.com:19999`,
+        accessToken
+      });
+
+
+      let sdk = new Looker40SDK(session);
+
       this.setState((prevState) => ({
         userProfile, //think we want this here?
         customizations,
@@ -191,11 +204,11 @@ class App extends React.Component {
         },
         lookerHost,
         tokenLastRefreshed: sessionResponseData.session.mongoInfo.api_token_last_refreshed || Date.now(),
-        accessToken: sessionResponseData.session.mongoInfo.api_user_token || ''
+        sdk
       }), () => {
         // console.log('checkSession callback 1111 this.state.lookerUser', this.state.lookerUser)
         this.applyCustomization(activeCustomization)
-        this.logoutTimer()
+        this.logoutTimer();
       })
     }
   }
@@ -233,6 +246,17 @@ class App extends React.Component {
       const { customizations } = sessionResponseData.session
       const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
       const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
+      const accessToken = sessionResponseData.session.mongoInfo ? sessionResponseData.session.mongoInfo.api_user_token : '';
+
+
+      const session = new PblSessionEmbed({
+        ...DefaultSettings(),
+        base_url: `https://${lookerHost}.looker.com:19999`,
+        accessToken
+      });
+
+
+      let sdk = new Looker40SDK(session);
 
       this.setState(prevState => ({
         userProfile,
@@ -255,7 +279,7 @@ class App extends React.Component {
         },
         lookerHost,
         tokenLastRefreshed: sessionResponseData.session.mongoInfo.api_token_last_refreshed || Date.now(),
-        accessToken: sessionResponseData.session.mongoInfo.api_user_token || ''
+        sdk
       }), () => {
         this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
         this.logoutTimer()
@@ -427,10 +451,8 @@ class App extends React.Component {
   render() {
     // console.log('App render');
     // console.log('this.props', this.props);
-    const { userProfile, customizations, activeCustomization, indexOfCustomizationToEdit, lookerContent, lookerUser, lookerHost, accessToken } = this.state;
-    // console.log('accessToken', accessToken)
-    // const { activeIndustry } = this.state;
-    // console.log('activeCustomization', activeCustomization);
+    const { userProfile, customizations, activeCustomization, indexOfCustomizationToEdit, lookerContent, lookerUser, lookerHost, accessToken, sdk } = this.state;
+
 
     let usecaseFromUrl = usecaseHelper();
 
@@ -459,7 +481,7 @@ class App extends React.Component {
             lookerUserAttributeBrandOptions={LookerUserAttributeBrandOptions}
             switchUserAttributeBrand={this.switchUserAttributeBrand}
             usecaseFromUrl={usecaseFromUrl}
-            accessToken={accessToken}
+            sdk={sdk}
           />
         </div>
       </Router>

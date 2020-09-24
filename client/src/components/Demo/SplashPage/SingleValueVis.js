@@ -66,8 +66,10 @@ export function SingleValueVis({ lookerContent, classes }) {
       }% `
       : '';
   return (
-    <Card className={`${classes.padding15} ${classes.overflowHidden} `}
-      variant="outlined"
+    <Card className={`${classes.padding15} 
+    ${classes.overflowHidden} 
+    ${classes.lookerCardShadow}
+    `}
     >
       <div
         style={{
@@ -139,6 +141,6 @@ export function SingleValueVis({ lookerContent, classes }) {
           </Grid>
         }
       </div >
-    </Card>
+    </Card >
   );
 }

@@ -15,8 +15,11 @@ export function PopularAnalysis({ lookerContent, classes, handleMenuItemSelect }
 
   return (
 
-    <Card className={classes.padding15}
-      variant="outlined"
+    <Card className={`${classes.padding15} 
+    ${classes.overflowHidden} 
+    ${classes.lookerCardShadow}
+    `}
+    // variant="outlined"
     >
       <div
         className={`${classes.overflowYScroll}`}

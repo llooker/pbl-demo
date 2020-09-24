@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://127.0.0.1:5000/",
+  "proxy": "http://embed.demo:5000/",
   "dependencies": {
     "@date-io/date-fns": "^1.3.13",
     "@looker/embed-sdk": "^1.1.0",

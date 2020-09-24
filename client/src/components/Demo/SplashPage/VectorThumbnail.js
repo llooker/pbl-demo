@@ -3,20 +3,11 @@ import AppContext from '../../../AppContext';
 import { ApiHighlight } from '../../Highlights/Highlight';
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress, Divider, Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Looker40SDK, DefaultSettings } from "@looker/sdk";
-import { PblSessionEmbed } from '../../../LookerHelpers/pblsession'
 
 export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSelect, index }) {
   const [svg, setSvg] = useState(undefined)
-  const { userProfile, lookerUser, show, accessToken, lookerHost } = useContext(AppContext);
+  const { userProfile, lookerUser, show, sdk } = useContext(AppContext);
 
-  const session = new PblSessionEmbed({
-    ...DefaultSettings(),
-    base_url: `https://${lookerHost}.looker.com:19999`,
-    accessToken
-  });
-
-  let sdk = new Looker40SDK(session);
 
   useEffect(() => {
     let isSubscribed = true

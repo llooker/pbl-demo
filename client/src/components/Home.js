@@ -27,9 +27,9 @@ import style from 'react-syntax-highlighter/dist/esm/styles/hljs/agate';
 import './Home.css'; //needed for iframe height
 import { MonetizationModal } from './Demo/MonetizationModal';
 import BottomBar from './Material/BottomBar';
-
 import LookerUserPermissions from '../lookerUserPermissions.json';
 import { lookerUserTimeHorizonMap } from '../App';
+
 
 
 
@@ -314,6 +314,10 @@ class Home extends Component {
   };
 
   componentDidMount(props) {
+
+    // console.log('Home componentDidMount')
+    // console.log('this.props', this.props)
+
     let { usecaseFromUrl } = this.props || 'atom';
 
     this.setState({
@@ -384,6 +388,8 @@ class Home extends Component {
   }
 
 
+
+
   render() {
 
     //how to make this dynamic????
@@ -421,9 +427,10 @@ class Home extends Component {
 
     const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedMenuItem, renderedDemoComponents } = this.state;
     const { handleTabChange, handleMenuItemSelect, handleDrawerChange } = this;
-    const { classes, activeCustomization, lookerUser, applySession, lookerUserAttributeBrandOptions, lookerHost, userProfile, accessToken } = this.props
+    const { classes, activeCustomization, lookerUser, applySession, lookerUserAttributeBrandOptions, lookerHost, userProfile, sdk } = this.props
 
     // console.log('accessToken', accessToken)
+
 
     // Use Lodash to sort array by 'name'
     let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : [];
@@ -451,38 +458,7 @@ class Home extends Component {
         renderedDemoComponents: [selectedMenuItemVal]
       }, () => {
       })
-
-      //couldn't figure this out...
-      // UsecaseContent[activeUsecase].demoComponents.map(item => {
-      //   demoComponentMap[item.lookerContent[0].id ?
-      //     validIdHelper(item.type + item.lookerContent[0].id) :
-      //     validIdHelper(item.type)] = item.type.split(" ").map(item => _.capitalize(item)).join("")
-      // })
     }
-
-
-    /**
-     * what this does
-     * we want rendered demo components to render active one first
-     * renderedDemoComponents is always up to date
-     * so create array of unique demo components starting with rendered
-     * then iterate through usecase file and sort array according to order of unique
-     */
-
-    // const orderedDemoComponentsForRender = [...renderedDemoComponents, ...demoComponentKeyMap]
-    // const uniqueOrderedDemoComponentsForRender = [...new Set(orderedDemoComponentsForRender)];
-
-    // if (activeUsecase) {
-    //   UsecaseContent[activeUsecase].demoComponents.sort(function (a, b) {
-    //     let idToUseForA = validIdHelper(a.lookerContent[0].id ? a.type + a.lookerContent[0].id : a.type);
-    //     let idToUseForB = validIdHelper(b.lookerContent[0].id ? b.type + b.lookerContent[0].id : b.type);
-    //     return uniqueOrderedDemoComponentsForRender.indexOf(idToUseForA) - uniqueOrderedDemoComponentsForRender.indexOf(idToUseForB);
-    //   });
-    // }
-
-    // console.log('this.state.renderedDemoComponents', this.state.renderedDemoComponents)
-    // console.log('orderedDemoComponentsForRender', orderedDemoComponentsForRender)
-    // console.log('uniqueOrderedDemoComponentsForRender', uniqueOrderedDemoComponentsForRender)
 
     return (
       <div className={classes.root} >
@@ -496,8 +472,8 @@ class Home extends Component {
             userProfile,
             codeShow: this.state.codeShow,
             toggleCodeShow: this.toggleCodeShow,
-            accessToken,
-            lookerHost
+            lookerHost,
+            sdk
           }
         } >
           <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>

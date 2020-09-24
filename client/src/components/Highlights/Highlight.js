@@ -11,6 +11,8 @@ export const EMBED_COLOR = '#12B5CB'
 export const EMBED_BACKGROUND_COLOR = 'rgba(18, 181, 203, 0.1)'
 
 function Highlight({ children, color, height, width, margin, id, backgroundColor, ...props }) {
+  // console.log('Highlight')
+  // console.log('props', props)
   const { show } = useContext(AppContext)
   var style = {};
   if (show) {
@@ -41,7 +43,9 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
   // boxShadow: `0 4px 80px ${color}22`
 
   return (
-    <div id={id} style={style} {...props}>
+    <div id={id} style={style}
+    // {...props}
+    >
       {children}
     </div>
   );
