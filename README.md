@@ -5,6 +5,12 @@ This app is the new solution for PBL Demos.
 This is a react/node app featuring Looker's all new embed SDK to showcase PBL demos.
 
 Steps for configuring this application locally on your machine: 
+
+### Clone Repo
+```
+git clone git@github.com:ewarrenG/looker-embed.git
+```
+
 <ol>
     <li>Open terminal and run 'git clone git@github.com:ewarrenG/looker-embed.git'</li>
     <li>There are three files with sensitive credentials, you'll need to add manually:
