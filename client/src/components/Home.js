@@ -1,4 +1,5 @@
 import _ from 'lodash'
+// import $ from 'jquery';
 import React, { Component } from 'react'
 import clsx from 'clsx';
 import { withStyles } from "@material-ui/core/styles";
@@ -261,13 +262,16 @@ class Home extends Component {
   }
 
   toggleHighlightShow = () => {
-    if (this.state.codeShow) this.toggleCodeShow()
+    // if (this.state.codeShow) this.toggleCodeShow()
     this.setState({ highlightShow: !this.state.highlightShow })
   }
 
   toggleCodeShow = () => {
-    if (this.state.highlightShow) this.toggleHighlightShow()
+    // console.log('toggleCodeShow')
+    // console.log('000 toggleCodeShthis.state.codeShow', this.state.codeShow)
+
     this.setState({ codeShow: !this.state.codeShow })
+    // console.log('1111 toggleCodeShthis.state.codeShow', this.state.codeShow)
   }
 
   handleTabChange = newValue => {
@@ -509,11 +513,6 @@ class Home extends Component {
                   orderedDemoComponentsForMenuObj={orderedDemoComponentsForMenuObj}
                   selectedMenuItem={selectedMenuItem}
                   handleMenuItemSelect={handleMenuItemSelect}
-                // lookerUser={lookerUser}
-                // show={show}
-                // toggleShow={toggleShow}
-                // codeShow={codeShow}
-                // toggleCodeShow={toggleCodeShow}
                 /> : ''}
 
               <MonetizationModal
@@ -614,10 +613,8 @@ function TopBar(props) {
 function MenuList(props) {
   // const { toggleShow } = useContext(AppContext)
   // const { show } = useContext(AppContext)
-  // const { toggleCodeShow } = useContext(AppContext)
   // const { codeShow } = useContext(AppContext)
-  const { classes, activeUsecase, orderedDemoComponentsForMenuObj, selectedMenuItem, handleMenuItemSelect,
-    lookerUser, show, toggleShow, codeShow, toggleCodeShow } = props
+  const { classes, activeUsecase, orderedDemoComponentsForMenuObj, selectedMenuItem, handleMenuItemSelect } = props
   const demoComponentIconMap = {
     "splashpage19": HomeIcon,
     "simpledashboard5": VisibilityOutlined,

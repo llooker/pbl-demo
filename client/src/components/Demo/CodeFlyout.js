@@ -13,32 +13,30 @@ export default function CodeFlyout(props) {
 
   const { classes, lookerContent, clientSideCode, serverSideCode, lookerUser, permissionNeededCode, height } = props
   return (
-    <ClickAwayListener onClickAway={() => {
-      toggleCodeShow()
-    }}>
-      <Fade in={codeShow || false}>
-        {Object.keys(lookerUser).length ?
-          <Grid container spacing={3}
-            className={`${classes.padding20} ${classes.codeFlyoutContainer}`}
-            style={{ height }}>
-            <Grid item sm={11}>
-              <Typography variant="h6" className={` ${classes.mrAuto}`} style={{ color: 'white' }}>
-                Looker User Object
+    // <ClickAwayListener onClickAway={toggleCodeShow} mouseEvent={!codeShow ? false : 'click'}>
+    <Fade in={codeShow || false}>
+      {Object.keys(lookerUser).length ?
+        <Grid container spacing={3}
+          className={`${classes.padding20} ${classes.codeFlyoutContainer}`}
+          style={{ height }}>
+          <Grid item sm={11}>
+            <Typography variant="h6" className={` ${classes.mrAuto}`} style={{ color: 'white' }}>
+              Looker User Object
             </Typography>
-            </Grid>
-            <Grid item sm={1}
-              style={{ textAlign: 'right' }}
-            >
-              <CloseIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => toggleCodeShow()} />
-            </Grid>
+          </Grid>
+          <Grid item sm={1}
+            style={{ textAlign: 'right' }}
+          >
+            <CloseIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => toggleCodeShow()} />
+          </Grid>
 
-            <Grid item sm={12}>
-              <CodeSnippet code={lookerUser} />
-            </Grid>
-          </Grid> : ''
-        }
-      </Fade >
-    </ClickAwayListener >
+          <Grid item sm={12}>
+            <CodeSnippet code={lookerUser} />
+          </Grid>
+        </Grid> : ''
+      }
+    </Fade >
+    // </ClickAwayListener >
   )
 }
 

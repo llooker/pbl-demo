@@ -23,7 +23,6 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
     let clientLookerResponse = await sdk.ok(sdk.content_thumbnail({ type: item.resourceType, resource_id: item.id }));
     const blob = new Blob([clientLookerResponse], { type: 'image/svg+xml' });
     let url = URL.createObjectURL(blob);
-
     return url;
   }
 
