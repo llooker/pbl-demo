@@ -17,7 +17,15 @@ import BottomBar from '../../Material/BottomBar.js'
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent';
 import AppContext from '../../../AppContext';
+//new
+import Usa from "@svg-maps/usa";
+// import { SVGMap, CheckboxSVGMap } from "react-svg-map";
+import CheckboxSVGMap from '../../MapSvg/checkbox-svg-map'
+import "react-svg-map/lib/index.css";
+
+
 const { validIdHelper } = require('../../../tools');
+// console.log('CheckboxSVGMap', CheckboxSVGMap)
 
 export default function Dashboard(props) {
   const topBarBottomBarHeight = 112;
@@ -263,14 +271,104 @@ export default function Dashboard(props) {
 
 
 function FilterBar(props) {
+  console.log('FilterBar')
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
     apiContent, customFilterAction, regionValue, setRegionValue, toggleValue, handleToggle } = props;
+  console.log('apiContent', apiContent)
 
   const [expanded, setExpanded] = useState(true);
+  const [selectedLocationIdsByRegion, setSelectedLocationIdsByRegion] = useState([]);
 
   const handleExpansionPanel = (event, newValue) => {
     setExpanded(expanded ? false : true);
   };
+
+  const customUsa = {
+    ...Usa,
+    label: "Custom map label",
+    locations: Usa.locations.map(location => {
+      // Modify each location
+      // console.log('location', location)
+      switch (location.name) {
+        //9
+        case "Connecticut":
+        case "Maine":
+        case "Massachusetts":
+        case "New Hampshire":
+        case "Rhode Island":
+        case "Vermont":
+        case "New Jersey":
+        case "New York":
+        case "Pennsylvania":
+        case "Delaware":
+          return { ...location, region: "Northeast" }
+        //12
+        case "Illinois":
+        case "Indiana":
+        case "Michigan":
+        case "Ohio":
+        case "Wisconsin":
+        case "Iowa":
+        case "Kansas":
+        case "Minnesota":
+        case "Missouri":
+        case "Nebraska":
+        case "North Dakota":
+        case "South Dakota":
+          return { ...location, region: "Midwest" }
+        //16
+        case "Florida":
+        case "Georgia":
+        case "Maryland":
+        case "North Carolina":
+        case "South Carolina":
+        case "Virginia":
+        case "District of Columbia":
+        case "Washington, DC":
+        case "West Virginia":
+        case "Alabama":
+        case "Kentucky":
+        case "Mississippi":
+        case "Tennessee":
+        case "Arkansas":
+        case "Louisiana":
+        case "Oklahoma":
+        case "Texas":
+          return { ...location, region: "South" }
+        //8
+        case "Arizona":
+        case "Colorado":
+        case "Idaho":
+        case "Montana":
+        case "Nevada":
+        case "New Mexico":
+        case "Utah":
+        case "Wyoming":
+          return { ...location, region: "Mountain" }
+        //5
+        case "Alaska":
+        case "California":
+        case "Hawaii":
+        case "Oregon":
+        case "Washington":
+          return { ...location, region: "West" }
+        // default:
+        //   return location
+      }
+    })
+  };
+
+  // console.log('Usa', Usa)
+  // console.log('customUsa', customUsa)
+  // console.log('selectedLocationIdsByRegion', selectedLocationIdsByRegion)
+
+
+  useEffect(() => {
+    console.log('useEffect')
+    console.log('selectedLocationIdsByRegion', selectedLocationIdsByRegion)
+  }, [selectedLocationIdsByRegion]);
+
+
   return (
 
     <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} className={classes.w100} elevation={0}>
@@ -286,13 +384,13 @@ function FilterBar(props) {
         {
           lookerContent[0].filters || lookerContent[0].dynamicFieldLookUp ?
             <Grid
-              container>
+              container spacing={3}>
               {apiContent.map((item, index) => {
                 return (
                   lookerContent[0].filterComponents[index] === 'autocomplete' ?
-                    <ApiHighlight classes={classes}
-                      key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-                      <Grid item sm={6}>
+                    <Grid item sm={6}>
+                      <ApiHighlight classes={classes}
+                        key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
                         <Autocomplete
                           id={`combo-box-dashboard-${lookerContent.id}`}
                           options={Array.isArray(apiContent[index]) ?
@@ -322,36 +420,24 @@ function FilterBar(props) {
                           renderInput={(params) => <TextField {...params} label={lookerContent[0].filters[index].filterName} variant="outlined" />}
                           loadingText="Loading..."
                         />
-                      </Grid>
-                    </ApiHighlight>
-                    : lookerContent[0].filterComponents[index] === 'togglebutton' ?
-
-                      <ApiHighlight classes={classes}
-                        key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-                        <Grid item sm={12}>
-                          <ToggleButtonGroup
-                            value={regionValue}
-                            exclusive
-                            onChange={(event, newValue) => {
-                              setRegionValue(newValue)
+                      </ApiHighlight>
+                    </Grid>
+                    : lookerContent[0].filterComponents[index] === 'mapfilter' ?
+                      <Grid item sm={3}>
+                        <ApiHighlight classes={classes}
+                          key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
+                          <Typography className={`${classes.heading} ${classes.ml12}`}>Selected region: {regionValue.length ? regionValue : "None"}</Typography>
+                          <CheckboxSVGMap map={customUsa}
+                            onChange={(locations) => {
+                              let associatedRegion = locations[0].region;
+                              setRegionValue(associatedRegion)
                               customFilterAction(lookerContent[0].id,
                                 lookerContent[0].filters[index].filterName,
-                                (newValue) ? newValue : '')
+                                (associatedRegion) ? associatedRegion : '')
                             }}
-                            aria-label="region"
-                          >
-                            {apiContent[index].map((region, index) => {
-                              return (
-                                <ToggleButton
-                                  key={validIdHelper(`${type}-FilterBar-ToggleButton-${lookerContent[0].id}-${index}`)}
-                                  value={region.label} aria-label={region.label}>
-                                  {region.label}
-                                </ToggleButton>
-                              )
-                            })}
-                          </ToggleButtonGroup>
-                        </Grid>
-                      </ApiHighlight>
+                          />;
+                          </ApiHighlight>
+                      </Grid>
                       : 'ooooopppp')
               })}
               <Grid item sm={1} />

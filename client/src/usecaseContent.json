@@ -320,7 +320,7 @@
             ],
             "filterComponents": [
               "autocomplete",
-              "togglebutton"
+              "mapfilter"
             ]
           }
         ]
