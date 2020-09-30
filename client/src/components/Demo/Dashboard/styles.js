@@ -93,5 +93,8 @@ export default makeStyles((theme) => ({
   noContainerScroll: {
     width: '100%',
     margin: 0
+  },
+  verticalAlignTop: {
+    verticalAlign: 'top'
   }
 }));

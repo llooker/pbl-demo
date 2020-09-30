@@ -268,10 +268,9 @@ export default function Dashboard(props) {
 
 
 function FilterBar(props) {
-  console.log('FilterBar')
+  // console.log('FilterBar')
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
     apiContent, customFilterAction, regionValue, setRegionValue, toggleValue, handleToggle } = props;
-  console.log('apiContent', apiContent)
 
   const [expanded, setExpanded] = useState(true);
   const [selectedLocationIdsByRegion, setSelectedLocationIdsByRegion] = useState([]);
@@ -355,15 +354,6 @@ function FilterBar(props) {
     })
   };
 
-  console.log('Usa', Usa)
-  console.log('customUsa', customUsa)
-  // console.log('selectedLocationIdsByRegion', selectedLocationIdsByRegion)
-
-
-  useEffect(() => {
-    console.log('useEffect')
-    console.log('selectedLocationIdsByRegion', selectedLocationIdsByRegion)
-  }, [selectedLocationIdsByRegion]);
 
 
   return (
@@ -378,91 +368,107 @@ function FilterBar(props) {
 
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        {
-          lookerContent[0].filters || lookerContent[0].dynamicFieldLookUp ?
-            <Grid
-              container spacing={3}>
-              {apiContent.map((item, index) => {
-                return (
-                  lookerContent[0].filterComponents[index] === 'autocomplete' ?
-                    <Grid item sm={6}>
-                      <ApiHighlight classes={classes}
-                        key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-                        <Autocomplete
-                          id={`combo-box-dashboard-${lookerContent.id}`}
-                          options={Array.isArray(apiContent[index]) ?
-                            apiContent[index] :
-                            []}
-                          renderOption={(option) => (
-                            <Grid container justify="space-between">
-                              <Grid item>
-                                {option.label}
-                              </Grid>
-                              {option.trend && <Grid item>
-                                <NumberToColoredPercent
-                                  val={option.trend}
-                                  positive_good={true}
-                                  abs_val={Math.abs(option.trend)}
-                                />
-                              </Grid>}
-                            </Grid>
-                          )}
-                          getOptionLabel={(option) => option.label}
-                          style={{ width: 400 }}
-                          onChange={(event, newValue) => {
-                            customFilterAction(lookerContent[0].id,
-                              lookerContent[0].filters[index].filterName,
-                              (newValue) ? newValue.label : '')
-                          }}
-                          renderInput={(params) => <TextField {...params} label={lookerContent[0].filters[index].filterName} variant="outlined" />}
-                          loadingText="Loading..."
-                        />
-                      </ApiHighlight>
-                    </Grid>
-                    : lookerContent[0].filterComponents[index] === 'mapfilter' ?
-                      <Grid item sm={3}>
+        <Grid
+          container spacing={3}>
+          {
+            lookerContent[0].filters || lookerContent[0].dynamicFieldLookUp ?
+
+              <>
+                {apiContent.map((item, index) => {
+                  return (
+                    lookerContent[0].filterComponents[index] === 'autocomplete' ?
+                      <Grid item sm={4}>
+
                         <ApiHighlight classes={classes}
                           key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-                          <Typography className={`${classes.heading} ${classes.ml12}`} component="span">{regionValue.length ? regionValue : "None"}</Typography>
-                          <CheckboxSVGMap map={customUsa}
-                            onChange={(locations) => {
-                              let associatedRegion = locations[0].region;
-                              setRegionValue(associatedRegion)
+                          <Autocomplete
+                            id={`combo-box-dashboard-${lookerContent.id}`}
+                            options={Array.isArray(apiContent[index]) ?
+                              apiContent[index] :
+                              []}
+                            renderOption={(option) => (
+                              <Grid container justify="space-between">
+                                <Grid item>
+                                  {option.label}
+                                </Grid>
+                                {option.trend && <Grid item>
+                                  <NumberToColoredPercent
+                                    val={option.trend}
+                                    positive_good={true}
+                                    abs_val={Math.abs(option.trend)}
+                                  />
+                                </Grid>}
+                              </Grid>
+                            )}
+                            getOptionLabel={(option) => option.label}
+                            style={{ width: 400 }}
+                            onChange={(event, newValue) => {
                               customFilterAction(lookerContent[0].id,
                                 lookerContent[0].filters[index].filterName,
-                                (associatedRegion) ? associatedRegion : '')
+                                (newValue) ? newValue.label : '')
                             }}
-                          />;
+                            renderInput={(params) => <TextField {...params} label={lookerContent[0].filters[index].filterName} variant="outlined" />}
+                            loadingText="Loading..."
+                          />
                         </ApiHighlight>
                       </Grid>
-                      : 'ooooopppp')
-              })}
-              <Grid item sm={1} />
-              {lookerContent[0].dynamicFieldLookUp ?
-                <EmbedHighlight classes={classes} >
-                  <Grid item sm={5}>
-                    <ToggleButtonGroup
-                      value={toggleValue}
-                      exclusive
-                      onChange={handleToggle}
-                      aria-label="text alignment"
-                    >
-                      {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
-                        return (
-                          <ToggleButton
-                            key={validIdHelper(`dynamicDashToggle-${key}`)}
-                            value={key} aria-label="left aligned">
-                            {key}
-                          </ToggleButton>
-                        )
-                      })}
-                    </ToggleButtonGroup>
-                  </Grid>
-                </EmbedHighlight>
-                : ''
-              }
-            </Grid> : ''
-        }
+                      : lookerContent[0].filterComponents[index] === 'mapfilter' ?
+                        <>
+                          <Grid item sm={1} />
+                          <Grid item sm={4}>
+                            <ApiHighlight classes={classes}
+                              key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
+
+                              <Typography className={`${classes.heading} ${classes.ml12} 
+                          // ${classes.verticalAlignTop}
+                          `}
+                                // component="span"
+                                color="secondary"
+                              >Selected Region: <b>{regionValue.length ? regionValue : "None"}</b></Typography>
+                              <CheckboxSVGMap map={customUsa}
+                                onChange={(locations) => {
+                                  let associatedRegion = locations[0].region;
+                                  setRegionValue(associatedRegion)
+                                  customFilterAction(lookerContent[0].id,
+                                    lookerContent[0].filters[index].filterName,
+                                    (associatedRegion) ? associatedRegion : '')
+                                }}
+                              />
+                            </ApiHighlight>
+                          </Grid>
+                        </>
+                        : 'ooooopppp')
+                })}
+                {lookerContent[0].dynamicFieldLookUp ?
+                  <>
+                    <Grid item sm={1} />
+                    <Grid item sm={4}>
+                      <EmbedHighlight classes={classes} >
+                        <ToggleButtonGroup
+                          value={toggleValue}
+                          exclusive
+                          onChange={handleToggle}
+                          aria-label="text alignment"
+                        >
+                          {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
+                            return (
+                              <ToggleButton
+                                key={validIdHelper(`dynamicDashToggle-${key}`)}
+                                value={key} aria-label="left aligned">
+                                {key}
+                              </ToggleButton>
+                            )
+                          })}
+                        </ToggleButtonGroup>
+                      </EmbedHighlight>
+                    </Grid>
+                  </>
+                  : ''
+                }
+              </>
+              : ''
+          }
+        </Grid>
       </ExpansionPanelDetails>
     </ExpansionPanel >
   )

@@ -1,4 +1,6 @@
 import { CheckboxSVGMap } from "react-svg-map";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 CheckboxSVGMap.prototype.toggleLocation = function toggleLocation(event) {
   const location = event.target;
@@ -23,15 +25,6 @@ CheckboxSVGMap.prototype.toggleLocation = function toggleLocation(event) {
     // Copy old state
     let selectedLocations = [...statesWithinRegion]; //[...prevState.selectedLocations];
 
-    if (location.attributes['aria-checked'].value === 'true') {
-      // Delete location
-      selectedLocations.splice(selectedLocations.indexOf(location), 1);
-    } else {
-      // Add location
-      selectedLocations.push(location);
-    }
-
-
     // Call onChange event handler
     if (this.props.onChange) {
       this.props.onChange(selectedLocations);
@@ -40,6 +33,11 @@ CheckboxSVGMap.prototype.toggleLocation = function toggleLocation(event) {
     // Return new state
     return { selectedLocations };
   });
+}
+
+CheckboxSVGMap.prototype.componentDidMount = function componentDidMount() {
+  //override components for all states to be selected initially
+  this.setState({ selectedLocations: this.props.map.locations });
 }
 
 export { CheckboxSVGMap as CheckboxSVGMap } 
