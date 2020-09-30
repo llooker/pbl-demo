@@ -34,7 +34,7 @@ export default function Dashboard(props) {
   const [serverSideCode, setServerSideCode] = useState('');
   const [toggleValue, setToggleValue] = useState('');
   const [dashboardOptions, setDashboardOptions] = useState({});
-  const [regionValue, setRegionValue] = useState('All');
+  const [regionValue, setRegionValue] = useState('Pacific,South,Mountain,Midwest,Northeast');
   const { codeShow, toggleCodeShow } = useContext(AppContext)
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
 
@@ -273,7 +273,6 @@ function FilterBar(props) {
     apiContent, customFilterAction, regionValue, setRegionValue, toggleValue, handleToggle } = props;
 
   const [expanded, setExpanded] = useState(true);
-  const [selectedLocationIdsByRegion, setSelectedLocationIdsByRegion] = useState([]);
 
   const handleExpansionPanel = (event, newValue) => {
     setExpanded(expanded ? false : true);
@@ -414,27 +413,31 @@ function FilterBar(props) {
                       </Grid>
                       : lookerContent[0].filterComponents[index] === 'mapfilter' ?
                         <>
-                          <Grid item sm={1} />
-                          <Grid item sm={4}>
-                            <ApiHighlight classes={classes}
+                          <Grid item sm={4} >
+                            <EmbedHighlight classes={classes}
                               key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-
-                              <Typography className={`${classes.heading} ${classes.ml12} 
-                          // ${classes.verticalAlignTop}
-                          `}
+                              <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
                                 // component="span"
                                 color="secondary"
-                              >Selected Region: <b>{regionValue.length ? regionValue : "None"}</b></Typography>
+                              >Selected Region(s): <b>{regionValue ? regionValue : "Outside US"}</b></Typography>
+
                               <CheckboxSVGMap map={customUsa}
                                 onChange={(locations) => {
-                                  let associatedRegion = locations[0].region;
-                                  setRegionValue(associatedRegion)
+
+                                  let allUniqueRegionsFromSelectedLocations = [];
+                                  for (let j = 0; j < locations.length; j++) {
+                                    if (allUniqueRegionsFromSelectedLocations.indexOf(locations[j].region) == -1) {
+                                      allUniqueRegionsFromSelectedLocations.push(locations[j].region)
+                                    }
+                                  }
+                                  let allUniqueRegionsFromSelectedLocationsCommaSep = allUniqueRegionsFromSelectedLocations.join(",")
+                                  setRegionValue(allUniqueRegionsFromSelectedLocationsCommaSep)
                                   customFilterAction(lookerContent[0].id,
                                     lookerContent[0].filters[index].filterName,
-                                    (associatedRegion) ? associatedRegion : '')
+                                    (regionValue) ? regionValue : '')
                                 }}
                               />
-                            </ApiHighlight>
+                            </EmbedHighlight>
                           </Grid>
                         </>
                         : 'ooooopppp')
