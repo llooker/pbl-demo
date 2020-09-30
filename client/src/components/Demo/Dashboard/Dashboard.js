@@ -19,13 +19,10 @@ import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent
 import AppContext from '../../../AppContext';
 //new
 import Usa from "@svg-maps/usa";
-// import { SVGMap, CheckboxSVGMap } from "react-svg-map";
-import CheckboxSVGMap from '../../MapSvg/checkbox-svg-map'
 import "react-svg-map/lib/index.css";
-
+import { CheckboxSVGMap } from "./CheckboxSvgMapRegion";
 
 const { validIdHelper } = require('../../../tools');
-// console.log('CheckboxSVGMap', CheckboxSVGMap)
 
 export default function Dashboard(props) {
   const topBarBottomBarHeight = 112;
@@ -351,15 +348,15 @@ function FilterBar(props) {
         case "Hawaii":
         case "Oregon":
         case "Washington":
-          return { ...location, region: "West" }
+          return { ...location, region: "Pacific" }
         // default:
         //   return location
       }
     })
   };
 
-  // console.log('Usa', Usa)
-  // console.log('customUsa', customUsa)
+  console.log('Usa', Usa)
+  console.log('customUsa', customUsa)
   // console.log('selectedLocationIdsByRegion', selectedLocationIdsByRegion)
 
 
@@ -426,7 +423,7 @@ function FilterBar(props) {
                       <Grid item sm={3}>
                         <ApiHighlight classes={classes}
                           key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-                          <Typography className={`${classes.heading} ${classes.ml12}`}>Selected region: {regionValue.length ? regionValue : "None"}</Typography>
+                          <Typography className={`${classes.heading} ${classes.ml12}`} component="span">{regionValue.length ? regionValue : "None"}</Typography>
                           <CheckboxSVGMap map={customUsa}
                             onChange={(locations) => {
                               let associatedRegion = locations[0].region;
@@ -436,7 +433,7 @@ function FilterBar(props) {
                                 (associatedRegion) ? associatedRegion : '')
                             }}
                           />;
-                          </ApiHighlight>
+                        </ApiHighlight>
                       </Grid>
                       : 'ooooopppp')
               })}
