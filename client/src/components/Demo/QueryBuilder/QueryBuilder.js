@@ -60,7 +60,6 @@ export default function QueryBuilder(props) {
     setApiContent(apiContentCopy)
 
     let timer = Date.now();
-    console.log('timer', timer);
 
     let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
       method: 'GET',

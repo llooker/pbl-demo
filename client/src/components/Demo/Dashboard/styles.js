@@ -96,5 +96,11 @@ export default makeStyles((theme) => ({
   },
   verticalAlignTop: {
     verticalAlign: 'top'
-  }
+  },
+  w33: {
+    width: "33%"
+  },
+  mr12: {
+    marginRight: 12
+  },
 }));

@@ -283,6 +283,16 @@
                 "label": "Select region",
                 "filterName": "State Region",
                 "lookerMethod": "runInlineQuery"
+              },
+              {
+                "label": "Select Age Range",
+                "filterName": "Age",
+                "lookerMethod": "runInlineQuery"
+              },
+              {
+                "label": "Lifetime Revenue Tier",
+                "filterName": "Lifetime Revenue Tier",
+                "lookerMethod": "runInlineQuery"
               }
             ],
             "inlineQueries": [
@@ -312,15 +322,35 @@
                   "users.state_region"
                 ],
                 "limit": "500"
+              },
+              {
+                "model": "atom_fashion",
+                "view": "order_items",
+                "fields": [
+                  "users.age"
+                ],
+                "limit": "500"
+              },
+              {
+                "model": "atom_fashion",
+                "view": "order_items",
+                "fields": [
+                  "user_order_facts.lifetime_revenue_tier"
+                ],
+                "limit": "500"
               }
             ],
             "desiredFilterName": [
               "products.brand",
-              "users.state_region"
+              "users.state_region",
+              "users.age",
+              "users.lifetime_revenue_tier"
             ],
             "filterComponents": [
               "autocomplete",
-              "mapfilter"
+              "mapfilter",
+              "rangeslider",
+              "togglebutton"
             ]
           }
         ]
