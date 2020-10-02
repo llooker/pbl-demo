@@ -19,7 +19,7 @@ import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent
 import AppContext from '../../../AppContext';
 //new
 import Usa from "@svg-maps/usa";
-import "react-svg-map/lib/index.css";
+// import "react-svg-map/lib/index.css";
 import { CheckboxSVGMap } from "./CheckboxSvgMapRegion";
 
 const { validIdHelper } = require('../../../tools');
@@ -366,8 +366,6 @@ function FilterBar(props) {
   };
 
   const handleSliderChange = (event, newValue) => {
-    console.log('handleSliderChange')
-    console.log('newValue', newValue)
     setSliderValue(newValue);
   };
 
@@ -381,9 +379,6 @@ function FilterBar(props) {
     "100 to 499": SentimentSatisfied,
     "500 or Above": SentimentVerySatisfied,
   }
-
-
-
 
   return (
 
@@ -488,7 +483,6 @@ function FilterBar(props) {
                                 }}
                                 valueLabelDisplay="auto"
                                 aria-labelledby="range-slider"
-                                // getAriaValueText={valuetext}
                                 onChangeCommitted={(event, newValue) => {
                                   console.log('newValue', newValue)
                                   customFilterAction(lookerContent[0].id,
@@ -498,7 +492,6 @@ function FilterBar(props) {
                                 min={Array.isArray(apiContent[index]) ? apiContent[index][0].label : ''}
                                 max={Array.isArray(apiContent[index]) ? apiContent[index][apiContent[index].length - 1].label : ''}
                                 name="Age Range"
-                                // valueLabelDisplay="on"
                                 marks={Array.isArray(apiContent[index]) ? [{ value: apiContent[index][0].label, label: apiContent[index][0].label }, { value: apiContent[index][apiContent[index].length - 1].label, label: apiContent[index][apiContent[index].length - 1].label }] : ''}
                                 disabled={Array.isArray(apiContent[index]) ? false : true}
                               />

@@ -178,6 +178,25 @@ html {
   height: calc(100% + 75px);
 } */
 
-lk-expandable-sidebar{
-  boder-right: '0px transparent solid'
-}
+/* svg map style override */
+.svg-map {
+  
+  width: 200px;
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  stroke: #666;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round; }
+  .svg-map__location {
+    fill: #e5e5e5;
+    cursor: pointer; }
+    .svg-map__location:focus, .svg-map__location:hover {
+      fill: #e5e5e5;
+      outline: 0; }
+    .svg-map__location[aria-checked=true] {
+      fill: #343D4E; }
+
+
+
