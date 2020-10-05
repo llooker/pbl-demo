@@ -14,7 +14,7 @@ import rawSampleCode from '!!raw-loader!./Dashboard.js'; // eslint-disable-line 
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import BottomBar from '../../Material/BottomBar.js'
-import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
+import { ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '../../Highlights/Highlight';
 import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent';
 import AppContext from '../../../AppContext';
 //new
@@ -439,7 +439,7 @@ function FilterBar(props) {
                       : lookerContent[0].filterComponents[index] === 'mapfilter' ?
                         <>
                           <Grid item sm={4} >
-                            <EmbedHighlight classes={classes}
+                            <EmbedMethodHighlight classes={classes}
                               key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
                               <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
                               // component="span"
@@ -462,7 +462,7 @@ function FilterBar(props) {
                                     (regionValue) ? regionValue : '')
                                 }}
                               />
-                            </EmbedHighlight>
+                            </EmbedMethodHighlight>
                           </Grid>
                         </>
                         : lookerContent[0].filterComponents[index] === "rangeslider"
@@ -470,74 +470,80 @@ function FilterBar(props) {
                           ?
 
                           <Grid container item sm={4} >
-                            <>
-                              <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
-                              // component="span"
-                              // color="secondary"
-                              >Age Range:</Typography>
-                              <Slider
-                                value={sliderValue.length ? sliderValue : Array.isArray(apiContent[index]) ? [apiContent[index][0].label, apiContent[index][apiContent[index].length - 1].label] : []}
-                                onChange={handleSliderChange}
-                                onChange={(event, newValue) => {
-                                  setSliderValue(newValue);
-                                }}
-                                valueLabelDisplay="auto"
-                                aria-labelledby="range-slider"
-                                onChangeCommitted={(event, newValue) => {
-                                  console.log('newValue', newValue)
-                                  customFilterAction(lookerContent[0].id,
-                                    lookerContent[0].filters[index].filterName,
-                                    (newValue) ? `[${newValue}]` : '[]')
-                                }}
-                                min={Array.isArray(apiContent[index]) ? apiContent[index][0].label : ''}
-                                max={Array.isArray(apiContent[index]) ? apiContent[index][apiContent[index].length - 1].label : ''}
-                                name="Age Range"
-                                marks={Array.isArray(apiContent[index]) ? [{ value: apiContent[index][0].label, label: apiContent[index][0].label }, { value: apiContent[index][apiContent[index].length - 1].label, label: apiContent[index][apiContent[index].length - 1].label }] : ''}
-                                disabled={Array.isArray(apiContent[index]) ? false : true}
-                              />
-                            </>
-                            <>
-                              <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
-                              // component="span"
-                              // color="secondary"
-                              >Lifetime Revenue Tier:</Typography>
-                              <ToggleButtonGroup
-                                value={lifetimeRevenueTierValue}
-                                exclusive //for now
-                                onChange={(event, newValue) => {
-                                  setLifetimeRevenueTierValue(newValue)
-                                  customFilterAction(lookerContent[0].id,
-                                    lookerContent[0].filters[index + 1].filterName,
-                                    (newValue) ? newValue : '')
-                                }}
-                                aria-label="ageTier"
-                                className={classes.w100}>
-                                >
+                            <Grid item sm={12}>
+                              <EmbedMethodHighlight classes={classes}
+                                key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
+                                <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
+                                // component="span"
+                                // color="secondary"
+                                >Age Range:</Typography>
+                                <Slider
+                                  value={sliderValue.length ? sliderValue : Array.isArray(apiContent[index]) ? [apiContent[index][0].label, apiContent[index][apiContent[index].length - 1].label] : []}
+                                  onChange={handleSliderChange}
+                                  onChange={(event, newValue) => {
+                                    setSliderValue(newValue);
+                                  }}
+                                  valueLabelDisplay="auto"
+                                  aria-labelledby="range-slider"
+                                  onChangeCommitted={(event, newValue) => {
+                                    console.log('newValue', newValue)
+                                    customFilterAction(lookerContent[0].id,
+                                      lookerContent[0].filters[index].filterName,
+                                      (newValue) ? `[${newValue}]` : '[]')
+                                  }}
+                                  min={Array.isArray(apiContent[index]) ? apiContent[index][0].label : ''}
+                                  max={Array.isArray(apiContent[index]) ? apiContent[index][apiContent[index].length - 1].label : ''}
+                                  name="Age Range"
+                                  marks={Array.isArray(apiContent[index]) ? [{ value: apiContent[index][0].label, label: apiContent[index][0].label }, { value: apiContent[index][apiContent[index].length - 1].label, label: apiContent[index][apiContent[index].length - 1].label }] : ''}
+                                  disabled={Array.isArray(apiContent[index]) ? false : true}
+                                />
+                              </EmbedMethodHighlight>
+                            </Grid>
+                            <Grid item sm={12}>
+                              <EmbedMethodHighlight classes={classes}
+                                key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
+                                <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
+                                // component="span"
+                                // color="secondary"
+                                >Lifetime Revenue Tier:</Typography>
+                                <ToggleButtonGroup
+                                  value={lifetimeRevenueTierValue}
+                                  exclusive //for now
+                                  onChange={(event, newValue) => {
+                                    setLifetimeRevenueTierValue(newValue)
+                                    customFilterAction(lookerContent[0].id,
+                                      lookerContent[0].filters[index + 1].filterName,
+                                      (newValue) ? newValue : '')
+                                  }}
+                                  aria-label="ageTier"
+                                  className={classes.w100}>
+                                  >
                                 {apiContent[index + 1].map((ageTier, index) => {
-                                  if (ageTier.label !== "Undefined") {
-                                    const Icon = lifetimeRevenueTierIconMap[ageTier.label];
-                                    return (
-                                      <ToggleButton
-                                        key={validIdHelper(`${type}-FilterBar-ToggleButton-${lookerContent[0].id}-${index}`)}
-                                        value={ageTier.label}
-                                        aria-label={ageTier.label}
-                                        className={classes.w33}>
-                                        <Icon className={classes.mr12} />
-                                        {_.capitalize(lifetimeRevenueTierMap[ageTier.label]) || ageTier.label}
-                                      </ToggleButton>
-                                    )
-                                  }
-                                })}
-                              </ToggleButtonGroup>
-                            </>
+                                    if (ageTier.label !== "Undefined") {
+                                      const Icon = lifetimeRevenueTierIconMap[ageTier.label];
+                                      return (
+                                        <ToggleButton
+                                          key={validIdHelper(`${type}-FilterBar-ToggleButton-${lookerContent[0].id}-${index}`)}
+                                          value={ageTier.label}
+                                          aria-label={ageTier.label}
+                                          className={classes.w33}>
+                                          <Icon className={classes.mr12} />
+                                          {_.capitalize(lifetimeRevenueTierMap[ageTier.label]) || ageTier.label}
+                                        </ToggleButton>
+                                      )
+                                    }
+                                  })}
+                                </ToggleButtonGroup>
+
+                              </EmbedMethodHighlight>
+                            </Grid>
                           </Grid>
                           : '')
                 })}
                 {lookerContent[0].dynamicFieldLookUp ?
                   <>
-                    <Grid item sm={1} />
                     <Grid item sm={4}>
-                      <EmbedHighlight classes={classes} >
+                      <EmbedMethodHighlight classes={classes} >
                         <ToggleButtonGroup
                           value={toggleValue}
                           exclusive
@@ -554,7 +560,7 @@ function FilterBar(props) {
                             )
                           })}
                         </ToggleButtonGroup>
-                      </EmbedHighlight>
+                      </EmbedMethodHighlight>
                     </Grid>
                   </>
                   : ''
