@@ -29,13 +29,14 @@ export default function CustomVis(props) {
   const [toDate, setToDate] = useState('');
   const [category, setCategory] = useState('All')
   const [desiredField, setDesiredField] = useState('')
-  const [apiContent, setApiContent] = useState([]);
+  const [apiContent, setApiContent] = useState(undefined);
   const [open, setOpen] = React.useState(false);
   const [modalContent, setModalContent] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
-  const [serverSideCode, setServerSideCode] = useState('');
-  const { togglePayWallModal, show, codeShow } = useContext(AppContext)
+  // const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const { togglePayWallModal, show, codeShow, sdk } = useContext(AppContext)
+
 
   //declare constants
   const classes = useStyles();
@@ -53,17 +54,10 @@ export default function CustomVis(props) {
     originalInlineQueryCopy.limit = "25";
 
     setOpen(true);
-    let lookerResponse = await fetch('/runinlinequery/' + encodeURIComponent(JSON.stringify(originalInlineQueryCopy)) + '/json', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    let lookerResponseData = await lookerResponse.json();
+    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: originalInlineQueryCopy }));
     let modalObj = {
       "title": `Detail View for ${day}`,
-      "body": lookerResponseData.queryResults
+      "body": lookerResponseData
     }
     setModalContent(modalObj);
   };
@@ -106,9 +100,9 @@ export default function CustomVis(props) {
   //format response from initial api call based on LookerContent array
   //to match format required by Nivo Calendar component
   let filterData = [];
-  if (apiContent.queryResults && apiContent.queryResults) {
+  if (apiContent) {
     //filtering for fromDate, toDate and category
-    filterData = _.filter(apiContent.queryResults, (row) => {
+    filterData = _.filter(apiContent, (row) => {
       return (row[apiContent.inlineQuery.fields[0]] >= fromDate
         && row[apiContent.inlineQuery.fields[0]] < toDate
         && (category === 'All' ? true : row[apiContent.inlineQuery.fields[1]] === category)
@@ -161,40 +155,29 @@ export default function CustomVis(props) {
   })
 
   const performLookerApiCalls = function (lookerContent) {
-    setApiContent([]); //set to empty array to show progress bar and skeleton
+    setApiContent(undefined); //set to empty array to show progress bar and skeleton
     lookerContent.map(async lookerContent => {
-      let inlineQuery = lookerContent.inlineQuery;
+      let { inlineQuery } = lookerContent;
       inlineQuery.filters = {
-        // ...inlineQuery.filters,
-        // [Object.keys(inlineQuery.filters)[0]]: lookerUser.user_attributes.time_horizon,
         [lookerContent.desiredFilterName]: lookerUser.user_attributes.brand
       };
-      let stringifiedQuery = encodeURIComponent(JSON.stringify(inlineQuery));
-      // console.log('stringifiedQuery', stringifiedQuery)
-      let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-      let lookerResponseData = await lookerResponse.json();
+      let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: inlineQuery }));
+
       // console.log('lookerResponseData', lookerResponseData)
-      lookerResponseData.queryResults = lookerResponseData.queryResults.filter(item => {
+      lookerResponseData = lookerResponseData.filter(item => {
         return item[inlineQuery.fields[0]]
       })
       let uniqueCategories = ['All'];
-      for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
-        if (uniqueCategories.indexOf(lookerResponseData.queryResults[i][inlineQuery.fields[1]]) === -1) {
-          uniqueCategories.push(lookerResponseData.queryResults[i][inlineQuery.fields[1]])
+      for (let i = 0; i < lookerResponseData.length; i++) {
+        if (uniqueCategories.indexOf(lookerResponseData[i][inlineQuery.fields[1]]) === -1) {
+          uniqueCategories.push(lookerResponseData[i][inlineQuery.fields[1]])
         }
       }
       lookerResponseData.inlineQuery = inlineQuery;
       lookerResponseData.uniqueCategories = uniqueCategories;
-      setFromDate(lookerResponseData.queryResults[lookerResponseData.queryResults.length - 1][lookerResponseData.inlineQuery.fields[0]]);
-      setToDate(incrementDate(lookerResponseData.queryResults[0][lookerResponseData.inlineQuery.fields[0]], 1));
+      setFromDate(lookerResponseData[lookerResponseData.length - 1][lookerResponseData.inlineQuery.fields[0]]);
+      setToDate(incrementDate(lookerResponseData[0][lookerResponseData.inlineQuery.fields[0]], 1));
       setApiContent(lookerResponseData)
-      if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
     })
   }
 
@@ -214,7 +197,7 @@ export default function CustomVis(props) {
           key={validIdHelper(type)} >
           <div className={`${classes.root} `}>
 
-            {!apiContent.queryResults ?
+            {!apiContent ?
               <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
               :
               <FilterBar {...props}
@@ -232,7 +215,7 @@ export default function CustomVis(props) {
             }
 
 
-            {!apiContent.queryResults ?
+            {!apiContent ?
               <Grid item sm={12} style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
                 <Card className={`${classes.card} ${classes.flexCentered}`}
                   elevation={0}
@@ -242,7 +225,7 @@ export default function CustomVis(props) {
                 </Card>
               </Grid>
 
-              : apiContent.queryResults && apiContent.queryResults.length ?
+              : apiContent && apiContent.length ?
                 <Box>
                   <Grid container
                     spacing={3}
@@ -352,7 +335,7 @@ function FilterBar(props) {
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Grid container spacing={3}>
-          {apiContent.queryResults ?
+          {apiContent ?
             <>
               <Grid item sm={3}>
 
@@ -421,8 +404,8 @@ function FilterBar(props) {
                       KeyboardButtonProps={{
                         'aria-label': 'change date',
                       }}
-                      minDate={fromDate}
-                      maxDate={toDate}
+                      minDate={apiContent[apiContent.length - 1][apiContent.inlineQuery.fields[0]]}
+                      maxDate={apiContent[0][apiContent.inlineQuery.fields[0]]}
                     />
                   </MuiPickersUtilsProvider>
                 </ApiHighlight>
