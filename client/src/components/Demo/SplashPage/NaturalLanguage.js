@@ -7,10 +7,9 @@ import { makeStyles } from '@material-ui/core/styles';
 const { validIdHelper, decodeHtml } = require('../../../tools');
 
 
-export function NaturalLanguage({ lookerContent, item, index, classes }) {
+export function NaturalLanguage({ lookerContent, inlineQuery, index, classes }) {
   const [apiContent, setApiContent] = useState(undefined);
   const { userProfile, lookerUser, show, sdk } = useContext(AppContext);
-
 
   useEffect(() => {
     let isSubscribed = true
@@ -20,11 +19,10 @@ export function NaturalLanguage({ lookerContent, item, index, classes }) {
       }
     })
     return () => isSubscribed = false
-  }, [item, lookerUser]);
+  }, [inlineQuery, lookerUser]);
 
   const runInlineQuery = async () => {
     setApiContent(undefined)
-    let inlineQuery = item;
     let clientLookerResponse = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: inlineQuery }));
     return clientLookerResponse[0];
   }

@@ -26,10 +26,10 @@ export function Welcome({ lookerContent, classes }) {
       </Typography>
       <br />
       <>
-        {lookerContent.inlineQueries.map((item, index) => (
+        {lookerContent.inlineQueries.map((inlineQuery, index) => (
           <NaturalLanguage
             key={`${validIdHelper('naturalLanguage-splashPage-' + index)}`}
-            {...{ lookerContent, item, index, classes }}
+            {...{ lookerContent, inlineQuery, index, classes }}
           />
         )
         )}

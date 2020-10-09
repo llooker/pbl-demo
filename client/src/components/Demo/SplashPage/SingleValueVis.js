@@ -10,9 +10,9 @@ const { validIdHelper, decodeHtml } = require('../../../tools');
 export function SingleValueVis({ lookerContent, classes }) {
   // console.log('SingleValueVis')
   // console.log('lookerContent', lookerContent)
-  // const [svg, setSvg] = useState(undefined)
-  const [apiContent, setApiContent] = useState([]);
-  const { userProfile, lookerUser, show } = useContext(AppContext)
+
+  const [apiContent, setApiContent] = useState(undefined);
+  const { userProfile, lookerUser, show, sdk } = useContext(AppContext);
 
   let dataObjForSparkline = {}
 
@@ -27,21 +27,15 @@ export function SingleValueVis({ lookerContent, classes }) {
   }, [lookerContent, lookerUser]);
 
   const runInlineQuery = async () => {
-    setApiContent([])
-    let stringifiedQuery = encodeURIComponent(JSON.stringify(lookerContent.inlineQuery))
-    let lookerResponse = await fetch(`/runinlinequery/${stringifiedQuery}/${lookerContent.resultFormat}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    let lookerResponseData = await lookerResponse.json();
+
+    setApiContent(undefined)
+    let { inlineQuery } = lookerContent;
+    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: inlineQuery }));
     dataObjForSparkline.id = validIdHelper(`singleVisValue-${lookerContent.id}`);
     dataObjForSparkline.data = [];
 
     let dataArrForDataObj = [];
-    lookerResponseData.queryResults.map(item => {
+    lookerResponseData.map(item => {
       if (item[lookerContent.inlineQuery.fields[0]]
         // && item['order_items.count']['order_items.previous_period']["This Period" ? "This Period" : "Previous Period"]
       ) {
@@ -58,8 +52,8 @@ export function SingleValueVis({ lookerContent, classes }) {
     return [dataObjForSparkline]
   }
 
-  const upOrDownArrow = apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
-  const labelText = !apiContent.length ? '' : lookerContent.chipFormat === "revenue" ?
+  const upOrDownArrow = apiContent && apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
+  const labelText = !apiContent ? '' : lookerContent.chipFormat === "revenue" ?
     `$${(apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '').replace(/\d(?=(\d{3})+\.)/g, '$&,')}` :
     lookerContent.chipFormat === "integer" ? parseInt(apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '') : lookerContent.chipFormat === 'percent' ?
       `${((apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '') * 100)
@@ -76,7 +70,7 @@ export function SingleValueVis({ lookerContent, classes }) {
           height: lookerContent.height,
         }}
       >
-        {apiContent.length ?
+        {apiContent ?
           <React.Fragment>
             <ApiHighlight height={130} classes={classes} >
               <Grid container className={`${classes.textCenter} `}>
