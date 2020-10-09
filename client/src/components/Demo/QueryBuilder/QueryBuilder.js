@@ -26,11 +26,11 @@ export default function QueryBuilder(props) {
   const [apiContent, setApiContent] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
-  const { togglePayWallModal, show, codeShow } = useContext(AppContext);
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [width, setWidth] = useState((window.innerWidth - sideBarWidth));
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser } = props;
+  const { togglePayWallModal, show, codeShow, sdk } = useContext(AppContext)
 
   const handleChange = (event, newValue) => {
     handleTabChange(0);
@@ -53,36 +53,44 @@ export default function QueryBuilder(props) {
     });
   })
 
+  useEffect(() => {
+    console.log('useEffect');
+    console.log({ apiContent });
+
+  }, [apiContent])
+
   const performLookerApiCalls = async (newQuery, resultFormat) => {
     // console.log('performLookerApiCalls')
+    // console.log('newQuery', newQuery)
+    // console.log('resultFormat', resultFormat)
+    // console.log('lookerContent', lookerContent)
     let apiContentCopy = { ...apiContent }
     apiContentCopy.status = 'running';
     setApiContent(apiContentCopy)
 
     let timer = Date.now();
 
-    let lookerCreateTaskResposnse = await fetch('/createquerytask/' + JSON.stringify(newQuery), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+    let lookerCreateQueryResponseData = await sdk.ok(sdk.create_query(newQuery))
+    let lookerCreateTaskResponseData = await sdk.ok(sdk.create_query_task({
+      body: {
+        query_id: lookerCreateQueryResponseData.id,
+        result_format: resultFormat || 'json_detail'//lookerContent[0].resultFormat || 'json'
       }
-    })
-    let lookerCreateTaskResponseData = await lookerCreateTaskResposnse.json();
+    }))
 
     let taskInterval = setInterval(async () => {
-      let lookerCheckTaskResposnse = await fetch('/checkquerytask/' + lookerCreateTaskResponseData.queryTaskId, {
+      let lookerCheckTaskResponseData = await sdk.ok(sdk.query_task_results(lookerCreateTaskResponseData.id, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         }
-      })
-      let lookerCheckTaskResponseData = await lookerCheckTaskResposnse.json();
-      if (lookerCheckTaskResponseData.queryResults.status === 'complete') {
+      }));
+
+      if (lookerCheckTaskResponseData.status === 'complete') {
         clearInterval(taskInterval);
-        setApiContent(lookerCheckTaskResponseData.queryResults)
-        setServerSideCode(lookerCreateTaskResponseData.code)
+        setApiContent(lookerCheckTaskResponseData)
+        // setServerSideCode(lookerCreateTaskResponseData.code)
       }
 
       //time out after 30 seconds
@@ -90,11 +98,7 @@ export default function QueryBuilder(props) {
         clearInterval()
         setApiContent([])
       }
-
-    }, 5000)
-
-
-
+    }, 1000)
   }
 
   return (

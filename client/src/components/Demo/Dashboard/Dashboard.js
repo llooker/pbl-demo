@@ -28,14 +28,15 @@ export default function Dashboard(props) {
   const topBarBottomBarHeight = 112;
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(0);
-  const [apiContent, setApiContent] = useState([]);
+  const [apiContent, setApiContent] = useState(undefined);
   const [dashboardObj, setDashboardObj] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
-  const [serverSideCode, setServerSideCode] = useState('');
+  // const [serverSideCode, setServerSideCode] = useState('');
   const [toggleValue, setToggleValue] = useState('');
   const [dashboardOptions, setDashboardOptions] = useState({});
   const [regionValue, setRegionValue] = useState('Pacific,South,Mountain,Midwest,Northeast');
-  const { codeShow, toggleCodeShow } = useContext(AppContext)
+  // const { codeShow, toggleCodeShow } = useContext(AppContext)
+  const { togglePayWallModal, show, codeShow, sdk } = useContext(AppContext)
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
 
 
@@ -84,7 +85,7 @@ export default function Dashboard(props) {
   const performLookerApiCalls = function (lookerContent) {
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     setIFrame(0)
-    setApiContent([])
+    setApiContent(undefined)
     lookerContent.map(async lookerContent => {
       let dashboardId = lookerContent.id;
       // let dashboardSlug = lookerContent.slug;
@@ -128,22 +129,25 @@ export default function Dashboard(props) {
             ...jsonQuery.filters,
             [item.desiredFilterName]: lookerUser.user_attributes.brand
           };
-          let stringifiedQuery = encodeURIComponent(JSON.stringify(jsonQuery))
-          let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'
-            }
-          })
-          let lookerResponseData = await lookerResponse.json();
-          let queryResultsForDropdown = [];
-          let desiredProperty = Object.keys(lookerResponseData.queryResults[0])[0];
+          // let stringifiedQuery = encodeURIComponent(JSON.stringify(jsonQuery))
+          // let lookerResponse = await fetch('/runinlinequery/' + stringifiedQuery + '/json', {
+          //   method: 'GET',
+          //   headers: {
+          //     Accept: 'application/json',
+          //     'Content-Type': 'application/json'
+          //   }
+          // })
+          // let lookerResponseData = await lookerResponse.json();
 
-          for (let i = 0; i < lookerResponseData.queryResults.length; i++) {
+          let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: jsonQuery }));
+
+          let queryResultsForDropdown = [];
+          let desiredProperty = Object.keys(lookerResponseData[0])[0];
+
+          for (let i = 0; i < lookerResponseData.length; i++) {
             queryResultsForDropdown.push({
-              'label': lookerResponseData.queryResults[i][desiredProperty],
-              'trend': (lookerResponseData.queryResults[i]['trend']) ? lookerResponseData.queryResults[i]['trend'] : undefined
+              'label': lookerResponseData[i][desiredProperty],
+              'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined
             })
           }
 
@@ -157,7 +161,7 @@ export default function Dashboard(props) {
           orderedArrayForApiContent[index] = queryResultsForDropdown
           setApiContent([...orderedArrayForApiContent])
 
-          if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
+          // if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
         })
       }
 
@@ -198,6 +202,7 @@ export default function Dashboard(props) {
         <Grid container>
           <div className={`${classes.root}`}>
             {lookerContent[0].hasOwnProperty("filters") &&
+              apiContent &&
               apiContent.length === lookerContent[0].filters.length ?
               <Grid item
                 sm={12}

@@ -497,7 +497,7 @@
               },
               "limit": 500
             },
-            "resultFormat": "json",
+            "resultFormat": "json_detail",
             "fieldType": {
               "order_items.created_month": "dimension",
               "order_items.created_date": "dimension",
