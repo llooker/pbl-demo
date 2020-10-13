@@ -399,7 +399,7 @@ class Home extends Component {
     //how to make this dynamic????
     const demoComponentMap = {
       "splashpage19": SplashPage,
-      "simpledashboard5": Dashboard,
+      "customfilter5": Dashboard,
       "simpledashboard9": Dashboard,
       "customfilter1": Dashboard,
       "customvis": CustomVis,
@@ -408,21 +408,13 @@ class Home extends Component {
     };
 
     const demoComponentKeyMap = ["splashpage19",
-      "simpledashboard5",
+      "customfilter5",
       "simpledashboard9",
       "customfilter1",
       "customvis",
       "querybuilderexplorelite",
       "reportbuilder14"
     ]
-    // const demoComponentValueMap = [SplashPage,
-    //   Dashboard,
-    //   Dashboard,
-    //   Dashboard,
-    //   CustomVis,
-    //   QueryBuilder,
-    //   ReportBuilder
-    // ]
 
     const themeMap = {
       "atom": atomTheme,
@@ -617,7 +609,7 @@ function MenuList(props) {
   const { classes, activeUsecase, orderedDemoComponentsForMenuObj, selectedMenuItem, handleMenuItemSelect } = props
   const demoComponentIconMap = {
     "splashpage19": HomeIcon,
-    "simpledashboard5": VisibilityOutlined,
+    "customfilter5": VisibilityOutlined,
     "simpledashboard9": ShowChart,
     "customfilter1": TableChartOutlined,
     "customvis": DateRangeOutlined,

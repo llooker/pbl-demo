@@ -13,18 +13,22 @@ import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import AppContext from '../../../AppContext';
+import { SwapVerticalCircleOutlined } from '@material-ui/icons';
 const { validIdHelper } = require('../../../tools');
 
 //start of ReportBuilder Component
 export default function ReportBuilder(props) {
   const topBarBottomBarHeight = 112;
   const [iFrameExists, setIFrame] = useState(0);
+  // const [exploreIFrameExists, setExploreIFrame] = useState(0);
   const [apiContent, setApiContent] = useState([]);
   const [exploreObj, setExploreObj] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
-  const { togglePayWallModal, codeShow } = useContext(AppContext)
+  // const { togglePayWallModal, codeShow } = useContext(AppContext)
+  const { togglePayWallModal, show, codeShow, sdk } = useContext(AppContext)
+
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [qid, setQid] = useState(null);
@@ -34,14 +38,24 @@ export default function ReportBuilder(props) {
   const tabContent = [...lookerContent]
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    if (newValue == 1 && lookerUser.user_attributes.permission_level != 'premium') {
+      // handleChange(0)
+      togglePayWallModal({
+        'show': true,
+        'permissionNeeded': 'explore'
+      });
+    } else {
+      setValue(newValue)
+    }
   };
 
   useEffect(() => {
     if (activeTabValue > value) {
       setValue(activeTabValue)
+    } else {
+      //setTimeout(() => 
+      performLookerApiCalls(lookerContent, 1)//, 100)
     }
-    setTimeout(() => performLookerApiCalls(lookerContent, 1), 100)
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser]);
 
@@ -49,17 +63,18 @@ export default function ReportBuilder(props) {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   })
 
+
+  // useEffect(() => {
+  //   console.log('exploreObj useEffect')
+  //   console.log('Object.keys(exploreObj).length', Object.keys(exploreObj).length)
+  // }, [exploreObj])
+
+
   useEffect(() => {
-    if (value == 1 && lookerUser.user_attributes.permission_level != 'premium') {
-      togglePayWallModal({
-        'show': true,
-        'permissionNeeded': 'explore'
-      });
-    } else {
-      handleTabChange(value); //this could go
-      performLookerApiCalls(lookerContent);
-    }
+    // console.log('value useEffect')
+    performLookerApiCalls(lookerContent, 0);
   }, [value])
+
 
   const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
 
@@ -101,21 +116,24 @@ export default function ReportBuilder(props) {
       $(`#embedContainer-reportbuilder-14`).empty();
       $(`#embedContainer-reportbuilder-14`).html(updatedIFrameArray);
 
-      let lookerResponse = await fetch('/deletelook/' + contentId, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      });
-      if (lookerResponse.status === 200) {
-        performLookerApiCalls(lookerContent, 1)
-      }
+      // let lookerResponse = await fetch('/deletelook/' + contentId, {
+      //   method: 'GET',
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/json'
+      //   }
+      // });
+      let lookerResponse = await sdk.ok(sdk.delete_look(contentId));
+      // console.log('lookerResponse', lookerResponse)
+      // if (lookerResponse.status === 200) {
+      performLookerApiCalls(lookerContent, 1)
+      // }
     }
   }
 
   const performLookerApiCalls = function (lookerContent, animateLoad) {
     // console.log('performLookerApiCalls')
+    // console.log('lookerContent', lookerContent)
     if (animateLoad) {
       handleChange('refresh', 0)
       setIFrame(0)
@@ -123,17 +141,38 @@ export default function ReportBuilder(props) {
     }
 
     lookerContent.map(async lookerContent => {
-      if (lookerContent.type === 'folder' && value === 0) {
-        let lookerResponse = await fetch('/fetchfolder/' + lookerContent.id, {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          }
-        })
+      if (value === 0 &&
+        lookerContent.type === 'folder') {
 
-        let lookerResponseData = await lookerResponse.json();
-        if (serverSideCode.length === 0) setServerSideCode(lookerResponseData.code);
+        const sharedFolder = await sdk.ok(sdk.folder(lookerContent.id));
+        const embedUser = await sdk.ok(sdk.me())
+
+        for (let h = 0; h < sharedFolder.looks.length; h++) {
+          let look = await sdk.ok(sdk.look(sharedFolder.looks[h].id))
+          let clientId = look.query.client_id;
+          sharedFolder.looks[h].client_id = clientId;
+        }
+
+        let embeddedUserFolder = {}
+        if (lookerUser.user_attributes.permission_level === 'premium') {
+          let embedUserLooks = await sdk.ok(sdk.search_looks({ user_id: embedUser.id }))
+          if (embedUserLooks && embedUserLooks.length) {
+            let embedUserFolderId = embedUserLooks[0].folder_id || null;
+            embeddedUserFolder = await sdk.ok(sdk.folder(embedUserFolderId));
+            for (let i = 0; i < embeddedUserFolder.looks.length; i++) {
+              let look = await sdk.ok(sdk.look(embeddedUserFolder.looks[i].id));
+              let clientId = look.query.client_id;
+              embeddedUserFolder.looks[i].client_id = clientId;
+            }
+          }
+        }
+
+        let lookerResponseData = {
+          sharedFolder,
+          embeddedUserFolder
+        }
+
+        // console.log('lookerResponseData', lookerResponseData)
 
         let looksToUse = [...lookerResponseData.sharedFolder.looks];
         if (lookerUser.user_attributes.permission_level === 'premium' &&
@@ -148,6 +187,7 @@ export default function ReportBuilder(props) {
           looks: looksToUse,
           dashboards: dashboardsToUse
         }
+        // console.log('objToUse', objToUse)
         let iFrameArray = $(`.embedContainer.${validIdHelper(demoComponentType)} > iframe`);
         if (objToUse.looks.length) {
           objToUse.looks.map((item, index) => {
@@ -225,28 +265,59 @@ export default function ReportBuilder(props) {
       } else if (lookerContent.type === 'explore' &&
         lookerUser.user_attributes.permission_level === 'premium' &&
         value === 1) {
+        // console.log('inside else ifff')
         let exploreId = lookerContent.id;
+        // console.log('exploreId', exploreId)
         $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).html('');
-        LookerEmbedSDK.createExploreWithId(exploreId)
-          .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
-          .withClassName('exploreIframe')
-          .withParams({
-            qid: qid || ''
-          })
-          .on('explore:state:changed', (event) => {
-          })
-          .build()
-          .connect()
-          .then((explore) => {
-            setTimeout(() => setIFrame(1), 1000)
-            setExploreObj(exploreObj)
-            LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
-            setQid(null)
-          })
-          .catch((error) => {
-            console.error('Connection error', error)
-          })
+        //separate logic for embedding explore with qid vs. no qid
+        if (qid) {
+          // console.log('qid ifff')
+          LookerEmbedSDK.createExploreWithId(exploreId)
+            .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+            .withClassName('exploreIframe')
+            .withParams({
+              qid: qid
+            })
+            .on('explore:state:changed', (event) => {
+            })
+            .build()
+            .connect()
+            .then((explore) => {
+              console.log('explore', explore)
+              // setTimeout(() => {
+              setIFrame(1)
+              setExploreObj(explore)
+              // }, 1000)
+              LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+              setQid(null)
+            })
+            .catch((error) => {
+              console.error('Connection error', error)
+            })
+        } else {
+          // console.log('qid else')
+          LookerEmbedSDK.createExploreWithId(exploreId)
+            .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
+            .withClassName('exploreIframe')
+            .on('explore:state:changed', (event) => {
+            })
+            .build()
+            .connect()
+            .then((explore) => {
+              // console.log('explore', explore)
+              // setTimeout(() => {
+              setIFrame(1)
+              setExploreObj(explore)
+              // }, 1000)
+              LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+              // setQid(null)
+            })
+            .catch((error) => {
+              console.error('Connection error', error)
+            })
+        }
       }
+      // else console.log('ellse')
     })
   }
 
@@ -358,6 +429,22 @@ export default function ReportBuilder(props) {
                             </React.Fragment>
                             :
                             <Grid item sm={12} >
+                              {/* couldn't get this to work */}
+                              {/* {Object.keys(exploreObj).length ?
+                                <EmbedHighlight classes={classes}>
+                                  <div
+                                    className="embedContainer"
+                                    id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                    key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
+                                  >
+                                  </div>
+                                </EmbedHighlight> :
+                                <Card className={`${classes.card} ${classes.flexCentered}`}
+                                  elevation={0}
+                                  mt={2}
+                                  style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
+                                  <CircularProgress className={classes.circularProgress} />
+                                </Card>} */}
                               <EmbedHighlight classes={classes}>
                                 <div
                                   className="embedContainer"

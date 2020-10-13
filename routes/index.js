@@ -20,19 +20,19 @@ router.post('/applyactivecustomziation', customizeCtrl.applyActiveCustomizationT
 
 //looker
 router.get('/auth', lookerCtrl.auth)
-router.get('/validatelookercontent/:content_id/:content_type', lookerCtrl.validateLookerContent)
-router.get('/fetchfolder/:folder_id', lookerCtrl.fetchFolder)
-router.post('/updatelookeruser', lookerCtrl.updateLookerUser)
-router.get('/runquery/:query_id/:result_format', lookerCtrl.runQuery)
-router.get('/runinlinequery/:inline_query/:result_format', lookerCtrl.runInlineQuery)
-// router.get('/createquery/:query_body/:result_format', lookerCtrl.createQuery)
-router.get('/createquerytask/:query_body', lookerCtrl.createQueryTask)
-router.get('/checkquerytask/:task_id', lookerCtrl.checkQueryTask)
-router.get('/deletelook/:look_id', lookerCtrl.deleteLook)
+router.post('/updatelookeruser', lookerCtrl.updateLookerUser) //necessary for persisting user change
 
-router.get('/getlook/:look_id', lookerCtrl.getLook);
-router.get('/getthumbnail/:type/:id', lookerCtrl.getThumbnail);
-router.get('/validateaccesstoken', lookerCtrl.validateAccessToken);
+// router.get('/validatelookercontent/:content_id/:content_type', lookerCtrl.validateLookerContent)
+// router.get('/fetchfolder/:folder_id', lookerCtrl.fetchFolder)
+// router.get('/runquery/:query_id/:result_format', lookerCtrl.runQuery)
+// router.get('/runinlinequery/:inline_query/:result_format', lookerCtrl.runInlineQuery)
+// // router.get('/createquery/:query_body/:result_format', lookerCtrl.createQuery)
+// router.get('/createquerytask/:query_body', lookerCtrl.createQueryTask)
+// router.get('/checkquerytask/:task_id', lookerCtrl.checkQueryTask)
+// router.get('/deletelook/:look_id', lookerCtrl.deleteLook)
+// router.get('/getlook/:look_id', lookerCtrl.getLook);
+// router.get('/getthumbnail/:type/:id', lookerCtrl.getThumbnail);
+// router.get('/validateaccesstoken', lookerCtrl.validateAccessToken);
 
 
 

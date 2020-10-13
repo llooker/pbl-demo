@@ -43,8 +43,8 @@ module.exports.fetchFolder = async (req, res, next) => {
     const embedUser = await sdk.ok(sdk.user(userCred.id));
     const sharedFolder = await sdk.ok(sdk.folder(params.folder_id));
     let embeddedUserFolder = {}
-    if (req.session.lookerUser.user_attributes.permission_level === 'premium') embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id));
-
+    if (req.session.lookerUser.user_attributes.permission_level === 'premium')
+      embeddedUserFolder = await sdk.ok(sdk.folder(embedUser.personal_folder_id));
 
 
     for (let h = 0; h < sharedFolder.looks.length; h++) {

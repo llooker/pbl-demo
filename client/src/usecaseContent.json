@@ -261,7 +261,7 @@
         ]
       },
       {
-        "type": "simple dashboard",
+        "type": "custom filter",
         "label": "Sales Overview",
         "menuCategory": "sales",
         "description": "Overview of all your sales!",
@@ -406,6 +406,9 @@
                 "Order Shipment Status",
                 "Open Orders to be Shipped"
               ]
+            },
+            "dynamicTheme": {
+              "title": "gfy"
             },
             "theme": "atom_fashion"
           }

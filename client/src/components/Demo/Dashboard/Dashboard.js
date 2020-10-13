@@ -5,8 +5,12 @@ import {
   AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField, Toolbar, FormControlLabel, Switch, Chip,
   ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Slider
 } from '@material-ui/core'
-import { Autocomplete, ToggleButton, ToggleButtonGroup, Skeleton } from '@material-ui/lab'
-import { ExpandMore, FilterList, SentimentDissatisfied, SentimentSatisfied, SentimentVerySatisfied } from '@material-ui/icons';
+import { Autocomplete, ToggleButton, ToggleButtonGroup, Skeleton, SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab'
+import {
+  ExpandMore, FilterList, SentimentDissatisfied, SentimentSatisfied, SentimentVerySatisfied,
+  FileCopy, Save, Print, Share, Favorite, ColorLens
+} from '@material-ui/icons';
+
 
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
@@ -21,6 +25,7 @@ import AppContext from '../../../AppContext';
 import Usa from "@svg-maps/usa";
 // import "react-svg-map/lib/index.css";
 import { CheckboxSVGMap } from "./CheckboxSvgMapRegion";
+// import SpeedDials from "./SpeedDial";
 
 const { validIdHelper } = require('../../../tools');
 
@@ -82,19 +87,22 @@ export default function Dashboard(props) {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   })
 
-  const performLookerApiCalls = function (lookerContent) {
+  const performLookerApiCalls = function (lookerContent, dynamicTheme) {
+    console.log('performLookerApiCalls')
+    console.log('dynamicTheme', dynamicTheme)
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     setIFrame(0)
     setApiContent(undefined)
     lookerContent.map(async lookerContent => {
       let dashboardId = lookerContent.id;
-      // let dashboardSlug = lookerContent.slug;
+      let themeToUse = dynamicTheme || lookerContent.theme || 'atom_fashion';
+      console.log("themeToUse", themeToUse)
       LookerEmbedSDK.createDashboardWithId(dashboardId) //dashboardSlug
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
         .withClassName('iframe')
         .withNext()
         // .withNext(lookerContent.isNext || false) //how can I make this dynamic based on prop??
-        .withTheme(lookerContent.theme || 'atom_fashion')
+        .withTheme(themeToUse)
         .withParams({ 'schedule_modal': 'true' })
         .on('page:property:change', (event) => {
           // console.log('page property is changing!!!!')
@@ -192,8 +200,14 @@ export default function Dashboard(props) {
     // console.log('event', event)
   }
 
+  const changeTheme = (newValue) => {
+    console.log('changeTheme')
+    console.log('newValue', newValue)
+    performLookerApiCalls(lookerContent, newValue)
+  }
 
 
+  console.log('apiContent', apiContent)
 
   return (
     <div className={`${classes.root} demoComponent`}
@@ -216,6 +230,7 @@ export default function Dashboard(props) {
                   setRegionValue={setRegionValue}
                   toggleValue={toggleValue}
                   handleToggle={handleToggle}
+                  changeTheme={changeTheme}
                 />
               </Grid> :
               lookerContent[0].hasOwnProperty("filters") ?
@@ -284,12 +299,13 @@ export default function Dashboard(props) {
 function FilterBar(props) {
   // console.log('FilterBar')
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
-    apiContent, customFilterAction, regionValue, setRegionValue, toggleValue, handleToggle } = props;
+    apiContent, customFilterAction, regionValue, setRegionValue, toggleValue, handleToggle, changeTheme } = props;
   // console.log('apiContent', apiContent)
 
   const [expanded, setExpanded] = useState(true);
   const [sliderValue, setSliderValue] = React.useState([]);
   const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
+  const [speedDialOpen, setSpeedDialOpen] = React.useState(false);
 
   const handleExpansionPanel = (event, newValue) => {
     setExpanded(expanded ? false : true);
@@ -374,6 +390,17 @@ function FilterBar(props) {
     setSliderValue(newValue);
   };
 
+  const handleSpeedDialClose = (newValue) => {
+    console.log('handleSpeedDialClose')
+    console.log('newValue', newValue)
+    changeTheme(newValue)
+    setSpeedDialOpen(false);
+  };
+
+  const handleSpeedDialOpen = () => {
+    setSpeedDialOpen(true);
+  };
+
   const lifetimeRevenueTierMap = {
     "0 to 99": "low",
     "100 to 499": "medium",
@@ -384,6 +411,26 @@ function FilterBar(props) {
     "100 to 499": SentimentSatisfied,
     "500 or Above": SentimentVerySatisfied,
   }
+
+  const actions = [
+    {
+      icon: <ColorLens style={{
+        backgroundColor: "#4a4842",
+        // color: "#4a4842"
+      }} />, name: 'Dark'
+    },
+    {
+      icon: <ColorLens style={{
+        backgroundColor: "#f6f8fa",
+        // color: "#f6f8fa" 
+      }} />, name: 'Light'
+    }
+  ];
+
+  // console.log('apiContent', apiContent)
+  // console.log('lookerContent[0].filters.length', lookerContent[0].filters.length)
+  // console.log('lookerContent[0].filterComponents.length', lookerContent[0].filterComponents.length)
+  // console.log('lookerContent[0].inlineQueries.length', lookerContent[0].inlineQueries.length)
 
   return (
 
@@ -405,6 +452,7 @@ function FilterBar(props) {
               <>
                 {apiContent.map((item, index) => {
                   return (
+                    // <h1>lookerContent[0].filterComponents[index]</h1>
                     lookerContent[0].filterComponents[index] === 'autocomplete' ?
                       <Grid item sm={4}>
 
@@ -471,7 +519,6 @@ function FilterBar(props) {
                           </Grid>
                         </>
                         : lookerContent[0].filterComponents[index] === "rangeslider"
-                          // || lookerContent[0].filterComponents[index] === "togglebutton" 
                           ?
 
                           <Grid container item sm={4} >
@@ -491,7 +538,6 @@ function FilterBar(props) {
                                   valueLabelDisplay="auto"
                                   aria-labelledby="range-slider"
                                   onChangeCommitted={(event, newValue) => {
-                                    console.log('newValue', newValue)
                                     customFilterAction(lookerContent[0].id,
                                       lookerContent[0].filters[index].filterName,
                                       (newValue) ? `[${newValue}]` : '[]')
@@ -543,11 +589,13 @@ function FilterBar(props) {
                               </EmbedMethodHighlight>
                             </Grid>
                           </Grid>
-                          : '')
+                          :
+                          //lookerContent[0].filterComponents[index] === "togglebutton" ? " going to be toggle button " : 
+                          '')
                 })}
                 {lookerContent[0].dynamicFieldLookUp ?
                   <>
-                    <Grid item sm={4}>
+                    <Grid item sm={2}>
                       <EmbedMethodHighlight classes={classes} >
                         <ToggleButtonGroup
                           value={toggleValue}
@@ -565,6 +613,38 @@ function FilterBar(props) {
                             )
                           })}
                         </ToggleButtonGroup>
+                      </EmbedMethodHighlight>
+                    </Grid>
+                  </>
+                  : ''
+                }
+                {lookerContent[0].dynamicTheme ?
+                  <>
+                    <Grid item sm={4}>
+                      <EmbedMethodHighlight classes={classes} >
+                        <SpeedDial
+                          ariaLabel="SpeedDial example"
+                          className={classes.speedDial}
+                          // hidden={hidden}
+                          icon={<SpeedDialIcon />}
+                          onClose={() => setSpeedDialOpen(false)}
+                          onOpen={handleSpeedDialOpen}
+                          open={speedDialOpen}
+                          // direction={direction}
+                          direction="right"
+                        >
+                          {actions.map((action) => (
+                            <SpeedDialAction
+                              key={action.name}
+                              icon={action.icon}
+                              tooltipTitle={action.name}
+                              onClick={() => {
+                                handleSpeedDialClose(action.name)
+                              }}
+                            />
+                          ))}
+                        </SpeedDial>
+
                       </EmbedMethodHighlight>
                     </Grid>
                   </>
