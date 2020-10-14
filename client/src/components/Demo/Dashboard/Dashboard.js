@@ -37,7 +37,8 @@ export default function Dashboard(props) {
   const [dashboardObj, setDashboardObj] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
   // const [serverSideCode, setServerSideCode] = useState('');
-  const [toggleValue, setToggleValue] = useState('');
+  const [tileToggleValue, setTileToggleValue] = useState('');
+  const [visColorToggleValue, setVisColorToggleValue] = useState('');
   const [dashboardOptions, setDashboardOptions] = useState({});
   const [regionValue, setRegionValue] = useState('Pacific,South,Mountain,Midwest,Northeast');
   // const { codeShow, toggleCodeShow } = useContext(AppContext)
@@ -56,10 +57,13 @@ export default function Dashboard(props) {
     setValue(newValue);
   };
 
-  const handleToggle = (event, newValue) => {
-    // console.log('handleToggle')
+  const handleTileToggle = (event, newValue) => {
+    // console.log('handleTileToggle')
     // console.log('newValue', newValue)
-    setToggleValue(newValue)
+    // console.log('dashboardOptions', dashboardOptions)
+    // console.log('dashboardObj', dashboardObj)
+    console.log('000 dashboardOptions.layouts', dashboardOptions.layouts)
+    setTileToggleValue(newValue)
     const filteredLayout = _.filter(dashboardOptions.layouts[0].dashboard_layout_components, (row) => {
       return (lookerContent[0].dynamicFieldLookUp[newValue].indexOf(dashboardOptions.elements[row.dashboard_element_id].title) > -1)
     })
@@ -69,6 +73,52 @@ export default function Dashboard(props) {
       dashboard_layout_components: filteredLayout
     }
     dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
+    console.log('111 dashboardOptions.layouts', dashboardOptions.layouts)
+  };
+
+  const handleVisColorToggle = (event, newValue) => {
+    // console.log('handleVisColorToggle')
+    // console.log('newValue', newValue)
+    console.log('000 dashboardOptions.elements', dashboardOptions.elements)
+    // alert(JSON.stringify(dashboardOptions.elements[121].vis_config.series_colors))
+    let newColorSeries = lookerContent[0].dynamicVisConfig.colors[newValue];
+    let newDashboardElements = { ...dashboardOptions.elements }
+    Object.keys(newDashboardElements).map(key => {
+      if (newDashboardElements[key].vis_config.series_colors) {
+        Object.keys(newDashboardElements[key].vis_config.series_colors).map((innerKey, index) => {
+          newDashboardElements[key].vis_config.series_colors[innerKey] = newColorSeries[index] || newColorSeries[0];
+        })
+      }
+
+
+
+      if (newDashboardElements[key].vis_config.custom_color) {
+        newDashboardElements[key].vis_config.custom_color = newColorSeries[0]
+      }
+
+
+      if (newDashboardElements[key].vis_config.map_value_colors) {
+        console.log('are we in this iffff')
+        newDashboardElements[key].vis_config.map_value_colors.map((item, index) => {
+          newDashboardElements[key].vis_config.map_value_colors[index] = newColorSeries[index] || newColorSeries[0];
+        })
+      }
+      // loss some fidelity here
+      if (newDashboardElements[key].vis_config.series_cell_visualizations) {
+        Object.keys(newDashboardElements[key].vis_config.series_cell_visualizations).map((innerKey, index) => {
+          if (newDashboardElements[key].vis_config.series_cell_visualizations[innerKey].hasOwnProperty("palette")) {
+            // console.log('are we in this iffff')
+            newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"]["custom_colors"].map((item, innerIndex) => {
+              newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"]["custom_colors"][innerIndex] = newColorSeries[innerIndex] || newColorSeries[0];
+            })
+          }
+        })
+      }
+    })
+    setVisColorToggleValue(newValue)
+    dashboardObj.setOptions({ "elements": { ...newDashboardElements } })
+    console.log('111 dashboardOptions.elements', dashboardOptions.elements)
+    // alert(JSON.stringify(dashboardOptions.elements[121].vis_config.series_colors))
   };
 
   useEffect(() => {
@@ -79,7 +129,8 @@ export default function Dashboard(props) {
 
   useEffect(() => {
     if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length && lookerContent[0].dynamicFieldLookUp) {
-      handleToggle(null, Object.keys(lookerContent[0].dynamicFieldLookUp)[0])
+      handleTileToggle(null, Object.keys(lookerContent[0].dynamicFieldLookUp)[0])
+      handleVisColorToggle(null, "#343d4e")
     }
   }, [dashboardOptions]);
 
@@ -87,16 +138,24 @@ export default function Dashboard(props) {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   })
 
+  useEffect(() => {
+    console.log('dashboardObj', dashboardObj)
+  }, [dashboardObj])
+
   const performLookerApiCalls = function (lookerContent, dynamicTheme) {
-    console.log('performLookerApiCalls')
-    console.log('dynamicTheme', dynamicTheme)
-    $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
+    // console.log('performLookerApiCalls')
+    // console.log('dynamicTheme', dynamicTheme)
     setIFrame(0)
-    setApiContent(undefined)
+    $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     lookerContent.map(async lookerContent => {
+      //dashboard creation
       let dashboardId = lookerContent.id;
-      let themeToUse = dynamicTheme || lookerContent.theme || 'atom_fashion';
-      console.log("themeToUse", themeToUse)
+      let themeToUse = dynamicTheme ?
+        dynamicTheme :
+        lookerContent.theme ?
+          lookerContent.theme :
+          'atom_fashion';
+
       LookerEmbedSDK.createDashboardWithId(dashboardId) //dashboardSlug
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
         .withClassName('iframe')
@@ -125,8 +184,10 @@ export default function Dashboard(props) {
         .catch((error) => {
           // console.error('Connection error', error)
         })
-
-      if (lookerContent.hasOwnProperty('filters')) {
+      //additional api calls
+      //only want to perform when there's not dynamicTheme
+      if (lookerContent.hasOwnProperty('filters') && !dynamicTheme) {
+        setApiContent(undefined)
         //get inline query from usecase file & set user attribute dynamically
         //iterating over filters
         let orderedArrayForApiContent = []
@@ -201,13 +262,13 @@ export default function Dashboard(props) {
   }
 
   const changeTheme = (newValue) => {
-    console.log('changeTheme')
-    console.log('newValue', newValue)
+    // console.log('changeTheme')
+    // console.log('newValue', newValue)
     performLookerApiCalls(lookerContent, newValue)
   }
 
 
-  console.log('apiContent', apiContent)
+  // console.log('apiContent', apiContent)
 
   return (
     <div className={`${classes.root} demoComponent`}
@@ -228,8 +289,10 @@ export default function Dashboard(props) {
                   customFilterAction={customFilterAction}
                   regionValue={regionValue}
                   setRegionValue={setRegionValue}
-                  toggleValue={toggleValue}
-                  handleToggle={handleToggle}
+                  tileToggleValue={tileToggleValue}
+                  handleTileToggle={handleTileToggle}
+                  visColorToggleValue={visColorToggleValue}
+                  handleVisColorToggle={handleVisColorToggle}
                   changeTheme={changeTheme}
                 />
               </Grid> :
@@ -299,7 +362,8 @@ export default function Dashboard(props) {
 function FilterBar(props) {
   // console.log('FilterBar')
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
-    apiContent, customFilterAction, regionValue, setRegionValue, toggleValue, handleToggle, changeTheme } = props;
+    apiContent, customFilterAction, regionValue, setRegionValue, tileToggleValue, handleTileToggle, changeTheme,
+    visColorToggleValue, handleVisColorToggle } = props;
   // console.log('apiContent', apiContent)
 
   const [expanded, setExpanded] = useState(true);
@@ -598,9 +662,9 @@ function FilterBar(props) {
                     <Grid item sm={2}>
                       <EmbedMethodHighlight classes={classes} >
                         <ToggleButtonGroup
-                          value={toggleValue}
+                          value={tileToggleValue}
                           exclusive
-                          onChange={handleToggle}
+                          onChange={handleTileToggle}
                           aria-label="text alignment"
                         >
                           {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
@@ -618,7 +682,7 @@ function FilterBar(props) {
                   </>
                   : ''
                 }
-                {lookerContent[0].dynamicTheme ?
+                {/* {lookerContent[0].dynamicTheme ?
                   <>
                     <Grid item sm={4}>
                       <EmbedMethodHighlight classes={classes} >
@@ -649,7 +713,41 @@ function FilterBar(props) {
                     </Grid>
                   </>
                   : ''
+                } */}
+
+
+                {lookerContent[0].dynamicVisConfig ?
+                  <>
+                    <Grid item sm={4}>
+                      <EmbedMethodHighlight classes={classes} >
+                        <Typography display="inline"
+                        // className={`${classes.mr12}`}
+                        >Dynamic Vis Color:</Typography>
+                        <ToggleButtonGroup
+                          value={visColorToggleValue}
+                          exclusive
+                          onChange={handleVisColorToggle}
+                          aria-label="text alignment"
+                          className={`${classes.ml12}`}
+                        >
+                          {Object.keys(lookerContent[0].dynamicVisConfig.colors).map(key => {
+                            return (
+                              <ToggleButton
+                                key={validIdHelper(`dynamicDashToggle-${key}`)}
+                                value={key} aria-label="left aligned">
+                                <span className={`${classes.dot}`} style={{ backgroundColor: key }}></span>
+                              </ToggleButton>
+                            )
+                          })}
+                        </ToggleButtonGroup>
+
+                      </EmbedMethodHighlight>
+                    </Grid>
+                  </>
+                  : ''
                 }
+
+
               </>
               : ''
           }

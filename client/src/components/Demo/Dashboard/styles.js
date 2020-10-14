@@ -103,4 +103,10 @@ export default makeStyles((theme) => ({
   mr12: {
     marginRight: 12
   },
+  dot: {
+    height: "25px",
+    width: "25px",
+    borderRadius: "50%",
+    display: "inline-block"
+  }
 }));
