@@ -38,6 +38,7 @@ export default function Dashboard(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   // const [serverSideCode, setServerSideCode] = useState('');
   const [tileToggleValue, setTileToggleValue] = useState('');
+  const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [visColorToggleValue, setVisColorToggleValue] = useState('');
   const [dashboardOptions, setDashboardOptions] = useState({});
   const [regionValue, setRegionValue] = useState('Pacific,South,Mountain,Midwest,Northeast');
@@ -62,7 +63,7 @@ export default function Dashboard(props) {
     // console.log('newValue', newValue)
     // console.log('dashboardOptions', dashboardOptions)
     // console.log('dashboardObj', dashboardObj)
-    console.log('000 dashboardOptions.layouts', dashboardOptions.layouts)
+    // console.log('000 dashboardOptions.layouts', dashboardOptions.layouts)
     setTileToggleValue(newValue)
     const filteredLayout = _.filter(dashboardOptions.layouts[0].dashboard_layout_components, (row) => {
       return (lookerContent[0].dynamicFieldLookUp[newValue].indexOf(dashboardOptions.elements[row.dashboard_element_id].title) > -1)
@@ -73,13 +74,13 @@ export default function Dashboard(props) {
       dashboard_layout_components: filteredLayout
     }
     dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
-    console.log('111 dashboardOptions.layouts', dashboardOptions.layouts)
+    // console.log('111 dashboardOptions.layouts', dashboardOptions.layouts)
   };
 
   const handleVisColorToggle = (event, newValue) => {
     // console.log('handleVisColorToggle')
     // console.log('newValue', newValue)
-    console.log('000 dashboardOptions.elements', dashboardOptions.elements)
+    // console.log('000 dashboardOptions.elements', dashboardOptions.elements)
     // alert(JSON.stringify(dashboardOptions.elements[121].vis_config.series_colors))
     let newColorSeries = lookerContent[0].dynamicVisConfig.colors[newValue];
     let newDashboardElements = { ...dashboardOptions.elements }
@@ -90,19 +91,16 @@ export default function Dashboard(props) {
         })
       }
 
-
-
       if (newDashboardElements[key].vis_config.custom_color) {
         newDashboardElements[key].vis_config.custom_color = newColorSeries[0]
       }
 
-
       if (newDashboardElements[key].vis_config.map_value_colors) {
-        console.log('are we in this iffff')
         newDashboardElements[key].vis_config.map_value_colors.map((item, index) => {
           newDashboardElements[key].vis_config.map_value_colors[index] = newColorSeries[index] || newColorSeries[0];
         })
       }
+
       // loss some fidelity here
       if (newDashboardElements[key].vis_config.series_cell_visualizations) {
         Object.keys(newDashboardElements[key].vis_config.series_cell_visualizations).map((innerKey, index) => {
@@ -117,9 +115,20 @@ export default function Dashboard(props) {
     })
     setVisColorToggleValue(newValue)
     dashboardObj.setOptions({ "elements": { ...newDashboardElements } })
-    console.log('111 dashboardOptions.elements', dashboardOptions.elements)
+    // console.log('111 dashboardOptions.elements', dashboardOptions.elements)
     // alert(JSON.stringify(dashboardOptions.elements[121].vis_config.series_colors))
   };
+
+  const handleThemeToggle = (event, newValue) => {
+    console.log('handleThemeToggle')
+    console.log('newValue', newValue)
+    setLightThemeToggleValue(newValue)
+
+    let themeName = newValue ? "light" : "dark";
+
+    console.log('themeName', themeName)
+    performLookerApiCalls(lookerContent, themeName)
+  }
 
   useEffect(() => {
     setTimeout(() => performLookerApiCalls([...lookerContent]), 1000)
@@ -138,13 +147,13 @@ export default function Dashboard(props) {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   })
 
-  useEffect(() => {
-    console.log('dashboardObj', dashboardObj)
-  }, [dashboardObj])
+  // useEffect(() => {
+  //   console.log('dashboardObj', dashboardObj)
+  // }, [dashboardObj])
 
   const performLookerApiCalls = function (lookerContent, dynamicTheme) {
-    // console.log('performLookerApiCalls')
-    // console.log('dynamicTheme', dynamicTheme)
+    console.log('performLookerApiCalls')
+    console.log('dynamicTheme', dynamicTheme)
     setIFrame(0)
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     lookerContent.map(async lookerContent => {
@@ -155,6 +164,8 @@ export default function Dashboard(props) {
         lookerContent.theme ?
           lookerContent.theme :
           'atom_fashion';
+
+      console.log('themeToUse', themeToUse)
 
       LookerEmbedSDK.createDashboardWithId(dashboardId) //dashboardSlug
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
@@ -261,14 +272,14 @@ export default function Dashboard(props) {
     // console.log('event', event)
   }
 
-  const changeTheme = (newValue) => {
-    // console.log('changeTheme')
-    // console.log('newValue', newValue)
-    performLookerApiCalls(lookerContent, newValue)
-  }
+  // const changeTheme = (newValue) => {
+  //   // console.log('changeTheme')
+  //   // console.log('newValue', newValue)
+  //   performLookerApiCalls(lookerContent, newValue)
+  // }
 
 
-  // console.log('apiContent', apiContent)
+  console.log('lightThemeToggleValue', lightThemeToggleValue)
 
   return (
     <div className={`${classes.root} demoComponent`}
@@ -293,7 +304,9 @@ export default function Dashboard(props) {
                   handleTileToggle={handleTileToggle}
                   visColorToggleValue={visColorToggleValue}
                   handleVisColorToggle={handleVisColorToggle}
-                  changeTheme={changeTheme}
+                  lightThemeToggleValue={lightThemeToggleValue}
+                  handleThemeToggle={handleThemeToggle}
+                // changeTheme={changeTheme}
                 />
               </Grid> :
               lookerContent[0].hasOwnProperty("filters") ?
@@ -362,14 +375,14 @@ export default function Dashboard(props) {
 function FilterBar(props) {
   // console.log('FilterBar')
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
-    apiContent, customFilterAction, regionValue, setRegionValue, tileToggleValue, handleTileToggle, changeTheme,
-    visColorToggleValue, handleVisColorToggle } = props;
+    apiContent, customFilterAction, regionValue, setRegionValue, tileToggleValue, handleTileToggle, //changeTheme,
+    visColorToggleValue, handleVisColorToggle, lightThemeToggleValue, handleThemeToggle } = props;
   // console.log('apiContent', apiContent)
 
   const [expanded, setExpanded] = useState(true);
   const [sliderValue, setSliderValue] = React.useState([]);
   const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
-  const [speedDialOpen, setSpeedDialOpen] = React.useState(false);
+  // const [speedDialOpen, setSpeedDialOpen] = React.useState(false);
 
   const handleExpansionPanel = (event, newValue) => {
     setExpanded(expanded ? false : true);
@@ -454,16 +467,16 @@ function FilterBar(props) {
     setSliderValue(newValue);
   };
 
-  const handleSpeedDialClose = (newValue) => {
-    console.log('handleSpeedDialClose')
-    console.log('newValue', newValue)
-    changeTheme(newValue)
-    setSpeedDialOpen(false);
-  };
+  // const handleSpeedDialClose = (newValue) => {
+  //   console.log('handleSpeedDialClose')
+  //   console.log('newValue', newValue)
+  //   changeTheme(newValue)
+  //   setSpeedDialOpen(false);
+  // };
 
-  const handleSpeedDialOpen = () => {
-    setSpeedDialOpen(true);
-  };
+  // const handleSpeedDialOpen = () => {
+  //   setSpeedDialOpen(true);
+  // };
 
   const lifetimeRevenueTierMap = {
     "0 to 99": "low",
@@ -476,20 +489,20 @@ function FilterBar(props) {
     "500 or Above": SentimentVerySatisfied,
   }
 
-  const actions = [
-    {
-      icon: <ColorLens style={{
-        backgroundColor: "#4a4842",
-        // color: "#4a4842"
-      }} />, name: 'Dark'
-    },
-    {
-      icon: <ColorLens style={{
-        backgroundColor: "#f6f8fa",
-        // color: "#f6f8fa" 
-      }} />, name: 'Light'
-    }
-  ];
+  // const actions = [
+  //   {
+  //     icon: <ColorLens style={{
+  //       backgroundColor: "#4a4842",
+  //       // color: "#4a4842"
+  //     }} />, name: 'Dark'
+  //   },
+  //   {
+  //     icon: <ColorLens style={{
+  //       backgroundColor: "#f6f8fa",
+  //       // color: "#f6f8fa" 
+  //     }} />, name: 'Light'
+  //   }
+  // ];
 
   // console.log('apiContent', apiContent)
   // console.log('lookerContent[0].filters.length', lookerContent[0].filters.length)
@@ -670,7 +683,7 @@ function FilterBar(props) {
                           {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
                             return (
                               <ToggleButton
-                                key={validIdHelper(`dynamicDashToggle-${key}`)}
+                                key={validIdHelper(`dynamicDashTileToggle-${key}`)}
                                 value={key} aria-label="left aligned">
                                 {key}
                               </ToggleButton>
@@ -682,38 +695,28 @@ function FilterBar(props) {
                   </>
                   : ''
                 }
-                {/* {lookerContent[0].dynamicTheme ?
+                {lookerContent[0].dynamicTheme ?
                   <>
-                    <Grid item sm={4}>
+                    <Grid item sm={2}>
                       <EmbedMethodHighlight classes={classes} >
-                        <SpeedDial
-                          ariaLabel="SpeedDial example"
-                          className={classes.speedDial}
-                          // hidden={hidden}
-                          icon={<SpeedDialIcon />}
-                          onClose={() => setSpeedDialOpen(false)}
-                          onOpen={handleSpeedDialOpen}
-                          open={speedDialOpen}
-                          // direction={direction}
-                          direction="right"
-                        >
-                          {actions.map((action) => (
-                            <SpeedDialAction
-                              key={action.name}
-                              icon={action.icon}
-                              tooltipTitle={action.name}
-                              onClick={() => {
-                                handleSpeedDialClose(action.name)
-                              }}
-                            />
-                          ))}
-                        </SpeedDial>
+
+                        <Typography display="inline"
+                        // className={`${classes.mr12}`}
+                        >{lightThemeToggleValue ? "Light mode" : "Dark mode"}</Typography>
+
+                        <Switch
+                          checked={!lightThemeToggleValue}
+                          onChange={() => handleThemeToggle(null, !lightThemeToggleValue)}
+                          color="primary"
+                          name="light theme toggle"
+                          inputProps={{ 'aria-label': 'primary checkbox' }}
+                        />
 
                       </EmbedMethodHighlight>
                     </Grid>
                   </>
                   : ''
-                } */}
+                }
 
 
                 {lookerContent[0].dynamicVisConfig ?
@@ -733,7 +736,7 @@ function FilterBar(props) {
                           {Object.keys(lookerContent[0].dynamicVisConfig.colors).map(key => {
                             return (
                               <ToggleButton
-                                key={validIdHelper(`dynamicDashToggle-${key}`)}
+                                key={validIdHelper(`dynamicDashVisConfigToggle-${key}`)}
                                 value={key} aria-label="left aligned">
                                 <span className={`${classes.dot}`} style={{ backgroundColor: key }}></span>
                               </ToggleButton>
