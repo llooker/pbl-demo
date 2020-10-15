@@ -21,6 +21,7 @@ router.post('/applyactivecustomziation', customizeCtrl.applyActiveCustomizationT
 //looker
 router.get('/auth', lookerCtrl.auth)
 router.post('/updatelookeruser', lookerCtrl.updateLookerUser) //necessary for persisting user change
+// router.post('/refreshlookertoken', lookerCtrl.refreshLookerToken) //necessary for persisting user change
 
 // router.get('/validatelookercontent/:content_id/:content_type', lookerCtrl.validateLookerContent)
 // router.get('/fetchfolder/:folder_id', lookerCtrl.fetchFolder)

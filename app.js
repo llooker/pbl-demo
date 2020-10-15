@@ -15,7 +15,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var sess = {
-  secret: 'keyboard catv1.0.5',
+  secret: 'keyboard catv1.0.6',
   cookie: {
     // expires: new Date(Date.now() + 3600000), //hour
     maxAge: 14 * 24 * 3600000 //two weeks

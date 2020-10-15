@@ -142,6 +142,7 @@ class App extends React.Component {
       let currentTime = Date.now();
       let expiresInBuffer = 58 * 60 * 1000; //3480000; //58 minutes
       if (currentTime > (this.state.tokenLastRefreshed + expiresInBuffer)) {
+        //force logout
         this.applySession({})
         clearInterval(clientInterval);
       }
@@ -183,6 +184,8 @@ class App extends React.Component {
 
 
       let sdk = new Looker40SDK(session);
+
+
 
       this.setState((prevState) => ({
         userProfile, //think we want this here?

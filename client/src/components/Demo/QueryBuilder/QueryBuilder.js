@@ -53,11 +53,6 @@ export default function QueryBuilder(props) {
     });
   })
 
-  useEffect(() => {
-    console.log('useEffect');
-    console.log({ apiContent });
-
-  }, [apiContent])
 
   const performLookerApiCalls = async (newQuery, resultFormat) => {
     // console.log('performLookerApiCalls')
