@@ -407,7 +407,10 @@
                 "Open Orders to be Shipped"
               ]
             },
-            "dynamicTheme": {
+            "dynamicThemeMode": {
+              "title": "gfy"
+            },
+            "dynamicThemeFont": {
               "title": "gfy"
             },
             "dynamicVisConfig": {
@@ -439,7 +442,7 @@
                 ]
               }
             },
-            "theme": "atom_fashion"
+            "theme": "light_arial"
           }
         ]
       },
