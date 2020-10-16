@@ -77,7 +77,7 @@ export default function UserMenu(props) {
         <Divider className={classes.divider} />
         <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
         <Divider className={classes.divider} />
-        <MenuItem onClick={() => handleClose('modal')}>Show Modal</MenuItem>
+        <MenuItem onClick={() => handleClose('modal')}>Show Monetization Modal</MenuItem>
         <Divider className={classes.divider} />
         <MenuItem>Current brand: {selectedBrand}</MenuItem>
         <MenuItem>

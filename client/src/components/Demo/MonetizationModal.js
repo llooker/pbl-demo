@@ -2,7 +2,12 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppContext from '../../AppContext';
-import { Modal, Fade, Grid, Paper, Card, CardContent, CardActions, Button, Typography, Chip, Divider, List, ListItem, ListItemAvatar, Avatar, ImageIcon, ListItemText } from '@material-ui/core';
+import {
+  Modal, Fade, Grid, Paper, Card, CardContent, CardActions, Button, Typography, Chip, Divider, List, ListItem, ListItemAvatar, Avatar, ImageIcon, ListItemText
+
+} from '@material-ui/core';
+import { Rating } from '@material-ui/lab'
+
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import CheckIcon from '@material-ui/icons/Check';
@@ -13,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
     width: 1000,
-    height: 580,
+    height: 604,
     overflow: 'scroll',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
@@ -52,8 +57,8 @@ const useStyles = makeStyles((theme) => ({
 
   },
   premium: {
-    backgroundColor: '#5F6BD8',
-    color: '#ffffff'
+    // backgroundColor: '#5F6BD8',
+    // color: '#ffffff'
   },
   font75: {
     fontSize: '.75em'
@@ -129,18 +134,24 @@ export function MonetizationModal({ props, switchLookerUser }) {
                     style={key === lookerUser.user_attributes.permission_level ? {
                       transform: 'scale(1.05)',
                       transition: 'transform .2s',
-                      height: 495
+                      height: 519
                     } : {
-                        height: 495
+                        height: 519
                       }}
                     onClick={() => {
                       switchLookerUser(key, 'permission')
                       togglePayWallModal()
                     }}>
                     <CardContent>
-                      <Typography variant="h6">
+                      <Typography variant="h6" display="justify">
                         {_.capitalize(key)}
                       </Typography>
+                      <Typography
+                        display="justify">
+                        <Rating
+                          name="read-only"
+                          value={key === 'basic' ? "3" : key === "advanced" ? "4" : "5"}
+                          readOnly /></Typography>
                       <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}>
                         {key === 'basic' ?
                           'Drive your business with clear KPIs' :
@@ -190,7 +201,7 @@ export function MonetizationModal({ props, switchLookerUser }) {
               )
             })}
           </Grid>
-        </div>
+        </div >
       </Fade >
     </Modal >
   );
