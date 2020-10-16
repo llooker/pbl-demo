@@ -17,7 +17,7 @@
           {
             "id": "19",
             "gridWidth": 6,
-            "height": 225,
+            "height": 160,
             "type": "welcome",
             "inlineQueries": [
               {
@@ -80,7 +80,7 @@
           {
             "id": "17",
             "gridWidth": 6,
-            "height": 225,
+            "height": 160,
             "type": "carousel"
           },
           {
@@ -204,14 +204,15 @@
           },
           {
             "gridWidth": 8,
-            "height": 400,
+            "height": 350,
             "type": "dashboard",
             "id": "12",
-            "slug": "3ytMWYFKKbofCDFkpAG46z"
+            "slug": "3ytMWYFKKbofCDFkpAG46z",
+            "title": "Most Recent Orders"
           },
           {
             "gridWidth": 4,
-            "height": 400,
+            "height": 350,
             "type": "popular analysis",
             "vectors": [
               {
@@ -416,12 +417,6 @@
             "dynamicVisConfig": {
               "title": "gfy",
               "colors": {
-                "#343d4e": [
-                  "#343d4e",
-                  "#485060",
-                  "#5d6471",
-                  "#717783"
-                ],
                 "#326ad4": [
                   "#326ad4",
                   "#4779d8",

@@ -179,8 +179,10 @@ export function MonetizationModal({ props, switchLookerUser }) {
                           switchLookerUser(key, 'permission')
                           togglePayWallModal()
                         }}>
-                        {Object.keys(modalListMap).indexOf(lookerUser.user_attributes.permission_level) < Object.keys(modalListMap).indexOf(key) ? 'Upgrade' : 'Switch'}
-                        {/* {'Upgrade'} */}
+                        {key === lookerUser.user_attributes.permission_level ? "Active" :
+                          Object.keys(modalListMap).indexOf(lookerUser.user_attributes.permission_level) < Object.keys(modalListMap).indexOf(key) ?
+                            'Upgrade' :
+                            'Switch'}
                       </Button>
                     </CardActions>
                   </Card>

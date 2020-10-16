@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.paper ? theme.palette.background.paper : '',
     overflow: 'scroll',
     borderRadius: '8px'
   },
@@ -108,5 +108,6 @@ export default makeStyles((theme) => ({
     width: "25px",
     borderRadius: "50%",
     display: "inline-block"
-  }
+  },
+  borderRadius0: { borderRadius: 0 }
 }));

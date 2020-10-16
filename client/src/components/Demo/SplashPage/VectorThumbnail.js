@@ -38,7 +38,7 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
           <Grid item sm={6}>
             <ApiHighlight classes={classes}>
               <div
-                className={` ${classes.maxHeight75} ${classes.textCenter} ${classes.cursorPointer} ${classes.overflowHidden}`}
+                className={` ${classes.maxHeight60} ${classes.textCenter} ${classes.cursorPointer} ${classes.overflowHidden}`}
               >
                 <img
                   onClick={() => handleMenuItemSelect(item.id, 1)}

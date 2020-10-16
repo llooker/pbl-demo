@@ -89,7 +89,7 @@ export function EmbedHighlight({ ...props }) {
         color: '#fff',
         top: '-10px',
         left: '-10px',
-        position: 'absolute'
+        position: 'absolute',
       }}
     />
     {children}

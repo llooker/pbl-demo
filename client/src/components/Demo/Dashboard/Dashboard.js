@@ -9,7 +9,7 @@ import { Autocomplete, ToggleButton, ToggleButtonGroup, Skeleton } from '@materi
 import {
   ExpandMore, FilterList, SentimentDissatisfied, SentimentSatisfied, SentimentVerySatisfied,
 } from '@material-ui/icons';
-
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
@@ -22,14 +22,18 @@ import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent
 import AppContext from '../../../AppContext';
 //new
 import Usa from "@svg-maps/usa";
-// import "react-svg-map/lib/index.css";
 import { CheckboxSVGMap } from "./CheckboxSvgMapRegion";
-// import SpeedDials from "./SpeedDial";
 
 const { validIdHelper } = require('../../../tools');
 
 export default function Dashboard(props) {
+  // console.log('Dashboard')
+  // console.log('props', props)
+
+  const { staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
+  const demoComponentType = type || 'code flyout';
   const topBarBottomBarHeight = 112;
+
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState(undefined);
@@ -37,19 +41,37 @@ export default function Dashboard(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   const [dashboardOptions, setDashboardOptions] = useState({});
   const [regionValue, setRegionValue] = useState('Pacific,South,Mountain,Midwest,Northeast');
-  // const { codeShow, toggleCodeShow } = useContext(AppContext)
-  const { togglePayWallModal, show, codeShow, sdk } = useContext(AppContext)
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [tileToggleValue, setTileToggleValue] = useState('');
-  const [visColorToggleValue, setVisColorToggleValue] = useState('#343d4e');
+  const [visColorToggleValue, setVisColorToggleValue] = useState('#326ad4');
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
+  const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
+  const { togglePayWallModal, show, codeShow, sdk, atomTheme } = useContext(AppContext)
 
-
+  const isThemeableDashboard = validIdHelper(`${demoComponentType}${lookerContent[0].id}`) === 'customfilter1' && !lightThemeToggleValue;
+  const darkThemeBackgroundColor = "#343D4E";
 
   const classes = useStyles();
-  const { staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
-  const demoComponentType = type || 'code flyout';
+
+  //condtional theming for dark mode :D
+  let paletteToUse = !lightThemeToggleValue ?
+    {
+      palette: {
+        type: 'dark',
+        background: { paper: darkThemeBackgroundColor, default: darkThemeBackgroundColor },
+      }
+    }
+    :
+    { palette: { ...atomTheme.palette } }
+
+  const theme = React.useMemo(
+    () =>
+      createMuiTheme(
+        paletteToUse
+      ),
+    [lightThemeToggleValue],
+  );
 
   //handle tab change
   const handleChange = (event, newValue) => {
@@ -58,11 +80,6 @@ export default function Dashboard(props) {
   };
 
   const handleTileToggle = (event, newValue) => {
-    // console.log('handleTileToggle')
-    // console.log('newValue', newValue)
-    // console.log('dashboardOptions', dashboardOptions)
-    // console.log('dashboardObj', dashboardObj)
-    // console.log('000 dashboardOptions.layouts', dashboardOptions.layouts)
     setTileToggleValue(newValue)
     const filteredLayout = _.filter(dashboardOptions.layouts[0].dashboard_layout_components, (row) => {
       return (lookerContent[0].dynamicFieldLookUp[newValue].indexOf(dashboardOptions.elements[row.dashboard_element_id].title) > -1)
@@ -73,7 +90,6 @@ export default function Dashboard(props) {
       dashboard_layout_components: filteredLayout
     }
     dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
-    // console.log('111 dashboardOptions.layouts', dashboardOptions.layouts)
   };
 
   const handleVisColorToggle = (event, newValue) => {
@@ -125,7 +141,9 @@ export default function Dashboard(props) {
   }
 
   useEffect(() => {
-    setTimeout(() => performLookerApiCalls([...lookerContent]), 1000)
+    let themeName = lightThemeToggleValue ? 'light' : 'dark';
+    themeName += `_${fontThemeSelectValue}`;
+    performLookerApiCalls([...lookerContent], themeName)
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser]);
 
@@ -133,21 +151,27 @@ export default function Dashboard(props) {
   useEffect(() => {
     if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length && lookerContent[0].dynamicFieldLookUp) {
       handleTileToggle(null, tileToggleValue ? tileToggleValue : Object.keys(lookerContent[0].dynamicFieldLookUp)[0])
-      handleVisColorToggle(null, visColorToggleValue ? visColorToggleValue : '#343d4e')
+      handleVisColorToggle(null, visColorToggleValue ? visColorToggleValue : '#326ad4')
     }
   }, [dashboardOptions]);
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+    setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
   })
 
   const performLookerApiCalls = function (lookerContent, dynamicTheme) {
+
+    // console.log('performLookerApiCalls')
+    // console.log('lookerContent', lookerContent)
+    // console.log('dynamicTheme', dynamicTheme)
+
     setIFrame(0)
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     lookerContent.map(async lookerContent => {
       //dashboard creation
       let dashboardId = lookerContent.id;
-      let themeToUse = dynamicTheme ?
+      let themeToUse = dynamicTheme && isThemeableDashboard ?
         dynamicTheme :
         lookerContent.theme ?
           lookerContent.theme :
@@ -182,9 +206,9 @@ export default function Dashboard(props) {
           // console.error('Connection error', error)
         })
       //additional api calls
-      //only want to perform when there's not dynamicTheme
-      if (lookerContent.hasOwnProperty('filters') && !dynamicTheme) {
-        setApiContent(undefined)
+      //only want to perform when there's not apiContent
+      if (lookerContent.hasOwnProperty('filters') && !apiContent) {
+        // setApiContent(undefined)
         //get inline query from usecase file & set user attribute dynamically
         //iterating over filters
         let orderedArrayForApiContent = []
@@ -234,106 +258,100 @@ export default function Dashboard(props) {
     // console.log('event', event)
   }
 
+
   return (
     <div className={`${classes.root} demoComponent`}
-      style={{ height }}>
-      <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
-        <Grid container>
-          <div className={`${classes.root}`}>
-            {lookerContent[0].hasOwnProperty("filters") &&
-              apiContent &&
-              apiContent.length === lookerContent[0].filters.length ?
-              <Grid item
-                sm={12}
-                key={validIdHelper(`${demoComponentType}-FilterBar-${lookerContent[0].id}`)}
-              >
-                <FilterBar {...props}
-                  classes={classes}
-                  apiContent={apiContent}
-                  customFilterAction={customFilterAction}
-                  regionValue={regionValue}
-                  setRegionValue={setRegionValue}
-                  tileToggleValue={tileToggleValue}
-                  handleTileToggle={handleTileToggle}
-                  visColorToggleValue={visColorToggleValue}
-                  handleVisColorToggle={handleVisColorToggle}
-                  lightThemeToggleValue={lightThemeToggleValue}
-                  fontThemeSelectValue={fontThemeSelectValue}
-                  handleThemeChange={handleThemeChange}
-                // handleThemeToggle={handleThemeToggle}
-                // changeTheme={changeTheme}
-                />
-              </Grid> :
-              lookerContent[0].hasOwnProperty("filters") ?
-                <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> :
-                ''}
-
-
-            {
-              iFrameExists
-                ? ''
-                :
-                <Grid item sm={12} style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
-                  <Card className={`${classes.card} ${classes.flexCentered}`}
-                    elevation={0}
-                    mt={2}
-                    style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
-                    <CircularProgress className={classes.circularProgress} />
-                  </Card>
-                </Grid>
-            }
-            <Box
-              className={iFrameExists ? ` ` : `${classes.hidden} `}
-              style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}
+      style={{ height }}
+    >
+      <ThemeProvider theme={theme}>
+        <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
+          <Grid container>
+            <div
+              className={`${classes.root}`}
             >
-              <Grid container
-                spacing={3}
-                className={`${classes.noContainerScroll}`}>
-                {codeShow ?
-                  <Grid item sm={6}
-                    className={`${classes.positionFixedTopRight}`}
-                  >
-                    <CodeFlyout {...props}
-                      classes={classes}
-                      lookerUser={lookerUser}
-                      height={height}
-                    />
+              {lookerContent[0].hasOwnProperty("filters") &&
+                apiContent &&
+                apiContent.length === lookerContent[0].filters.length ?
+                <Grid item
+                  sm={12}
+                  key={validIdHelper(`${demoComponentType}-FilterBar-${lookerContent[0].id}`)}>
+                  <FilterBar {...props}
+                    classes={classes}
+                    apiContent={apiContent}
+                    customFilterAction={customFilterAction}
+                    regionValue={regionValue}
+                    setRegionValue={setRegionValue}
+                    tileToggleValue={tileToggleValue}
+                    handleTileToggle={handleTileToggle}
+                    visColorToggleValue={visColorToggleValue}
+                    handleVisColorToggle={handleVisColorToggle}
+                    lightThemeToggleValue={lightThemeToggleValue}
+                    fontThemeSelectValue={fontThemeSelectValue}
+                    handleThemeChange={handleThemeChange}
+                    isThemeableDashboard={isThemeableDashboard}
+                  />
+                </Grid> :
+                lookerContent[0].hasOwnProperty("filters") ?
+                  <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> :
+                  ''}
+              {
+                iFrameExists
+                  ? ''
+                  :
+                  <Grid item sm={12} style={{ height: height - 30 - expansionPanelHeight }}>
+                    <Card className={`${classes.card} ${classes.flexCentered}`}
+                      elevation={0}
+                      mt={2}
+                      style={{ height: height - 30 - expansionPanelHeight }}>
+                      <CircularProgress className={classes.circularProgress} />
+                    </Card>
                   </Grid>
-                  : ''}
-                <Grid item sm={12}>
-
-                  <Box className={`${classes.w100} ${classes.padding10}`} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
-
-
-                    <EmbedHighlight classes={classes}>
-                      <div
-                        className={`embedContainer ${validIdHelper(demoComponentType)}`}
-                        id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                        key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                      >
-                      </div>
-                    </EmbedHighlight>
-                  </Box>
+              }
+              <Box
+                className={iFrameExists ? ` ` : `${classes.hidden} `}
+                style={{ height: height - 30 - expansionPanelHeight }}>
+                <Grid container
+                  spacing={3}
+                  className={`${classes.noContainerScroll}`}>
+                  {codeShow ?
+                    <Grid item sm={6}
+                      className={`${classes.positionFixedTopRight}`}
+                    >
+                      <CodeFlyout {...props}
+                        classes={classes}
+                        lookerUser={lookerUser}
+                        height={height}
+                      />
+                    </Grid>
+                    : ''}
+                  <Grid item sm={12}>
+                    <Box className={`${classes.w100} ${classes.padding10}`} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
+                      <EmbedHighlight classes={classes}>
+                        <div
+                          className={`embedContainer ${validIdHelper(demoComponentType)}`}
+                          id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                          key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                        >
+                        </div>
+                      </EmbedHighlight>
+                    </Box>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Box>
-          </div>
-        </Grid>
-      </Card>
-    </div>
+              </Box>
+            </div>
+          </Grid>
+        </Card>
+      </ThemeProvider>
+    </ div>
   )
 }
-
-
 
 
 function FilterBar(props) {
   // console.log('FilterBar')
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
     apiContent, customFilterAction, regionValue, setRegionValue, tileToggleValue, handleTileToggle, //changeTheme,
-    visColorToggleValue, handleVisColorToggle, lightThemeToggleValue,
-    // handleThemeToggle,
-    fontThemeSelectValue, handleThemeChange
+    visColorToggleValue, handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange, isThemeableDashboard
   } = props;
 
   const [expanded, setExpanded] = useState(true);
@@ -434,10 +452,15 @@ function FilterBar(props) {
     "500 or Above": SentimentVerySatisfied,
   }
 
-
   return (
 
-    <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} className={classes.w100} elevation={0}>
+    <ExpansionPanel
+      expanded={expanded}
+      onChange={handleExpansionPanel}
+      // className={classes.w100}
+      className={`${classes.w100} MuiExpansionPanel-root`}
+      elevation={0}
+    >
       <ExpansionPanelSummary
         expandIcon={<ExpandMore />}
         aria-controls="panel1a-content"
@@ -451,11 +474,9 @@ function FilterBar(props) {
           container spacing={3}>
           {
             lookerContent[0].filters || lookerContent[0].dynamicFieldLookUp ?
-
               <>
                 {apiContent.map((item, index) => {
                   return (
-                    // <h1>lookerContent[0].filterComponents[index]</h1>
                     lookerContent[0].filterComponents[index] === 'autocomplete' ?
                       <Grid item sm={3}>
 
@@ -463,8 +484,6 @@ function FilterBar(props) {
                           key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
 
                           <Typography
-                          // display="inline"
-                          // className={`${classes.mr12}`}
                           >Filter By Product:</Typography>
                           <Autocomplete
                             id={`combo-box-dashboard-${lookerContent.id}`}
@@ -473,7 +492,7 @@ function FilterBar(props) {
                               []}
                             renderOption={(option) => (
                               <Grid container justify="space-between">
-                                <Grid item>
+                                <Grid item >
                                   {option.label}
                                 </Grid>
                                 {option.trend && <Grid item>
@@ -486,13 +505,15 @@ function FilterBar(props) {
                               </Grid>
                             )}
                             getOptionLabel={(option) => option.label}
-                            // style={{ width: 400 }}
                             onChange={(event, newValue) => {
                               customFilterAction(lookerContent[0].id,
                                 lookerContent[0].filters[index].filterName,
                                 (newValue) ? newValue.label : '')
                             }}
-                            renderInput={(params) => <TextField {...params} label={lookerContent[0].filters[index].filterName} variant="outlined" />}
+                            renderInput={(params) => <TextField {...params}
+                              label={lookerContent[0].filters[index].filterName}
+                              variant="outlined"
+                            />}
                             loadingText="Loading..."
                           />
                         </ApiHighlight>
@@ -503,8 +524,6 @@ function FilterBar(props) {
                             <EmbedMethodHighlight classes={classes}
                               key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
                               <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
-                              // component="span"
-                              // color="secondary"
                               >Region(s): <b>{regionValue ? regionValue : "Outside US"}</b></Typography>
 
                               <CheckboxSVGMap map={customUsa}
@@ -534,8 +553,6 @@ function FilterBar(props) {
                               <EmbedMethodHighlight classes={classes}
                                 key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
                                 <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
-                                // component="span"
-                                // color="secondary"
                                 >Age Range:</Typography>
                                 <Slider
                                   value={sliderValue.length ? sliderValue : Array.isArray(apiContent[index]) ? [apiContent[index][0].label, apiContent[index][apiContent[index].length - 1].label] : []}
@@ -562,8 +579,6 @@ function FilterBar(props) {
                               <EmbedMethodHighlight classes={classes}
                                 key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
                                 <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
-                                // component="span"
-                                // color="secondary"
                                 >Lifetime Revenue Tier:</Typography>
                                 <ToggleButtonGroup
                                   value={lifetimeRevenueTierValue}
@@ -598,7 +613,6 @@ function FilterBar(props) {
                             </Grid>
                           </Grid>
                           :
-                          //lookerContent[0].filterComponents[index] === "togglebutton" ? " going to be toggle button " : 
                           '')
                 })}
                 {lookerContent[0].dynamicFieldLookUp ?
@@ -606,8 +620,6 @@ function FilterBar(props) {
                     <Grid item sm={3}>
                       <EmbedMethodHighlight classes={classes} >
                         <Typography
-                        // display="inline"
-                        // className={`${classes.mr12}`}
                         >Dynamic Tiles:</Typography>
                         <ToggleButtonGroup
                           value={tileToggleValue}
@@ -630,23 +642,17 @@ function FilterBar(props) {
                   </>
                   : ''
                 }
-
-
-
                 {lookerContent[0].dynamicVisConfig ?
                   <>
-                    <Grid item sm={3}>
+                    <Grid item sm={2}>
                       <EmbedMethodHighlight classes={classes} >
                         <Typography
-                        // display="inline"
-                        // className={`${classes.mr12}`}
                         >Dynamic Vis Color:</Typography>
                         <ToggleButtonGroup
                           value={visColorToggleValue}
                           exclusive
                           onChange={handleVisColorToggle}
                           aria-label="text alignment"
-                        // className={`${classes.ml12}`}
                         >
                           {Object.keys(lookerContent[0].dynamicVisConfig.colors).map(key => {
                             return (
@@ -664,14 +670,11 @@ function FilterBar(props) {
                   </>
                   : ''
                 }
-
                 {lookerContent[0].dynamicThemeMode ?
                   <>
                     <Grid item sm={1}>
-                      <EmbedMethodHighlight classes={classes} >
+                      <EmbedHighlight classes={classes} >
                         <Typography
-                        // display="inline"
-                        // className={`${classes.mr12}`}
                         >{lightThemeToggleValue ? "Light mode" : "Dark mode"}</Typography>
 
                         <Switch
@@ -682,18 +685,19 @@ function FilterBar(props) {
                           inputProps={{ 'aria-label': 'primary checkbox' }}
                         />
 
-                      </EmbedMethodHighlight>
+                      </EmbedHighlight>
                     </Grid>
                   </>
                   : ''
                 }
                 {lookerContent[0].dynamicThemeFont ?
                   <>
-                    <Grid item sm={1}>
-                      <EmbedMethodHighlight classes={classes} >
+                    <Grid item sm={2}>
+                      <EmbedHighlight classes={classes} >
 
                         <FormControl className={classes.formControl}>
-                          <InputLabel id="demo-simple-select-label">Change font</InputLabel>
+                          <InputLabel id="demo-simple-select-label"
+                          >Change font</InputLabel>
                           <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
@@ -708,14 +712,11 @@ function FilterBar(props) {
                           </Select>
                         </FormControl>
 
-                      </EmbedMethodHighlight>
+                      </EmbedHighlight>
                     </Grid>
                   </>
                   : ''
                 }
-
-
-
               </>
               : ''
           }

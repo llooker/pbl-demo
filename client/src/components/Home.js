@@ -469,7 +469,8 @@ class Home extends Component {
             codeShow: this.state.codeShow,
             toggleCodeShow: this.toggleCodeShow,
             lookerHost,
-            sdk
+            sdk,
+            atomTheme: atomTheme
           }
         } >
           <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>

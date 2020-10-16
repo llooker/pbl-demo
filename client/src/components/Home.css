@@ -105,6 +105,8 @@ iframe{
 }
 .embedContainer iframe.splashPage {
   height: 370px;
+  margin-top: -35px;
+  /* overflow: hidden; */
 }
 
 /* override */

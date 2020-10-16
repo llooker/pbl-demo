@@ -19,11 +19,7 @@ export function Welcome({ lookerContent, classes }) {
       className={`${classes.overflowScroll} ${classes.padding15}`}
       style={{ maxHeight: lookerContent.height }}
     >
-      <Typography variant="h4">Welcome back</Typography>
-      <br />
-      <Typography variant="subtitle1" display="inline">
-        Hi <b>{userProfile.givenName}</b>, hope you're having a good day. Here are a few things you might want to know.
-      </Typography>
+      <Typography variant="h4">Welcome back, {userProfile.givenName}!</Typography>
       <br />
       <>
         {lookerContent.inlineQueries.map((inlineQuery, index) => (
