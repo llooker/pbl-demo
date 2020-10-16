@@ -132,8 +132,10 @@ export function MonetizationModal({ props, switchLookerUser }) {
                   <Card className={`${classes.card} ${classes[key]}`}
                     elevation={1}
                     style={key === lookerUser.user_attributes.permission_level ? {
-                      transform: 'scale(1.05)',
-                      transition: 'transform .2s',
+                      // transform: 'scale(1.05)',
+                      // transition: 'transform .2s',
+                      backgroundColor: '#5F6BD8',
+                      color: '#ffffff',
                       height: 519
                     } : {
                         height: 519
@@ -184,12 +186,13 @@ export function MonetizationModal({ props, switchLookerUser }) {
                       <Button
                         color="primary"
                         variant="outlined"
-                        disabled={key === lookerUser.user_attributes.permission_level ? true : false}
+                        // disabled={key === lookerUser.user_attributes.permission_level ? true : false}
                         fullWidth
                         onClick={() => {
                           switchLookerUser(key, 'permission')
                           togglePayWallModal()
-                        }}>
+                        }}
+                        style={key === lookerUser.user_attributes.permission_level ? { color: '#ffffff', borderColor: "#ffffff" } : {}}>
                         {key === lookerUser.user_attributes.permission_level ? "Active" :
                           Object.keys(modalListMap).indexOf(lookerUser.user_attributes.permission_level) < Object.keys(modalListMap).indexOf(key) ?
                             'Upgrade' :

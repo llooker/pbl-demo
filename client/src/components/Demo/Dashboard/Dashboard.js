@@ -49,7 +49,7 @@ export default function Dashboard(props) {
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
   const { togglePayWallModal, show, codeShow, sdk, atomTheme } = useContext(AppContext)
 
-  const isThemeableDashboard = validIdHelper(`${demoComponentType}${lookerContent[0].id}`) === 'customfilter1' && !lightThemeToggleValue;
+  const isThemeableDashboard = validIdHelper(`${demoComponentType}${lookerContent[0].id}`) === 'customfilter1';
   const darkThemeBackgroundColor = "#343D4E";
 
   const classes = useStyles();
@@ -94,6 +94,7 @@ export default function Dashboard(props) {
 
   const handleVisColorToggle = (event, newValue) => {
     let newColorSeries = lookerContent[0].dynamicVisConfig.colors[newValue];
+    // console.log('newColorSeries', newColorSeries)
     let newDashboardElements = { ...dashboardOptions.elements };
     Object.keys(newDashboardElements).map(key => {
       if (newDashboardElements[key].vis_config.series_colors) {
@@ -117,12 +118,16 @@ export default function Dashboard(props) {
         Object.keys(newDashboardElements[key].vis_config.series_cell_visualizations).map((innerKey, index) => {
           if (newDashboardElements[key].vis_config.series_cell_visualizations[innerKey].hasOwnProperty("palette")) {
             newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"]["custom_colors"].map((item, innerIndex) => {
+
+              console.log('newColorSeries[innerIndex]', newColorSeries[innerIndex])
               newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"]["custom_colors"][innerIndex] = newColorSeries[innerIndex] || newColorSeries[0];
             })
           }
         })
       }
     })
+
+    // console.log('newDashboardElements', newDashboardElements)
 
     setVisColorToggleValue(newValue)
     dashboardObj.setOptions({ "elements": { ...newDashboardElements } })
@@ -176,6 +181,7 @@ export default function Dashboard(props) {
         lookerContent.theme ?
           lookerContent.theme :
           'atom_fashion';
+      // console.log('themeToUse', themeToUse)
 
       LookerEmbedSDK.createDashboardWithId(dashboardId) //dashboardSlug
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
