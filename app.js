@@ -3,9 +3,9 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const app = express();
+const session = require('express-session');
 require('dotenv').config();
-
-var session = require('express-session');
+//mongo
 var MongoStore = require('connect-mongo')(session);
 let mongoDB = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster1.97hzq.gcp.mongodb.net/pbl-demo
 `
