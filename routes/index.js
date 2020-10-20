@@ -4,19 +4,20 @@ const express = require('express')
 const router = express.Router();
 
 const indexCtrl = require('../controllers/indexController')
-const customizeCtrl = require('../controllers/customizeController')
+// const customizeCtrl = require('../controllers/customizeController')
 const lookerCtrl = require('../controllers/lookerController')
 
 //session 
 router.get('/readsession', indexCtrl.readSession)
 router.post('/writesession', indexCtrl.writeSession)
 router.post('/endsession', indexCtrl.endSession)
+router.get('/refreshlookertoken', indexCtrl.refreshLookerToken)
 
 //customization
-router.get('/customize', customizeCtrl.main)
-router.post('/savecustomization', customizeCtrl.saveCustomization)
-router.post('/savelookercontent', customizeCtrl.saveLookerContent)
-router.post('/applyactivecustomziation', customizeCtrl.applyActiveCustomizationToSession)
+// router.get('/customize', customizeCtrl.main)
+// router.post('/savecustomization', customizeCtrl.saveCustomization)
+// router.post('/savelookercontent', customizeCtrl.saveLookerContent)
+// router.post('/applyactivecustomziation', customizeCtrl.applyActiveCustomizationToSession)
 
 //looker
 router.get('/auth', lookerCtrl.auth)

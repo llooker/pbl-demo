@@ -5,10 +5,6 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 // import Config from './clientConfig.json';
 import Home from './components/Home'
 import SignIn from './components/SignIn'
-// import Header from './components/Header'
-// import Footer from './components/Footer'
-import Customizations from './components/Customizations'
-import EditCustomization from './components/EditCustomization'
 //make looker user dynamic
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
@@ -42,7 +38,6 @@ class Login extends React.Component {
 
     const { from } = this.props.location.state || { from: { pathname: '/analytics' } } //needs work?
     const { pathname } = this.props.location
-    const { activeCustomization } = this.props
     const { userProfile } = this.props
 
     const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
@@ -67,15 +62,7 @@ class Login extends React.Component {
 
 const PrivateRoute = ({
   component: Component,
-  customizations,
-  activeCustomization,
-  applyCustomization,
-  editCustomization,
-  indexOfCustomizationToEdit,
-  saveCustomization,
-  cancelIndexOfCustomizationToEdit,
   lookerContent,
-  saveLookerContent,
   userProfile,
   lookerUser,
   lookerHost,
@@ -85,19 +72,12 @@ const PrivateRoute = ({
   switchUserAttributeBrand,
   usecaseFromUrl,
   sdk,
+  lookerTokenExpires,
   ...rest }) => (
     < Route {...rest} render={(props) => (
       Object.keys(userProfile).length ?
         <Component {...props}
-          customizations={customizations}
-          activeCustomization={activeCustomization}
-          applyCustomization={applyCustomization}
-          editCustomization={editCustomization}
-          indexOfCustomizationToEdit={indexOfCustomizationToEdit}
-          saveCustomization={saveCustomization}
-          cancelIndexOfCustomizationToEdit={cancelIndexOfCustomizationToEdit}
           lookerContent={lookerContent}
-          saveLookerContent={saveLookerContent}
           userProfile={userProfile}
           lookerUser={lookerUser}
           lookerHost={lookerHost}
@@ -107,6 +87,7 @@ const PrivateRoute = ({
           switchUserAttributeBrand={switchUserAttributeBrand}
           usecaseFromUrl={usecaseFromUrl}
           sdk={sdk}
+          lookerTokenExpires={lookerTokenExpires}
         />
         : <Redirect to={{
           pathname: '/',
@@ -120,34 +101,33 @@ class App extends React.Component {
     super(props);
     this.state = {
       userProfile: {},
-      customizations: [],
-      activeCustomization: {},
-      indexOfCustomizationToEdit: null,
-      // lookerContent: [UsecaseContent[activeUsecase]],
       lookerUser: {
         ...InitialLookerUser
       },
       lookerHost: '',
       activeUsecase: '',
-      tokenLastRefreshed: '',
-      sdk: ''
+      // tokenLastRefreshed: '',
+      sdk: '',
+      lookerTokenExpires: ''
     }
   }
 
   // keep track of when user logs in
   // keep track of current time 
   // if current time > initial log in time plus buffer, logout
-  logoutTimer = () => {
-    let clientInterval = setInterval(async () => {
-      let currentTime = Date.now();
-      let expiresInBuffer = 58 * 60 * 1000; //3480000; //58 minutes
-      if (currentTime > (this.state.tokenLastRefreshed + expiresInBuffer)) {
-        //force logout
-        this.applySession({})
-        clearInterval(clientInterval);
-      }
-    }, 1000)
-  }
+  // logoutTimer = () => {
+  //   console.log('logoutTimer')
+  //   console.log('this.state.lookerTokenExpires', this.state.lookerTokenExpires)
+  //   let clientInterval = setInterval(async () => {
+  //     let currentTime = Date.now();
+  //     // let expiresInBuffer = 58 * 60 * 1000; //3480000; //58 minutes
+  //     if (currentTime > (this.state.lookerTokenExpires)) {
+  //       //force logout
+  //       this.applySession({})
+  //       clearInterval(clientInterval);
+  //     }
+  //   }, 1000)
+  // }
 
   componentDidMount() {
     // console.log('App componentDidMount')
@@ -157,7 +137,8 @@ class App extends React.Component {
   //called on componentDidMount
   //get request so should only check info, never update
   checkSession = async () => {
-    // console.log('checkSession')
+    console.log('checkSession')
+    // this.applySession({})
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -166,13 +147,11 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
-    // console.log('sessionResponseData', sessionResponseData)
+    console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
-    const { customizations } = sessionResponseData.session
-    const activeCustomization = sessionResponseData.session.activeCustomization ? sessionResponseData.session.activeCustomization : 0;
     const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
     const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-    const accessToken = sessionResponseData.session.mongoInfo ? sessionResponseData.session.mongoInfo.api_user_token : '';
+    const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
 
@@ -189,7 +168,6 @@ class App extends React.Component {
 
       this.setState((prevState) => ({
         userProfile, //think we want this here?
-        customizations,
         lookerUser: {
           ...prevState.lookerUser,
           external_user_id: userProfile.email, //googleId
@@ -206,21 +184,20 @@ class App extends React.Component {
           }
         },
         lookerHost,
-        tokenLastRefreshed: sessionResponseData.session.mongoInfo.api_token_last_refreshed || Date.now(),
-        sdk
+        // tokenLastRefreshed: sessionResponseData.session.lookerApiToken.api_token_last_refreshed || Date.now(),
+        sdk,
+        lookerTokenExpires: sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000 //(sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
       }), () => {
         // console.log('checkSession callback 1111 this.state.lookerUser', this.state.lookerUser)
-        this.applyCustomization(activeCustomization)
-        this.logoutTimer();
+        // this.logoutTimer();
       })
     }
   }
 
   // called by responseGoogle once it gets response
-  // since login can assume activeCustomization will be default..
   applySession = async (userProfile) => {
-    // console.log('applySession')
-    // console.log('userProfile', userProfile)
+    console.log('applySession')
+    console.log('userProfile', userProfile)
 
     if (Object.keys(userProfile).length === 0) {
       // console.log('inside ifff')
@@ -246,10 +223,10 @@ class App extends React.Component {
         body: JSON.stringify({ userProfile, lookerUser: this.state.lookerUser })
       })
       const sessionResponseData = await sessionData.json();
-      const { customizations } = sessionResponseData.session
+      console.log('sessionResponseData', sessionResponseData)
       const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
       const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-      const accessToken = sessionResponseData.session.mongoInfo ? sessionResponseData.session.mongoInfo.api_user_token : '';
+      const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
 
 
       const session = new PblSessionEmbed({
@@ -263,7 +240,6 @@ class App extends React.Component {
 
       this.setState(prevState => ({
         userProfile,
-        customizations,
         lookerUser: {
           ...prevState.lookerUser,
           external_user_id: userProfile.email, //googleId
@@ -281,112 +257,13 @@ class App extends React.Component {
           }
         },
         lookerHost,
-        tokenLastRefreshed: sessionResponseData.session.mongoInfo.api_token_last_refreshed || Date.now(),
-        sdk
+        // tokenLastRefreshed: sessionResponseData.session.lookerApiToken.api_token_last_refreshed || Date.now(),
+        sdk,
+        lookerTokenExpires: sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000//(sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
       }), () => {
-        this.applyCustomization(0) //assume default customization, set lookerContent and activeCustomization in applyCustomization
-        this.logoutTimer()
+        // this.logoutTimer()
       });
     }
-  }
-
-  //called by: checkSession, applySession, applyButton, saveCustomization
-  applyCustomization = async (customizationIndex) => {
-    // console.log('applyCustomization')
-    // console.log('customizationIndex', customizationIndex)
-
-    let customizationResponse = await fetch('/applyactivecustomziation', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ customizationIndex })
-    })
-
-    let customizationResponseData = await customizationResponse.json();
-
-    let lookerContentToUse = [];
-    //check industry first, insert to array
-    if (this.state.customizations[customizationIndex].industry) {
-      // lookerContentToUse = [...DefaultLookerContent[this.state.lookerHost][this.state.customizations[customizationIndex].industry]]
-    }
-    //then check custom content, insert to array
-    if (this.state.customizations[customizationIndex].lookerContent) {
-      // lookerContentToUse = [...lookerContentToUse, ...this.state.customizations[customizationIndex].lookerContent]
-    }
-
-    this.setState({
-      activeCustomization: this.state.customizations[customizationIndex],
-      lookerContent: lookerContentToUse
-    }, () => {
-      // console.log('applyCustomization callback this.state.lookerContent', this.state.lookerContent)
-      // console.log('applyCustomization callback this.state.activeCustomization', this.state.activeCustomization)
-      // this.props.history.push('/home') //not going to work here :P
-    });
-  }
-
-  editCustomization = (customizationIndex) => {
-    // console.log('editCustomization')
-    // console.log('customizationIndex', customizationIndex)
-    const validCustomizationIndex = typeof this.state.customizations[customizationIndex] === 'undefined' ? null : customizationIndex
-    this.setState({
-      indexOfCustomizationToEdit: validCustomizationIndex,
-    }, () => {
-      // console.log('editCustomization callback this.state.indexOfCustomizationToEdit', this.state.indexOfCustomizationToEdit)
-    });
-  }
-
-  saveCustomization = async (formData) => {
-    // console.log('saveCustomization')
-    // console.log('formData', formData)
-    let customizationResponse = await fetch('/savecustomization', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-
-    let customizationResponseData = await customizationResponse.json();
-
-    // console.log('customizationResponseData', customizationResponseData)
-
-    this.setState({
-      customizations: customizationResponseData.customizations,
-      // indexOfCustomizationToEdit: null
-    }, () => {
-      this.applyCustomization(formData.customizationIndex) //sessionActiveCustomization
-    })
-  }
-
-
-  cancelIndexOfCustomizationToEdit = () => {
-    // console.log("cancelIndexOfCustomizationToEdit")
-    this.setState({
-      indexOfCustomizationToEdit: null
-    })
-  }
-
-  saveLookerContent = async (newLookerContent) => {
-    // console.log('saveLookerContent')
-    // console.log('newLookerContent', newLookerContent)
-
-    /*let customizationResponse = await fetch('/savelookercontent', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ activeCustomization: this.state.activeCustomization, newLookerContent: newLookerContent })
-    })
-    let customizationResponseData = await customizationResponse.json();
-
-    this.setState(prevState => ({
-      lookerContent: [...prevState.lookerContent, newLookerContent] //should I be using DB as source here?
-    }))*/
-
   }
 
   switchLookerUser = (newUser) => {
@@ -454,7 +331,7 @@ class App extends React.Component {
   render() {
     // console.log('App render');
     // console.log('this.props', this.props);
-    const { userProfile, customizations, activeCustomization, indexOfCustomizationToEdit, lookerContent, lookerUser, lookerHost, accessToken, sdk } = this.state;
+    const { userProfile, lookerContent, lookerUser, lookerHost, accessToken, sdk, lookerTokenExpires } = this.state;
 
 
     let usecaseFromUrl = usecaseHelper();
@@ -466,16 +343,13 @@ class App extends React.Component {
             {...props}
             applySession={this.applySession}
             userProfile={userProfile}
-            activeCustomization={activeCustomization}
             lookerUser={lookerUser}
             switchLookerUser={this.switchLookerUser}
             lookerHost={lookerHost}
           />}
           />
           <PrivateRoute path='/analytics' component={Home}
-            activeCustomization={activeCustomization}
             lookerContent={lookerContent}
-            saveLookerContent={this.saveLookerContent}
             userProfile={userProfile}
             lookerUser={lookerUser}
             applySession={this.applySession}
@@ -485,6 +359,7 @@ class App extends React.Component {
             switchUserAttributeBrand={this.switchUserAttributeBrand}
             usecaseFromUrl={usecaseFromUrl}
             sdk={sdk}
+            lookerTokenExpires={lookerTokenExpires}
           />
         </div>
       </Router>

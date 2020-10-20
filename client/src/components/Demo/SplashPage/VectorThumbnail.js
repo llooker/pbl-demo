@@ -6,8 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSelect, index }) {
   const [svg, setSvg] = useState(undefined)
-  const { userProfile, lookerUser, show, sdk } = useContext(AppContext);
+  const { userProfile, lookerUser, show, sdk, lookerTokenExpires } = useContext(AppContext);
 
+  console.log('lookerTokenExpires', lookerTokenExpires)
 
   useEffect(() => {
     let isSubscribed = true
@@ -20,6 +21,21 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
   }, [item, lookerUser]);
 
   const getThumbnail = async () => {
+
+    let currentTime = Date.now();
+    //not sure this is going to bubble up to where I need it to
+
+    if (currentTime > lookerTokenExpires) {
+      let refreshedToken = await fetch('/refreshlookertoken', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      console.log('refreshedToken', refreshedToken)
+    }
+
     let clientLookerResponse = await sdk.ok(sdk.content_thumbnail({ type: item.resourceType, resource_id: item.id }));
     const blob = new Blob([clientLookerResponse], { type: 'image/svg+xml' });
     let url = URL.createObjectURL(blob);

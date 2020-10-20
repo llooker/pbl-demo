@@ -423,7 +423,7 @@ class Home extends Component {
 
     const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedMenuItem, renderedDemoComponents } = this.state;
     const { handleTabChange, handleMenuItemSelect, handleDrawerChange } = this;
-    const { classes, activeCustomization, lookerUser, applySession, lookerUserAttributeBrandOptions, lookerHost, userProfile, sdk } = this.props
+    const { classes, activeCustomization, lookerUser, applySession, lookerUserAttributeBrandOptions, lookerHost, userProfile, sdk, lookerTokenExpires } = this.props
 
     // console.log('accessToken', accessToken)
 
@@ -470,7 +470,8 @@ class Home extends Component {
             toggleCodeShow: this.toggleCodeShow,
             lookerHost,
             sdk,
-            atomTheme: atomTheme
+            atomTheme: atomTheme,
+            lookerTokenExpires: lookerTokenExpires
           }
         } >
           <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>

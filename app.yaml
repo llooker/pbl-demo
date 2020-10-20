@@ -29,3 +29,6 @@ handlers:
 
 # includes:
 #   - env_variables.yaml
+
+# beta_settings:
+#   cloud_sql_instances: pbl-demo-2020-281322:asia-northeast1:atom-fashion-2

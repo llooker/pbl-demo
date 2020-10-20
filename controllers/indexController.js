@@ -2,7 +2,7 @@
 
 //const lookerHost = process.env.LOOKER_HOST;
 const lookerHostNameToUse = process.env.LOOKER_HOST.substr(0, process.env.LOOKER_HOST.indexOf('.')) //lookerHost.substr(0, lookerHost.indexOf('.'));
-const Customization = require('../models/Customization');
+// const Customization = require('../models/Customization');
 const User = require('../models/User');
 const { makeid } = require('../tools');
 
@@ -15,16 +15,18 @@ const sdk = new Looker40SDK(session)
 const rp = require('request-promise');
 
 module.exports.readSession = async (req, res, next) => {
-  // console.log('readSession')
+  console.log('readSession')
   let { session } = req
-  session.lookerHost = lookerHostNameToUse; //lookerHostNameToUse
-  if (session.userProfile) session = await checkForCustomizations(session)
+  console.log({ session })
+  // session.lookerHost = lookerHostNameToUse;
+  // if (session.userProfile) session = await checkForCustomizations(session)
   res.status(200).send({ session })
 }
 
 module.exports.writeSession = async (req, res, next) => {
-  // console.log('writeSession')
+  console.log('writeSession')
   let { session } = req;
+  console.log({ session })
   session.userProfile = req.body.userProfile;
   session.lookerUser = req.body.lookerUser;
   session.lookerHost = lookerHostNameToUse; //lookerHostNameToUse;
@@ -35,24 +37,24 @@ module.exports.writeSession = async (req, res, next) => {
   session.lookerUser.last_name = session.userProfile.familyName;
   /**/
 
-  /*
-      RG 9/4:
-      1) Added an iframe call to the looker server to ensure state is posted for any subsequent API calls
-      2) Added a super-user call to the api to log in the api session for the user
-      3) Saving the resulting bearer token into the datastore for future retrieval
-  */
+  // /*
+  //     RG 9/4:
+  //     1) Added an iframe call to the looker server to ensure state is posted for any subsequent API calls
+  //     2) Added a super-user call to the api to log in the api session for the user
+  //     3) Saving the resulting bearer token into the datastore for future retrieval
+  // */
 
-  // Calling the iframe url to ensure the embed user exists
+  // // Calling the iframe url to ensure the embed user exists
   const url = await createSignedUrl('/alive', session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
   await rp(url)
 
-  // Initialize the API session, sudo and retrieve the bearer token
+  // // Initialize the API session, sudo and retrieve the bearer token
   const userCred = await sdk.ok(sdk.user_for_credential('embed', session.userProfile.email)); //googleId
 
   const embeddedUserSession = new NodeSession(settings) // node wrapper
-  ////instantiate new sdk client based on embedded session
+  // ////instantiate new sdk client based on embedded session
   const embeddedUserSdk = new Looker40SDK(embeddedUserSession)
-  ////ensure service account connected before sudoing
+  // ////ensure service account connected before sudoing
   const me = await embeddedUserSdk.ok(embeddedUserSdk.me())
   const embed_user_token = await embeddedUserSdk.login_user(userCred.id.toString())
   const u = {
@@ -62,18 +64,18 @@ module.exports.writeSession = async (req, res, next) => {
     , api_user_token: embed_user_token.value
     , api_token_last_refreshed: Date.now()
   }
-  // Save the bearer token in Mongo for future retrieval
-  let r = await User.findOneAndUpdate({ google_id: session.userProfile.email }, u, { //googleId
-    new: true,
-    upsert: true,
-    rawResult: true // Return the raw result from the MongoDB driver
-  });
-  // console.log(r)
+  // // Save the bearer token in Mongo for future retrieval
+  // let r = await User.findOneAndUpdate({ google_id: session.userProfile.email }, u, { //googleId
+  //   new: true,
+  //   upsert: true,
+  //   rawResult: true // Return the raw result from the MongoDB driver
+  // });
+  // // console.log(r)
 
-  session.mongoInfo = { ...u }
+  session.lookerApiToken = { ...u }
 
-  /* end RG 9/4 Changes */
-  session = await checkForCustomizations(session)
+  // /* end RG 9/4 Changes */
+  // session = await checkForCustomizations(session)
   res.status(200).send({ session });
 }
 
@@ -82,7 +84,46 @@ module.exports.endSession = async (req, res, next) => {
   res.status(200).send('session destroyed :)');
 }
 
-async function checkForCustomizations(session) {
+module.exports.refreshLookerToken = async (req, res, next) => {
+  console.log('refreshLookerToken')
+  let { session } = req;
+  console.log({ session })
+  // // Calling the iframe url to ensure the embed user exists
+  const url = await createSignedUrl('/alive', session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
+  await rp(url)
+
+  // // Initialize the API session, sudo and retrieve the bearer token
+  const userCred = await sdk.ok(sdk.user_for_credential('embed', session.userProfile.email)); //googleId
+
+  const embeddedUserSession = new NodeSession(settings) // node wrapper
+  // ////instantiate new sdk client based on embedded session
+  const embeddedUserSdk = new Looker40SDK(embeddedUserSession)
+  // ////ensure service account connected before sudoing
+  const me = await embeddedUserSdk.ok(embeddedUserSdk.me())
+  const embed_user_token = await embeddedUserSdk.login_user(userCred.id.toString())
+  const u = {
+    looker_user_id: userCred.id.toString()
+    , google_id: session.userProfile.email //googleId
+    // ,api_user_token: embed_user_token.value.access_token
+    , api_user_token: embed_user_token.value
+    , api_token_last_refreshed: Date.now()
+  }
+  // // Save the bearer token in Mongo for future retrieval
+  // let r = await User.findOneAndUpdate({ google_id: session.userProfile.email }, u, { //googleId
+  //   new: true,
+  //   upsert: true,
+  //   rawResult: true // Return the raw result from the MongoDB driver
+  // });
+  // // console.log(r)
+
+  session.lookerApiToken = { ...u }
+
+  // /* end RG 9/4 Changes */
+  // session = await checkForCustomizations(session)
+  res.status(200).send({ session });
+}
+
+/*async function checkForCustomizations(session) {
   // console.log('checkForCustomizations')
   const { email } = session.userProfile
 
@@ -92,7 +133,7 @@ async function checkForCustomizations(session) {
     companyName: 'WYSIWYG',
     logoUrl: 'https://looker.com/assets/img/images/logos/looker_black.svg',
     date: new Date()
-    // industry: "marketing", 
+    // industry: "marketing",
   }
 
   var myPromise = () => {
@@ -165,7 +206,7 @@ async function checkForCustomizations(session) {
   var result = await myPromise();
   session.customizations = result
   return session;
-}
+}*/
 
 /**
  * current implementation
@@ -226,3 +267,4 @@ async function checkForCustomizations(session) {
 //   session = await checkForCustomizations(session)
 //   res.status(200).send({ session });
 // }
+

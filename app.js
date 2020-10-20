@@ -1,29 +1,33 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const app = express();
 const session = require('express-session');
-require('dotenv').config();
-//mongo
-var MongoStore = require('connect-mongo')(session);
-let mongoDB = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster1.97hzq.gcp.mongodb.net/pbl-demo
-`
-mongoose.connect(mongoDB, { useNewUrlParser: true });
-mongoose.Promise = global.Promise;
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+const pg = require('pg');
+const pgSession = require('connect-pg-simple')(session);
 
-var sess = {
+require('dotenv').config();
+
+const conString = `postgres://${process.env.POSTGRES_USERNAME}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_IP_ADDRESS}:5432/${process.env.POSTGRES_DATABASE_NAME}`;
+
+const pgPool = new pg.Pool({
+  // Insert pool options here
+  database: process.env.POSTGRES_DATABASE_NAME,
+  user: process.env.POSTGRES_USERNAME,
+  password: process.env.POSTGRES_PASSWORD,
+  port: 5432,
+  host: process.env.POSTGRES_IP_ADDRESS,
+});
+
+const sess = {
+  store: new pgSession({
+    pool: pgPool,                // Connection pool
+    tableName: 'user_sessions'   // Use another table-name than the default "session" one
+  }),
   secret: 'keyboard catv1.0.6',
-  cookie: {
-    // expires: new Date(Date.now() + 3600000), //hour
-    maxAge: 14 * 24 * 3600000 //two weeks
-    // maxAge: 5000 //58 * 60 * 1000
-  },
-  saveUninitialized: false,
-  resave: false,
-  store: new MongoStore({ mongooseConnection: mongoose.connection })
+  resave: true,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
 }
 
 if (app.get('env') === 'production') {
@@ -58,7 +62,7 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
-else console.log('elllse')
+// else console.log('elllse')
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
