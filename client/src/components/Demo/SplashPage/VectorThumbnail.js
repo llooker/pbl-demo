@@ -5,9 +5,12 @@ import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, 
 import { makeStyles } from '@material-ui/core/styles';
 
 export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSelect, index }) {
-  const [svg, setSvg] = useState(undefined)
-  const { userProfile, lookerUser, show, sdk, lookerTokenExpires } = useContext(AppContext);
+  // console.log('VectorThumbnail')
 
+  const [svg, setSvg] = useState(undefined)
+  const { userProfile, lookerUser, show, sdk, lookerTokenExpires, refreshLookerToken } = useContext(AppContext);
+
+  console.log('sdk', sdk)
   console.log('lookerTokenExpires', lookerTokenExpires)
 
   useEffect(() => {
@@ -21,18 +24,12 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
   }, [item, lookerUser]);
 
   const getThumbnail = async () => {
-
+    // console.log('getThumbnail')
     let currentTime = Date.now();
-    //not sure this is going to bubble up to where I need it to
 
     if (currentTime > lookerTokenExpires) {
-      let refreshedToken = await fetch('/refreshlookertoken', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
+      console.log('inisde currentTime > lookerTokenExpires if')
+      let refreshedToken = await refreshLookerToken();
       console.log('refreshedToken', refreshedToken)
     }
 
@@ -77,6 +74,5 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
         ''
       }
     </Grid >
-
   );
 }

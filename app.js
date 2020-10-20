@@ -1,15 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-// const mongoose = require('mongoose');
 const app = express();
 const session = require('express-session');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 
 require('dotenv').config();
-
-const conString = `postgres://${process.env.POSTGRES_USERNAME}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_IP_ADDRESS}:5432/${process.env.POSTGRES_DATABASE_NAME}`;
 
 const pgPool = new pg.Pool({
   // Insert pool options here
@@ -23,7 +20,7 @@ const pgPool = new pg.Pool({
 const sess = {
   store: new pgSession({
     pool: pgPool,                // Connection pool
-    tableName: 'user_sessions'   // Use another table-name than the default "session" one
+    tableName: 'session'   // Use another table-name than the default "session" one
   }),
   secret: 'keyboard catv1.0.6',
   resave: true,

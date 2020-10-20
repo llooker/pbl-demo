@@ -423,9 +423,10 @@ class Home extends Component {
 
     const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedMenuItem, renderedDemoComponents } = this.state;
     const { handleTabChange, handleMenuItemSelect, handleDrawerChange } = this;
-    const { classes, activeCustomization, lookerUser, applySession, lookerUserAttributeBrandOptions, lookerHost, userProfile, sdk, lookerTokenExpires } = this.props
+    const { classes, activeCustomization, lookerUser, applySession, lookerUserAttributeBrandOptions, lookerHost, userProfile, sdk, lookerTokenExpires, refreshLookerToken } = this.props;
 
-    // console.log('accessToken', accessToken)
+    // console.log('sdk', sdk)
+    // console.log('lookerTokenExpires', lookerTokenExpires)
 
 
     // Use Lodash to sort array by 'name'
@@ -470,8 +471,9 @@ class Home extends Component {
             toggleCodeShow: this.toggleCodeShow,
             lookerHost,
             sdk,
-            atomTheme: atomTheme,
-            lookerTokenExpires: lookerTokenExpires
+            atomTheme,
+            lookerTokenExpires,
+            refreshLookerToken
           }
         } >
           <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>

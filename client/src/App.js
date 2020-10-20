@@ -1,16 +1,12 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Link, Redirect, withRouter, useHistory } from 'react-router-dom'
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
-// import Config from './clientConfig.json';
-import Home from './components/Home'
-import SignIn from './components/SignIn'
-//make looker user dynamic
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import Home from './components/Home';
+import SignIn from './components/SignIn';
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
 import UsecaseContent from './usecaseContent.json';
 import LookerUserAttributeBrandOptions from './lookerUserAttributeBrandOptions.json';
-
 import { Looker40SDK, DefaultSettings } from "@looker/sdk";
 import { PblSessionEmbed } from './LookerHelpers/pblsession'
 
@@ -26,7 +22,6 @@ class Login extends React.Component {
   }
 
   responseGoogle = (response) => {
-    // debugger //from Jim
     if (response.error) {
       console.log('response.error', response.error)
     } else {
@@ -73,6 +68,7 @@ const PrivateRoute = ({
   usecaseFromUrl,
   sdk,
   lookerTokenExpires,
+  refreshLookerToken,
   ...rest }) => (
     < Route {...rest} render={(props) => (
       Object.keys(userProfile).length ?
@@ -88,6 +84,7 @@ const PrivateRoute = ({
           usecaseFromUrl={usecaseFromUrl}
           sdk={sdk}
           lookerTokenExpires={lookerTokenExpires}
+          refreshLookerToken={refreshLookerToken}
         />
         : <Redirect to={{
           pathname: '/',
@@ -106,39 +103,19 @@ class App extends React.Component {
       },
       lookerHost: '',
       activeUsecase: '',
-      // tokenLastRefreshed: '',
       sdk: '',
       lookerTokenExpires: ''
     }
   }
-
-  // keep track of when user logs in
-  // keep track of current time 
-  // if current time > initial log in time plus buffer, logout
-  // logoutTimer = () => {
-  //   console.log('logoutTimer')
-  //   console.log('this.state.lookerTokenExpires', this.state.lookerTokenExpires)
-  //   let clientInterval = setInterval(async () => {
-  //     let currentTime = Date.now();
-  //     // let expiresInBuffer = 58 * 60 * 1000; //3480000; //58 minutes
-  //     if (currentTime > (this.state.lookerTokenExpires)) {
-  //       //force logout
-  //       this.applySession({})
-  //       clearInterval(clientInterval);
-  //     }
-  //   }, 1000)
-  // }
 
   componentDidMount() {
     // console.log('App componentDidMount')
     this.checkSession()
   }
 
-  //called on componentDidMount
-  //get request so should only check info, never update
   checkSession = async () => {
-    console.log('checkSession')
-    // this.applySession({})
+    // console.log('checkSession')
+    // this.applySession({}) //force logout
     let sessionResponse = await fetch('/readsession', {
       method: 'GET',
       headers: {
@@ -147,30 +124,26 @@ class App extends React.Component {
       }
     })
     const sessionResponseData = await sessionResponse.json();
-    console.log('sessionResponseData', sessionResponseData)
+    // console.log('sessionResponseData', sessionResponseData)
     const { userProfile } = sessionResponseData.session
     const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
     const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
     const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
+    // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
+    const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
+
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
-
-      const session = new PblSessionEmbed({
-        ...DefaultSettings(),
-        base_url: `https://${lookerHost}.looker.com:19999`,
-        accessToken
-      });
-
-
-      let sdk = new Looker40SDK(session);
-
-
+      // console.log('000 this.state.sdk', this.state.sdk)
+      //do we want to do this everytime client loads or save in session somehow?
+      let sdk = createSdkHelper({ lookerHost, accessToken })
+      // console.log('1111 sdk', sdk)
 
       this.setState((prevState) => ({
-        userProfile, //think we want this here?
+        userProfile,
         lookerUser: {
           ...prevState.lookerUser,
-          external_user_id: userProfile.email, //googleId
+          external_user_id: userProfile.email,
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
           permissions: LookerUserPermissions[lookerUser.user_attributes.permission_level] || LookerUserPermissions['basic'],
@@ -184,23 +157,22 @@ class App extends React.Component {
           }
         },
         lookerHost,
-        // tokenLastRefreshed: sessionResponseData.session.lookerApiToken.api_token_last_refreshed || Date.now(),
         sdk,
-        lookerTokenExpires: sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000 //(sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
+        lookerTokenExpires
       }), () => {
         // console.log('checkSession callback 1111 this.state.lookerUser', this.state.lookerUser)
-        // this.logoutTimer();
+        // console.log('this.state.sdk', this.state.sdk)
+        // console.log('this.state.lookerTokenExpires', this.state.lookerTokenExpires)
       })
     }
   }
 
   // called by responseGoogle once it gets response
   applySession = async (userProfile) => {
-    console.log('applySession')
-    console.log('userProfile', userProfile)
+    // console.log('applySession')
+    // console.log('userProfile', userProfile)
 
     if (Object.keys(userProfile).length === 0) {
-      // console.log('inside ifff')
       let sessionData = await fetch('/endsession', {
         method: 'POST',
         headers: {
@@ -223,26 +195,20 @@ class App extends React.Component {
         body: JSON.stringify({ userProfile, lookerUser: this.state.lookerUser })
       })
       const sessionResponseData = await sessionData.json();
-      console.log('sessionResponseData', sessionResponseData)
+      // console.log('sessionResponseData', sessionResponseData)
       const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
       const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
       const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
+      // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
+      const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
 
-
-      const session = new PblSessionEmbed({
-        ...DefaultSettings(),
-        base_url: `https://${lookerHost}.looker.com:19999`,
-        accessToken
-      });
-
-
-      let sdk = new Looker40SDK(session);
+      let sdk = createSdkHelper({ lookerHost, accessToken })
 
       this.setState(prevState => ({
         userProfile,
         lookerUser: {
           ...prevState.lookerUser,
-          external_user_id: userProfile.email, //googleId
+          external_user_id: userProfile.email,
           first_name: userProfile.givenName,
           last_name: userProfile.familyName,
           permissions: LookerUserPermissions[lookerUser.user_attributes.permission_level] || LookerUserPermissions['basic'], //assume good initially,
@@ -257,11 +223,11 @@ class App extends React.Component {
           }
         },
         lookerHost,
-        // tokenLastRefreshed: sessionResponseData.session.lookerApiToken.api_token_last_refreshed || Date.now(),
         sdk,
-        lookerTokenExpires: sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000//(sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
+        lookerTokenExpires
       }), () => {
-        // this.logoutTimer()
+        // console.log('this.state.sdk', this.state.sdk)
+        // console.log('this.state.lookerTokenExpires', this.state.lookerTokenExpires)
       });
     }
   }
@@ -271,10 +237,8 @@ class App extends React.Component {
     // console.log('newUser', newUser)
     // console.log('LookerUserPermissions[newUser]', LookerUserPermissions[newUser])
 
-
     let userAttributeCopy = { ...this.state.lookerUser.user_attributes, "permission_level": newUser }
     userAttributeCopy.time_horizon = lookerUserTimeHorizonMap[newUser];
-
 
     this.setState(prevState => ({
       lookerUser: {
@@ -294,7 +258,6 @@ class App extends React.Component {
       })
 
       let lookerUserResponseData = await lookerUserResponse.json();
-
     });
   }
 
@@ -324,14 +287,37 @@ class App extends React.Component {
       })
 
       let lookerUserResponseData = await lookerUserResponse.json();
-
     });
   }
 
+  refreshLookerToken = async () => {
+    let sessionResponse = await fetch('/refreshlookertoken', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    let sessionResponseData = await sessionResponse.json();
+    const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
+    const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
+    // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
+    const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
+
+    let sdk = createSdkHelper({ lookerHost, accessToken })
+
+    this.setState({
+      sdk,
+      lookerTokenExpires
+    }, () => {
+      return lookerTokenExpires
+    })
+  }
+
   render() {
-    // console.log('App render');
-    // console.log('this.props', this.props);
-    const { userProfile, lookerContent, lookerUser, lookerHost, accessToken, sdk, lookerTokenExpires } = this.state;
+
+    const { userProfile, lookerContent, lookerUser, lookerHost,
+      sdk, lookerTokenExpires } = this.state;
 
 
     let usecaseFromUrl = usecaseHelper();
@@ -360,6 +346,7 @@ class App extends React.Component {
             usecaseFromUrl={usecaseFromUrl}
             sdk={sdk}
             lookerTokenExpires={lookerTokenExpires}
+            refreshLookerToken={this.refreshLookerToken}
           />
         </div>
       </Router>
@@ -377,5 +364,22 @@ export function usecaseHelper() {
     }
   }
   return 'atom';
+}
+
+export function createSdkHelper({ accessToken, lookerHost }) {
+
+  // console.log('createSdkHelper')
+  // console.log('accessToken', accessToken)
+  // console.log('lookerHost', lookerHost)
+
+  const session = new PblSessionEmbed({
+    ...DefaultSettings(),
+    base_url: `https://${lookerHost}.looker.com:19999`,
+    accessToken
+  });
+  // console.log('session', session)
+
+  let sdk = new Looker40SDK(session);
+  return sdk;
 }
 
