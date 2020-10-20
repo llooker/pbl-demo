@@ -60,7 +60,7 @@ export function EmbeddedQuery({ lookerContent, classes, id }) {
     // variant="outlined"
     >
       <div
-        // className={`${classes.overflowHidden}`}
+        className={`${classes.overflowHidden}`}
         style={{ height: lookerContent.height }}
       >
         {
@@ -73,7 +73,7 @@ export function EmbeddedQuery({ lookerContent, classes, id }) {
               </Card>
             </Grid>
         }
-        <Grid container spacing={3}>
+        <Grid container spacing={4}>
           <Grid item sm={12}>
             <EmbedHighlight classes={classes}
               height={iFrameExists ? 350 : 0}
