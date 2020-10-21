@@ -8,14 +8,14 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
   // console.log('VectorThumbnail')
 
   const [svg, setSvg] = useState(undefined)
-  const { userProfile, lookerUser, show, sdk, lookerTokenExpires, refreshLookerToken } = useContext(AppContext);
+  const { userProfile, lookerUser, show, sdk, lookerTokenExpires, refreshLookerToken, corsApiCall } = useContext(AppContext);
 
   console.log('sdk', sdk)
   console.log('lookerTokenExpires', lookerTokenExpires)
 
   useEffect(() => {
     let isSubscribed = true
-    getThumbnail().then(response => {
+    corsApiCall(getThumbnail).then(response => {
       if (isSubscribed) {
         setSvg(response)
       }
@@ -29,8 +29,7 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
 
     if (currentTime > lookerTokenExpires) {
       console.log('inisde currentTime > lookerTokenExpires if')
-      let refreshedToken = await refreshLookerToken();
-      console.log('refreshedToken', refreshedToken)
+      // let refreshedToken = await refreshLookerToken();
     }
 
     let clientLookerResponse = await sdk.ok(sdk.content_thumbnail({ type: item.resourceType, resource_id: item.id }));

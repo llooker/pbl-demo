@@ -68,7 +68,7 @@ const PrivateRoute = ({
   usecaseFromUrl,
   sdk,
   lookerTokenExpires,
-  refreshLookerToken,
+  checkToken,
   corsApiCall,
   ...rest }) => (
     < Route {...rest} render={(props) => (
@@ -85,7 +85,7 @@ const PrivateRoute = ({
           usecaseFromUrl={usecaseFromUrl}
           sdk={sdk}
           lookerTokenExpires={lookerTokenExpires}
-          refreshLookerToken={refreshLookerToken}
+          refreshLookerToken={checkToken}
           corsApiCall={corsApiCall}
         />
         : <Redirect to={{
@@ -292,13 +292,14 @@ class App extends React.Component {
     });
   }
 
-  corsApiCall = (func, args) => {
-    await checkToken()
-    func(...args)
+  corsApiCall = async (func, args=[]) => {
+    await this.checkToken()
+    let res = func(...args)
+    return res
   }
 
   checkToken = async () => {
-    if (this.state.lookerTokenExpires > Date.now()) {
+    if (Date.now() > this.state.lookerTokenExpires) {
       let sessionResponse = await fetch('/refreshlookertoken', {
         method: 'GET',
         headers: {
@@ -354,6 +355,7 @@ class App extends React.Component {
             sdk={sdk}
             lookerTokenExpires={lookerTokenExpires}
             refreshLookerToken={this.refreshLookerToken}
+            corsApiCall={this.corsApiCall}
           />
         </div>
       </Router>
