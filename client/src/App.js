@@ -292,13 +292,14 @@ class App extends React.Component {
     });
   }
 
-  corsApiCall = async (func, args=[]) => {
+  corsApiCall = async (func, args = []) => {
     await this.checkToken()
     let res = func(...args)
     return res
   }
 
   checkToken = async () => {
+    console.log("test")
     if (Date.now() > this.state.lookerTokenExpires) {
       let sessionResponse = await fetch('/refreshlookertoken', {
         method: 'GET',
