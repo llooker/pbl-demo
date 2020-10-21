@@ -69,6 +69,7 @@ const PrivateRoute = ({
   sdk,
   lookerTokenExpires,
   refreshLookerToken,
+  corsApiCall,
   ...rest }) => (
     < Route {...rest} render={(props) => (
       Object.keys(userProfile).length ?
@@ -85,6 +86,7 @@ const PrivateRoute = ({
           sdk={sdk}
           lookerTokenExpires={lookerTokenExpires}
           refreshLookerToken={refreshLookerToken}
+          corsApiCall={corsApiCall}
         />
         : <Redirect to={{
           pathname: '/',
@@ -290,28 +292,33 @@ class App extends React.Component {
     });
   }
 
-  refreshLookerToken = async () => {
-    let sessionResponse = await fetch('/refreshlookertoken', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    let sessionResponseData = await sessionResponse.json();
-    const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-    const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
-    // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
-    const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
+  corsApiCall = (func, args) => {
+    await checkToken()
+    func(...args)
+  }
 
-    let sdk = createSdkHelper({ lookerHost, accessToken })
+  checkToken = async () => {
+    if (this.state.lookerTokenExpires > Date.now()) {
+      let sessionResponse = await fetch('/refreshlookertoken', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      let sessionResponseData = await sessionResponse.json();
+      const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
+      const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
+      // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
+      const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
 
-    this.setState({
-      sdk,
-      lookerTokenExpires
-    }, () => {
-      return lookerTokenExpires
-    })
+      let sdk = createSdkHelper({ lookerHost, accessToken })
+
+      this.setState({
+        sdk,
+        lookerTokenExpires
+      })
+    }
   }
 
   render() {
