@@ -423,20 +423,16 @@ class Home extends Component {
 
     const { drawerTabValue, drawerOpen, activeTabValue, activeUsecase, selectedMenuItem, renderedDemoComponents } = this.state;
     const { handleTabChange, handleMenuItemSelect, handleDrawerChange } = this;
-    const { 
-      classes, 
+    const {
+      classes,
       lookerUser,
       applySession,
       lookerUserAttributeBrandOptions,
       lookerHost,
       userProfile,
       sdk,
-      lookerTokenExpires,
-      refreshLookerToken,
       corsApiCall } = this.props;
 
-    // console.log('sdk', sdk)
-    // console.log('lookerTokenExpires', lookerTokenExpires)
 
 
     // Use Lodash to sort array by 'name'
@@ -482,8 +478,6 @@ class Home extends Component {
             lookerHost,
             sdk,
             atomTheme,
-            lookerTokenExpires,
-            refreshLookerToken,
             corsApiCall
           }
         } >

@@ -67,7 +67,6 @@ const PrivateRoute = ({
   switchUserAttributeBrand,
   usecaseFromUrl,
   sdk,
-  lookerTokenExpires,
   checkToken,
   corsApiCall,
   ...rest }) => (
@@ -84,8 +83,6 @@ const PrivateRoute = ({
           switchUserAttributeBrand={switchUserAttributeBrand}
           usecaseFromUrl={usecaseFromUrl}
           sdk={sdk}
-          lookerTokenExpires={lookerTokenExpires}
-          refreshLookerToken={checkToken}
           corsApiCall={corsApiCall}
         />
         : <Redirect to={{
@@ -131,8 +128,8 @@ class App extends React.Component {
     const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
     const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
     const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
-    // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
-    const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
+    const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
+    // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
 
     //make sure defined and contains properties
     if (userProfile && Object.keys(userProfile).length) {
@@ -201,8 +198,8 @@ class App extends React.Component {
       const lookerUser = sessionResponseData.session.lookerUser ? sessionResponseData.session.lookerUser : this.state.lookerUser;
       const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
       const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
-      // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
-      const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
+      const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
+      // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
 
       let sdk = createSdkHelper({ lookerHost, accessToken })
 
@@ -299,7 +296,6 @@ class App extends React.Component {
   }
 
   checkToken = async () => {
-    console.log("test")
     if (Date.now() > this.state.lookerTokenExpires) {
       let sessionResponse = await fetch('/refreshlookertoken', {
         method: 'GET',
@@ -311,8 +307,8 @@ class App extends React.Component {
       let sessionResponseData = await sessionResponse.json();
       const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
       const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
-      // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
-      const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
+      const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + (sessionResponseData.session.lookerApiToken.api_user_token.expires_in * 1000)
+      // const lookerTokenExpires = sessionResponseData.session.lookerApiToken.api_token_last_refreshed + 10000;
 
       let sdk = createSdkHelper({ lookerHost, accessToken })
 
@@ -326,7 +322,7 @@ class App extends React.Component {
   render() {
 
     const { userProfile, lookerContent, lookerUser, lookerHost,
-      sdk, lookerTokenExpires } = this.state;
+      sdk } = this.state;
 
 
     let usecaseFromUrl = usecaseHelper();
@@ -354,8 +350,6 @@ class App extends React.Component {
             switchUserAttributeBrand={this.switchUserAttributeBrand}
             usecaseFromUrl={usecaseFromUrl}
             sdk={sdk}
-            lookerTokenExpires={lookerTokenExpires}
-            refreshLookerToken={this.refreshLookerToken}
             corsApiCall={this.corsApiCall}
           />
         </div>

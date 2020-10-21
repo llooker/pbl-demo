@@ -9,11 +9,11 @@ const { validIdHelper, decodeHtml } = require('../../../tools');
 
 export function NaturalLanguage({ lookerContent, inlineQuery, index, classes }) {
   const [apiContent, setApiContent] = useState(undefined);
-  const { userProfile, lookerUser, show, sdk } = useContext(AppContext);
+  const { userProfile, lookerUser, show, sdk, corsApiCall } = useContext(AppContext);
 
   useEffect(() => {
     let isSubscribed = true
-    runInlineQuery().then(response => {
+    corsApiCall(runInlineQuery).then(response => {
       if (isSubscribed) {
         setApiContent(response)
       }
