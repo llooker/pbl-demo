@@ -12,13 +12,13 @@ export function SingleValueVis({ lookerContent, classes }) {
   // console.log('lookerContent', lookerContent)
 
   const [apiContent, setApiContent] = useState(undefined);
-  const { userProfile, lookerUser, show, sdk } = useContext(AppContext);
+  const { userProfile, lookerUser, show, sdk, corsApiCall } = useContext(AppContext);
 
   let dataObjForSparkline = {}
 
   useEffect(() => {
     let isSubscribed = true
-    runInlineQuery().then(response => {
+    corsApiCall(runInlineQuery).then(response => {
       if (isSubscribed) {
         setApiContent(response)
       }
