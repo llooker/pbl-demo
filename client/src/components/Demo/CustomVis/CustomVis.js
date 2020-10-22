@@ -35,7 +35,7 @@ export default function CustomVis(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   // const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
-  const { togglePayWallModal, show, codeShow, sdk } = useContext(AppContext)
+  const { togglePayWallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
 
 
   //declare constants
@@ -144,7 +144,8 @@ export default function CustomVis(props) {
 
   useEffect(() => {
     if (lookerContent.length) {
-      setTimeout(() => performLookerApiCalls(lookerContent), 100);
+      // setTimeout(() => performLookerApiCalls(lookerContent), 100);
+      corsApiCall(performLookerApiCalls, [lookerContent])
       setDesiredField(lookerContent[0].desiredFields[0])
       setClientSideCode(rawSampleCode)
     }
@@ -155,6 +156,9 @@ export default function CustomVis(props) {
   })
 
   const performLookerApiCalls = function (lookerContent) {
+    // console.log('performLookerApiCalls')
+    // console.log({ lookerContent })
+
     setApiContent(undefined); //set to empty array to show progress bar and skeleton
     lookerContent.map(async lookerContent => {
       let { inlineQuery } = lookerContent;
@@ -278,7 +282,7 @@ export default function CustomVis(props) {
                                   'permissionNeeded': 'see_drill_overlay'
                                 });
                               } else {
-                                handleModalOpen(day)
+                                corsApiCall(handleModalOpen, [day])
                                 event.stopPropagation();
                               }
                             }}

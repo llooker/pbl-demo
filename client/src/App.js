@@ -290,6 +290,9 @@ class App extends React.Component {
   }
 
   corsApiCall = async (func, args = []) => {
+    console.log('corsApiCall');
+    console.log({ func });
+    console.log({ args });
     await this.checkToken()
     let res = func(...args)
     return res

@@ -47,7 +47,7 @@ export default function Dashboard(props) {
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
-  const { togglePayWallModal, show, codeShow, sdk, atomTheme } = useContext(AppContext)
+  const { togglePayWallModal, show, codeShow, sdk, atomTheme, corsApiCall } = useContext(AppContext)
 
   const isThemeableDashboard = validIdHelper(`${demoComponentType}${lookerContent[0].id}`) === 'customfilter1';
   const darkThemeBackgroundColor = "#343D4E";
@@ -118,17 +118,12 @@ export default function Dashboard(props) {
         Object.keys(newDashboardElements[key].vis_config.series_cell_visualizations).map((innerKey, index) => {
           if (newDashboardElements[key].vis_config.series_cell_visualizations[innerKey].hasOwnProperty("palette")) {
             newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"]["custom_colors"].map((item, innerIndex) => {
-
-              console.log('newColorSeries[innerIndex]', newColorSeries[innerIndex])
               newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"]["custom_colors"][innerIndex] = newColorSeries[innerIndex] || newColorSeries[0];
             })
           }
         })
       }
     })
-
-    // console.log('newDashboardElements', newDashboardElements)
-
     setVisColorToggleValue(newValue)
     dashboardObj.setOptions({ "elements": { ...newDashboardElements } })
   };
@@ -142,13 +137,13 @@ export default function Dashboard(props) {
       themeName = lightThemeToggleValue ? `light_${newValue}` : `dark_${newValue}`
       setFontThemeSelectValue(newValue)
     }
-    performLookerApiCalls(lookerContent, themeName)
+    corsApiCall(performLookerApiCalls, [lookerContent, themeName])
   }
 
   useEffect(() => {
     let themeName = lightThemeToggleValue ? 'light' : 'dark';
     themeName += `_${fontThemeSelectValue}`;
-    performLookerApiCalls([...lookerContent], themeName)
+    corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser]);
 
@@ -166,10 +161,9 @@ export default function Dashboard(props) {
   })
 
   const performLookerApiCalls = function (lookerContent, dynamicTheme) {
-
-    // console.log('performLookerApiCalls')
-    // console.log('lookerContent', lookerContent)
-    // console.log('dynamicTheme', dynamicTheme)
+    // console.log('performLookerApiCalls')   
+    // console.log({ lookerContent })   
+    // console.log({ dynamicTheme })
 
     setIFrame(0)
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
