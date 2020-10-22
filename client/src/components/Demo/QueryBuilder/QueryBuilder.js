@@ -30,7 +30,7 @@ export default function QueryBuilder(props) {
   const [width, setWidth] = useState((window.innerWidth - sideBarWidth));
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser } = props;
-  const { togglePayWallModal, show, codeShow, sdk } = useContext(AppContext)
+  const { togglePayWallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
 
   const handleChange = (event, newValue) => {
     handleTabChange(0);
@@ -112,6 +112,7 @@ export default function QueryBuilder(props) {
               <FilterBar {...props}
                 classes={classes}
                 action={performLookerApiCalls}
+                corsApiCall={corsApiCall}
               />
             </Grid>
             {apiContent.status === 'running' ?
@@ -165,11 +166,13 @@ export default function QueryBuilder(props) {
     </div >
   )
 }
-
+/**
+ * seems inconsistent that filterbar performs performLookerApiCalls here??
+ */
 
 function FilterBar(props) {
   // console.log('FilterBar');
-  const { staticContent, staticContent: { lookerContent }, classes, action, lookerUser } = props;
+  const { staticContent, staticContent: { lookerContent }, classes, action, lookerUser, corsApiCall } = props;
   let measureCounter = 0;
   let dimensionCounter = 0;
 
@@ -229,7 +232,7 @@ function FilterBar(props) {
       newQueryObj.fields = newFields;
       newQueryObj.filters = currentFilters;
 
-      action(newQueryObj, lookerContent[0].resultFormat);
+      corsApiCall(action, [newQueryObj, lookerContent[0].resultFormat]);
 
       setQueryModified(false)
       setQueryShouldRun(false)
