@@ -27,7 +27,7 @@ export default function ReportBuilder(props) {
   const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   // const { togglePayWallModal, codeShow } = useContext(AppContext)
-  const { togglePayWallModal, show, codeShow, sdk } = useContext(AppContext)
+  const { togglePayWallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
 
   const classes = useStyles();
   const [value, setValue] = useState(0);
@@ -53,8 +53,7 @@ export default function ReportBuilder(props) {
     if (activeTabValue > value) {
       setValue(activeTabValue)
     } else {
-      //setTimeout(() => 
-      performLookerApiCalls(lookerContent, 1)//, 100)
+      corsApiCall(performLookerApiCalls, [lookerContent, 1])
     }
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser]);
@@ -72,7 +71,7 @@ export default function ReportBuilder(props) {
 
   useEffect(() => {
     // console.log('value useEffect')
-    performLookerApiCalls(lookerContent, 0);
+    corsApiCall(performLookerApiCalls, [lookerContent, 0]);
   }, [value])
 
 
@@ -116,18 +115,8 @@ export default function ReportBuilder(props) {
       $(`#embedContainer-reportbuilder-14`).empty();
       $(`#embedContainer-reportbuilder-14`).html(updatedIFrameArray);
 
-      // let lookerResponse = await fetch('/deletelook/' + contentId, {
-      //   method: 'GET',
-      //   headers: {
-      //     Accept: 'application/json',
-      //     'Content-Type': 'application/json'
-      //   }
-      // });
       let lookerResponse = await sdk.ok(sdk.delete_look(contentId));
-      // console.log('lookerResponse', lookerResponse)
-      // if (lookerResponse.status === 200) {
-      performLookerApiCalls(lookerContent, 1)
-      // }
+      corsApiCall(performLookerApiCalls, [lookerContent, 1])
     }
   }
 
