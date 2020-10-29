@@ -43,7 +43,7 @@ export default function Dashboard(props) {
   const [regionValue, setRegionValue] = useState('Pacific,South,Mountain,Midwest,Northeast');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [tileToggleValue, setTileToggleValue] = useState('');
-  const [visColorToggleValue, setVisColorToggleValue] = useState('#326ad4');
+  const [visColorToggleValue, setVisColorToggleValue] = useState('#2d4266');
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
@@ -94,7 +94,6 @@ export default function Dashboard(props) {
 
   const handleVisColorToggle = (event, newValue) => {
     let newColorSeries = lookerContent[0].dynamicVisConfig.colors[newValue];
-    // console.log('newColorSeries', newColorSeries)
     let newDashboardElements = { ...dashboardOptions.elements };
     Object.keys(newDashboardElements).map(key => {
       if (newDashboardElements[key].vis_config.series_colors) {
@@ -117,12 +116,12 @@ export default function Dashboard(props) {
       if (newDashboardElements[key].vis_config.series_cell_visualizations) {
         Object.keys(newDashboardElements[key].vis_config.series_cell_visualizations).map((innerKey, index) => {
           if (newDashboardElements[key].vis_config.series_cell_visualizations[innerKey].hasOwnProperty("palette")) {
-            newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"]["custom_colors"].map((item, innerIndex) => {
-              newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"]["custom_colors"][innerIndex] = newColorSeries[innerIndex] || newColorSeries[0];
-            })
+            newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"] = { ...lookerContent[0].dynamicVisConfig.series_cell_visualizations[newValue] }
           }
         })
       }
+
+
     })
     setVisColorToggleValue(newValue)
     dashboardObj.setOptions({ "elements": { ...newDashboardElements } })
@@ -151,7 +150,7 @@ export default function Dashboard(props) {
   useEffect(() => {
     if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length && lookerContent[0].dynamicFieldLookUp) {
       handleTileToggle(null, tileToggleValue ? tileToggleValue : Object.keys(lookerContent[0].dynamicFieldLookUp)[0])
-      handleVisColorToggle(null, visColorToggleValue ? visColorToggleValue : '#326ad4')
+      handleVisColorToggle(null, visColorToggleValue ? visColorToggleValue : '#2d4266')
     }
   }, [dashboardOptions]);
 
@@ -659,7 +658,10 @@ function FilterBar(props) {
                               <ToggleButton
                                 key={validIdHelper(`dynamicDashVisConfigToggle-${key}`)}
                                 value={key} aria-label="left aligned">
-                                <span className={`${classes.dot}`} style={{ backgroundColor: key }}></span>
+                                <span className={`${classes.dot}`} style={{
+                                  backgroundColor: (lookerContent[0].dynamicVisConfig.colors[key][lookerContent[0].dynamicVisConfig.colors[key].length - 1]
+                                    || key)
+                                }}></span>
                               </ToggleButton>
                             )
                           })}

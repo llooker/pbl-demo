@@ -417,24 +417,50 @@
             "dynamicVisConfig": {
               "title": "gfy",
               "colors": {
-                "#326ad4": [
-                  "#326ad4",
-                  "#4779d8",
-                  "#5b88dd",
-                  "#7097e1"
+                "#2d4266": [
+                  "#2d4266",
+                  "#416098",
+                  "#5780cd",
+                  "#6391e8"
                 ],
-                "#5d9979": [
-                  "#5d9979",
-                  "#6da386",
-                  "#7dad94",
-                  "#8eb8a1"
+                "#43606b": [
+                  "#43606b",
+                  "#4a7880",
+                  "#66a99d",
+                  "#a3d9a9"
                 ],
-                "#9d55a4": [
-                  "#9d55a4",
-                  "#a766ad",
-                  "#b177b6",
-                  "#ba88bf"
+                "#414c67": [
+                  "#414c67",
+                  "#64689b",
+                  "#9682cd",
+                  "#b48ee4"
                 ]
+              },
+              "series_cell_visualizations": {
+                "#2d4266": {
+                  "palette_id": "a3425339-dbbb-2584-0e23-38ed7d87ed50",
+                  "collection_id": "b43731d5-dc87-4a8e-b807-635bef3948e7",
+                  "custom_colors": [
+                    "#6391e8",
+                    "#2d4266"
+                  ]
+                },
+                "#43606b": {
+                  "palette_id": "c5182d25-00a3-cd71-eed3-4056299dd78f",
+                  "collection_id": "atom-fashion",
+                  "custom_colors": [
+                    "#a3d9a9",
+                    "#43606b"
+                  ]
+                },
+                "#414c67": {
+                  "palette_id": "7e059aa1-0d23-dab1-dbf9-a751ab7f54fb",
+                  "collection_id": "b43731d5-dc87-4a8e-b807-635bef3948e7",
+                  "custom_colors": [
+                    "#b48ee4",
+                    "#414c67"
+                  ]
+                }
               }
             },
             "theme": "light_arial"
