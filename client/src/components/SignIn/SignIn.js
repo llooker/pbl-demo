@@ -28,9 +28,7 @@ export default function SignIn(props) {
     if (response.error) {
       console.log('response.error', response.error)
     } else {
-      // this.props.applySession(response.profileObj)
-      setSession(response.profileObj)
-
+      setSession((session) => { return { ...session, userProfile: response.profileObj } })
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`

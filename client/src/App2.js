@@ -9,9 +9,51 @@ import UsecaseContent from './usecaseContent.json';
 
 function App2(props) {
 
-  const [session, setSession] = useState({});
 
-  console.log({ session })
+  const checkForExistingSession = async () => {
+    let sessionResponse = await fetch('/readsession', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    const sessionResponseData = await sessionResponse.json();
+    console.log('sessionResponseData', sessionResponseData)
+  }
+
+  const [session, setSession] = useState(checkForExistingSession());
+
+  // console.log({ session })
+  useEffect(() => {
+    async function writeSession() {
+      if (session.userProfile) {
+        let sessionData = await fetch('/writesession', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userProfile: session.userProfile,
+            // lookerUser: this.state.lookerUser 
+          })
+        })
+      }
+      // else {
+      //   let sessionData = await fetch('/endsession', {
+      //     method: 'POST',
+      //     headers: {
+      //       Accept: 'application/json',
+      //       'Content-Type': 'application/json'
+      //     }
+      //   })
+      //   setSession({})
+      // }
+    }
+    writeSession();
+  }, [session])
+
 
   return (
     <Router>

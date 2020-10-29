@@ -22,7 +22,7 @@ const sess = {
     pool: pgPool,                // Connection pool
     tableName: 'session'   // Use another table-name than the default "session" one
   }),
-  secret: 'keyboard catv1.0.7',
+  secret: 'keyboard catv1.0.8',
   resave: true,
   cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
 }
