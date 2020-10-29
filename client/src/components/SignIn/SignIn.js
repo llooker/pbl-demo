@@ -1,56 +1,17 @@
 import _ from 'lodash'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
-import { grey, orange } from '@material-ui/core/colors';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
-import './Home.css';
-const { validIdHelper } = require('../tools');
-const lightGrey = grey[200];
+import '../Home.css';
+import UsecaseContent from '../../usecaseContent.json';
+import useStyles from './styles.js';
+import AppContext from '../../contexts/AppContext';
+
+const { validIdHelper } = require('../../tools');
 
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-  flexCentered: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  card: {
-    minWidth: 350,
-    minHeight: 500,
-    left: '75%',
-    top: '50%',
-    transform: `translate(-75%, -50%)`,
-    position: 'absolute',
-    textAlign: 'center',
-    backgroundColor: lightGrey
-  },
-  h100: {
-    height: '100%'
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  actions: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  cardCopy: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: `translate(-50%, -50%)`,
-    margin: '0',
-    width: '80%',
-  }
-}));
+
 
 
 export default function SignIn(props) {
@@ -58,12 +19,30 @@ export default function SignIn(props) {
   // console.log('SignIn')
   // console.log('props', props)
 
-  const { googleClientId, onSuccess, onFailure, usecaseFromUrl } = props;
+  // const { googleClientId, onSuccess, onFailure, usecaseFromUrl } = props;
   // console.log('usecaseFromUrl', usecaseFromUrl)
+
+  const { session, setSession } = useContext(AppContext)
+
+  const responseGoogle = (response) => {
+    if (response.error) {
+      console.log('response.error', response.error)
+    } else {
+      // this.props.applySession(response.profileObj)
+      setSession(response.profileObj)
+
+    }
+  }
+  const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
+
+  const usecaseFromUrl = usecaseHelper();
+
+
   const classes = useStyles();
+
   const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
-  const backgroundImage = require(`../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`);
-  const logoImage = require(`../images/${usecaseFromUrl}_logo_black.svg`)
+  const backgroundImage = require(`../../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`);
+  const logoImage = require(`../../images/${usecaseFromUrl}_logo_black.svg`)
 
   return (
     <div className={`${classes.root} demoComponent ${classes.h100}`}>
@@ -93,8 +72,8 @@ export default function SignIn(props) {
                 <GoogleLogin
                   clientId={googleClientId}
                   buttonText="Login"
-                  onSuccess={onSuccess}
-                  onFailure={onSuccess}
+                  onSuccess={responseGoogle}
+                  onFailure={responseGoogle}
                   cookiePolicy={'single_host_origin'}
                 />
               </CardActions>
@@ -104,4 +83,15 @@ export default function SignIn(props) {
       </Grid>
     </div >
   )
+}
+
+export function usecaseHelper() {
+  let keyArr = Object.keys(UsecaseContent);
+  let url = window.location.href;
+  for (let i = 0; i < keyArr.length; i++) {
+    if (url.indexOf(keyArr[i]) > -1) {
+      return keyArr[i];
+    }
+  }
+  return 'atom';
 }

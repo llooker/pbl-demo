@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import Home from './components/Home';
-import SignIn from './components/SignIn';
+import SignIn from './components/SignIn/SignIn';
 import LookerUserPermissions from './lookerUserPermissions.json';
 import InitialLookerUser from './initialLookerUser.json';
 import UsecaseContent from './usecaseContent.json';
@@ -31,7 +31,9 @@ class Login extends React.Component {
 
   render() {
 
-    const { from } = this.props.location.state || { from: { pathname: '/analytics' } } //needs work?
+    // const { from } = this.props.location.state || { from: { pathname: '/analytics' } } //needs work?
+    const { from } = this.props.location.state || { from: { pathname: '/analytics/splashpage19' } } //needs work?
+
     const { pathname } = this.props.location
     const { userProfile } = this.props
 
@@ -342,7 +344,7 @@ class App extends React.Component {
             lookerHost={lookerHost}
           />}
           />
-          <PrivateRoute path='/analytics' component={Home}
+          <PrivateRoute path={['/analytics/:democomponent', '/analytics']} component={Home}
             lookerContent={lookerContent}
             userProfile={userProfile}
             lookerUser={lookerUser}

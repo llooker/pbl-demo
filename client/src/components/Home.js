@@ -456,12 +456,17 @@ class Home extends Component {
         UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
           validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
           validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
+
+      console.log('this.props.match.params.democomponent', this.props.match.params.democomponent)
       this.setState({
         selectedMenuItem: selectedMenuItemVal,
         renderedDemoComponents: [selectedMenuItemVal]
       }, () => {
       })
     }
+
+    console.log({ selectedMenuItem })
+    console.log({ renderedDemoComponents })
 
     return (
       <div className={classes.root} >
