@@ -108,7 +108,8 @@ export default function Home(props) {
     <div className={classes.root} >
 
       <AppContext.Provider value={{
-        clientSession, setClientSession
+        // clientSession, setClientSession
+        payWallModal, togglePayWallModal
       }}>
         <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
           <CssBaseline />

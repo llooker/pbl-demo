@@ -14,7 +14,7 @@ import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, Fin
 import HomeIcon from '@material-ui/icons/Home'; //can't reuse home name
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { blue, grey } from '@material-ui/core/colors';
-import UserMenu from './Material/UserMenu';
+import UserMenu from './Home/UserMenu';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import UsecaseContent from '../usecaseContent.json';
 import SplashPage from './Demo/SplashPage/SplashPage';

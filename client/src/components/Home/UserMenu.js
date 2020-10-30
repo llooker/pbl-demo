@@ -1,9 +1,12 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Menu, MenuItem, Typography, Divider, TextField, Avatar } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import LookerUserAttributeBrandOptions from '../../lookerUserAttributeBrandOptions.json';
 
-import AppContext from '../../AppContext';
+// import AppContext from '../../AppContext';
+import AppContext from '../../contexts/AppContext';
+
 
 const { validIdHelper } = require('../../tools');
 
@@ -20,10 +23,13 @@ export default function UserMenu(props) {
 
   const { lookerUser, onLogoutSuccess, lookerUserAttributeBrandOptions, handleUserMenuSwitch } = props
   const classes = useStyles();
-  const { togglePayWallModal, codeShow, toggleShow, userProfile } = useContext(AppContext)
+  const { togglePayWallModal,
+    // codeShow, 
+    // toggleShow, 
+    userProfile } = useContext(AppContext)
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedBrand, setSelectedBrand] = React.useState(lookerUser.user_attributes.brand || '');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState(lookerUser.user_attributes.brand || '');
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -39,7 +45,7 @@ export default function UserMenu(props) {
         'permissionNeeded': 'explore'
       })
     } else if (typeof newValue === 'string') {
-      handleUserMenuSwitch(newValue, property)
+      // handleUserMenuSwitch(newValue, property)
     }
   };
   useEffect(() => {
