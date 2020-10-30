@@ -6,11 +6,8 @@ export const checkForExistingSession = async () => {
       'Content-Type': 'application/json'
     }
   })
-  console.log({ sessionResponse })
   const sessionResponseData = await sessionResponse.json();
-  console.log({ sessionResponseData })
-  console.log(sessionResponseData.session.userProfile)
-  return { session: sessionResponseData }; //{}
+  return { session: sessionResponseData.session };
 }
 
 export const writeNewSession = async (newSession) => {
@@ -23,7 +20,7 @@ export const writeNewSession = async (newSession) => {
     body: JSON.stringify({ ...newSession })
   })
   const newSessionResponseData = await newSessionResponse.json();
-  return { session: newSessionResponseData };
+  return { session: newSessionResponseData.session };
 }
 
 export const endSession = async () => {
@@ -37,17 +34,3 @@ export const endSession = async () => {
   const endSessionResponseData = await endSessionResponse.json();
   return { message: endSessionResponse };
 }
-
-// export const isSignedIn = async () => {
-//   let sessionResponse = await fetch('/readsession', {
-//     method: 'GET',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json'
-//     }
-//   })
-//   const sessionResponseData = await sessionResponse.json();
-//   // return { sessionResponseData.session.userProfile ? true : false }
-//   let returnVal = sessionResponseData.session.userProfile ? true : false;
-//   return returnVal;
-// }

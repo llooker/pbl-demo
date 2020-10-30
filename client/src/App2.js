@@ -8,10 +8,9 @@ import {
 } from "react-router-dom";
 
 import AppContext from './contexts/AppContext';
-import SignIn from './components/SignIn/SignIn2';
 import { checkForExistingSession } from './AuthUtils/auth';
-// import { Home } from '@material-ui/icons';
-import Home from './components/Home2';
+import SignIn from './components/SignIn/SignIn2';
+import Home from './components/Home/Home2';
 
 function App2(props) {
   // console.log('App2')
@@ -23,17 +22,10 @@ function App2(props) {
   useEffect(() => {
     async function fetchSession() {
       const sessionResponse = await checkForExistingSession();
-      // const sessionResponseData = await sessionResponse.json();
 
-      console.log({ sessionResponse })
-      console.log(sessionResponse.session.userProfile)
-
-      // console.log(sessionResponseData.session)
-      // console.log(sessionResponseData.session.userProfile)
-      // if (sessionResponseData.session && sessionResponseData.session.userProfile) {
-      //   console.log('inside ifff')
-      //   setClientSession(sessionResponseData.session)
-      // } else console.log('elllse')
+      if (sessionResponse.session && sessionResponse.session.userProfile) {
+        setClientSession(sessionResponse.session)
+      } //else console.log('elllse')
     }
 
     fetchSession()
@@ -51,18 +43,17 @@ function App2(props) {
         clientSession, setClientSession
       }}>
         <Switch>
-          {/* <Route path='/analytics' >
-            <Home />
-          </Route> */}
           <PrivateRoute
-            path='/analytics'
+            path='/analytics/:democomponent'
             isSignedIn={clientSession.userProfile ? true : false}
             component={Home}>
-            {/* <Home /> */}
           </PrivateRoute>
-          <Route path='/' exact>
-            <SignIn />
-          </Route>
+          <PublicRoute
+            path='/'
+            exact
+            isSignedIn={clientSession.userProfile ? true : false}
+            component={SignIn}>
+          </PublicRoute>
         </Switch>
       </AppContext.Provider>
     </Router >
@@ -76,17 +67,13 @@ App2.propTypes = {
 export default App2
 
 
-
 const PrivateRoute = ({
   component: Component,
   isSignedIn,
   ...rest }) => {
 
-  console.log({ isSignedIn })
   return (
 
-    // Show the component only when the user is logged in
-    // Otherwise, redirect the user to /signin page
     <Route {...rest} render={(props) => (
       (isSignedIn) ?
         <Component {...props} />
@@ -97,16 +84,18 @@ const PrivateRoute = ({
 
 
 
-// const PublicRoute = ({ component: Component, restricted, ...rest }) => {
-//   return (
-//     // restricted = false meaning public route
-//     // restricted = true meaning restricted route
-//     <Route {...rest} render={props => (
-//       isLogin() && restricted ?
-//         <Redirect to="/dashboard" />
-//         : <Component {...props} />
-//     )} />
-//   );
-// };
+const PublicRoute = ({ component: Component,
+  isSignedIn,
+  restricted, ...rest }) => {
+  return (
+    // restricted = false meaning public route
+    // restricted = true meaning restricted route
+    <Route {...rest} render={props => (
+      (isSignedIn) ?
+        <Redirect to="/analytics/:democomponent" />
+        : <Component {...props} />
+    )} />
+  );
+};
 
 // export default PublicRoute;

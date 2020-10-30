@@ -1,30 +1,15 @@
 import _ from 'lodash'
-import React, { useState, useEffect, useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
-import '../Home.css';
-import UsecaseContent from '../../usecaseContent.json';
-import useStyles from './styles.js';
+import React, { useContext } from 'react';
+import { useHistory } from "react-router-dom";
+import { GoogleLogin } from 'react-google-login';
 import AppContext from '../../contexts/AppContext';
-import InitialLookerUser from '../../initialLookerUser.json';
-
-
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-  useHistory,
-  useLocation
-} from "react-router-dom";
-
 import { writeNewSession } from '../../AuthUtils/auth';
-
+import UsecaseContent from '../../usecaseContent.json';
+import InitialLookerUser from '../../initialLookerUser.json';
+import useStyles from './styles.js';
+import '../Home.css';
+import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
 const { validIdHelper, usecaseHelper } = require('../../tools');
-
-
 
 export default function SignIn(props) {
   // console.log('SignIn');
