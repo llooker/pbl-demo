@@ -34,7 +34,7 @@ module.exports.writeSession = async (req, res, next) => {
 
 module.exports.endSession = async (req, res, next) => {
   req.session.destroy();
-  res.status(200).send('session destroyed :)');
+  res.status(200).send({ message: 'session destroyed :)' });
 }
 
 module.exports.refreshLookerToken = async (req, res, next) => {
