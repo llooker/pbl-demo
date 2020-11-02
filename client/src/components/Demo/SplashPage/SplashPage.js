@@ -15,7 +15,9 @@ import { EmbeddedLook } from './EmbeddedLook';
 import { EmbeddedDashboard } from './EmbeddedDashboard';
 import { ContentCarousel } from './ContentCarousel';
 import BottomBar from '../../Material/BottomBar.js'
-import AppContext from '../../../AppContext';
+// import AppContext from '../../../AppContext';
+import AppContext from '../../../contexts/AppContext';
+
 import { EmbeddedQuery } from './EmbeddedQuery';
 const { validIdHelper } = require('../../../tools');
 
@@ -30,14 +32,13 @@ export default function SplashPage(props) {
   const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
 
-  const { toggleShow } = useContext(AppContext)
-  const { show } = useContext(AppContext)
-  const { codeShow } = useContext(AppContext)
+  const { toggleShow, show, codeShow } = useContext(AppContext)
+
 
 
   //declare constants
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, handleMenuItemSelect, lookerUser, lookerHost } = props;
+  // const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, handleMenuItemSelect, lookerUser, lookerHost } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode

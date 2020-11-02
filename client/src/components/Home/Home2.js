@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
@@ -19,6 +21,11 @@ import LeftDrawer from './LeftDrawer';
 import { MonetizationModal } from '../Demo/MonetizationModal/MonetizationModal';
 import LookerUserPermissions from '../../lookerUserPermissions.json';
 import lookerUserTimeHorizonMap from '../../lookerUserTimeHorizonMap.json';
+import SplashPage from '../Demo/SplashPage/SplashPage';
+import Dashboard from '../Demo/Dashboard/Dashboard';
+import CustomVis from '../Demo/CustomVis/CustomVis';
+import ReportBuilder from '../Demo/ReportBuilder/ReportBuilder';
+import QueryBuilder from '../Demo/QueryBuilder/QueryBuilder';
 
 import '../Home.css';
 
@@ -46,7 +53,7 @@ export default function Home(props) {
   const [payWallModal, setPaywallModal] = useState({});
   const [selectedMenuItem, setSelectedMenuItem] = useState('');
   const [renderedDemoComponents, setRenderedDemoComponents] = useState([]);
-
+  // const [lookerContent, setLookerContent] = useState({})
   //functions
   const togglePayWallModal = (modalContent) => {
     setPaywallModal({ ...modalContent })
@@ -155,7 +162,28 @@ export default function Home(props) {
   }
 
 
+  const demoComponentMap = {
+    "splashpage19": SplashPage,
+    "customfilter5": Dashboard,
+    "simpledashboard9": Dashboard,
+    "customfilter1": Dashboard,
+    "customvis": CustomVis,
+    "querybuilderexplorelite": QueryBuilder,
+    "reportbuilder14": ReportBuilder,
+  };
+
+  const DemoComponent = demoComponentMap[selectedMenuItem];
+  console.log('selectedMenuItem', selectedMenuItem)
+  let lookerContent = _.map(UsecaseContent[activeUsecase].demoComponents, (o) => {
+    if (selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id)) return o
+  });
+  lookerContent = _.without(lookerContent, undefined)
+
+
+
   console.log({ activeUsecase })
+  console.log('lookerContent')
+  console.log({ lookerContent })
 
   return (
     <div className={classes.root} >
@@ -167,6 +195,8 @@ export default function Home(props) {
         drawerOpen, setDrawerOpen,
         activeUsecase,
         selectedMenuItem, handleMenuItemSelect,
+        show: highlightShow,
+        toggleShow: toggleHighlightShow
         // renderedDemoComponents, setRenderedDemoComponents
       }}>
         <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
@@ -186,7 +216,9 @@ export default function Home(props) {
           >
             <div className={classes.drawerHeader} />
 
-            {selectedMenuItem}
+            {/* {selectedMenuItem} */}
+            {/* <DemoComponent staticContent={lookerContent} /> */}
+
           </main>
 
         </ThemeProvider>
