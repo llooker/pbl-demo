@@ -33,26 +33,35 @@ function App2(props) {
   }, [])
 
   useEffect(() => {
+    console.log('useEffect [clientSession]')
     console.log({ clientSession })
   }, [clientSession])
 
-
+  /**
+   *   <Switch>
+            <Route path={'login'} render={props => <LoginContainer {...props} />} />
+          </Switch>
+   */
   return (
     < Router >
       <AppContext.Provider value={{
         clientSession, setClientSession
       }}>
+
+
         <Switch>
           <PrivateRoute
             path='/analytics/:democomponent'
             isSignedIn={clientSession.userProfile ? true : false}
             component={Home}>
+            {/* render={props => <Home {...props} />}> */}
           </PrivateRoute>
           <PublicRoute
             path='/'
-            exact
+            // exact
             isSignedIn={clientSession.userProfile ? true : false}
             component={SignIn}>
+            {/* // render={props => <SignIn {...props} />}> */}
           </PublicRoute>
         </Switch>
       </AppContext.Provider>
@@ -71,14 +80,17 @@ const PrivateRoute = ({
   component: Component,
   isSignedIn,
   ...rest }) => {
-  console.log('isSignedIn', isSignedIn)
+  // console.log('PrivateRoute')
+  // console.log('isSignedIn', isSignedIn)
+  // console.log('Component', Component)
   return (
 
-    <Route {...rest} render={(props) => (
-      (isSignedIn) ?
-        <Component {...props} />
-        : <Redirect to="/" />
-    )} />
+    <Route exact
+      {...rest} render={(props) => (
+        (isSignedIn) ?
+          <Component {...props} />
+          : <Redirect to="/" />
+      )} />
   );
 };
 
@@ -87,14 +99,18 @@ const PrivateRoute = ({
 const PublicRoute = ({ component: Component,
   isSignedIn,
   restricted, ...rest }) => {
+  // console.log('PublicRoute')
+  // console.log('isSignedIn', isSignedIn)
+  // console.log('Component', Component)
   return (
     // restricted = false meaning public route
     // restricted = true meaning restricted route
-    <Route {...rest} render={props => (
-      (isSignedIn) ?
-        <Redirect to="/analytics/:democomponent" />
-        : <Component {...props} />
-    )} />
+    <Route exact
+      {...rest} render={props => (
+        (isSignedIn) ?
+          <Redirect to="/analytics/:democomponent" />
+          : <Component {...props} />
+      )} />
   );
 };
 

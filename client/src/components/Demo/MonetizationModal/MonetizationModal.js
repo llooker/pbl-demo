@@ -32,7 +32,9 @@ function getModalStyle() {
 
 
 export function MonetizationModal({ props }) {
-  console.log('MonetizationModal')
+
+  // console.log('MonetizationModal')
+
   let { setClientSession, clientSession, togglePayWallModal, payWallModal, handleSwitchLookerUser } = useContext(AppContext)
 
   const [modalStyle] = React.useState(getModalStyle);

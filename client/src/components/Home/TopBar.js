@@ -1,17 +1,24 @@
-import React from 'react'
+import React, { useContext } from 'react';
 import clsx from 'clsx';
 import {
   AppBar, Toolbar, Badge, Avatar, IconButton
 } from '@material-ui/core/';
 import { AddAlert, ChevronLeft, Menu } from '@material-ui/icons';
 import { endSession } from '../../AuthUtils/auth';
+import AppContext from '../../contexts/AppContext';
+import { useStyles, } from './styles.js';
+
 import UserMenu from './UserMenu';
 
 
 export default function TopBar(props) {
-  const { classes, activeUsecase,
-    // lookerUser, applySession, lookerUserAttributeBrandOptions, handleUserMenuSwitch, 
-    drawerOpen, handleDrawerChange } = props
+
+
+  const classes = useStyles();
+
+  let { clientSession, setClientSession,
+    drawerOpen, setDrawerOpen,
+    activeUsecase } = useContext(AppContext)
 
   return (
     <AppBar
@@ -22,7 +29,7 @@ export default function TopBar(props) {
         <IconButton
           color="inherit"
           aria-label="open drawer"
-          onClick={() => handleDrawerChange(!drawerOpen)}
+          onClick={() => setDrawerOpen(!drawerOpen)}
           edge="start"
         >
           {drawerOpen ? <ChevronLeft /> : <Menu />}
@@ -37,10 +44,7 @@ export default function TopBar(props) {
         <Badge badgeContent={3} color="error" className={`${classes.mlAuto} ${classes.mr12} `} >
           <AddAlert />
         </Badge>
-        <UserMenu
-        // lookerUser={lookerUser}
-        // handleUserMenuSwitch={handleUserMenuSwitch} //
-        />
+        <UserMenu />
       </Toolbar>
     </AppBar>
   )

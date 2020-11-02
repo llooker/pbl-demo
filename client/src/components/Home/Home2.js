@@ -11,19 +11,23 @@ import {
   ListSubheader, List, ListItem, ListItemIcon, ListItemText,
   Badge, FormControlLabel, Switch, Button
 } from '@material-ui/core/';
+import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, FindInPage, Code, TableChartOutlined, LibraryBooksOutlined, Menu, ChevronLeft } from '@material-ui/icons';
+import clsx from 'clsx';
 import { useStyles, defaultTheme, atomTheme } from './styles.js';
 import TopBar from './TopBar';
+import LeftDrawer from './LeftDrawer';
 import { MonetizationModal } from '../Demo/MonetizationModal/MonetizationModal';
 import LookerUserPermissions from '../../lookerUserPermissions.json';
 import lookerUserTimeHorizonMap from '../../lookerUserTimeHorizonMap.json';
-
 
 import '../Home.css';
 
 const { validIdHelper, usecaseHelper } = require('../../tools');
 
+console.log({ usecaseHelper })
 
 export default function Home(props) {
+  console.log("Home")
 
   let history = useHistory();
   let { setClientSession, clientSession } = useContext(AppContext)
@@ -33,7 +37,7 @@ export default function Home(props) {
   const didMountRef = useRef(false)
   const [drawerOpen, setDrawerOpen] = useState(window.innerWidth > 768 ? true : false);
   const [activeTabValue, setActiveTabValue] = useState(0);
-  const [activeUsecase, setActiveUsecase] = useState('');
+  const [activeUsecase, setActiveUsecase] = useState(usecaseHelper(UsecaseContent));
   const [highlightShow, setHighlightShow] = useState(false);
   const [codeShow, setCodeShow] = useState(false);
   const [payWallModal, setPaywallModal] = useState({});
@@ -53,10 +57,15 @@ export default function Home(props) {
   const handleTabChange = (newValue) => {
     setActiveTabValue(newValue)
   }
-  const handleDrawerChange = (open) => {
-    setDrawerOpen(open);
-  }
+
+  // const handleDrawerChange = (open) => {
+  //   setDrawerOpen(open);
+  // }
+
   const handleMenuItemSelect = (newValue, fromSplash) => {
+    console.log("handleMenuItemSelect");
+    console.log("newValue", newValue);
+    console.log("fromSplash", fromSplash);
     handleTabChange(0)
 
     if (highlightShow) toggleHighlightShow()
@@ -83,16 +92,10 @@ export default function Home(props) {
   };
 
   const handleSwitchLookerUser = async (newValue, property) => {
-    console.log('handleSwitchLookerUser')
-    console.log('newValue', newValue)
-    console.log('property', property)
-    //eg to review this 9/8
     let newLookerUser = { ...clientSession.lookerUser }
-    // console.log('new looker user',newLookerUser)
     if (property === 'brand') {
       newLookerUser.user_attributes.brand = newValue
     } else if (property === 'permission') {
-      // console.log('permission',newValue)
       newLookerUser.permissions = LookerUserPermissions[newValue] || LookerUserPermissions['basic']
       newLookerUser.user_attributes.permission_level = newValue
       newLookerUser.user_attributes.time_horizon = lookerUserTimeHorizonMap[newValue]
@@ -105,20 +108,6 @@ export default function Home(props) {
       },
       body: JSON.stringify(newLookerUser)
     })
-    // console.log(x)
-
-    // this.setState({
-    //   renderedDemoComponents: [this.state.selectedMenuItem]
-    // }, () => {
-    //   if (property === 'brand') {
-    //     this.props.switchUserAttributeBrand(newValue);
-    //   } else if (property === 'permission') {
-    //     this.props.switchLookerUser(newValue);
-    //   }
-    // })
-
-
-
   }
 
   //componentDidMount
@@ -129,7 +118,6 @@ export default function Home(props) {
     LookerEmbedSDK.init(`https://${clientSession.lookerHost}.looker.com`, '/auth');
 
     window.addEventListener("resize", () => {
-      // console.log('resize event')
       setDrawerOpen(window.innerWidth > 768 ? true : false)
     });
 
@@ -142,16 +130,26 @@ export default function Home(props) {
     } else didMountRef.current = true
   })
 
-  useEffect(() => {
-    console.log('useEffect [clientSession]')
-    console.log({ clientSession })
-  }, [clientSession])
+  // useEffect(() => {
+  //   console.log('useEffect [clientSession]')
+  //   console.log({ clientSession })
+  // }, [clientSession])
 
   const themeMap = {
     "atom": atomTheme,
     // "vidly": vidlyTheme
   }
 
+  if (activeUsecase && !selectedMenuItem.length) {
+    let selectedMenuItemVal =
+      UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
+        validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
+        validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
+    setSelectedMenuItem(selectedMenuItemVal)
+    setRenderedDemoComponents([selectedMenuItemVal])
+  }
+
+  console.log({ activeUsecase })
 
   return (
     <div className={classes.root} >
@@ -159,34 +157,32 @@ export default function Home(props) {
       <AppContext.Provider value={{
         clientSession, setClientSession,
         payWallModal, togglePayWallModal,
-        handleSwitchLookerUser
+        handleSwitchLookerUser,
+        drawerOpen, setDrawerOpen,
+        activeUsecase,
+        selectedMenuItem, handleMenuItemSelect,
+        // renderedDemoComponents, setRenderedDemoComponents
       }}>
         <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
           <CssBaseline />
 
-          {/* <h1>analytics</h1>
-          <button onClick={() => {
-            setClientSession({})
-            history.push("/")
-            endSession();
-          }}>Logout</button> */}
+          <TopBar />
+
+          <MonetizationModal />
+
+          <LeftDrawer />
 
 
-          <TopBar
-            // {...this.props}
-            classes={classes}
-            activeUsecase={activeUsecase}
-            lookerUser={clientSession.lookerUser}
-            // applySession={applySession}
-            // lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
-            // switchLookerUser={switchLookerUser}
-            // handleDrawerChange={this.handleDrawerChange}
-            drawerOpen={drawerOpen}
-          />
+          <main
+            className={clsx(classes.content, {
+              [classes.contentShift]: drawerOpen,
+            })}
+          >
+            <div className={classes.drawerHeader} />
 
-          <MonetizationModal
-          // switchLookerUser={switchLookerUser}
-          />
+            {selectedMenuItem}
+          </main>
+
         </ThemeProvider>
       </AppContext.Provider>
     </div>
