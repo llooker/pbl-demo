@@ -13,6 +13,10 @@ import {
 } from '@material-ui/core/';
 import { useStyles, defaultTheme, atomTheme } from './styles.js';
 import TopBar from './TopBar';
+import { MonetizationModal } from '../Demo/MonetizationModal/MonetizationModal';
+import LookerUserPermissions from '../../lookerUserPermissions.json';
+import lookerUserTimeHorizonMap from '../../lookerUserTimeHorizonMap.json';
+
 
 import '../Home.css';
 
@@ -78,6 +82,45 @@ export default function Home(props) {
     setRenderedDemoComponents([...renderedDemoComponentsCopy])
   };
 
+  const handleSwitchLookerUser = async (newValue, property) => {
+    console.log('handleSwitchLookerUser')
+    console.log('newValue', newValue)
+    console.log('property', property)
+    //eg to review this 9/8
+    let newLookerUser = { ...clientSession.lookerUser }
+    // console.log('new looker user',newLookerUser)
+    if (property === 'brand') {
+      newLookerUser.user_attributes.brand = newValue
+    } else if (property === 'permission') {
+      // console.log('permission',newValue)
+      newLookerUser.permissions = LookerUserPermissions[newValue] || LookerUserPermissions['basic']
+      newLookerUser.user_attributes.permission_level = newValue
+      newLookerUser.user_attributes.time_horizon = lookerUserTimeHorizonMap[newValue]
+    }
+    const x = await fetch('/updatelookeruser', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newLookerUser)
+    })
+    // console.log(x)
+
+    // this.setState({
+    //   renderedDemoComponents: [this.state.selectedMenuItem]
+    // }, () => {
+    //   if (property === 'brand') {
+    //     this.props.switchUserAttributeBrand(newValue);
+    //   } else if (property === 'permission') {
+    //     this.props.switchLookerUser(newValue);
+    //   }
+    // })
+
+
+
+  }
+
   //componentDidMount
   useEffect(() => {
     const usecaseFromUrl = usecaseHelper(UsecaseContent);
@@ -99,17 +142,24 @@ export default function Home(props) {
     } else didMountRef.current = true
   })
 
+  useEffect(() => {
+    console.log('useEffect [clientSession]')
+    console.log({ clientSession })
+  }, [clientSession])
+
   const themeMap = {
     "atom": atomTheme,
     // "vidly": vidlyTheme
   }
 
+
   return (
     <div className={classes.root} >
 
       <AppContext.Provider value={{
-        // clientSession, setClientSession
-        payWallModal, togglePayWallModal
+        clientSession, setClientSession,
+        payWallModal, togglePayWallModal,
+        handleSwitchLookerUser
       }}>
         <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
           <CssBaseline />
@@ -129,9 +179,13 @@ export default function Home(props) {
             lookerUser={clientSession.lookerUser}
             // applySession={applySession}
             // lookerUserAttributeBrandOptions={lookerUserAttributeBrandOptions}
-            // handleUserMenuSwitch={this.handleUserMenuSwitch}
+            // switchLookerUser={switchLookerUser}
             // handleDrawerChange={this.handleDrawerChange}
             drawerOpen={drawerOpen}
+          />
+
+          <MonetizationModal
+          // switchLookerUser={switchLookerUser}
           />
         </ThemeProvider>
       </AppContext.Provider>

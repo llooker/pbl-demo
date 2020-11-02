@@ -24,7 +24,7 @@ export default function SignIn(props) {
     } else {
       setClientSession((clientSession) => { return { ...clientSession, userProfile: response.profileObj, lookerUser: InitialLookerUser } })
       writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: InitialLookerUser })
-      history.push('/analytics');
+      history.push('/analytics/:democomponent');
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`

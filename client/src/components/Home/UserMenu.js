@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useHistory, } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Menu, MenuItem, Typography, Divider, TextField, Avatar } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import LookerUserAttributeBrandOptions from '../../lookerUserAttributeBrandOptions.json';
-
+import { endSession } from '../../AuthUtils/auth';
 // import AppContext from '../../AppContext';
 import AppContext from '../../contexts/AppContext';
-
-
 const { validIdHelper } = require('../../tools');
 
 const useStyles = makeStyles((theme) => ({
@@ -20,16 +19,13 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function UserMenu(props) {
-
-  const { lookerUser, onLogoutSuccess, lookerUserAttributeBrandOptions, handleUserMenuSwitch } = props
+  let history = useHistory();
   const classes = useStyles();
-  const { togglePayWallModal,
-    // codeShow, 
-    // toggleShow, 
-    userProfile } = useContext(AppContext)
+
+  let { togglePayWallModal, clientSession, setClientSession, handleSwitchLookerUser } = useContext(AppContext)
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedBrand, setSelectedBrand] = useState(lookerUser.user_attributes.brand || '');
+  const [selectedBrand, setSelectedBrand] = useState(clientSession.lookerUser.user_attributes.brand || '');
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,20 +34,23 @@ export default function UserMenu(props) {
   const handleClose = (newValue, property) => {
     setAnchorEl(null);
     if (newValue == null) {
-      onLogoutSuccess({})
+      setClientSession({})
+      history.push("/")
+      endSession();
+
     } else if (newValue === 'modal') {
       togglePayWallModal({
         'show': true,
         'permissionNeeded': 'explore'
       })
     } else if (typeof newValue === 'string') {
-      // handleUserMenuSwitch(newValue, property)
+      handleSwitchLookerUser(newValue, property)
     }
   };
   useEffect(() => {
     // console.log('useEffect')
-    setSelectedBrand(lookerUser.user_attributes.brand || '')
-  }, [lookerUser]);
+    setSelectedBrand(clientSession.lookerUser.user_attributes.brand || '')
+  }, [clientSession.lookerUser]);
 
   return (
     <div className={`${classes.zIndex1500}`}>
@@ -62,11 +61,11 @@ export default function UserMenu(props) {
         onClick={handleClick}
         color="inherit"
       >
-        <Avatar alt={userProfile.name} src={userProfile.imageUrl} className={classes.mr12} />
+        <Avatar alt={clientSession.userProfile.name} src={clientSession.userProfile.imageUrl} className={classes.mr12} />
 
         <Typography>
-          {typeof lookerUser.user_attributes.permission_level === 'string' ?
-            lookerUser.user_attributes.permission_level.charAt(0).toUpperCase() + lookerUser.user_attributes.permission_level.substring(1) : ''}
+          {typeof clientSession.lookerUser.user_attributes.permission_level === 'string' ?
+            clientSession.lookerUser.user_attributes.permission_level.charAt(0).toUpperCase() + clientSession.lookerUser.user_attributes.permission_level.substring(1) : ''}
         </Typography>
       </IconButton>
       <Menu
@@ -89,7 +88,7 @@ export default function UserMenu(props) {
         <MenuItem>
           <Autocomplete
             id="combo-box-usermenu"
-            options={lookerUserAttributeBrandOptions}
+            options={LookerUserAttributeBrandOptions || []}
             getOptionLabel={(option) => option.label}
             style={{ width: 300 }}
             onChange={(event) => handleClose((event.target.innerText || ''), 'brand')}

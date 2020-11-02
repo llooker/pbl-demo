@@ -1,75 +1,23 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppContext from '../../AppContext';
+// import AppContext from '../../AppContext';
+import AppContext from '../../../contexts/AppContext';
+
 import {
   Modal, Fade, Grid, Paper, Card, CardContent, CardActions, Button, Typography, Chip, Divider, List, ListItem, ListItemAvatar, Avatar, ImageIcon, ListItemText
 
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab'
 
+import useStyles from './styles.js';
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import CheckIcon from '@material-ui/icons/Check';
-import LookerUserPermissions from '../../lookerUserPermissions.json';
-const { validIdHelper } = require('../../tools');
+import LookerUserPermissions from '../../../lookerUserPermissions.json';
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    position: 'absolute',
-    width: 1000,
-    height: 604,
-    overflow: 'scroll',
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    // height: 520,
-    overflow: 'scroll',
-    cursor: 'pointer',
-    '&:hover': {
-      transform: 'scale(1.05)',
-      transition: 'transform .2s'
-    }
-  },
-  flexCentered: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  padding15: {
-    padding: 15
-  },
-  divider: {
-    marginTop: 15,
-    marginBottom: 15,
-    color: '#fff'
-  },
-  basic: {
+const { validIdHelper } = require('../../../tools');
 
-  },
-  advanced: {
-
-  },
-  premium: {
-    // backgroundColor: '#5F6BD8',
-    // color: '#ffffff'
-  },
-  font75: {
-    fontSize: '.75em'
-  },
-  font875: {
-    // fontSize: '.875em'
-  },
-  padding30: {
-    padding: 30
-  }
-}));
 
 function getModalStyle() {
   const top = 10 //+ rand();
@@ -83,8 +31,10 @@ function getModalStyle() {
 }
 
 
-export function MonetizationModal({ props, switchLookerUser }) {
-  const { payWallModal, togglePayWallModal, lookerUser } = useContext(AppContext);
+export function MonetizationModal({ props }) {
+  console.log('MonetizationModal')
+  let { setClientSession, clientSession, togglePayWallModal, payWallModal, handleSwitchLookerUser } = useContext(AppContext)
+
   const [modalStyle] = React.useState(getModalStyle);
   const classes = useStyles();
 
@@ -131,7 +81,7 @@ export function MonetizationModal({ props, switchLookerUser }) {
                 >
                   <Card className={`${classes.card} ${classes[key]}`}
                     elevation={1}
-                    style={key === lookerUser.user_attributes.permission_level ? {
+                    style={key === clientSession.lookerUser.user_attributes.permission_level ? {
                       // transform: 'scale(1.05)',
                       // transition: 'transform .2s',
                       backgroundColor: '#5F6BD8',
@@ -141,7 +91,7 @@ export function MonetizationModal({ props, switchLookerUser }) {
                         height: 519
                       }}
                     onClick={() => {
-                      switchLookerUser(key, 'permission')
+                      handleSwitchLookerUser(key, 'permission')
                       togglePayWallModal()
                     }}>
                     <CardContent>
@@ -189,12 +139,12 @@ export function MonetizationModal({ props, switchLookerUser }) {
                         // disabled={key === lookerUser.user_attributes.permission_level ? true : false}
                         fullWidth
                         onClick={() => {
-                          switchLookerUser(key, 'permission')
+                          handleSwitchLookerUser(key, 'permission')
                           togglePayWallModal()
                         }}
-                        style={key === lookerUser.user_attributes.permission_level ? { color: '#ffffff', borderColor: "#ffffff" } : {}}>
-                        {key === lookerUser.user_attributes.permission_level ? "Active" :
-                          Object.keys(modalListMap).indexOf(lookerUser.user_attributes.permission_level) < Object.keys(modalListMap).indexOf(key) ?
+                        style={key === clientSession.lookerUser.user_attributes.permission_level ? { color: '#ffffff', borderColor: "#ffffff" } : {}}>
+                        {key === clientSession.lookerUser.user_attributes.permission_level ? "Active" :
+                          Object.keys(modalListMap).indexOf(clientSession.lookerUser.user_attributes.permission_level) < Object.keys(modalListMap).indexOf(key) ?
                             'Upgrade' :
                             'Switch'}
                       </Button>

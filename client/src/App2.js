@@ -71,7 +71,7 @@ const PrivateRoute = ({
   component: Component,
   isSignedIn,
   ...rest }) => {
-
+  console.log('isSignedIn', isSignedIn)
   return (
 
     <Route {...rest} render={(props) => (

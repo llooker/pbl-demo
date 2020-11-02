@@ -9,7 +9,9 @@ import UserMenu from './UserMenu';
 
 
 export default function TopBar(props) {
-  const { classes, activeUsecase, lookerUser, applySession, lookerUserAttributeBrandOptions, handleUserMenuSwitch, drawerOpen, handleDrawerChange } = props
+  const { classes, activeUsecase,
+    // lookerUser, applySession, lookerUserAttributeBrandOptions, handleUserMenuSwitch, 
+    drawerOpen, handleDrawerChange } = props
 
   return (
     <AppBar
@@ -36,7 +38,7 @@ export default function TopBar(props) {
           <AddAlert />
         </Badge>
         <UserMenu
-          lookerUser={lookerUser}
+        // lookerUser={lookerUser}
         // handleUserMenuSwitch={handleUserMenuSwitch} //
         />
       </Toolbar>

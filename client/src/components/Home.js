@@ -26,7 +26,7 @@ import AppContext from '../AppContext';
 // import { HighlightSourcesLegend } from './HighlightSourcesLegend';
 import style from 'react-syntax-highlighter/dist/esm/styles/hljs/agate';
 import './Home.css'; //needed for iframe height
-import { MonetizationModal } from './Demo/MonetizationModal';
+import { MonetizationModal } from './Demo/MonetizationModal/MonetizationModal';
 import BottomBar from './Material/BottomBar';
 import LookerUserPermissions from '../lookerUserPermissions.json';
 import { lookerUserTimeHorizonMap } from '../App';
