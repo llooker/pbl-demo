@@ -24,7 +24,7 @@ export default function SignIn(props) {
     } else {
       setClientSession((clientSession) => { return { ...clientSession, userProfile: response.profileObj, lookerUser: InitialLookerUser } })
       writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: InitialLookerUser })
-      history.push('/analytics/:democomponent');
+      history.push('/analytics');
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
@@ -66,7 +66,6 @@ export default function SignIn(props) {
                   onSuccess={responseGoogle}
                   onFailure={responseGoogle}
                   cookiePolicy={'single_host_origin'}
-                // redirectUri={'/analytics/:democomponent'}
                 />
               </CardActions>
             </div>

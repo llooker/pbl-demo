@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useHistory, } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
 import { endSession } from '../../AuthUtils/auth';
 import UsecaseContent from '../../usecaseContent.json';
@@ -28,6 +28,9 @@ console.log({ usecaseHelper })
 
 export default function Home(props) {
   console.log("Home")
+
+  let { democomponent } = useParams();
+  console.log('democomponent', democomponent)
 
   let history = useHistory();
   let { setClientSession, clientSession } = useContext(AppContext)
@@ -63,9 +66,9 @@ export default function Home(props) {
   // }
 
   const handleMenuItemSelect = (newValue, fromSplash) => {
-    console.log("handleMenuItemSelect");
-    console.log("newValue", newValue);
-    console.log("fromSplash", fromSplash);
+    // console.log("handleMenuItemSelect");
+    // console.log("newValue", newValue);
+    // console.log("fromSplash", fromSplash);
     handleTabChange(0)
 
     if (highlightShow) toggleHighlightShow()
@@ -130,15 +133,17 @@ export default function Home(props) {
     } else didMountRef.current = true
   })
 
-  // useEffect(() => {
-  //   console.log('useEffect [clientSession]')
-  //   console.log({ clientSession })
-  // }, [clientSession])
 
   const themeMap = {
     "atom": atomTheme,
     // "vidly": vidlyTheme
   }
+
+  useEffect(() => {
+    if (selectedMenuItem) {
+      history.push(`/analytics/${selectedMenuItem}`)
+    }
+  }, [selectedMenuItem])
 
   if (activeUsecase && !selectedMenuItem.length) {
     let selectedMenuItemVal =
@@ -148,6 +153,7 @@ export default function Home(props) {
     setSelectedMenuItem(selectedMenuItemVal)
     setRenderedDemoComponents([selectedMenuItemVal])
   }
+
 
   console.log({ activeUsecase })
 
