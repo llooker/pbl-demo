@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
-import AppContext from '../../../AppContext';
+// import AppContext from '../../../AppContext';
+import AppContext from '../../../contexts/AppContext';
+
 import { ApiHighlight } from '../../Highlights/Highlight';
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress, Divider, Chip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,8 +10,9 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
   // console.log('VectorThumbnail')
 
   const [svg, setSvg] = useState(undefined)
-  const { userProfile, lookerUser, show, sdk, corsApiCall } = useContext(AppContext);
-
+  // const { userProfile, lookerUser, show, sdk, corsApiCall } = useContext(AppContext);
+  const { clientSession, show, sdk, corsApiCall } = useContext(AppContext)
+  const { userProfile, lookerUser } = clientSession;
 
   useEffect(() => {
     let isSubscribed = true

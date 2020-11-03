@@ -19,7 +19,7 @@ module.exports.readSession = async (req, res, next) => {
 module.exports.writeSession = async (req, res, next) => {
   // console.log('writeSession')
   let { session } = req;
-  // console.log({ session })
+  console.log({ session })
   session.userProfile = req.body.userProfile;
   session.lookerUser = req.body.lookerUser;
   session.lookerHost = lookerHostNameToUse;
@@ -28,6 +28,7 @@ module.exports.writeSession = async (req, res, next) => {
   session.lookerUser.last_name = session.userProfile.familyName;
 
   let updatedSession = await tokenHelper(session)
+  // console.log('updatedSession', updatedSession);
 
   res.status(200).send({ session: updatedSession });
 }
@@ -61,10 +62,8 @@ async function tokenHelper(session) {
   const me = await embeddedUserSdk.ok(embeddedUserSdk.me())
   const embed_user_token = await embeddedUserSdk.login_user(userCred.id.toString())
   const u = {
-    // looker_user_id: userCred.id.toString(), //unncessary
-    // google_id: session.userProfile.email, //unncessary
     api_user_token: embed_user_token.value,
-    api_token_last_refreshed: Date.now()
+    expires_in: (Date.now() + (embed_user_token.value.expires_in * 1000))
   }
   session.lookerApiToken = { ...u }
   return session;

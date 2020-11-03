@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
-import AppContext from '../../AppContext';
-import zIndex from '@material-ui/core/styles/zIndex';
-import { Chip, Fade } from '@material-ui/core';
+import AppContext from '../../contexts/AppContext';
+import { Chip } from '@material-ui/core';
 
 
 // maybe move this to config?
@@ -15,26 +14,20 @@ export const EMBED_METHOD_BACKGROUND_COLOR = 'rgba(41, 122, 244, 0.1)'
 function Highlight({ children, color, height, width, margin, id, backgroundColor, ...props }) {
   // console.log('Highlight')
   // console.log('props', props)
-  const { show } = useContext(AppContext)
+  const { highlightShow } = useContext(AppContext)
   var style = {};
-  if (show) {
+  if (highlightShow) {
     style = {
       ...style,
-      // boxShadow: `0 0 10px ${color}, 
-      // inset 0 0 10px ${color}`,
-
       border: `3px solid ${color}`,
       backgroundColor: `${backgroundColor}`,
       borderRadius: `4px`,
-      // zIndex: 10000000000000000,
       position: 'relative',
-      // padding: '10px'
     }
   } else {
     style = {
       border: `3px solid transparent`,
       backgroundColor: `transparent`,
-      // padding: '10px'
     }
   }
 
@@ -42,7 +35,6 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
   if (width) { style['width'] = width }
   if (margin) { style['margin'] = margin }
 
-  // boxShadow: `0 4px 80px ${color}22`
 
   return (
     <div id={id} style={style}
@@ -54,7 +46,7 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
 }
 
 export function ApiHighlight({ ...props }) {
-  const { show } = useContext(AppContext)
+  const { highlightShow } = useContext(AppContext)
   const { classes } = props
   const { children } = props
 
@@ -62,7 +54,7 @@ export function ApiHighlight({ ...props }) {
 
     <Chip size="small"
       label={"API"}
-      className={show ? 'test' : `${classes.hidden}`}
+      className={highlightShow ? 'test' : `${classes.hidden}`}
       display="inline"
       align="right"
       style={{ backgroundColor: "#A142F4", color: '#fff', top: '-10px', left: '-10px', position: 'absolute' }}
@@ -73,7 +65,7 @@ export function ApiHighlight({ ...props }) {
 }
 
 export function EmbedHighlight({ ...props }) {
-  const { show } = useContext(AppContext)
+  const { highlightShow } = useContext(AppContext)
   const { classes } = props
   const { children } = props
 
@@ -81,7 +73,7 @@ export function EmbedHighlight({ ...props }) {
 
     <Chip size="small"
       label={"Embed"}
-      className={show ? 'test' : `${classes.hidden}`}
+      className={highlightShow ? 'test' : `${classes.hidden}`}
       display="inline"
       align="right"
       style={{
@@ -98,7 +90,7 @@ export function EmbedHighlight({ ...props }) {
 }
 
 export function EmbedMethodHighlight({ ...props }) {
-  const { show } = useContext(AppContext)
+  const { highlightShow } = useContext(AppContext)
   const { classes } = props
   const { children } = props
 
@@ -106,7 +98,7 @@ export function EmbedMethodHighlight({ ...props }) {
 
     <Chip size="small"
       label={"Embed Method"}
-      className={show ? 'test' : `${classes.hidden}`}
+      className={highlightShow ? 'test' : `${classes.hidden}`}
       display="inline"
       align="right"
       style={{

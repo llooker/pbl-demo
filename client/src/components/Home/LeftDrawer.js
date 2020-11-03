@@ -13,22 +13,48 @@ import {
   Badge, FormControlLabel, Switch, Button
 } from '@material-ui/core/';
 import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, FindInPage, Code, TableChartOutlined, LibraryBooksOutlined, Menu, ChevronLeft } from '@material-ui/icons';
-import HomeIcon from '@material-ui/icons/Home';
+import HomeIcon from '@material-ui/icons/Home'; //already declared
 import { useStyles, } from './styles.js';
+import BottomBar from './BottomBar'; //needs refactor
 
 const { validIdHelper } = require('../../tools');
-
 
 export default function LeftDrawer(props) {
   // console.log('LeftDrawer');
 
   const classes = useStyles();
-  const { drawerOpen, setDrawerOpen, activeUsecase } = useContext(AppContext)
+  const { drawerOpen, setDrawerOpen, } = useContext(AppContext);
 
-  // console.log({ activeUsecase })
-  // console.log({ drawerOpen })
-  // console.log({ setDrawerOpen })
+  return (
+    <Drawer
+      className={classes.drawer}
+      variant="persistent"
+      anchor="left"
+      open={drawerOpen}
+      classes={{
+        paper: classes.drawerPaper,
+      }}
+    >
+      <div className={classes.drawerHeader}>
+        <IconButton
+          onClick={() => setDrawerOpen(false)}>
+          <ChevronLeft />
+        </IconButton>
+      </div>
 
+      <MenuList classes={classes} />
+
+      {/* should be refactored */}
+      <BottomBar classes={classes} />
+    </Drawer>
+  )
+}
+
+function MenuList(props) {
+  // console.log("MenuList")
+  // console.log({ props })
+  const { classes } = props
+  const { activeUsecase, selectedMenuItem, handleMenuItemSelect } = useContext(AppContext);
 
   let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : [];
   let orderedDemoComponentsForMenuObj = {};
@@ -43,49 +69,6 @@ export default function LeftDrawer(props) {
       expandedTreeItemsArr.push("" + (index + cumulativePusher));
     }
   })
-
-  return (
-    <Drawer
-      className={classes.drawer}
-      variant="persistent"
-      anchor="left"
-      open={drawerOpen}
-      classes={{
-        paper: classes.drawerPaper,
-      }}
-    >
-
-      <div className={classes.drawerHeader}>
-        <IconButton
-          onClick={() => setDrawerOpen(false)}>
-          <ChevronLeft />
-        </IconButton>
-      </div>
-
-      {/* LeftDrawer */}
-
-      {Object.keys(orderedDemoComponentsForMenuObj).length ?
-        <MenuList
-          // {...this.props}
-          classes={classes}
-          // activeUsecase={activeUsecase}
-          orderedDemoComponentsForMenuObj={orderedDemoComponentsForMenuObj}
-        // selectedMenuItem={selectedMenuItem}
-        // handleMenuItemSelect={handleMenuItemSelect}
-        /> : ''}
-
-    </Drawer>
-  )
-}
-
-function MenuList(props) {
-
-  // console.log("MenuList")
-  // console.log({ props })
-
-  const { classes, orderedDemoComponentsForMenuObj } = props
-
-  const { drawerOpen, setDrawerOpen, activeUsecase, selectedMenuItem, handleMenuItemSelect } = useContext(AppContext)
 
 
   const demoComponentIconMap = {

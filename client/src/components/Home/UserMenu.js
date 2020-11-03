@@ -1,11 +1,11 @@
+import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Menu, MenuItem, Typography, Divider, TextField, Avatar } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import LookerUserAttributeBrandOptions from '../../lookerUserAttributeBrandOptions.json';
+import { lookerUserAttributeBrandOptions, lookerUserPermissions } from '../../LookerHelpers/defaults';
 import { endSession } from '../../AuthUtils/auth';
-// import AppContext from '../../AppContext';
 import AppContext from '../../contexts/AppContext';
 const { validIdHelper } = require('../../tools');
 
@@ -22,7 +22,7 @@ export default function UserMenu(props) {
   let history = useHistory();
   const classes = useStyles();
 
-  let { togglePayWallModal, clientSession, setClientSession, handleSwitchLookerUser } = useContext(AppContext)
+  let { setPaywallModal, clientSession, setClientSession, handleSwitchLookerUser } = useContext(AppContext)
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(clientSession.lookerUser.user_attributes.brand || '');
@@ -37,9 +37,8 @@ export default function UserMenu(props) {
       setClientSession({})
       history.push("/")
       endSession();
-
     } else if (newValue === 'modal') {
-      togglePayWallModal({
+      setPaywallModal({
         'show': true,
         'permissionNeeded': 'explore'
       })
@@ -76,9 +75,14 @@ export default function UserMenu(props) {
         onClose={handleClose}
       >
         <MenuItem autoFocus={false}>Select User Level</MenuItem>
-        <MenuItem autoFocus={false} onClick={() => handleClose('basic', 'permission')}>Basic</MenuItem>
+        {/* <MenuItem autoFocus={false} onClick={() => handleClose('basic', 'permission')}>Basic</MenuItem>
         <MenuItem autoFocus={false} onClick={() => handleClose('advanced', 'permission')}>Advanced</MenuItem>
-        <MenuItem autoFocus={false} onClick={() => handleClose('premium', 'permission')}>Premium</MenuItem>
+        <MenuItem autoFocus={false} onClick={() => handleClose('premium', 'permission')}>Premium</MenuItem> */}
+
+        {Object.keys(lookerUserPermissions).map(key => {
+          return (<MenuItem autoFocus={false} onClick={() => handleClose(key, 'permission')}>{_.capitalize(key)}</MenuItem>)
+        })}
+
         <Divider className={classes.divider} />
         <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
         <Divider className={classes.divider} />
@@ -88,7 +92,7 @@ export default function UserMenu(props) {
         <MenuItem>
           <Autocomplete
             id="combo-box-usermenu"
-            options={LookerUserAttributeBrandOptions || []}
+            options={lookerUserAttributeBrandOptions || []}
             getOptionLabel={(option) => option.label}
             style={{ width: 300 }}
             onChange={(event) => handleClose((event.target.innerText || ''), 'brand')}

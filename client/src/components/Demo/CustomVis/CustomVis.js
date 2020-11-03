@@ -14,15 +14,18 @@ import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./CustomVis.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
 import { ApiHighlight } from '../../Highlights/Highlight';
-//new date pickers
 import { format, endOfDay, addDays } from 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
-import AppContext from '../../../AppContext';
+import AppContext from '../../../contexts/AppContext';
+
 const { validIdHelper } = require('../../../tools');
 
 export default function CustomVis(props) {
   // console.log('CustomVis')
+  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
+  const { userProfile, lookerUser, lookerHost } = clientSession
+
   const topBarBottomBarHeight = 112;
   const [value, setValue] = useState(0);
   const [fromDate, setFromDate] = useState('');
@@ -35,12 +38,13 @@ export default function CustomVis(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   // const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
-  const { togglePayWallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
 
 
   //declare constants
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange,
+    //lookerUser, lookerHost 
+  } = props;
 
   //handle opening of modal for advanced and premium users
   const handleModalOpen = async ({ day }) => {
@@ -276,7 +280,7 @@ export default function CustomVis(props) {
                             onClick={(day, event) => {
                               if (!day.value) {
                               } else if (lookerUser.user_attributes.permission_level === 'basic') {
-                                togglePayWallModal({
+                                setPaywallModal({
                                   'show': true,
                                   'permissionNeeded': 'see_drill_overlay'
                                 });

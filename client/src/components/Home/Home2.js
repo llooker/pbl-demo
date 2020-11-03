@@ -1,32 +1,24 @@
 import _ from 'lodash'
-
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, useLocation } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
-import { endSession } from '../../AuthUtils/auth';
+import { createSdkHelper } from '../../AuthUtils/auth';
 import UsecaseContent from '../../usecaseContent.json';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ThemeProvider } from '@material-ui/core/styles';
-import {
-  Drawer, CssBaseline, AppBar, Toolbar, Typography,
-  Divider, IconButton, Tabs, Tab, Icon, Box, Avatar,
-  ListSubheader, List, ListItem, ListItemIcon, ListItemText,
-  Badge, FormControlLabel, Switch, Button
-} from '@material-ui/core/';
-import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, FindInPage, Code, TableChartOutlined, LibraryBooksOutlined, Menu, ChevronLeft } from '@material-ui/icons';
+import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
 import { useStyles, defaultTheme, atomTheme } from './styles.js';
+import { lookerUserPermissions, lookerUserTimeHorizonMap } from '../../LookerHelpers/defaults';
 import TopBar from './TopBar';
 import LeftDrawer from './LeftDrawer';
 import { MonetizationModal } from '../Demo/MonetizationModal/MonetizationModal';
-import LookerUserPermissions from '../../lookerUserPermissions.json';
-import lookerUserTimeHorizonMap from '../../lookerUserTimeHorizonMap.json';
+
 import SplashPage from '../Demo/SplashPage/SplashPage';
 import Dashboard from '../Demo/Dashboard/Dashboard';
 import CustomVis from '../Demo/CustomVis/CustomVis';
 import ReportBuilder from '../Demo/ReportBuilder/ReportBuilder';
 import QueryBuilder from '../Demo/QueryBuilder/QueryBuilder';
-
 import '../Home.css';
 
 const { validIdHelper, usecaseHelper } = require('../../tools');
@@ -34,54 +26,39 @@ const { validIdHelper, usecaseHelper } = require('../../tools');
 console.log({ usecaseHelper })
 
 export default function Home(props) {
-  console.log("Home")
-
-  let { democomponent } = useParams();
-  console.log('democomponent', democomponent)
+  // console.log("Home")
 
   let history = useHistory();
-  let { setClientSession, clientSession } = useContext(AppContext)
+  // let location = useLocation();
+  let { setClientSession, clientSession,
+    sdk, setSdk,
+    initialHref, setInitialHref
+  } = useContext(AppContext)
+  let { democomponent } = useParams();
+  // console.log({ initialHref })
+
   const classes = useStyles();
 
   //state
   const didMountRef = useRef(false)
   const [drawerOpen, setDrawerOpen] = useState(window.innerWidth > 768 ? true : false);
-  const [activeTabValue, setActiveTabValue] = useState(0);
   const [activeUsecase, setActiveUsecase] = useState(usecaseHelper(UsecaseContent));
   const [highlightShow, setHighlightShow] = useState(false);
   const [codeShow, setCodeShow] = useState(false);
   const [payWallModal, setPaywallModal] = useState({});
   const [selectedMenuItem, setSelectedMenuItem] = useState('');
-  const [renderedDemoComponents, setRenderedDemoComponents] = useState([]);
-  // const [lookerContent, setLookerContent] = useState({})
-  //functions
-  const togglePayWallModal = (modalContent) => {
-    setPaywallModal({ ...modalContent })
-  }
-  const toggleHighlightShow = () => {
-    setHighlightShow(!highlightShow)
-  }
-  const toggleCodeShow = () => {
-    setCodeShow(!codeShow)
-  }
-  const handleTabChange = (newValue) => {
-    setActiveTabValue(newValue)
-  }
-
-  // const handleDrawerChange = (open) => {
-  //   setDrawerOpen(open);
-  // }
 
   const handleMenuItemSelect = (newValue, fromSplash) => {
-    // console.log("handleMenuItemSelect");
-    // console.log("newValue", newValue);
-    // console.log("fromSplash", fromSplash);
-    handleTabChange(0)
 
-    if (highlightShow) toggleHighlightShow()
-    if (codeShow) toggleCodeShow()
+    // console.log('handleMenuItemSelect');
+    // console.log('newValue', newValue);
+    // console.log('fromSplash', fromSplash);
 
-    let selectedMenuItemValue = ''
+    if (highlightShow) setHighlightShow(!highlightShow);
+    if (codeShow) setCodeShow(!codeShow);
+
+    let selectedMenuItemValue = '';
+
     if (fromSplash) {
       UsecaseContent[activeUsecase].demoComponents.map(item => {
         if (item.type !== "splash page") {
@@ -94,23 +71,25 @@ export default function Home(props) {
       })
     } else selectedMenuItemValue = newValue;
 
-    let renderedDemoComponentsCopy = [...renderedDemoComponents]
-    if (renderedDemoComponentsCopy.indexOf(selectedMenuItemValue) == -1) renderedDemoComponentsCopy.unshift(selectedMenuItemValue)
-
     setSelectedMenuItem(selectedMenuItemValue)
-    setRenderedDemoComponents([...renderedDemoComponentsCopy])
   };
 
   const handleSwitchLookerUser = async (newValue, property) => {
+
+    // console.log('handleSwitchLookerUser');
+    // console.log('newValue', newValue);
+    // console.log('property', property);
+
     let newLookerUser = { ...clientSession.lookerUser }
     if (property === 'brand') {
       newLookerUser.user_attributes.brand = newValue
     } else if (property === 'permission') {
-      newLookerUser.permissions = LookerUserPermissions[newValue] || LookerUserPermissions['basic']
+      newLookerUser.permissions = lookerUserPermissions[newValue] || lookerUserPermissions['basic']
       newLookerUser.user_attributes.permission_level = newValue
       newLookerUser.user_attributes.time_horizon = lookerUserTimeHorizonMap[newValue]
     }
-    const x = await fetch('/updatelookeruser', {
+
+    const lookerUserResponse = await fetch('/updatelookeruser', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -118,6 +97,38 @@ export default function Home(props) {
       },
       body: JSON.stringify(newLookerUser)
     })
+
+    let lookerUserResponseData = await lookerUserResponse.json();
+    setClientSession(lookerUserResponseData.session);
+  }
+
+  //Q for nick -- is this the best place to do this???
+  const corsApiCall = async (func, args = []) => {
+    await checkToken()
+    let res = func(...args)
+    return res
+  }
+
+  const checkToken = async () => {
+    // console.log('checkToken')
+
+    if (clientSession.lookerApiToken.requires_refresh || Date.now() > clientSession.lookerApiToken.expires_in) {
+      let sessionResponse = await fetch('/refreshlookertoken', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      const sessionResponseData = await sessionResponse.json();
+      // console.log('sessionResponseData', sessionResponseData)
+      const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
+      const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
+      const sdk = createSdkHelper({ lookerHost, accessToken })
+      setSdk(sdk);
+      setClientSession(sessionResponseData.session)
+
+    }
   }
 
   //componentDidMount
@@ -131,36 +142,15 @@ export default function Home(props) {
       setDrawerOpen(window.innerWidth > 768 ? true : false)
     });
 
-  }, [])
 
-  //componentDidUpdate
-  useEffect(() => {
-    if (didMountRef.current) {
-      // doStuff()
-    } else didMountRef.current = true
-  })
+    initializeSelectedMenuItem()
+
+  }, [])
 
 
   const themeMap = {
     "atom": atomTheme,
-    // "vidly": vidlyTheme
   }
-
-  useEffect(() => {
-    if (selectedMenuItem) {
-      history.push(`/analytics/${selectedMenuItem}`)
-    }
-  }, [selectedMenuItem])
-
-  if (activeUsecase && !selectedMenuItem.length) {
-    let selectedMenuItemVal =
-      UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
-        validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
-        validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
-    setSelectedMenuItem(selectedMenuItemVal)
-    setRenderedDemoComponents([selectedMenuItemVal])
-  }
-
 
   const demoComponentMap = {
     "splashpage19": SplashPage,
@@ -172,58 +162,74 @@ export default function Home(props) {
     "reportbuilder14": ReportBuilder,
   };
 
-  const DemoComponent = demoComponentMap[selectedMenuItem];
-  console.log('selectedMenuItem', selectedMenuItem)
-  let DemoComponentContent = {}
-  if (selectedMenuItem) {
-    // DemoComponentContent = _.map(UsecaseContent[activeUsecase].demoComponents, (o) => {
-    //   if (selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id)) return o
-    // });
-    // DemoComponentContent = _.without(DemoComponentContent, undefined)
-    DemoComponentContent = _.filter(UsecaseContent[activeUsecase].demoComponents, function (o) {
-      return selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id)
-    });
+  const initializeSelectedMenuItem = () => {
+
+    let splitInitialRef = initialHref.split('/');
+    let lastSlashTilEnd = _.toLower(splitInitialRef[splitInitialRef.length - 1]);
+
+    let selectedMenuItemVal;
+    if (demoComponentMap.hasOwnProperty(lastSlashTilEnd)) {
+      selectedMenuItemVal = lastSlashTilEnd
+      setInitialHref(''); //comes from App.js so need to reset
+    } else if (demoComponentMap.hasOwnProperty(democomponent)) {
+      selectedMenuItemVal = democomponent;
+    } else { //catch all
+      selectedMenuItemVal =
+        UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
+          validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
+          validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
+    }
+    setSelectedMenuItem(selectedMenuItemVal)
   }
 
-  console.log({ activeUsecase })
-  console.log({ DemoComponentContent })
+  //componentDidUpdate
+  useEffect(() => {
+    if (didMountRef.current) {
+      // doStuff()
+    } else didMountRef.current = true
+  })
+
+
+  useEffect(() => {
+    if (selectedMenuItem) {
+      history.push(`/analytics/${selectedMenuItem}`)
+    }
+  }, [selectedMenuItem]);
+
+  const DemoComponent = demoComponentMap[selectedMenuItem];
+  const DemoComponentContent = _.find(UsecaseContent[activeUsecase].demoComponents, (o) => {
+    return selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id) || selectedMenuItem === validIdHelper(o.type)
+  })
 
   return (
     <div className={classes.root} >
 
       <AppContext.Provider value={{
         clientSession, setClientSession,
-        payWallModal, togglePayWallModal,
+        payWallModal, setPaywallModal,
         handleSwitchLookerUser,
         drawerOpen, setDrawerOpen,
         activeUsecase,
         selectedMenuItem, handleMenuItemSelect,
-        show: highlightShow,
-        toggleShow: toggleHighlightShow
-        // renderedDemoComponents, setRenderedDemoComponents
+        highlightShow, setHighlightShow,
+        codeShow, setCodeShow,
+        sdk,
+        corsApiCall,
+        atomTheme
       }}>
         <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
           <CssBaseline />
-
           <TopBar />
-
           <MonetizationModal />
-
           <LeftDrawer />
-
-
           <main
             className={clsx(classes.content, {
               [classes.contentShift]: drawerOpen,
             })}
           >
             <div className={classes.drawerHeader} />
-
-            {/* {selectedMenuItem} */}
-            <DemoComponent staticContent={DemoComponentContent.length ? DemoComponentContent[0] : {}} />
-
+            {DemoComponentContent ? <DemoComponent staticContent={DemoComponentContent} /> : ''}
           </main>
-
         </ThemeProvider>
       </AppContext.Provider>
     </div>

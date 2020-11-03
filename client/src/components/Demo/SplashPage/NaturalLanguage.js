@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
-import AppContext from '../../../AppContext';
-import { ApiHighlight } from '../../Highlights/Highlight';
-
-import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress, Chip } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect, useContext } from 'react';
+import AppContext from '../../../contexts/AppContext';
+import { ApiHighlight } from '../../Highlights/Highlight'; //ooops
+import { Typography, Grid, Chip } from '@material-ui/core';
 const { validIdHelper, decodeHtml } = require('../../../tools');
 
-
 export function NaturalLanguage({ lookerContent, inlineQuery, index, classes }) {
+
   const [apiContent, setApiContent] = useState(undefined);
-  const { userProfile, lookerUser, show, sdk, corsApiCall } = useContext(AppContext);
+  const { clientSession, sdk, corsApiCall } = useContext(AppContext);
+  const { userProfile, lookerUser } = clientSession;
 
   useEffect(() => {
     let isSubscribed = true

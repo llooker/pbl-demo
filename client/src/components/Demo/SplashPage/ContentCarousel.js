@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
-import AppContext from '../../../AppContext';
+// import AppContext from '../../../AppContext';
+import AppContext from '../../../contexts/AppContext';
+
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, CircularProgress, Grid, Divider, Hidden } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import { ApiHighlight } from '../../Highlights/Highlight';
+// import { ApiHighlight } from '../../Highlights/Highlight';
 
 const { validIdHelper } = require('../../../tools');
 
@@ -12,7 +14,9 @@ const { validIdHelper } = require('../../../tools');
 
 export function ContentCarousel({ lookerContent, classes }) {
   // console.log('Welcome')
-  const { userProfile, lookerUser } = useContext(AppContext)
+  // const { userProfile, lookerUser } = useContext(AppContext)
+  const { clientSession } = useContext(AppContext)
+  const { userProfile, lookerUser } = clientSession;
 
   useEffect(() => {
     // setClientSideCode(rawSampleCode)

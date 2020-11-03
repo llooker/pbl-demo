@@ -8,13 +8,13 @@ import { NaturalLanguage } from './NaturalLanguage';
 const { validIdHelper } = require('../../../tools');
 
 export function Welcome({ lookerContent, classes }) {
-  console.log('Welcome')
+  // console.log('Welcome')
   // const { userProfile, lookerUser } = useContext(AppContext)
   const { clientSession } = useContext(AppContext)
   const { userProfile, lookerUser } = clientSession
 
-  console.log({ userProfile })
-  console.log({ lookerUser })
+  // console.log({ userProfile })
+  // console.log({ lookerUser })
 
   useEffect(() => {
     // setClientSideCode(rawSampleCode)

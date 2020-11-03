@@ -1,11 +1,11 @@
 import _ from 'lodash'
 import React, { useContext } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams, useLocation } from "react-router-dom";
 import { GoogleLogin } from 'react-google-login';
 import AppContext from '../../contexts/AppContext';
 import { writeNewSession } from '../../AuthUtils/auth';
 import UsecaseContent from '../../usecaseContent.json';
-import InitialLookerUser from '../../initialLookerUser.json';
+import { initialLookerUser } from '../../LookerHelpers/defaults'
 import useStyles from './styles.js';
 import '../Home.css';
 import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
@@ -16,15 +16,22 @@ export default function SignIn(props) {
   // console.log('props', props)
 
   let history = useHistory();
+  let location = useLocation();
   let { clientSession, setClientSession } = useContext(AppContext)
+  let { democomponent } = useParams();
+  // console.log({ democomponent })
+  // console.log({ history })
+  // console.log({ location })
 
-  const responseGoogle = (response) => {
+
+  const responseGoogle = async (response) => {
     if (response.error) {
       console.log('response.error', response.error)
     } else {
-      setClientSession((clientSession) => { return { ...clientSession, userProfile: response.profileObj, lookerUser: InitialLookerUser } })
-      writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: InitialLookerUser })
-      history.push('/analytics');
+      let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialLookerUser })
+      setClientSession(newSession.session)
+      let urlAsString = `/analytics/${democomponent}`
+      history.push(urlAsString); //for now
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`

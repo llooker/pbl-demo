@@ -14,11 +14,16 @@ import rawSampleCode from '!!raw-loader!./QueryBuilder.js'; // eslint-disable-li
 import useStyles from './styles.js';
 import { ApiHighlight } from '../../Highlights/Highlight';
 import { TabPanel, a11yProps, descendingComparator, getComparator, stableSort } from './helpers.js';
-import AppContext from '../../../AppContext';
+import AppContext from '../../../contexts/AppContext';
+
 const { validIdHelper, prettifyString } = require('../../../tools');
 
 export default function QueryBuilder(props) {
   // console.log('QueryBuilder')
+
+  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
+  const { userProfile, lookerUser, lookerHost } = clientSession
+
 
   const topBarBottomBarHeight = 112;
   const sideBarWidth = 240 + 152; //24 + 24 + 30 + 30 + 12 + 12 + 10 + 10
@@ -29,13 +34,17 @@ export default function QueryBuilder(props) {
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [width, setWidth] = useState((window.innerWidth - sideBarWidth));
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser } = props;
-  const { togglePayWallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type },
+    //activeTabValue, handleTabChange, lookerUser 
+  } = props;
 
-  const handleChange = (event, newValue) => {
-    handleTabChange(0);
-    setValue(newValue);
-  };
+  console.log({ lookerContent })
+  console.log({ lookerUser })
+
+  // const handleChange = (event, newValue) => {
+  //   handleTabChange(0);
+  //   setValue(newValue);
+  // };
 
   useEffect(() => {
     // call this is filterBar instead to make field chip dynamic
@@ -172,7 +181,16 @@ export default function QueryBuilder(props) {
 
 function FilterBar(props) {
   // console.log('FilterBar');
-  const { staticContent, staticContent: { lookerContent }, classes, action, lookerUser, corsApiCall } = props;
+
+
+  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
+  const { userProfile, lookerUser, lookerHost } = clientSession
+
+  const { staticContent, staticContent: { lookerContent }, classes, action, //lookerUser, corsApiCall 
+  } = props;
+
+
+
   let measureCounter = 0;
   let dimensionCounter = 0;
 
@@ -248,12 +266,15 @@ function FilterBar(props) {
       'advanced': 'last 365 days',
       'premium': 'last 730 days' //before today
     }
-    let updatedFiltersData = [...filtersData]
-    updatedFiltersData[3].value = lookerUserTimeHorizonMap[lookerUser.user_attributes.permission_level] || "182 days";
-    setFilterData(updatedFiltersData);
-    setFieldsChipData(initializeFieldChipDataHelper())
+    if (lookerUser) {
+      let updatedFiltersData = [...filtersData]
+      updatedFiltersData[3].value = lookerUserTimeHorizonMap[lookerUser.user_attributes.permission_level] || "182 days";
+      setFilterData(updatedFiltersData);
+      setFieldsChipData(initializeFieldChipDataHelper())
 
-    setQueryShouldRun(true);
+      setQueryShouldRun(true);
+
+    }
   }, [lookerUser]);
 
   useEffect(() => {

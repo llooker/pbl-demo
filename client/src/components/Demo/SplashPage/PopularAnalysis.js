@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
-import AppContext from '../../../AppContext';
-import { ApiHighlight } from '../../Highlights/Highlight';
+// import AppContext from '../../../AppContext';
+// import { ApiHighlight } from '../../Highlights/Highlight';
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, CircularProgress, Grid, Divider } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { ResponsiveLine } from '@nivo/line';
+// import { makeStyles } from '@material-ui/core/styles';
+// import { ResponsiveLine } from '@nivo/line';
 import { VectorThumbnail } from './VectorThumbnail';
-import { NaturalLanguage } from './NaturalLanguage';
+// import { NaturalLanguage } from './NaturalLanguage';
 const { validIdHelper } = require('../../../tools');
 
 

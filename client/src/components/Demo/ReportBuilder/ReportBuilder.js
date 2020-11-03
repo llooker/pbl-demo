@@ -12,12 +12,18 @@ import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
-import AppContext from '../../../AppContext';
+import AppContext from '../../../contexts/AppContext';
+
 import { SwapVerticalCircleOutlined } from '@material-ui/icons';
 const { validIdHelper } = require('../../../tools');
 
 //start of ReportBuilder Component
 export default function ReportBuilder(props) {
+
+
+  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
+  const { userProfile, lookerUser, lookerHost } = clientSession
+
   const topBarBottomBarHeight = 112;
   const [iFrameExists, setIFrame] = useState(0);
   // const [exploreIFrameExists, setExploreIFrame] = useState(0);
@@ -26,13 +32,13 @@ export default function ReportBuilder(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
-  // const { togglePayWallModal, codeShow } = useContext(AppContext)
-  const { togglePayWallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
 
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [qid, setQid] = useState(null);
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type },
+    //activeTabValue, handleTabChange, lookerUser, lookerHost 
+  } = props;
 
   const demoComponentType = type;
   const tabContent = [...lookerContent]
@@ -40,7 +46,7 @@ export default function ReportBuilder(props) {
   const handleChange = (event, newValue) => {
     if (newValue == 1 && lookerUser.user_attributes.permission_level != 'premium') {
       // handleChange(0)
-      togglePayWallModal({
+      setPaywallModal({
         'show': true,
         'permissionNeeded': 'explore'
       });
@@ -50,11 +56,11 @@ export default function ReportBuilder(props) {
   };
 
   useEffect(() => {
-    if (activeTabValue > value) {
-      setValue(activeTabValue)
-    } else {
-      corsApiCall(performLookerApiCalls, [lookerContent, 1])
-    }
+    // if (activeTabValue > value) {
+    //   setValue(activeTabValue)
+    // } else {
+    corsApiCall(performLookerApiCalls, [lookerContent, 1])
+    //}
     setClientSideCode(rawSampleCode)
   }, [lookerContent, lookerUser]);
 
@@ -393,7 +399,7 @@ export default function ReportBuilder(props) {
                               <Grid item sm={4} >
                                 <ApiHighlight height={500} classes={classes}>
                                   <TreeSideBar {...{
-                                    togglePayWallModal,
+                                    setPaywallModal,
                                     classes,
                                     demoComponentType,
                                     tabContent,
@@ -458,7 +464,14 @@ export default function ReportBuilder(props) {
 
 
 function TreeSideBar(props) {
-  const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent, lookerUser, togglePayWallModal } = props
+
+
+  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
+  const { userProfile, lookerUser, lookerHost } = clientSession
+
+  const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent,
+    //lookerUser, setPaywallModal
+  } = props
   const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
   let treeCounter = 0;
   const [selected, setSelected] = useState(2);
@@ -549,9 +562,9 @@ function TreeSideBar(props) {
                                   );
                                   event.stopPropagation();
                                 } else {
-                                  // togglePayWallModal();
+                                  // setPaywallModal();
 
-                                  togglePayWallModal({
+                                  setPaywallModal({
                                     'show': true,
                                     'permissionNeeded': 'explore'
                                   });
@@ -596,9 +609,9 @@ function TreeSideBar(props) {
                                     );
                                     event.stopPropagation();
                                   } else {
-                                    // togglePayWallModal();
+                                    // setPaywallModal();
 
-                                    togglePayWallModal({
+                                    setPaywallModal({
                                       'show': true,
                                       'permissionNeeded': 'explore'
                                     });
@@ -627,9 +640,9 @@ function TreeSideBar(props) {
                                     );
                                     event.stopPropagation();
                                   } else {
-                                    // togglePayWallModal();
+                                    // setPaywallModal();
 
-                                    togglePayWallModal({
+                                    setPaywallModal({
                                       'show': true,
                                       'permissionNeeded': 'explore'
                                     });

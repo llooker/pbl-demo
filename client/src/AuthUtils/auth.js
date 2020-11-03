@@ -1,3 +1,6 @@
+import { Looker40SDK, DefaultSettings } from "@looker/sdk";
+import { PblSessionEmbed } from '../LookerHelpers/pblsession'
+
 export const checkForExistingSession = async () => {
   let sessionResponse = await fetch('/readsession', {
     method: 'GET',
@@ -34,3 +37,16 @@ export const endSession = async () => {
   const endSessionResponseData = await endSessionResponse.json();
   return { message: endSessionResponse };
 }
+
+export const createSdkHelper = ({ accessToken, lookerHost }) => {
+
+  const session = new PblSessionEmbed({
+    ...DefaultSettings(),
+    base_url: `https://${lookerHost}.looker.com:19999`,
+    accessToken
+  });
+
+  let sdk = new Looker40SDK(session);
+  return sdk;
+}
+

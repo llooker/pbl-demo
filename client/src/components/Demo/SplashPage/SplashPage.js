@@ -14,7 +14,6 @@ import { PopularAnalysis } from './PopularAnalysis';
 import { EmbeddedLook } from './EmbeddedLook';
 import { EmbeddedDashboard } from './EmbeddedDashboard';
 import { ContentCarousel } from './ContentCarousel';
-import BottomBar from '../../Material/BottomBar.js'
 // import AppContext from '../../../AppContext';
 import AppContext from '../../../contexts/AppContext';
 
@@ -23,7 +22,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
 export default function SplashPage(props) {
-  console.log('SplashPage')
+  // console.log('SplashPage')
   //intialize state using hooks
 
   const topBarBottomBarHeight = 112;
@@ -33,7 +32,8 @@ export default function SplashPage(props) {
   const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
 
-  const { toggleShow, show, codeShow } = useContext(AppContext)
+  const { clientSession, highlightShow, codeShow, handleMenuItemSelect } = useContext(AppContext)
+  const { userProfile, lookerUser, lookerHost } = clientSession
 
 
 
@@ -41,9 +41,10 @@ export default function SplashPage(props) {
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type },
     handleTabChange,
-    handleMenuItemSelect,
-    lookerUser,
-    lookerHost } = props;
+    // handleMenuItemSelect,
+    // lookerUser,
+    // lookerHost 
+  } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
@@ -70,8 +71,8 @@ export default function SplashPage(props) {
    * this section is necessary but less relevant to looker functionality itself
    */
 
-  console.log({ staticContent })
-  console.log({ lookerContent })
+  // console.log({ staticContent })
+  // console.log({ lookerContent })
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
@@ -115,9 +116,9 @@ export default function SplashPage(props) {
                       {(lookerContent.type === 'welcome') && <Welcome
                         {...{ lookerContent, classes, demoComponentType, lookerHost }}
                       />}
-                      {(lookerContent.type === 'carousel') && <ContentCarousel
+                      {/* {(lookerContent.type === 'carousel') && <ContentCarousel
                         {...{ lookerContent, classes, demoComponentType, lookerHost }}
-                      />}
+                      />} */}
                       {(lookerContent.type === 'single value') && <SingleValueVis
                         {...{ lookerContent, classes, demoComponentType, lookerHost }}
                       />}

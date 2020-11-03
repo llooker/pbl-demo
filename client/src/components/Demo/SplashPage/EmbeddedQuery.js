@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import React, { useEffect, useRef, useCallback, useState, useContext } from 'react';
-import AppContext from '../../../AppContext';
+// import AppContext from '../../../AppContext';
+import AppContext from '../../../contexts/AppContext';
+
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import { Typography, Grid, Card, CircularProgress, Box, Chip } from '@material-ui/core';
@@ -9,7 +11,9 @@ import { urlencoded } from 'body-parser';
 export function EmbeddedQuery({ lookerContent, classes, id }) {
 
   const [iFrameExists, setIFrame] = useState(0);
-  const { userProfile, lookerUser, show, lookerHost } = useContext(AppContext)
+  // const { userProfile, lookerUser, show, lookerHost } = useContext(AppContext)
+  const { clientSession, show, sdk, corsApiCall } = useContext(AppContext)
+  const { userProfile, lookerUser, lookerHost } = clientSession;
 
   useEffect(() => {
     $(`#${id}`).html('')

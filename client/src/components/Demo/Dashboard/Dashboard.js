@@ -2,7 +2,7 @@ import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField, FormControlLabel, Chip,
+  Typography, Box, Grid, CircularProgress, Card, TextField,
   ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Slider, FormControl, InputLabel, Select, MenuItem, Switch
 } from '@material-ui/core'
 import { Autocomplete, ToggleButton, ToggleButtonGroup, Skeleton } from '@material-ui/lab'
@@ -15,22 +15,20 @@ import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./Dashboard.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
-import { TabPanel, a11yProps } from './helpers.js';
-import BottomBar from '../../Material/BottomBar.js'
-import { ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '../../Highlights/Highlight';
+import { ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '../../Highlights/Highlight'; //ooops
 import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent';
-import AppContext from '../../../AppContext';
-//new
+import AppContext from '../../../contexts/AppContext';
 import Usa from "@svg-maps/usa";
 import { CheckboxSVGMap } from "./CheckboxSvgMapRegion";
-
 const { validIdHelper } = require('../../../tools');
 
 export default function Dashboard(props) {
-  // console.log('Dashboard')
-  // console.log('props', props)
 
-  const { staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange, lookerUser, lookerHost } = props;
+  const { staticContent: { lookerContent }, staticContent: { type } } = props;
+
+  const { clientSession, codeShow, sdk, corsApiCall, atomTheme } = useContext(AppContext)
+  const { lookerUser, lookerHost } = clientSession
+
   const demoComponentType = type || 'code flyout';
   const topBarBottomBarHeight = 112;
 
@@ -47,10 +45,11 @@ export default function Dashboard(props) {
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
-  const { togglePayWallModal, show, codeShow, sdk, atomTheme, corsApiCall } = useContext(AppContext)
 
   const isThemeableDashboard = validIdHelper(`${demoComponentType}${lookerContent[0].id}`) === 'customfilter1';
   const darkThemeBackgroundColor = "#343D4E";
+
+  console.log('isThemeableDashboard', isThemeableDashboard)
 
   const classes = useStyles();
 
@@ -73,11 +72,6 @@ export default function Dashboard(props) {
     [lightThemeToggleValue],
   );
 
-  //handle tab change
-  const handleChange = (event, newValue) => {
-    handleTabChange(0);
-    setValue(newValue);
-  };
 
   const handleTileToggle = (event, newValue) => {
     setTileToggleValue(newValue)

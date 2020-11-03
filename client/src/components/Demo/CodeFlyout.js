@@ -2,14 +2,12 @@ import React, { useContext } from 'react';
 import { Typography, Grid, Fade, ClickAwayListener } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-// import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/hljs'; //hehe
-import AppContext from '../../AppContext'
+import AppContext from '../../contexts/AppContext';
 
 //helper function for rendering content in code tab
 export default function CodeFlyout(props) {
-  const { toggleCodeShow } = useContext(AppContext);
-  const { codeShow } = useContext(AppContext);
+  const { codeShow, setCodeShow } = useContext(AppContext);
 
   const { classes, lookerContent, clientSideCode, serverSideCode, lookerUser, permissionNeededCode, height } = props
   return (
@@ -27,7 +25,7 @@ export default function CodeFlyout(props) {
           <Grid item sm={1}
             style={{ textAlign: 'right' }}
           >
-            <CloseIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => toggleCodeShow()} />
+            <CloseIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => setCodeShow()} />
           </Grid>
 
           <Grid item sm={12}>

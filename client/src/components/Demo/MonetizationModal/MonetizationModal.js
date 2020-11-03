@@ -1,23 +1,16 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-// import AppContext from '../../AppContext';
 import AppContext from '../../../contexts/AppContext';
-
 import {
-  Modal, Fade, Grid, Paper, Card, CardContent, CardActions, Button, Typography, Chip, Divider, List, ListItem, ListItemAvatar, Avatar, ImageIcon, ListItemText
-
+  Modal, Fade, Grid, Card, CardContent, CardActions, Button, Typography, Divider, List, ListItem, ListItemText
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab'
-
+import { ListItemIcon } from '@material-ui/core'; //already declared
+import { Check } from '@material-ui/icons';
 import useStyles from './styles.js';
-
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import CheckIcon from '@material-ui/icons/Check';
-import LookerUserPermissions from '../../../lookerUserPermissions.json';
-
+import { lookerUserPermissions } from '../../../LookerHelpers/defaults';
 const { validIdHelper } = require('../../../tools');
-
 
 function getModalStyle() {
   const top = 10 //+ rand();
@@ -30,12 +23,10 @@ function getModalStyle() {
   };
 }
 
-
 export function MonetizationModal({ props }) {
-
   // console.log('MonetizationModal')
+  let { clientSession, payWallModal, setPaywallModal, handleSwitchLookerUser } = useContext(AppContext)
 
-  let { setClientSession, clientSession, togglePayWallModal, payWallModal, handleSwitchLookerUser } = useContext(AppContext)
 
   const [modalStyle] = React.useState(getModalStyle);
   const classes = useStyles();
@@ -68,7 +59,7 @@ export function MonetizationModal({ props }) {
     < Modal
       className={`${classes.modal} `}
       open={payWallModal.show || false}
-      onClose={togglePayWallModal}
+      onClose={() => setPaywallModal({})}
     >
       <Fade in={payWallModal.show || false}>
         <div
@@ -76,7 +67,7 @@ export function MonetizationModal({ props }) {
           className={`${classes.paper} ${classes.padding30}`}>
           <Grid container
             spacing={3}>
-            {Object.keys(LookerUserPermissions).map(key => {
+            {Object.keys(lookerUserPermissions).map(key => {
               return (
                 <Grid item sm={4}
                   key={validIdHelper(`monetizationModal-gridItem-${key}`)}
@@ -94,7 +85,7 @@ export function MonetizationModal({ props }) {
                       }}
                     onClick={() => {
                       handleSwitchLookerUser(key, 'permission')
-                      togglePayWallModal()
+                      setPaywallModal({})
                     }}>
                     <CardContent>
                       <Typography variant="h6" display="justify">
@@ -126,7 +117,7 @@ export function MonetizationModal({ props }) {
                             >
                               <ListItemIcon
                               >
-                                <CheckIcon fontSize="small" />
+                                <Check fontSize="small" />
                               </ListItemIcon>
                               <ListItemText primary={item} />
                             </ListItem>
@@ -142,7 +133,7 @@ export function MonetizationModal({ props }) {
                         fullWidth
                         onClick={() => {
                           handleSwitchLookerUser(key, 'permission')
-                          togglePayWallModal()
+                          setPaywallModal({})
                         }}
                         style={key === clientSession.lookerUser.user_attributes.permission_level ? { color: '#ffffff', borderColor: "#ffffff" } : {}}>
                         {key === clientSession.lookerUser.user_attributes.permission_level ? "Active" :
