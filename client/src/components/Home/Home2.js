@@ -174,16 +174,19 @@ export default function Home(props) {
 
   const DemoComponent = demoComponentMap[selectedMenuItem];
   console.log('selectedMenuItem', selectedMenuItem)
-  let lookerContent = _.map(UsecaseContent[activeUsecase].demoComponents, (o) => {
-    if (selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id)) return o
-  });
-  lookerContent = _.without(lookerContent, undefined)
-
-
+  let DemoComponentContent = {}
+  if (selectedMenuItem) {
+    // DemoComponentContent = _.map(UsecaseContent[activeUsecase].demoComponents, (o) => {
+    //   if (selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id)) return o
+    // });
+    // DemoComponentContent = _.without(DemoComponentContent, undefined)
+    DemoComponentContent = _.filter(UsecaseContent[activeUsecase].demoComponents, function (o) {
+      return selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id)
+    });
+  }
 
   console.log({ activeUsecase })
-  console.log('lookerContent')
-  console.log({ lookerContent })
+  console.log({ DemoComponentContent })
 
   return (
     <div className={classes.root} >
@@ -217,7 +220,7 @@ export default function Home(props) {
             <div className={classes.drawerHeader} />
 
             {/* {selectedMenuItem} */}
-            {/* <DemoComponent staticContent={lookerContent} /> */}
+            <DemoComponent staticContent={DemoComponentContent.length ? DemoComponentContent[0] : {}} />
 
           </main>
 

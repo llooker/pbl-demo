@@ -23,8 +23,9 @@ const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
 export default function SplashPage(props) {
-  // console.log('SplashPage')
+  console.log('SplashPage')
   //intialize state using hooks
+
   const topBarBottomBarHeight = 112;
   const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(1);
@@ -38,7 +39,11 @@ export default function SplashPage(props) {
 
   //declare constants
   const classes = useStyles();
-  // const { staticContent, staticContent: { lookerContent }, staticContent: { type }, handleTabChange, handleMenuItemSelect, lookerUser, lookerHost } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type },
+    handleTabChange,
+    handleMenuItemSelect,
+    lookerUser,
+    lookerHost } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
@@ -64,6 +69,9 @@ export default function SplashPage(props) {
    * Rendering of actual html elements,
    * this section is necessary but less relevant to looker functionality itself
    */
+
+  console.log({ staticContent })
+  console.log({ lookerContent })
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
@@ -113,9 +121,6 @@ export default function SplashPage(props) {
                       {(lookerContent.type === 'single value') && <SingleValueVis
                         {...{ lookerContent, classes, demoComponentType, lookerHost }}
                       />}
-                      {/* {(lookerContent.type === 'dashboard') && <EmbeddedDashboard
-                        {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
-                      />} */}
                       {(lookerContent.type === 'dashboard') && <EmbeddedQuery
                         {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
                       />}

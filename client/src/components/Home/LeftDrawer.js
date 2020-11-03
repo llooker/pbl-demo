@@ -20,14 +20,14 @@ const { validIdHelper } = require('../../tools');
 
 
 export default function LeftDrawer(props) {
-  console.log('LeftDrawer');
+  // console.log('LeftDrawer');
 
   const classes = useStyles();
   const { drawerOpen, setDrawerOpen, activeUsecase } = useContext(AppContext)
 
-  console.log({ activeUsecase })
-  console.log({ drawerOpen })
-  console.log({ setDrawerOpen })
+  // console.log({ activeUsecase })
+  // console.log({ drawerOpen })
+  // console.log({ setDrawerOpen })
 
 
   let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : [];
@@ -80,8 +80,8 @@ export default function LeftDrawer(props) {
 
 function MenuList(props) {
 
-  console.log("MenuList")
-  console.log({ props })
+  // console.log("MenuList")
+  // console.log({ props })
 
   const { classes, orderedDemoComponentsForMenuObj } = props
 
