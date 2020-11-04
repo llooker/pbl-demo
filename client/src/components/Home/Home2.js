@@ -10,6 +10,7 @@ import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
 import { useStyles, defaultTheme, atomTheme } from './styles.js';
 import { lookerUserPermissions, lookerUserTimeHorizonMap } from '../../LookerHelpers/defaults';
+
 import TopBar from './TopBar';
 import LeftDrawer from './LeftDrawer';
 import { MonetizationModal } from '../Demo/MonetizationModal/MonetizationModal';
@@ -23,21 +24,13 @@ import '../Home.css';
 
 const { validIdHelper, usecaseHelper } = require('../../tools');
 
-console.log({ usecaseHelper })
 
 export default function Home(props) {
   // console.log("Home")
-
-  let history = useHistory();
-  // let location = useLocation();
-  let { setClientSession, clientSession,
-    sdk, setSdk,
-    initialHref, setInitialHref
-  } = useContext(AppContext)
+  let { setClientSession, clientSession, sdk, setSdk } = useContext(AppContext)
   let { democomponent } = useParams();
-  // console.log({ initialHref })
-
   const classes = useStyles();
+
 
   //state
   const didMountRef = useRef(false)
@@ -46,7 +39,7 @@ export default function Home(props) {
   const [highlightShow, setHighlightShow] = useState(false);
   const [codeShow, setCodeShow] = useState(false);
   const [payWallModal, setPaywallModal] = useState({});
-  const [selectedMenuItem, setSelectedMenuItem] = useState('');
+  const [selectedMenuItem, setSelectedMenuItem] = useState(democomponent);
 
   const handleMenuItemSelect = (newValue, fromSplash) => {
 
@@ -70,7 +63,6 @@ export default function Home(props) {
         }
       })
     } else selectedMenuItemValue = newValue;
-
     setSelectedMenuItem(selectedMenuItemValue)
   };
 
@@ -121,7 +113,6 @@ export default function Home(props) {
         }
       })
       const sessionResponseData = await sessionResponse.json();
-      // console.log('sessionResponseData', sessionResponseData)
       const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
       const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
       const sdk = createSdkHelper({ lookerHost, accessToken })
@@ -142,10 +133,24 @@ export default function Home(props) {
       setDrawerOpen(window.innerWidth > 768 ? true : false)
     });
 
-
-    initializeSelectedMenuItem()
-
   }, [])
+
+  //componentDidUpdate
+  useEffect(() => {
+    if (didMountRef.current) {
+      // doStuff()
+    } else didMountRef.current = true
+  })
+
+
+  useEffect(() => {
+    setSelectedMenuItem(democomponent)
+  }, [democomponent])
+
+  // useEffect(() => {
+  //   console.log('handleMenuItemSelect useEffect ')
+  //   console.log({ selectedMenuItem })
+  // }, [selectedMenuItem])
 
 
   const themeMap = {
@@ -162,44 +167,14 @@ export default function Home(props) {
     "reportbuilder14": ReportBuilder,
   };
 
-  const initializeSelectedMenuItem = () => {
-
-    let splitInitialRef = initialHref.split('/');
-    let lastSlashTilEnd = _.toLower(splitInitialRef[splitInitialRef.length - 1]);
-
-    let selectedMenuItemVal;
-    if (demoComponentMap.hasOwnProperty(lastSlashTilEnd)) {
-      selectedMenuItemVal = lastSlashTilEnd
-      setInitialHref(''); //comes from App.js so need to reset
-    } else if (demoComponentMap.hasOwnProperty(democomponent)) {
-      selectedMenuItemVal = democomponent;
-    } else { //catch all
-      selectedMenuItemVal =
-        UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id ?
-          validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type + UsecaseContent[activeUsecase].demoComponents[0].lookerContent[0].id) :
-          validIdHelper(UsecaseContent[activeUsecase].demoComponents[0].type)
-    }
-    setSelectedMenuItem(selectedMenuItemVal)
-  }
-
-  //componentDidUpdate
-  useEffect(() => {
-    if (didMountRef.current) {
-      // doStuff()
-    } else didMountRef.current = true
-  })
-
-
-  useEffect(() => {
-    if (selectedMenuItem) {
-      history.push(`/analytics/${selectedMenuItem}`)
-    }
-  }, [selectedMenuItem]);
 
   const DemoComponent = demoComponentMap[selectedMenuItem];
   const DemoComponentContent = _.find(UsecaseContent[activeUsecase].demoComponents, (o) => {
     return selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id) || selectedMenuItem === validIdHelper(o.type)
-  })
+  });
+
+  console.log({ DemoComponentContent })
+
 
   return (
     <div className={classes.root} >

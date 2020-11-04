@@ -1,17 +1,9 @@
 import _ from 'lodash'
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useHistory, } from "react-router-dom";
+import React, { useContext } from 'react';
+import { Link } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
-import { endSession } from '../../AuthUtils/auth';
 import UsecaseContent from '../../usecaseContent.json';
-import { LookerEmbedSDK } from '@looker/embed-sdk'
-import { ThemeProvider } from '@material-ui/core/styles';
-import {
-  Drawer,
-  IconButton,
-  ListSubheader, List, ListItem, ListItemIcon, ListItemText,
-  Badge, FormControlLabel, Switch, Button
-} from '@material-ui/core/';
+import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
 import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, FindInPage, Code, TableChartOutlined, LibraryBooksOutlined, Menu, ChevronLeft } from '@material-ui/icons';
 import HomeIcon from '@material-ui/icons/Home'; //already declared
 import { useStyles, } from './styles.js';
@@ -102,20 +94,25 @@ function MenuList(props) {
               const MatchingIconComponent = demoComponentIconMap[key]
 
               return (
+                // <Link to={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type)}
+                //   style={{ textDecoration: 'none' }}>
                 <ListItem
                   button
                   className={`${classes.nested} ${classes.roundedTab}`}
                   key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
-                  onClick={
-                    () => handleMenuItemSelect(validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type))
-                  }
+                  // onClick={
+                  //   () => handleMenuItemSelect(validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type))
+                  // }
                   selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedMenuItem}
+                  component={Link}
+                  to={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type)}
                 >
                   <ListItemIcon>
                     <MatchingIconComponent />
                   </ListItemIcon>
                   <ListItemText primary={_.capitalize(item.label)} />
                 </ListItem>
+                // </Link>
               )
             })}
           </List>

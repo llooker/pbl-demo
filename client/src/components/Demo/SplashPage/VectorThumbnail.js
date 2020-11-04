@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
-// import AppContext from '../../../AppContext';
+import { Link } from "react-router-dom";
 import AppContext from '../../../contexts/AppContext';
-
 import { ApiHighlight } from '../../Highlights/Highlight';
-import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Grid, CircularProgress, Divider, Chip } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Typography, Grid, Divider } from '@material-ui/core';
 
-export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSelect, index }) {
+export function VectorThumbnail({ lookerContent, classes, item, index }) {
   // console.log('VectorThumbnail')
 
   const [svg, setSvg] = useState(undefined)
   // const { userProfile, lookerUser, show, sdk, corsApiCall } = useContext(AppContext);
-  const { clientSession, show, sdk, corsApiCall } = useContext(AppContext)
+  const { clientSession, sdk, corsApiCall } = useContext(AppContext)
   const { userProfile, lookerUser } = clientSession;
 
   useEffect(() => {
@@ -33,9 +31,10 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
 
   return (
     <Grid container
-      onClick={() => handleMenuItemSelect(item.id, 1)}
       className={`${classes.cursorPointer}`}
       spacing={3}
+      component={Link}
+      to={item.demoComponentId}
     >
       {svg ?
         <>
@@ -46,7 +45,6 @@ export function VectorThumbnail({ lookerContent, classes, item, handleMenuItemSe
                 className={` ${classes.maxHeight60} ${classes.textCenter} ${classes.cursorPointer} ${classes.overflowHidden}`}
               >
                 <img
-                  onClick={() => handleMenuItemSelect(item.id, 1)}
                   src={svg}
                   style={{ width: '100%' }}
                 />

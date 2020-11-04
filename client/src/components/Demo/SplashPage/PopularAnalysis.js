@@ -10,7 +10,7 @@ const { validIdHelper } = require('../../../tools');
 
 
 
-export function PopularAnalysis({ lookerContent, classes, handleMenuItemSelect }) {
+export function PopularAnalysis({ lookerContent, classes }) {
   const [apiContent, setApiContent] = useState([]);
 
   return (
@@ -35,7 +35,7 @@ export function PopularAnalysis({ lookerContent, classes, handleMenuItemSelect }
             return (
               <VectorThumbnail
                 key={`${validIdHelper('vectorThumbnail-splashPage-' + index)}`}
-                {...{ lookerContent, item, classes, handleMenuItemSelect, index }}
+                {...{ lookerContent, item, classes, index }}
               />
             )
           }

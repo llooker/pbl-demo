@@ -34,6 +34,7 @@ export const endSession = async () => {
       'Content-Type': 'application/json'
     }
   })
+  localStorage.clear();
   const endSessionResponseData = await endSessionResponse.json();
   return { message: endSessionResponse };
 }

@@ -19,7 +19,7 @@ module.exports.readSession = async (req, res, next) => {
 module.exports.writeSession = async (req, res, next) => {
   // console.log('writeSession')
   let { session } = req;
-  console.log({ session })
+  // console.log({ session })
   session.userProfile = req.body.userProfile;
   session.lookerUser = req.body.lookerUser;
   session.lookerHost = lookerHostNameToUse;

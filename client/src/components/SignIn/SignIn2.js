@@ -15,13 +15,8 @@ export default function SignIn(props) {
   // console.log('SignIn');
   // console.log('props', props)
 
-  let history = useHistory();
-  let location = useLocation();
-  let { clientSession, setClientSession } = useContext(AppContext)
-  let { democomponent } = useParams();
-  // console.log({ democomponent })
-  // console.log({ history })
-  // console.log({ location })
+  let { clientSession, setClientSession,
+    initialHref, setInitialHref } = useContext(AppContext)
 
 
   const responseGoogle = async (response) => {
@@ -30,8 +25,13 @@ export default function SignIn(props) {
     } else {
       let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialLookerUser })
       setClientSession(newSession.session)
-      let urlAsString = `/analytics/${democomponent}`
-      history.push(urlAsString); //for now
+      localStorage.setItem("clientSession", JSON.stringify(newSession.session)) //for now
+      // if (initialHref) window.location = initialHref;
+      // else window.location = '/analytics/splashpage19';
+
+      // if (initialHref) history.push(initialHref)
+      // else history.push('/analytics/splashpage19')
+
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
@@ -41,6 +41,9 @@ export default function SignIn(props) {
   const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
   const backgroundImage = require(`../../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`);
   const logoImage = require(`../../images/${usecaseFromUrl}_logo_black.svg`)
+
+  console.log({ backgroundImage })
+  console.log({ classes })
 
   return (
     <div className={`${classes.root} demoComponent ${classes.h100}`}>

@@ -221,7 +221,8 @@
                 "resourceType": "dashboard",
                 "lookerMethod": "vector_thumbnail",
                 "label": "Analytics",
-                "gridWidth": "4"
+                "gridWidth": "4",
+                "demoComponentId": "simpledashboard9"
               },
               {
                 "id": "5",
@@ -229,7 +230,8 @@
                 "resourceType": "dashboard",
                 "lookerMethod": "vector_thumbnail",
                 "label": "Sales",
-                "gridWidth": "4"
+                "gridWidth": "4",
+                "demoComponentId": "customfilter5"
               },
               {
                 "id": "1",
@@ -237,7 +239,8 @@
                 "resourceType": "dashboard",
                 "lookerMethod": "vector_thumbnail",
                 "label": "Inventory",
-                "gridWidth": "4"
+                "gridWidth": "4",
+                "demoComponentId": "customfilter1"
               }
             ],
             "label": "Popular analysis"

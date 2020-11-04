@@ -8,6 +8,10 @@ export default makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
+  root: {
+    display: 'flex',
+    backgroundColor: 'rgb(229, 229, 229)'
+  },
   flexCentered: {
     display: 'flex',
     justifyContent: 'center',
