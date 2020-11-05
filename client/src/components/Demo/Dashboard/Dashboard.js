@@ -27,7 +27,7 @@ export default function Dashboard(props) {
 
   const { staticContent: { lookerContent }, staticContent: { type } } = props;
 
-  const { clientSession, codeShow, sdk, corsApiCall, atomTheme, isReady } = useContext(AppContext)
+  const { clientSession, codeShow, sdk, corsApiCall, atomTheme, isReady, selectedMenuItem } = useContext(AppContext)
   const { lookerUser, lookerHost } = clientSession;
 
   const demoComponentType = type || 'code flyout';
@@ -139,7 +139,7 @@ export default function Dashboard(props) {
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
       // setClientSideCode(rawSampleCode)
     }
-  }, [lookerUser, isReady])
+  }, [lookerUser, isReady, selectedMenuItem])
 
 
   useEffect(() => {
