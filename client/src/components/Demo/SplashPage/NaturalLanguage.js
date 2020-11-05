@@ -21,8 +21,8 @@ export function NaturalLanguage({ lookerContent, inlineQuery, index, classes }) 
   }, [inlineQuery, lookerUser]);
 
   const runInlineQuery = async () => {
-    setApiContent(undefined)
-    let clientLookerResponse = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: inlineQuery }));
+    // setApiContent(undefined)
+    let clientLookerResponse = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.resultFormat || 'json', body: inlineQuery }));
     return clientLookerResponse[0];
   }
 

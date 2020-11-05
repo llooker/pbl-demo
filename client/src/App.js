@@ -16,7 +16,7 @@ function App(props) {
 
   //onload
   useEffect(() => {
-    // console.log("inside this useEffect")
+    // console.log("inside onload useEffect")
     async function fetchSession() {
 
       const sessionResponse = await checkForExistingSession();
@@ -26,21 +26,27 @@ function App(props) {
         const accessToken = sessionResponse.session.lookerApiToken ? sessionResponse.session.lookerApiToken.api_user_token : '';
         const sdk = createSdkHelper({ lookerHost, accessToken })
 
-        setSdk(sdk)
         setClientSession(sessionResponse.session)
+        setSdk(sdk)
+
         localStorage.setItem("clientSession", JSON.stringify(sessionResponse.session));
+        // localStorage.setItem("sdk", JSON.stringify(sdk));
       }
     }
 
-    if (localStorage.getItem("clientSession")) {
+    if (localStorage.getItem("clientSession")) { //&& localStorage.getItem(sdk)) {
+      // console.log("localStorage ifff")
       let clientSessionLocalStorage = JSON.parse(localStorage.getItem("clientSession"))
+      // let sdkLocalStorage = JSON.parse(localStorage.getItem("sdk"))
+      // setSdk(sdkLocalStorage)
+
       const lookerHost = clientSessionLocalStorage.lookerHost ? clientSessionLocalStorage.lookerHost : '';
       const accessToken = clientSessionLocalStorage.lookerApiToken ? clientSessionLocalStorage.lookerApiToken.api_user_token : '';
       const sdk = createSdkHelper({ lookerHost, accessToken })
-      setSdk(sdk)
+      setSdk(sdk);
       setClientSession(clientSessionLocalStorage)
-
     } else {
+      // console.log("localStorage else")
       fetchSession(); //make async call
     }
 
@@ -48,6 +54,11 @@ function App(props) {
 
   // console.log({ sdk })
   // console.log({ clientSession })
+
+  useEffect(() => {
+    // console.log("useEffect sdk")
+    // console.log({ sdk })
+  }, [sdk])
 
 
   return (

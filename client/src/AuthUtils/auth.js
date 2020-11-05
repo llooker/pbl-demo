@@ -2,6 +2,7 @@ import { Looker40SDK, DefaultSettings } from "@looker/sdk";
 import { PblSessionEmbed } from '../LookerHelpers/pblsession'
 
 export const checkForExistingSession = async () => {
+  // console.log('checkForExistingSession')
   let sessionResponse = await fetch('/readsession', {
     method: 'GET',
     headers: {
@@ -14,6 +15,7 @@ export const checkForExistingSession = async () => {
 }
 
 export const writeNewSession = async (newSession) => {
+  // console.log('writeNewSession')
   let newSessionResponse = await fetch('/writesession', {
     method: 'POST',
     headers: {
@@ -27,6 +29,7 @@ export const writeNewSession = async (newSession) => {
 }
 
 export const endSession = async () => {
+  // console.log('endSession')
   let endSessionResponse = await fetch('/endsession', {
     method: 'POST',
     headers: {
@@ -40,14 +43,59 @@ export const endSession = async () => {
 }
 
 export const createSdkHelper = ({ accessToken, lookerHost }) => {
-
-  const session = new PblSessionEmbed({
+  // console.log('createSdkHelper')
+  const pblsession = new PblSessionEmbed({
     ...DefaultSettings(),
     base_url: `https://${lookerHost}.looker.com:19999`,
     accessToken
   });
 
-  let sdk = new Looker40SDK(session);
+  let sdk = new Looker40SDK(pblsession);
   return sdk;
+}
+
+export const checkToken = async (sdk) => {
+  // console.log('checkToken')
+  try {
+    let meTest = await sdk.ok(sdk.me())
+    // console.log({ meTest })
+    return { status: "ok" }
+
+  } catch (error) {
+    // console.log({ error })
+    let sessionResponse = await fetch('/refreshlookertoken', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    const sessionResponseData = await sessionResponse.json();
+    // console.log({ sessionResponseData })
+    const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
+    const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
+    const sdk = createSdkHelper({ lookerHost, accessToken })
+
+    return { status: "updated", sdk, clientSession: sessionResponseData.session }
+  }
+
+  //old implementation
+  // if (Date.now() > clientSession.lookerApiToken.expires_in) {
+  //   console.log("inside checkToken iff")
+  //   let sessionResponse = await fetch('/refreshlookertoken', {
+  //     method: 'GET',
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //   const sessionResponseData = await sessionResponse.json();
+  //   const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
+  //   const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
+  //   const sdk = createSdkHelper({ lookerHost, accessToken })
+  //   setSdk(sdk);
+  //   setClientSession(sessionResponseData.session)
+
+  // } else console.log("else")
 }
 

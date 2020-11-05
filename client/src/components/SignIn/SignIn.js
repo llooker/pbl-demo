@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { useHistory, useParams, useLocation } from "react-router-dom";
 import { GoogleLogin } from 'react-google-login';
 import AppContext from '../../contexts/AppContext';
-import { writeNewSession } from '../../AuthUtils/auth';
+import { writeNewSession, createSdkHelper } from '../../AuthUtils/auth';
 import UsecaseContent from '../../usecaseContent.json';
 import { initialLookerUser } from '../../LookerHelpers/defaults'
 import useStyles from './styles.js';
@@ -16,16 +16,27 @@ export default function SignIn(props) {
   // console.log('props', props)
 
   let { clientSession, setClientSession,
+    sdk, setSdk,
     initialHref, setInitialHref } = useContext(AppContext)
 
 
   const responseGoogle = async (response) => {
     if (response.error) {
-      console.log('response.error', response.error)
+      // console.log('response.error', response.error)
     } else {
       let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialLookerUser })
-      setClientSession(newSession.session)
+      // console.log({ newSession })
+      setClientSession(newSession.session);
       localStorage.setItem("clientSession", JSON.stringify(newSession.session)) //for now
+
+
+      // const lookerHost = newSession.session.lookerHost ? newSession.session.lookerHost : '';
+      // const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
+      // const sdk = createSdkHelper({ lookerHost, accessToken })
+      // setSdk(sdk);
+      // localStorage.setItem("sdk", JSON.stringify(sdk)) //for now
+
+
       // if (initialHref) window.location = initialHref;
       // else window.location = '/analytics/splashpage19';
 

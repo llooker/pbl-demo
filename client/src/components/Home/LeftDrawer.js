@@ -46,7 +46,7 @@ function MenuList(props) {
   // console.log("MenuList")
   // console.log({ props })
   const { classes } = props
-  const { activeUsecase, selectedMenuItem, handleMenuItemSelect } = useContext(AppContext);
+  const { activeUsecase, selectedMenuItem } = useContext(AppContext);
 
   let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : [];
   let orderedDemoComponentsForMenuObj = {};
@@ -94,15 +94,10 @@ function MenuList(props) {
               const MatchingIconComponent = demoComponentIconMap[key]
 
               return (
-                // <Link to={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type)}
-                //   style={{ textDecoration: 'none' }}>
                 <ListItem
                   button
                   className={`${classes.nested} ${classes.roundedTab}`}
                   key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
-                  // onClick={
-                  //   () => handleMenuItemSelect(validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type))
-                  // }
                   selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedMenuItem}
                   component={Link}
                   to={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type)}
@@ -112,7 +107,6 @@ function MenuList(props) {
                   </ListItemIcon>
                   <ListItemText primary={_.capitalize(item.label)} />
                 </ListItem>
-                // </Link>
               )
             })}
           </List>

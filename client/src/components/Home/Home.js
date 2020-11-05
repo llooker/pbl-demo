@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useHistory, useParams, useLocation } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
-import { createSdkHelper } from '../../AuthUtils/auth';
+import { checkToken } from '../../AuthUtils/auth';
 import UsecaseContent from '../../usecaseContent.json';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -31,7 +31,6 @@ export default function Home(props) {
   let { democomponent } = useParams();
   const classes = useStyles();
 
-
   //state
   const didMountRef = useRef(false)
   const [drawerOpen, setDrawerOpen] = useState(window.innerWidth > 768 ? true : false);
@@ -40,31 +39,6 @@ export default function Home(props) {
   const [codeShow, setCodeShow] = useState(false);
   const [payWallModal, setPaywallModal] = useState({});
   const [selectedMenuItem, setSelectedMenuItem] = useState(democomponent);
-
-  const handleMenuItemSelect = (newValue, fromSplash) => {
-
-    // console.log('handleMenuItemSelect');
-    // console.log('newValue', newValue);
-    // console.log('fromSplash', fromSplash);
-
-    if (highlightShow) setHighlightShow(!highlightShow);
-    if (codeShow) setCodeShow(!codeShow);
-
-    let selectedMenuItemValue = '';
-
-    if (fromSplash) {
-      UsecaseContent[activeUsecase].demoComponents.map(item => {
-        if (item.type !== "splash page") {
-          item.lookerContent.map(lookerContentItem => {
-            if (lookerContentItem.id === newValue) {
-              selectedMenuItemValue = validIdHelper(item.type + lookerContentItem.id)
-            }
-          })
-        }
-      })
-    } else selectedMenuItemValue = newValue;
-    setSelectedMenuItem(selectedMenuItemValue)
-  };
 
   const handleSwitchLookerUser = async (newValue, property) => {
 
@@ -94,36 +68,14 @@ export default function Home(props) {
     setClientSession(lookerUserResponseData.session);
   }
 
-  //Q for nick -- is this the best place to do this???
+
   const corsApiCall = async (func, args = []) => {
-    await checkToken()
+    let checkTokenRsp = await checkToken(sdk);
+    // console.log({ checkTokenRsp })
+    if (checkTokenRsp.sdk) setSdk(checkTokenRsp.sdk)
+    if (checkTokenRsp.clientSession) setClientSession(checkTokenRsp.clientSession)
     let res = func(...args)
     return res
-  }
-
-  const checkToken = async () => {
-    console.log('checkToken')
-
-    console.log("sdk.ok") //leave for now
-    console.log(sdk.ok)
-
-    if (clientSession.lookerApiToken.requires_refresh || Date.now() > clientSession.lookerApiToken.expires_in) {
-      console.log("inside checkToken iff")
-      let sessionResponse = await fetch('/refreshlookertoken', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-      const sessionResponseData = await sessionResponse.json();
-      const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-      const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
-      const sdk = createSdkHelper({ lookerHost, accessToken })
-      setSdk(sdk);
-      setClientSession(sessionResponseData.session)
-
-    }
   }
 
   //componentDidMount
@@ -148,13 +100,26 @@ export default function Home(props) {
 
 
   useEffect(() => {
+
+    if (highlightShow) setHighlightShow(!highlightShow);
+    if (codeShow) setCodeShow(!codeShow);
+
     setSelectedMenuItem(democomponent)
   }, [democomponent])
 
+  useEffect(() => {
+    // console.log('clientSession useEffect ')
+    // console.log({ clientSession })
+    localStorage.setItem("clientSession", JSON.stringify(clientSession)) //for now
+
+  }, [clientSession])
+
   // useEffect(() => {
-  //   console.log('handleMenuItemSelect useEffect ')
-  //   console.log({ selectedMenuItem })
-  // }, [selectedMenuItem])
+  //   console.log('sdk useEffect ')
+  //   console.log({ sdk })
+  //   localStorage.setItem("sdk", JSON.stringify(sdk)) //for now
+
+  // }, [sdk])
 
 
   const themeMap = {
@@ -177,7 +142,7 @@ export default function Home(props) {
     return selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id) || selectedMenuItem === validIdHelper(o.type)
   });
 
-  console.log({ DemoComponentContent })
+  // console.log({ DemoComponentContent })
 
 
   return (
@@ -189,7 +154,7 @@ export default function Home(props) {
         handleSwitchLookerUser,
         drawerOpen, setDrawerOpen,
         activeUsecase,
-        selectedMenuItem, handleMenuItemSelect,
+        selectedMenuItem,
         highlightShow, setHighlightShow,
         codeShow, setCodeShow,
         sdk,

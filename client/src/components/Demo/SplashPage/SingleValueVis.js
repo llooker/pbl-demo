@@ -6,10 +6,11 @@ import { ResponsiveLine } from '@nivo/line';
 const { validIdHelper, decodeHtml } = require('../../../tools');
 
 export function SingleValueVis({ lookerContent, classes }) {
-  // console.log('SingleValueVis')
+  console.log('SingleValueVis')
+  console.log({ lookerContent })
 
   const [apiContent, setApiContent] = useState(undefined);
-  const { clientSession, show, sdk, corsApiCall } = useContext(AppContext)
+  const { clientSession, sdk, corsApiCall } = useContext(AppContext)
   const { userProfile, lookerUser } = clientSession;
 
   let dataObjForSparkline = {}
@@ -17,6 +18,7 @@ export function SingleValueVis({ lookerContent, classes }) {
   useEffect(() => {
     let isSubscribed = true
     corsApiCall(runInlineQuery).then(response => {
+      console.log({ response })
       if (isSubscribed) {
         setApiContent(response)
       }
@@ -26,9 +28,10 @@ export function SingleValueVis({ lookerContent, classes }) {
 
   const runInlineQuery = async () => {
 
-    setApiContent(undefined)
+    // setApiContent(undefined)
     let { inlineQuery } = lookerContent;
-    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: inlineQuery }));
+    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.resultFormat || 'json', body: inlineQuery }));
+    console.log({ lookerResponseData })
     dataObjForSparkline.id = validIdHelper(`singleVisValue-${lookerContent.id}`);
     dataObjForSparkline.data = [];
 

@@ -15,6 +15,7 @@ export function VectorThumbnail({ lookerContent, classes, item, index }) {
   useEffect(() => {
     let isSubscribed = true
     corsApiCall(getThumbnail).then(response => {
+      // console.log({ response })
       if (isSubscribed) {
         setSvg(response)
       }
