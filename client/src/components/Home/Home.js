@@ -102,9 +102,13 @@ export default function Home(props) {
   }
 
   const checkToken = async () => {
-    // console.log('checkToken')
+    console.log('checkToken')
+
+    console.log("sdk.ok") //leave for now
+    console.log(sdk.ok)
 
     if (clientSession.lookerApiToken.requires_refresh || Date.now() > clientSession.lookerApiToken.expires_in) {
+      console.log("inside checkToken iff")
       let sessionResponse = await fetch('/refreshlookertoken', {
         method: 'GET',
         headers: {
