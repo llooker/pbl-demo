@@ -31,7 +31,6 @@ export default function Home(props) {
   let { democomponent } = useParams();
   const classes = useStyles();
 
-  //state
   const didMountRef = useRef(false)
   const [drawerOpen, setDrawerOpen] = useState(window.innerWidth > 768 ? true : false);
   const [activeUsecase, setActiveUsecase] = useState(usecaseHelper(UsecaseContent));
@@ -41,10 +40,6 @@ export default function Home(props) {
   const [selectedMenuItem, setSelectedMenuItem] = useState(democomponent);
 
   const handleSwitchLookerUser = async (newValue, property) => {
-
-    // console.log('handleSwitchLookerUser');
-    // console.log('newValue', newValue);
-    // console.log('property', property);
 
     let newLookerUser = { ...clientSession.lookerUser }
     if (property === 'brand') {
@@ -71,7 +66,6 @@ export default function Home(props) {
 
   const corsApiCall = async (func, args = []) => {
     let checkTokenRsp = await checkToken(sdk);
-    // console.log({ checkTokenRsp })
     if (checkTokenRsp.sdk) setSdk(checkTokenRsp.sdk)
     if (checkTokenRsp.clientSession) setClientSession(checkTokenRsp.clientSession)
     let res = func(...args)
@@ -108,18 +102,9 @@ export default function Home(props) {
   }, [democomponent])
 
   useEffect(() => {
-    // console.log('clientSession useEffect ')
-    // console.log({ clientSession })
     localStorage.setItem("clientSession", JSON.stringify(clientSession)) //for now
 
   }, [clientSession])
-
-  // useEffect(() => {
-  //   console.log('sdk useEffect ')
-  //   console.log({ sdk })
-  //   localStorage.setItem("sdk", JSON.stringify(sdk)) //for now
-
-  // }, [sdk])
 
 
   const themeMap = {
@@ -141,9 +126,6 @@ export default function Home(props) {
   const DemoComponentContent = _.find(UsecaseContent[activeUsecase].demoComponents, (o) => {
     return selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id) || selectedMenuItem === validIdHelper(o.type)
   });
-
-  // console.log({ DemoComponentContent })
-
 
   return (
     <div className={classes.root} >

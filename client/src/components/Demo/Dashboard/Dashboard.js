@@ -23,15 +23,12 @@ import { CheckboxSVGMap } from "./CheckboxSvgMapRegion";
 const { validIdHelper } = require('../../../tools');
 
 export default function Dashboard(props) {
-
-  console.log('Dashboard');
+  // console.log('Dashboard');
 
   const { staticContent: { lookerContent }, staticContent: { type } } = props;
 
   const { clientSession, codeShow, sdk, corsApiCall, atomTheme, selectedMenuItem } = useContext(AppContext)
   const { lookerUser, lookerHost } = clientSession;
-
-  console.log('selectedMenuItem', selectedMenuItem)
 
   const demoComponentType = type || 'code flyout';
   const topBarBottomBarHeight = 112;
@@ -53,8 +50,6 @@ export default function Dashboard(props) {
   const isThemeableDashboard = validIdHelper(`${demoComponentType}${lookerContent[0].id}`) === 'customfilter1';
   const darkThemeBackgroundColor = "#343D4E";
 
-  console.log('isThemeableDashboard', isThemeableDashboard)
-
   const classes = useStyles();
 
   //condtional theming for dark mode :D
@@ -67,7 +62,6 @@ export default function Dashboard(props) {
     }
     :
     { palette: { ...atomTheme.palette } }
-  console.log('paletteToUse', paletteToUse)
 
   const theme = React.useMemo(
     () =>
@@ -139,7 +133,6 @@ export default function Dashboard(props) {
   }
 
   useEffect(() => {
-    console.log("useEffect, [lookerContent, lookerUser]")
     let themeName = lightThemeToggleValue ? 'light' : 'dark';
     themeName += `_${fontThemeSelectValue}`;
     corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
@@ -166,9 +159,6 @@ export default function Dashboard(props) {
 
 
   const performLookerApiCalls = function (lookerContent, dynamicTheme) {
-    console.log('performLookerApiCalls')
-    console.log({ lookerContent })
-    console.log({ dynamicTheme })
 
     setIFrame(0)
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
@@ -180,7 +170,6 @@ export default function Dashboard(props) {
         lookerContent.theme ?
           lookerContent.theme :
           'atom_fashion';
-      console.log('themeToUse', themeToUse)
 
       LookerEmbedSDK.createDashboardWithId(dashboardId) //dashboardSlug
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
@@ -214,7 +203,6 @@ export default function Dashboard(props) {
       //only want to perform when there's not apiContent
       if (lookerContent.hasOwnProperty('filters') //&& !apiContent
       ) {
-        console.log('are we inside this ifff????')
         // setApiContent(undefined)
         //get inline query from usecase file & set user attribute dynamically
         //iterating over filters
@@ -240,7 +228,7 @@ export default function Dashboard(props) {
           orderedArrayForApiContent[index] = queryResultsForDropdown
           setApiContent([...orderedArrayForApiContent])
         })
-      } else console.log('elllse')
+      }
 
     })
   }
@@ -264,9 +252,6 @@ export default function Dashboard(props) {
     // console.log('changeHeight')
     // console.log('event', event)
   }
-
-
-  console.log({ theme })
 
   return (
     <div className={`${classes.root} demoComponent`}

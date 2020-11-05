@@ -25,24 +25,8 @@ export default function SignIn(props) {
       // console.log('response.error', response.error)
     } else {
       let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialLookerUser })
-      // console.log({ newSession })
       setClientSession(newSession.session);
-      localStorage.setItem("clientSession", JSON.stringify(newSession.session)) //for now
-
-
-      // const lookerHost = newSession.session.lookerHost ? newSession.session.lookerHost : '';
-      // const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
-      // const sdk = createSdkHelper({ lookerHost, accessToken })
-      // setSdk(sdk);
-      // localStorage.setItem("sdk", JSON.stringify(sdk)) //for now
-
-
-      // if (initialHref) window.location = initialHref;
-      // else window.location = '/analytics/splashpage19';
-
-      // if (initialHref) history.push(initialHref)
-      // else history.push('/analytics/splashpage19')
-
+      localStorage.setItem("clientSession", JSON.stringify(newSession.session))
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`

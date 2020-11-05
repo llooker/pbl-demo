@@ -35,11 +35,8 @@ export default function QueryBuilder(props) {
   const [width, setWidth] = useState((window.innerWidth - sideBarWidth));
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type },
-    //activeTabValue, handleTabChange, lookerUser 
   } = props;
 
-  console.log({ lookerContent })
-  console.log({ lookerUser })
 
   // const handleChange = (event, newValue) => {
   //   handleTabChange(0);
@@ -64,10 +61,6 @@ export default function QueryBuilder(props) {
 
 
   const performLookerApiCalls = async (newQuery, resultFormat) => {
-    // console.log('performLookerApiCalls')
-    // console.log('newQuery', newQuery)
-    // console.log('resultFormat', resultFormat)
-    // console.log('lookerContent', lookerContent)
     let apiContentCopy = { ...apiContent }
     apiContentCopy.status = 'running';
     setApiContent(apiContentCopy)

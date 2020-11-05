@@ -28,7 +28,6 @@ module.exports.writeSession = async (req, res, next) => {
   session.lookerUser.last_name = session.userProfile.familyName;
 
   let updatedSession = await tokenHelper(session)
-  // console.log('updatedSession', updatedSession);
 
   res.status(200).send({ session: updatedSession });
 }
@@ -41,15 +40,7 @@ module.exports.endSession = async (req, res, next) => {
 module.exports.refreshLookerToken = async (req, res, next) => {
   // console.log('refreshLookerToken')
   let { session } = req;
-  // console.log({ session })
-
-
-  // console.log("session.lookerApiToken ", session.lookerApiToken)
-
   let updatedSession = await tokenHelper(session)
-  // console.log({ updatedSession })
-  // console.log("updatedSession.lookerApiToken ", updatedSession.lookerApiToken)
-
   res.status(200).send({ session: updatedSession });
 }
 
