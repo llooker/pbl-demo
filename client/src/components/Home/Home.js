@@ -27,7 +27,7 @@ const { validIdHelper, usecaseHelper } = require('../../tools');
 
 export default function Home(props) {
   // console.log("Home")
-  let { setClientSession, clientSession, sdk, setSdk } = useContext(AppContext)
+  let { setClientSession, clientSession, sdk, setSdk, isReady } = useContext(AppContext)
   let { democomponent } = useParams();
   const classes = useStyles();
 
@@ -65,7 +65,8 @@ export default function Home(props) {
 
 
   const corsApiCall = async (func, args = []) => {
-    let checkTokenRsp = await checkToken(sdk);
+    // console.log("corsApiCall")
+    let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
     if (checkTokenRsp.sdk) setSdk(checkTokenRsp.sdk)
     if (checkTokenRsp.clientSession) setClientSession(checkTokenRsp.clientSession)
     let res = func(...args)
@@ -101,10 +102,6 @@ export default function Home(props) {
     setSelectedMenuItem(democomponent)
   }, [democomponent])
 
-  useEffect(() => {
-    localStorage.setItem("clientSession", JSON.stringify(clientSession)) //for now
-
-  }, [clientSession])
 
 
   const themeMap = {
@@ -141,7 +138,8 @@ export default function Home(props) {
         codeShow, setCodeShow,
         sdk,
         corsApiCall,
-        atomTheme
+        atomTheme,
+        isReady
       }}>
         <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
           <CssBaseline />

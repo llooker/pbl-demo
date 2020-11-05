@@ -27,7 +27,7 @@ export default function Dashboard(props) {
 
   const { staticContent: { lookerContent }, staticContent: { type } } = props;
 
-  const { clientSession, codeShow, sdk, corsApiCall, atomTheme, selectedMenuItem } = useContext(AppContext)
+  const { clientSession, codeShow, sdk, corsApiCall, atomTheme, isReady } = useContext(AppContext)
   const { lookerUser, lookerHost } = clientSession;
 
   const demoComponentType = type || 'code flyout';
@@ -133,11 +133,13 @@ export default function Dashboard(props) {
   }
 
   useEffect(() => {
-    let themeName = lightThemeToggleValue ? 'light' : 'dark';
-    themeName += `_${fontThemeSelectValue}`;
-    corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
-    // setClientSideCode(rawSampleCode)
-  }, [lookerContent, lookerUser]);
+    if (isReady) {
+      let themeName = lightThemeToggleValue ? 'light' : 'dark';
+      themeName += `_${fontThemeSelectValue}`;
+      corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
+      // setClientSideCode(rawSampleCode)
+    }
+  }, [lookerUser, isReady])
 
 
   useEffect(() => {

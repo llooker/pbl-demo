@@ -54,34 +54,17 @@ export const createSdkHelper = ({ accessToken, lookerHost }) => {
   return sdk;
 }
 
-export const checkToken = async (sdk) => {
+export const checkToken = async (expires_in) => { //sdk
   // console.log('checkToken')
-  try {
-    let meTest = await sdk.ok(sdk.me())
-    // console.log({ meTest })
-    return { status: "ok" }
 
-  } catch (error) {
-    // console.log({ error })
-    let sessionResponse = await fetch('/refreshlookertoken', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    const sessionResponseData = await sessionResponse.json();
-    // console.log({ sessionResponseData })
-    const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-    const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
-    const sdk = createSdkHelper({ lookerHost, accessToken })
+  //valid sdk implementation
+  // try {
+  //   let meTest = await sdk.ok(sdk.me())
+  //   // console.log({ meTest })
+  //   return { status: "ok" }
 
-    return { status: "updated", sdk, clientSession: sessionResponseData.session }
-  }
-
-  //old implementation
-  // if (Date.now() > clientSession.lookerApiToken.expires_in) {
-  //   console.log("inside checkToken iff")
+  // } catch (error) {
+  //   // console.log({ error })
   //   let sessionResponse = await fetch('/refreshlookertoken', {
   //     method: 'GET',
   //     headers: {
@@ -90,12 +73,30 @@ export const checkToken = async (sdk) => {
   //     }
   //   })
   //   const sessionResponseData = await sessionResponse.json();
+  //   // console.log({ sessionResponseData })
   //   const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
   //   const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
   //   const sdk = createSdkHelper({ lookerHost, accessToken })
-  //   setSdk(sdk);
-  //   setClientSession(sessionResponseData.session)
 
-  // } else console.log("else")
+  //   return { status: "updated", sdk, clientSession: sessionResponseData.session }
+  // }
+
+  //time-based implementation
+  if (Date.now() > expires_in) {
+    let sessionResponse = await fetch('/refreshlookertoken', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    const sessionResponseData = await sessionResponse.json();
+    const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
+    const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
+    const sdk = createSdkHelper({ lookerHost, accessToken })
+
+    return { status: "updated", sdk, clientSession: sessionResponseData.session }
+
+  } else return { status: "ok" }
 }
 

@@ -15,6 +15,7 @@ import useStyles from './styles.js';
 import { ApiHighlight } from '../../Highlights/Highlight';
 import { TabPanel, a11yProps, descendingComparator, getComparator, stableSort } from './helpers.js';
 import AppContext from '../../../contexts/AppContext';
+import { lookerUserTimeHorizonMap } from '../../../LookerHelpers/defaults';
 
 const { validIdHelper, prettifyString } = require('../../../tools');
 
@@ -176,7 +177,7 @@ function FilterBar(props) {
   // console.log('FilterBar');
 
 
-  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
+  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
 
   const { staticContent, staticContent: { lookerContent }, classes, action, //lookerUser, corsApiCall 
@@ -254,12 +255,7 @@ function FilterBar(props) {
 
   useEffect(() => {
     // console.log('useEffect lookerUser')
-    const lookerUserTimeHorizonMap = {
-      'basic': 'last 182 days',
-      'advanced': 'last 365 days',
-      'premium': 'last 730 days' //before today
-    }
-    if (lookerUser) {
+    if (isReady) {
       let updatedFiltersData = [...filtersData]
       updatedFiltersData[3].value = lookerUserTimeHorizonMap[lookerUser.user_attributes.permission_level] || "182 days";
       setFilterData(updatedFiltersData);
@@ -268,7 +264,7 @@ function FilterBar(props) {
       setQueryShouldRun(true);
 
     }
-  }, [lookerUser]);
+  }, [lookerUser, isReady]);
 
   useEffect(() => {
     // console.log('useEffect queryShouldRun')

@@ -9,19 +9,21 @@ export function VectorThumbnail({ lookerContent, classes, item, index }) {
 
   const [svg, setSvg] = useState(undefined)
   // const { userProfile, lookerUser, show, sdk, corsApiCall } = useContext(AppContext);
-  const { clientSession, sdk, corsApiCall } = useContext(AppContext)
+  const { clientSession, sdk, corsApiCall, isReady } = useContext(AppContext)
   const { userProfile, lookerUser } = clientSession;
 
   useEffect(() => {
     let isSubscribed = true
-    corsApiCall(getThumbnail).then(response => {
-      // console.log({ response })
-      if (isSubscribed) {
-        setSvg(response)
-      }
-    })
+    if (isReady) {
+      corsApiCall(getThumbnail).then(response => {
+        // console.log({ response })
+        if (isSubscribed) {
+          setSvg(response)
+        }
+      })
+    }
     return () => isSubscribed = false
-  }, [item, lookerUser]);
+  }, [lookerUser, isReady])
 
   const getThumbnail = async () => {
     let clientLookerResponse = await sdk.ok(sdk.content_thumbnail({ type: item.resourceType, resource_id: item.id }));

@@ -23,7 +23,7 @@ const { validIdHelper } = require('../../../tools');
 
 export default function CustomVis(props) {
   // console.log('CustomVis')
-  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
+  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
 
   const topBarBottomBarHeight = 112;
@@ -147,12 +147,12 @@ export default function CustomVis(props) {
   }
 
   useEffect(() => {
-    if (lookerContent.length) {
+    if (isReady) {
       corsApiCall(performLookerApiCalls, [lookerContent])
       setDesiredField(lookerContent[0].desiredFields[0])
       setClientSideCode(rawSampleCode)
     }
-  }, [lookerContent, lookerUser])
+  }, [lookerUser, isReady])
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));

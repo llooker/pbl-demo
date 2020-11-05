@@ -12,47 +12,51 @@ function App(props) {
   const [clientSession, setClientSession] = useState({});
   const [sdk, setSdk] = useState();
   const [initialHref, setInitialHref] = useState();
-
+  const [isReady, setIsReady] = useState(false);
 
   //onload
   useEffect(() => {
     async function fetchSession() {
 
       const sessionResponse = await checkForExistingSession();
+      console.log({ sessionResponse })
       if (sessionResponse.session && sessionResponse.session.userProfile) {
 
         const lookerHost = sessionResponse.session.lookerHost ? sessionResponse.session.lookerHost : '';
         const accessToken = sessionResponse.session.lookerApiToken ? sessionResponse.session.lookerApiToken.api_user_token : '';
         const sdk = createSdkHelper({ lookerHost, accessToken })
-
+        console.log({ sdk })
         setClientSession(sessionResponse.session)
         setSdk(sdk)
-
-        localStorage.setItem("clientSession", JSON.stringify(sessionResponse.session));
       }
     }
-
-    if (localStorage.getItem("clientSession")) {
-      let clientSessionLocalStorage = JSON.parse(localStorage.getItem("clientSession"))
-
-      const lookerHost = clientSessionLocalStorage.lookerHost ? clientSessionLocalStorage.lookerHost : '';
-      const accessToken = clientSessionLocalStorage.lookerApiToken ? clientSessionLocalStorage.lookerApiToken.api_user_token : '';
-      const sdk = createSdkHelper({ lookerHost, accessToken })
-      setSdk(sdk);
-      setClientSession(clientSessionLocalStorage)
-    } else {
-      fetchSession(); //make async call
-    }
-
+    fetchSession(); //make async call
   }, [])
 
+  useEffect(() => {
+    // console.log({ clientSession })
+    // console.log({ sdk })
+    if (clientSession && sdk) setIsReady(true)
+    else if (clientSession.userProfile) {
+      const lookerHost = clientSession.lookerHost ? clientSession.lookerHost : '';
+      const accessToken = clientSession.lookerApiToken ? clientSession.lookerApiToken.api_user_token : '';
+      const sdk = createSdkHelper({ lookerHost, accessToken })
+      setSdk(sdk)
+    }
+    else setIsReady(false)
+  }, [clientSession, sdk])
+
+  useEffect(() => {
+    // console.log({ isReady })
+  }, [isReady])
 
   return (
     < Router >
       <AppContext.Provider value={{
         clientSession, setClientSession,
         sdk, setSdk,
-        initialHref, setInitialHref
+        initialHref, setInitialHref,
+        isReady
       }}>
         <Switch>
           <PrivateRoute

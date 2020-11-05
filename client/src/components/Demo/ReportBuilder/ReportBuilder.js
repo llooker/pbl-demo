@@ -21,8 +21,8 @@ const { validIdHelper } = require('../../../tools');
 export default function ReportBuilder(props) {
 
 
-  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
-  const { userProfile, lookerUser, lookerHost } = clientSession
+  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(AppContext)
+  const { userProfile, lookerUser, lookerHost } = clientSession;
 
   const topBarBottomBarHeight = 112;
   const [iFrameExists, setIFrame] = useState(0);
@@ -56,29 +56,15 @@ export default function ReportBuilder(props) {
   };
 
   useEffect(() => {
-    // if (activeTabValue > value) {
-    //   setValue(activeTabValue)
-    // } else {
-    corsApiCall(performLookerApiCalls, [lookerContent, 1])
-    //}
-    setClientSideCode(rawSampleCode)
-  }, [lookerContent, lookerUser]);
+    if (isReady) {
+      corsApiCall(performLookerApiCalls, [lookerContent, !value])
+      setClientSideCode(rawSampleCode)
+    }
+  }, [lookerUser, value, isReady, value]);
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   })
-
-
-  // useEffect(() => {
-  //   console.log('exploreObj useEffect')
-  //   console.log('Object.keys(exploreObj).length', Object.keys(exploreObj).length)
-  // }, [exploreObj])
-
-
-  useEffect(() => {
-    // console.log('value useEffect')
-    corsApiCall(performLookerApiCalls, [lookerContent, 0]);
-  }, [value])
 
 
   const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {

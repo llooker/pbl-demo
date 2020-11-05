@@ -22,11 +22,15 @@ export default function SignIn(props) {
 
   const responseGoogle = async (response) => {
     if (response.error) {
-      // console.log('response.error', response.error)
     } else {
       let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialLookerUser })
+
+      const lookerHost = newSession.session.lookerHost ? newSession.session.lookerHost : '';
+      const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
+      const sdk = createSdkHelper({ lookerHost, accessToken })
+
       setClientSession(newSession.session);
-      localStorage.setItem("clientSession", JSON.stringify(newSession.session))
+      setSdk(sdk)
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
