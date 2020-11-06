@@ -37,7 +37,7 @@ export function VectorThumbnail({ lookerContent, classes, item, index }) {
       className={`${classes.cursorPointer}`}
       spacing={3}
       component={Link}
-      to={item.demoComponentId}
+      to={item.url}
     >
       {svg ?
         <>

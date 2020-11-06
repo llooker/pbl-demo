@@ -98,9 +98,11 @@ function MenuList(props) {
                   button
                   className={`${classes.nested} ${classes.roundedTab}`}
                   key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
-                  selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedMenuItem}
+                  // selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedMenuItem}
+                  selected={validIdHelper(_.lowerCase(item.label)) === selectedMenuItem}
                   component={Link}
-                  to={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type)}
+                  // to={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type)}
+                  to={validIdHelper(_.lowerCase(item.label))}
                 >
                   <ListItemIcon>
                     <MatchingIconComponent />

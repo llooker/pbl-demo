@@ -22,7 +22,7 @@ const sess = {
     pool: pgPool,                // Connection pool
     tableName: 'session'   // Use another table-name than the default "session" one
   }),
-  secret: 'keyboard catv1.0.8',
+  secret: 'keyboard catv1.0.4',
   resave: true,
   cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
 }
@@ -59,7 +59,6 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
-// else console.log('elllse')
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

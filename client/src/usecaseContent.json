@@ -222,7 +222,7 @@
                 "lookerMethod": "vector_thumbnail",
                 "label": "Analytics",
                 "gridWidth": "4",
-                "demoComponentId": "simpledashboard9"
+                "url": "webanalytics"
               },
               {
                 "id": "5",
@@ -231,7 +231,7 @@
                 "lookerMethod": "vector_thumbnail",
                 "label": "Sales",
                 "gridWidth": "4",
-                "demoComponentId": "customfilter5"
+                "url": "inventoryoverview"
               },
               {
                 "id": "1",
@@ -240,7 +240,7 @@
                 "lookerMethod": "vector_thumbnail",
                 "label": "Inventory",
                 "gridWidth": "4",
-                "demoComponentId": "customfilter1"
+                "url": "salesoverview"
               }
             ],
             "label": "Popular analysis"

@@ -109,20 +109,23 @@ export default function Home(props) {
   }
 
   const demoComponentMap = {
-    "splashpage19": SplashPage,
-    "customfilter5": Dashboard,
-    "simpledashboard9": Dashboard,
-    "customfilter1": Dashboard,
-    "customvis": CustomVis,
-    "querybuilderexplorelite": QueryBuilder,
-    "reportbuilder14": ReportBuilder,
+    "home": SplashPage,
+    "inventoryoverview": Dashboard,
+    "webanalytics": Dashboard,
+    "salesoverview": Dashboard,
+    "salescalendar": CustomVis,
+    "querybuilder": QueryBuilder,
+    "savedreports": ReportBuilder,
   };
 
 
   const DemoComponent = demoComponentMap[selectedMenuItem];
   const DemoComponentContent = _.find(UsecaseContent[activeUsecase].demoComponents, (o) => {
-    return selectedMenuItem === validIdHelper(o.type + o.lookerContent[0].id) || selectedMenuItem === validIdHelper(o.type)
+    return selectedMenuItem === validIdHelper(_.lowerCase(o.label));
+    //validIdHelper(o.type + o.lookerContent[0].id) || selectedMenuItem === validIdHelper(o.type)
   });
+
+  console.log({ DemoComponentContent })
 
   return (
     <div className={classes.root} >

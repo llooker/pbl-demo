@@ -123,17 +123,18 @@ const PublicRoute = ({ component: Component,
   // console.log({ isSignedIn })
   // console.log({ initialHref })
 
+
   const demoComponentMap = {
-    "splashpage19": "SplashPage",
-    "customfilter5": "Dashboard",
-    "simpledashboard9": "Dashboard",
-    "customfilter1": "Dashboard",
-    "customvis": "CustomVis",
-    "querybuilderexplorelite": "QueryBuilder",
-    "reportbuilder14": "ReportBuilder",
+    "home": "SplashPage",
+    "inventoryoverview": "Dashboard",
+    "webanalytics": "Dashboard",
+    "salesoverview": "Dashboard",
+    "salescalendar": "CustomVis",
+    "querybuilder": "QueryBuilder",
+    "savedreports": "ReportBuilder",
   };
 
-  let urlToUse = '/analytics/splashpage19';
+  let urlToUse = '/analytics/home';
   if (initialHref) {
     let initialHrefArr = initialHref.split('/');
     let lastTwoHrefArr = initialHrefArr.slice(-2);
