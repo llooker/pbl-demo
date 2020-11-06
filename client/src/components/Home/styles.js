@@ -1,9 +1,8 @@
-import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
-import { grey } from '@material-ui/core/colors';
+import { makeStyles } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
 
-export const useStyles = makeStyles((theme) => ({
+export default makeStyles((theme) => ({
   root: {
     display: 'flex',
     backgroundColor: 'rgb(229, 229, 229)'
@@ -187,15 +186,5 @@ export const useStyles = makeStyles((theme) => ({
 }));
 
 
-export const defaultTheme = createMuiTheme({})
-export const atomTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: grey[900],
-    },
-    secondary: {
-      main: grey[400],
-    },
-  },
-})
+
 

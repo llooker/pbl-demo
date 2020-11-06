@@ -5,10 +5,11 @@ import AppContext from '../../contexts/AppContext';
 import { checkToken } from '../../AuthUtils/auth';
 import UsecaseContent from '../../usecaseContent.json';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import { ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { grey } from '@material-ui/core/colors';
 import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
-import { useStyles, defaultTheme, atomTheme } from './styles.js';
+import useStyles from './styles.js';
 import { lookerUserPermissions, lookerUserTimeHorizonMap } from '../../LookerHelpers/defaults';
 
 import TopBar from './TopBar';
@@ -23,6 +24,19 @@ import QueryBuilder from '../Demo/QueryBuilder/QueryBuilder';
 import '../Home.css';
 
 const { validIdHelper, usecaseHelper } = require('../../tools');
+
+
+export const defaultTheme = createMuiTheme({})
+export const atomTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: grey[900],
+    },
+    secondary: {
+      main: grey[400],
+    },
+  },
+})
 
 
 export default function Home(props) {
@@ -122,10 +136,7 @@ export default function Home(props) {
   const DemoComponent = demoComponentMap[selectedMenuItem];
   const DemoComponentContent = _.find(UsecaseContent[activeUsecase].demoComponents, (o) => {
     return selectedMenuItem === validIdHelper(_.lowerCase(o.label));
-    //validIdHelper(o.type + o.lookerContent[0].id) || selectedMenuItem === validIdHelper(o.type)
   });
-
-  console.log({ DemoComponentContent })
 
   return (
     <div className={classes.root} >

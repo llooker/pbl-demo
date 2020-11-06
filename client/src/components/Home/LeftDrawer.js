@@ -6,7 +6,7 @@ import UsecaseContent from '../../usecaseContent.json';
 import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
 import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, FindInPage, Code, TableChartOutlined, LibraryBooksOutlined, Menu, ChevronLeft } from '@material-ui/icons';
 import HomeIcon from '@material-ui/icons/Home'; //already declared
-import { useStyles, } from './styles.js';
+import useStyles from './styles.js';
 import BottomBar from './BottomBar'; //needs refactor
 
 const { validIdHelper } = require('../../tools');
@@ -98,10 +98,8 @@ function MenuList(props) {
                   button
                   className={`${classes.nested} ${classes.roundedTab}`}
                   key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
-                  // selected={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type) === selectedMenuItem}
                   selected={validIdHelper(_.lowerCase(item.label)) === selectedMenuItem}
                   component={Link}
-                  // to={validIdHelper(item.lookerContent[0].id ? item.type + item.lookerContent[0].id : item.type)}
                   to={validIdHelper(_.lowerCase(item.label))}
                 >
                   <ListItemIcon>

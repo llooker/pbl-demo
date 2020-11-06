@@ -19,13 +19,13 @@ function App(props) {
     async function fetchSession() {
 
       const sessionResponse = await checkForExistingSession();
-      console.log({ sessionResponse })
+      // console.log({ sessionResponse })
       if (sessionResponse.session && sessionResponse.session.userProfile) {
 
         const lookerHost = sessionResponse.session.lookerHost ? sessionResponse.session.lookerHost : '';
         const accessToken = sessionResponse.session.lookerApiToken ? sessionResponse.session.lookerApiToken.api_user_token : '';
         const sdk = createSdkHelper({ lookerHost, accessToken })
-        console.log({ sdk })
+        // console.log({ sdk })
         setClientSession(sessionResponse.session)
         setSdk(sdk)
       }
