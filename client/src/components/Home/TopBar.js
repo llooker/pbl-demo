@@ -6,7 +6,7 @@ import {
 import { AddAlert, ChevronLeft, Menu } from '@material-ui/icons';
 import { endSession } from '../../AuthUtils/auth';
 import AppContext from '../../contexts/AppContext';
-import useStyles from './styles.js';
+import { useStyles } from './styles.js';
 
 import UserMenu from './UserMenu';
 

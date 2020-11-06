@@ -6,7 +6,7 @@ import UsecaseContent from '../../usecaseContent.json';
 import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
 import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, FindInPage, Code, TableChartOutlined, LibraryBooksOutlined, Menu, ChevronLeft } from '@material-ui/icons';
 import HomeIcon from '@material-ui/icons/Home'; //already declared
-import useStyles from './styles.js';
+import { useStyles } from './styles.js';
 import BottomBar from './BottomBar'; //needs refactor
 
 const { validIdHelper } = require('../../tools');
