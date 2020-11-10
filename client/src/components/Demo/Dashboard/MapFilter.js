@@ -7,10 +7,10 @@ const { validIdHelper } = require('../../../tools');
 
 export default function MapFilter({ lookerContent, apiContent, index, classes, customFilterAction, type }) {
 
-  const [regionValue, setRegionValue] = useState('Pacific,South,Mountain,Midwest,Northeast');
+  const [regionValue, setRegionValue] = useState('Pacific, South, Mountain, Midwest, Northeast');
 
   return (
-    <Grid item sm={4} >
+    <Grid item sm={3} >
       <EmbedMethodHighlight classes={classes}
         key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
         <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}

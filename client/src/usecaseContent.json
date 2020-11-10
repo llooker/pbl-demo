@@ -354,7 +354,7 @@
               "autocomplete",
               "mapfilter",
               "rangeslider",
-              "togglebutton"
+              "togglebuttonapi"
             ]
           }
         ]
@@ -393,7 +393,11 @@
               "products.brand"
             ],
             "filterComponents": [
-              "autocomplete"
+              "autocomplete",
+              "togglebutton",
+              "togglebutton",
+              "switch",
+              "select"
             ],
             "dynamicFieldLookUp": {
               "Inventory": [

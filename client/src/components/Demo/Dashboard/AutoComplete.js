@@ -8,6 +8,7 @@ const { validIdHelper } = require('../../../tools');
 
 
 export default function AutoComplete({ lookerContent, apiContent, index, classes, customFilterAction, type }) {
+  console.log({ apiContent })
   return (
     <Grid item sm={3}>
       <ApiHighlight classes={classes}
@@ -17,8 +18,8 @@ export default function AutoComplete({ lookerContent, apiContent, index, classes
         </Typography>
         <Autocomplete
           id={`combo-box-dashboard-${lookerContent.id}`}
-          options={Array.isArray(apiContent[index]) ?
-            apiContent[index] :
+          options={Array.isArray(apiContent) ?
+            apiContent :
             []}
           renderOption={(option) => (
             <Grid container justify="space-between">

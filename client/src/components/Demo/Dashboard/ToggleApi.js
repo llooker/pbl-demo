@@ -6,14 +6,11 @@ import { lifetimeRevenueTierMap, lifetimeRevenueTierIconMap } from './helpers';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 const { validIdHelper } = require('../../../tools');
 
-export default function Toggle({ lookerContent, apiContent, index, classes, customFilterAction, type }) {
+export default function ToggleApi({ lookerContent, apiContent, index, classes, customFilterAction, type }) {
 
   const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
-
-
   return (
-
-    <Grid item sm={12}>
+    <Grid item sm={3}>
       <EmbedMethodHighlight classes={classes}
         key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
         <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
@@ -26,13 +23,13 @@ export default function Toggle({ lookerContent, apiContent, index, classes, cust
           onChange={(event, newValue) => {
             setLifetimeRevenueTierValue(newValue)
             customFilterAction(lookerContent[0].id,
-              lookerContent[0].filters[index + 1].filterName,
+              lookerContent[0].filters[index].filterName,
               (newValue) ? newValue : '')
           }}
           aria-label="ageTier"
           className={classes.w100}>
           >
-      {apiContent[index + 1].map((ageTier, index) => {
+      {Array.isArray(apiContent) ? apiContent.map((ageTier, index) => {
             if (ageTier.label !== "Undefined") {
               const Icon = lifetimeRevenueTierIconMap[ageTier.label];
               return (
@@ -46,7 +43,7 @@ export default function Toggle({ lookerContent, apiContent, index, classes, cust
                 </ToggleButton>
               )
             }
-          })}
+          }) : ''}
         </ToggleButtonGroup>
 
       </EmbedMethodHighlight>

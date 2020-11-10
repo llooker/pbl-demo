@@ -13,18 +13,20 @@ import { EmbedHighlight, EmbedMethodHighlight } from '../../Highlights/Highlight
 import AutoComplete from './AutoComplete'
 import MapFilter from './MapFilter'
 import RangeSlider from './RangeSlider'
-import Toggle from './Toggle'
+import ToggleApi from './ToggleApi'
 
 
 const { validIdHelper } = require('../../../tools');
 
 export default function FilterBar(props) {
-  // console.log('FilterBar')
+  console.log('FilterBar')
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
     apiContent, customFilterAction, tileToggleValue, handleTileToggle, visColorToggleValue,
     handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange,
     isThemeableDashboard
   } = props;
+
+  console.log({ apiContent })
 
   const [expanded, setExpanded] = useState(true);
 
@@ -49,14 +51,15 @@ export default function FilterBar(props) {
           container spacing={3}>
           {
             // everything should work based on filters prop
+            //outdated
             lookerContent[0].filters ?
               <>
-                {apiContent.map((item, index) => {
+                {lookerContent[0].filterComponents.map((item, index) => {
                   return (
                     lookerContent[0].filterComponents[index] === 'autocomplete' ?
                       <AutoComplete
                         lookerContent={lookerContent}
-                        apiContent={apiContent}
+                        apiContent={apiContent[index]}
                         index={index}
                         classes={classes}
                         customFilterAction={customFilterAction}
@@ -65,34 +68,38 @@ export default function FilterBar(props) {
                       : lookerContent[0].filterComponents[index] === 'mapfilter' ?
                         <MapFilter
                           lookerContent={lookerContent}
-                          apiContent={apiContent}
+                          apiContent={apiContent[index]}
                           index={index}
                           classes={classes}
                           customFilterAction={customFilterAction}
                           type={type}
                         />
-                        : lookerContent[0].filterComponents[index] === "rangeslider"
-                          ?
-                          <Grid container item sm={4} >
-                            <RangeSlider
+                        : lookerContent[0].filterComponents[index] === 'rangeslider' ?
+                          <RangeSlider
+                            lookerContent={lookerContent}
+                            apiContent={apiContent[index]}
+                            index={index}
+                            classes={classes}
+                            customFilterAction={customFilterAction}
+                            type={type}
+                          />
+                          : lookerContent[0].filterComponents[index] === 'togglebuttonapi' ?
+
+                            <ToggleApi
                               lookerContent={lookerContent}
-                              apiContent={apiContent}
+                              apiContent={apiContent[index]}
                               index={index}
                               classes={classes}
                               customFilterAction={customFilterAction}
                               type={type}
                             />
-                            <Toggle
-                              lookerContent={lookerContent}
-                              apiContent={apiContent}
-                              index={index}
-                              classes={classes}
-                              customFilterAction={customFilterAction}
-                              type={type}
-                            />
-                          </Grid>
-                          :
-                          '')
+
+                            : lookerContent[0].filterComponents[index] === 'togglebutton' ?
+
+                              <h1>togglebuttoncomingsoon!</h1>
+
+                              :
+                              '')
                 })}
                 {/* should use Toggle component */}
                 {lookerContent[0].dynamicFieldLookUp ?
