@@ -1,19 +1,18 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useHistory, useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
 import { checkToken } from '../../AuthUtils/auth';
-import UsecaseContent from '../../usecaseContent.json';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { grey } from '@material-ui/core/colors';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
 import { lookerUserPermissions, lookerUserTimeHorizonMap } from '../../LookerHelpers/defaults';
+import UsecaseContent from '../../usecaseContent.json';
 
 import TopBar from './TopBar';
 import LeftDrawer from './LeftDrawer';
-import { MonetizationModal } from '../Demo/MonetizationModal/MonetizationModal';
+import MonetizationModal from '../Demo/MonetizationModal/MonetizationModal';
 
 import SplashPage from '../Demo/SplashPage/SplashPage';
 import Dashboard from '../Demo/Dashboard/Dashboard';
@@ -24,9 +23,6 @@ import '../Home.css';
 import { useStyles, defaultTheme, atomTheme } from './styles.js';
 
 const { validIdHelper, usecaseHelper } = require('../../tools');
-
-
-
 
 export default function Home(props) {
   // console.log("Home")

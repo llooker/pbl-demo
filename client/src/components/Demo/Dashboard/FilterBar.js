@@ -1,17 +1,20 @@
 import _ from 'lodash'
 import React, { useState } from 'react';
 import {
-  Typography, Grid, TextField,
-  ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Slider, FormControl, InputLabel, Select, MenuItem, Switch
+  Typography, Grid,
+  ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, FormControl, InputLabel, Select, MenuItem, Switch
 } from '@material-ui/core'
-import { Autocomplete, ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'; //Autocomplete
 import {
   ExpandMore, FilterList
 } from '@material-ui/icons';
-import { ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '../../Highlights/Highlight'; //ooops
-import { NumberToColoredPercent } from '../../Accessories/NumberToColoredPercent';
-import { CheckboxSVGMap } from "./CheckboxSvgMapRegion";
-import { customUsa, lifetimeRevenueTierMap, lifetimeRevenueTierIconMap } from './helpers';
+import { EmbedHighlight, EmbedMethodHighlight } from '../../Highlights/Highlight';
+
+import AutoComplete from './AutoComplete'
+import MapFilter from './MapFilter'
+import RangeSlider from './RangeSlider'
+import Toggle from './Toggle'
+
 
 const { validIdHelper } = require('../../../tools');
 
@@ -23,27 +26,16 @@ export default function FilterBar(props) {
   } = props;
 
   const [expanded, setExpanded] = useState(true);
-  const [sliderValue, setSliderValue] = React.useState([]);
-  const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
-  // const [speedDialOpen, setSpeedDialOpen] = React.useState(false);
 
   const handleExpansionPanel = (event, newValue) => {
     setExpanded(expanded ? false : true);
   };
-
-
-  const handleSliderChange = (event, newValue) => {
-    setSliderValue(newValue);
-  };
-
-
 
   return (
 
     <ExpansionPanel
       expanded={expanded}
       onChange={handleExpansionPanel}
-      // className={classes.w100}
       className={`${classes.w100} MuiExpansionPanel-root`}
       elevation={0}
     >
@@ -64,139 +56,44 @@ export default function FilterBar(props) {
                 {apiContent.map((item, index) => {
                   return (
                     lookerContent[0].filterComponents[index] === 'autocomplete' ?
-                      <Grid item sm={3}>
-
-                        <ApiHighlight classes={classes}
-                          key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-
-                          <Typography
-                          >Filter By Product:</Typography>
-                          <Autocomplete
-                            id={`combo-box-dashboard-${lookerContent.id}`}
-                            options={Array.isArray(apiContent[index]) ?
-                              apiContent[index] :
-                              []}
-                            renderOption={(option) => (
-                              <Grid container justify="space-between">
-                                <Grid item >
-                                  {option.label}
-                                </Grid>
-                                {option.trend && <Grid item>
-                                  <NumberToColoredPercent
-                                    val={option.trend}
-                                    positive_good={true}
-                                    abs_val={Math.abs(option.trend)}
-                                  />
-                                </Grid>}
-                              </Grid>
-                            )}
-                            getOptionLabel={(option) => option.label}
-                            onChange={(event, newValue) => {
-                              customFilterAction(lookerContent[0].id,
-                                lookerContent[0].filters[index].filterName,
-                                (newValue) ? newValue.label : '')
-                            }}
-                            renderInput={(params) => <TextField {...params}
-                              label={lookerContent[0].filters[index].filterName}
-                              variant="outlined"
-                            />}
-                            loadingText="Loading..."
-                          />
-                        </ApiHighlight>
-                      </Grid>
+                      <AutoComplete
+                        lookerContent={lookerContent}
+                        apiContent={apiContent}
+                        index={index}
+                        classes={classes}
+                        customFilterAction={customFilterAction}
+                        type={type}
+                      />
                       : lookerContent[0].filterComponents[index] === 'mapfilter' ?
-                        <>
-                          <Grid item sm={4} >
-                            <EmbedMethodHighlight classes={classes}
-                              key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-                              <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
-                              >Region(s): <b>{regionValue ? regionValue : "Outside US"}</b></Typography>
-
-                              <CheckboxSVGMap map={customUsa}
-                                onChange={(locations) => {
-
-                                  let allUniqueRegionsFromSelectedLocations = [];
-                                  for (let j = 0; j < locations.length; j++) {
-                                    if (allUniqueRegionsFromSelectedLocations.indexOf(locations[j].region) == -1) {
-                                      allUniqueRegionsFromSelectedLocations.push(locations[j].region)
-                                    }
-                                  }
-                                  let allUniqueRegionsFromSelectedLocationsCommaSep = allUniqueRegionsFromSelectedLocations.join(",")
-                                  setRegionValue(allUniqueRegionsFromSelectedLocationsCommaSep)
-                                  customFilterAction(lookerContent[0].id,
-                                    lookerContent[0].filters[index].filterName,
-                                    (regionValue) ? regionValue : '')
-                                }}
-                              />
-                            </EmbedMethodHighlight>
-                          </Grid>
-                        </>
+                        <MapFilter
+                          lookerContent={lookerContent}
+                          apiContent={apiContent}
+                          index={index}
+                          classes={classes}
+                          customFilterAction={customFilterAction}
+                          type={type}
+                          regionValue={regionValue}
+                          setRegionValue={setRegionValue}
+                        />
                         : lookerContent[0].filterComponents[index] === "rangeslider"
                           ?
-
                           <Grid container item sm={4} >
-                            <Grid item sm={12}>
-                              <EmbedMethodHighlight classes={classes}
-                                key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-                                <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
-                                >Age Range:</Typography>
-                                <Slider
-                                  value={sliderValue.length ? sliderValue : Array.isArray(apiContent[index]) ? [apiContent[index][0].label, apiContent[index][apiContent[index].length - 1].label] : []}
-                                  onChange={handleSliderChange}
-                                  onChange={(event, newValue) => {
-                                    setSliderValue(newValue);
-                                  }}
-                                  valueLabelDisplay="auto"
-                                  aria-labelledby="range-slider"
-                                  onChangeCommitted={(event, newValue) => {
-                                    customFilterAction(lookerContent[0].id,
-                                      lookerContent[0].filters[index].filterName,
-                                      (newValue) ? `[${newValue}]` : '[]')
-                                  }}
-                                  min={Array.isArray(apiContent[index]) ? apiContent[index][0].label : ''}
-                                  max={Array.isArray(apiContent[index]) ? apiContent[index][apiContent[index].length - 1].label : ''}
-                                  name="Age Range"
-                                  marks={Array.isArray(apiContent[index]) ? [{ value: apiContent[index][0].label, label: apiContent[index][0].label }, { value: apiContent[index][apiContent[index].length - 1].label, label: apiContent[index][apiContent[index].length - 1].label }] : ''}
-                                  disabled={Array.isArray(apiContent[index]) ? false : true}
-                                />
-                              </EmbedMethodHighlight>
-                            </Grid>
-                            <Grid item sm={12}>
-                              <EmbedMethodHighlight classes={classes}
-                                key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-                                <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
-                                >Lifetime Revenue Tier:</Typography>
-                                <ToggleButtonGroup
-                                  value={lifetimeRevenueTierValue}
-                                  exclusive //for now
-                                  onChange={(event, newValue) => {
-                                    setLifetimeRevenueTierValue(newValue)
-                                    customFilterAction(lookerContent[0].id,
-                                      lookerContent[0].filters[index + 1].filterName,
-                                      (newValue) ? newValue : '')
-                                  }}
-                                  aria-label="ageTier"
-                                  className={classes.w100}>
-                                  >
-                                {apiContent[index + 1].map((ageTier, index) => {
-                                    if (ageTier.label !== "Undefined") {
-                                      const Icon = lifetimeRevenueTierIconMap[ageTier.label];
-                                      return (
-                                        <ToggleButton
-                                          key={validIdHelper(`${type}-FilterBar-ToggleButton-${lookerContent[0].id}-${index}`)}
-                                          value={ageTier.label}
-                                          aria-label={ageTier.label}
-                                          className={classes.w33}>
-                                          <Icon className={classes.mr12} />
-                                          {_.capitalize(lifetimeRevenueTierMap[ageTier.label]) || ageTier.label}
-                                        </ToggleButton>
-                                      )
-                                    }
-                                  })}
-                                </ToggleButtonGroup>
-
-                              </EmbedMethodHighlight>
-                            </Grid>
+                            <RangeSlider
+                              lookerContent={lookerContent}
+                              apiContent={apiContent}
+                              index={index}
+                              classes={classes}
+                              customFilterAction={customFilterAction}
+                              type={type}
+                            />
+                            <Toggle
+                              lookerContent={lookerContent}
+                              apiContent={apiContent}
+                              index={index}
+                              classes={classes}
+                              customFilterAction={customFilterAction}
+                              type={type}
+                            />
                           </Grid>
                           :
                           '')
@@ -314,3 +211,5 @@ export default function FilterBar(props) {
     </ExpansionPanel >
   )
 }
+
+

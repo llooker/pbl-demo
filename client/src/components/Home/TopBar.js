@@ -12,8 +12,6 @@ import UserMenu from './UserMenu';
 
 
 export default function TopBar(props) {
-
-
   const classes = useStyles();
 
   let { clientSession, setClientSession,

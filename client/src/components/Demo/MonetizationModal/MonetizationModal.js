@@ -23,7 +23,7 @@ function getModalStyle() {
   };
 }
 
-export function MonetizationModal({ props }) {
+export default function MonetizationModal(props) {
   // console.log('MonetizationModal')
   let { clientSession, payWallModal, setPaywallModal, handleSwitchLookerUser } = useContext(AppContext)
 

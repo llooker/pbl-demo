@@ -1,9 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  Box, Grid, CircularProgress, Card
-} from '@material-ui/core'
+import { Box, Grid, CircularProgress, Card } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
