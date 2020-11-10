@@ -377,6 +377,25 @@
                 "label": "Select Product Name",
                 "filterName": "Product Name",
                 "lookerMethod": "runInlineQuery"
+              },
+              {
+                "label": "Dynamic Tiles",
+                "options": [
+                  "Inventory",
+                  "Orders"
+                ],
+                "value": "tileToggleValue",
+                "onChangeFunctionName": "handleTileToggle"
+              },
+              {
+                "label": "Dynamic Vis Config",
+                "options": [
+                  "#2d4266",
+                  "#43606b",
+                  "#414c67"
+                ],
+                "value": "visColorToggleValue",
+                "onChangeFunctionName": "handleVisColorToggle"
               }
             ],
             "inlineQueries": [

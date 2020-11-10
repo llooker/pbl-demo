@@ -15,7 +15,6 @@ const { validIdHelper } = require('../../../tools');
 
 export default function Dashboard(props) {
   // console.log('Dashboard');
-
   const { staticContent: { lookerContent }, staticContent: { type } } = props;
 
   const { clientSession, codeShow, sdk, corsApiCall, atomTheme, isReady, selectedMenuItem } = useContext(AppContext)
@@ -28,9 +27,7 @@ export default function Dashboard(props) {
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState(undefined);
   const [dashboardObj, setDashboardObj] = useState({});
-  // const [clientSideCode, setClientSideCode] = useState('');
   const [dashboardOptions, setDashboardOptions] = useState({});
-  // const [regionValue, setRegionValue] = useState('Pacific,South,Mountain,Midwest,Northeast');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [tileToggleValue, setTileToggleValue] = useState('');
   const [visColorToggleValue, setVisColorToggleValue] = useState('#2d4266');
@@ -62,7 +59,6 @@ export default function Dashboard(props) {
     [lightThemeToggleValue, lookerContent],
   );
 
-
   const handleTileToggle = (event, newValue) => {
     setTileToggleValue(newValue)
     const filteredLayout = _.filter(dashboardOptions.layouts[0].dashboard_layout_components, (row) => {
@@ -77,8 +73,6 @@ export default function Dashboard(props) {
   };
 
   const handleVisColorToggle = (event, newValue) => {
-    console.log("handleVisColorToggle")
-    console.log({ newValue })
     let newColorSeries = lookerContent[0].dynamicVisConfig.colors[newValue];
     let newDashboardElements = { ...dashboardOptions.elements };
     console.log({ newDashboardElements })
@@ -88,17 +82,14 @@ export default function Dashboard(props) {
           newDashboardElements[key].vis_config.series_colors[innerKey] = newColorSeries[index] || newColorSeries[0];
         })
       }
-
       if (newDashboardElements[key].vis_config.custom_color) {
         newDashboardElements[key].vis_config.custom_color = newColorSeries[0]
       }
-
       if (newDashboardElements[key].vis_config.map_value_colors) {
         newDashboardElements[key].vis_config.map_value_colors.map((item, index) => {
           newDashboardElements[key].vis_config.map_value_colors[index] = newColorSeries[index] || newColorSeries[0];
         })
       }
-
       // loss some fidelity here
       if (newDashboardElements[key].vis_config.series_cell_visualizations) {
         Object.keys(newDashboardElements[key].vis_config.series_cell_visualizations).map((innerKey, index) => {
@@ -107,8 +98,6 @@ export default function Dashboard(props) {
           }
         })
       }
-
-
     })
     setVisColorToggleValue(newValue)
     dashboardObj.setOptions({ "elements": { ...newDashboardElements } })
@@ -135,10 +124,9 @@ export default function Dashboard(props) {
     }
   }, [lookerUser, isReady, selectedMenuItem])
 
-
   useEffect(() => {
-    if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length && lookerContent[0].dynamicFieldLookUp) {
-      handleTileToggle(null, tileToggleValue ? tileToggleValue : Object.keys(lookerContent[0].dynamicFieldLookUp)[0])
+    if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length) {
+      handleTileToggle(null, tileToggleValue ? tileToggleValue : "Inventory")
       handleVisColorToggle(null, visColorToggleValue ? visColorToggleValue : '#2d4266')
     }
   }, [dashboardOptions]);
@@ -148,11 +136,9 @@ export default function Dashboard(props) {
     setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
   })
 
-  //componentDidMount
   useEffect(() => {
     setApiContent(undefined);
   }, [])
-
 
   const performLookerApiCalls = function (lookerContent, dynamicTheme) {
 
@@ -200,32 +186,31 @@ export default function Dashboard(props) {
       if (lookerContent.hasOwnProperty('filters') //&& !apiContent
       ) {
         // setApiContent(undefined)
-        //get inline query from usecase file & set user attribute dynamically
-        //iterating over filters
+        // get inline query from usecase file & set user attribute dynamically
+        // iterating over filters
         let orderedArrayForApiContent = []
         lookerContent.filters.map(async (item, index) => {
-          let jsonQuery = lookerContent.inlineQueries[index];
-          jsonQuery.filters = {
-            ...jsonQuery.filters,
-            [item.desiredFilterName]: lookerUser.user_attributes.brand
-          };
+          if (lookerContent.inlineQueries[index]) {
+            let jsonQuery = lookerContent.inlineQueries[index];
+            jsonQuery.filters = {
+              ...jsonQuery.filters,
+              [item.desiredFilterName]: lookerUser.user_attributes.brand
+            };
+            let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: jsonQuery }));
+            let queryResultsForDropdown = [];
+            let desiredProperty = Object.keys(lookerResponseData[0])[0];
 
-          let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: jsonQuery }));
-          let queryResultsForDropdown = [];
-          let desiredProperty = Object.keys(lookerResponseData[0])[0];
-
-          for (let i = 0; i < lookerResponseData.length; i++) {
-            queryResultsForDropdown.push({
-              'label': lookerResponseData[i][desiredProperty],
-              'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined
-            })
+            for (let i = 0; i < lookerResponseData.length; i++) {
+              queryResultsForDropdown.push({
+                'label': lookerResponseData[i][desiredProperty],
+                'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined
+              })
+            }
+            orderedArrayForApiContent[index] = queryResultsForDropdown
           }
-
-          orderedArrayForApiContent[index] = queryResultsForDropdown
           setApiContent([...orderedArrayForApiContent])
         })
       }
-
     })
   }
 
@@ -260,8 +245,7 @@ export default function Dashboard(props) {
               className={`${classes.root}`}
             >
               {lookerContent[0].hasOwnProperty("filters") &&
-                apiContent &&
-                apiContent.length === lookerContent[0].filters.length ?
+                apiContent ?
                 <Grid item
                   sm={12}
                   key={validIdHelper(`${demoComponentType}-FilterBar-${lookerContent[0].id}`)}>
@@ -276,7 +260,6 @@ export default function Dashboard(props) {
                     lightThemeToggleValue={lightThemeToggleValue}
                     fontThemeSelectValue={fontThemeSelectValue}
                     handleThemeChange={handleThemeChange}
-                    isThemeableDashboard={isThemeableDashboard}
                   />
                 </Grid> :
                 lookerContent[0].hasOwnProperty("filters") ?
