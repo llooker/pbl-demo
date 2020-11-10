@@ -16,6 +16,8 @@ import { ApiHighlight } from '../../Highlights/Highlight';
 import { TabPanel, a11yProps, descendingComparator, getComparator, stableSort } from './helpers.js';
 import AppContext from '../../../contexts/AppContext';
 import { lookerUserTimeHorizonMap } from '../../../LookerHelpers/defaults';
+import { Loader } from '../../Accessories/Loader';
+
 
 const { validIdHelper, prettifyString } = require('../../../tools');
 
@@ -34,9 +36,10 @@ export default function QueryBuilder(props) {
   const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [width, setWidth] = useState((window.innerWidth - sideBarWidth));
+  const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
+
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type },
-  } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, } = props;
 
 
   // const handleChange = (event, newValue) => {
@@ -57,6 +60,8 @@ export default function QueryBuilder(props) {
     window.addEventListener("resize", () => {
       setHeight((window.innerHeight - topBarBottomBarHeight))
       setWidth((window.innerWidth - sideBarWidth))
+      setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
+
     });
   })
 
@@ -119,14 +124,11 @@ export default function QueryBuilder(props) {
               />
             </Grid>
             {apiContent.status === 'running' ?
-              <Grid item sm={12} style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
-                <Card className={`${classes.card} ${classes.flexCentered}`}
-                  elevation={0}
-                  mt={2}
-                  style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
-                  <CircularProgress className={classes.circularProgress} />
-                </Card>
-              </Grid>
+
+              <Loader classes={classes}
+                height={height}
+                expansionPanelHeight={expansionPanelHeight} />
+
               : apiContent.data && apiContent.data.length ?
                 <Box>
                   <Grid container

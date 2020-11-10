@@ -3,9 +3,9 @@ import { Typography, Grid, Switch } from '@material-ui/core'
 import { EmbedMethodHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 const { validIdHelper } = require('../../../tools');
 
-export default function SwitchTheme({ lookerContent, classes, type, lightThemeToggleValue, handleThemeChange }) {
+export default function SwitchTheme({ lookerContent, classes, type, lightThemeToggleValue, handleThemeChange, horizontalLayout }) {
   return (
-    <Grid item sm={1}>
+    <Grid item sm={horizontalLayout ? 1 : 12}>
       <EmbedHighlight classes={classes} >
         <Typography
         >{lightThemeToggleValue ? "Light mode" : "Dark mode"}</Typography>

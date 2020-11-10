@@ -6,10 +6,10 @@ import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 const { validIdHelper } = require('../../../tools');
 
 
-export default function ToggleVisColor({ lookerContent, classes, type, visColorToggleValue, handleVisColorToggle }) {
+export default function ToggleVisColor({ lookerContent, classes, type, visColorToggleValue, handleVisColorToggle, horizontalLayout }) {
   return (
 
-    <Grid item sm={2}>
+    <Grid item sm={horizontalLayout ? 2 : 12}>
       <EmbedMethodHighlight classes={classes} >
         <Typography
         >Dynamic Vis Color:</Typography>

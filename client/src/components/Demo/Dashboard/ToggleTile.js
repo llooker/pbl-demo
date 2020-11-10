@@ -6,10 +6,10 @@ import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 const { validIdHelper } = require('../../../tools');
 
 
-export default function ToggleTile({ lookerContent, classes, type, tileToggleValue, handleTileToggle }) {
+export default function ToggleTile({ lookerContent, classes, type, tileToggleValue, handleTileToggle, horizontalLayout }) {
   return (
 
-    <Grid item sm={3}>
+    <Grid item sm={horizontalLayout ? 3 : 12}>
       <EmbedMethodHighlight classes={classes} >
         <Typography
         >

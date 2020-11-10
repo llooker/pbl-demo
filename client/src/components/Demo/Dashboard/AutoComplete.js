@@ -7,10 +7,9 @@ import { Autocomplete } from '@material-ui/lab'
 const { validIdHelper } = require('../../../tools');
 
 
-export default function AutoComplete({ lookerContent, apiContent, index, classes, customFilterAction, type }) {
-  console.log({ apiContent })
+export default function AutoComplete({ lookerContent, apiContent, index, classes, customFilterAction, type, horizontalLayout }) {
   return (
-    <Grid item sm={3}>
+    <Grid item sm={horizontalLayout ? 3 : 12}>
       <ApiHighlight classes={classes}
         key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
         <Typography>

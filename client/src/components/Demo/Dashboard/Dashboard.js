@@ -10,6 +10,10 @@ import useStyles from './styles.js';
 import { EmbedHighlight } from '../../Highlights/Highlight'; //ooops
 import AppContext from '../../../contexts/AppContext';
 import FilterBar from './FilterBar';
+import { Loader } from '../../Accessories/Loader';
+import { VerticalSplit, HorizontalSplit } from '@material-ui/icons';
+
+
 
 const { validIdHelper } = require('../../../tools');
 
@@ -34,6 +38,7 @@ export default function Dashboard(props) {
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
+  const [horizontalLayout, setHorizontalLayout] = useState(true);
 
   const isThemeableDashboard = validIdHelper(`${demoComponentType}${lookerContent[0].id}`) === 'customfilter1';
   const darkThemeBackgroundColor = "#343D4E";
@@ -75,7 +80,6 @@ export default function Dashboard(props) {
   const handleVisColorToggle = (event, newValue) => {
     let newColorSeries = lookerContent[0].dynamicVisConfig.colors[newValue];
     let newDashboardElements = { ...dashboardOptions.elements };
-    console.log({ newDashboardElements })
     Object.keys(newDashboardElements).map(key => {
       if (newDashboardElements[key].vis_config.series_colors) {
         Object.keys(newDashboardElements[key].vis_config.series_colors).map((innerKey, index) => {
@@ -125,9 +129,11 @@ export default function Dashboard(props) {
   }, [lookerUser, isReady, selectedMenuItem])
 
   useEffect(() => {
-    if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length) {
-      handleTileToggle(null, tileToggleValue ? tileToggleValue : "Inventory")
-      handleVisColorToggle(null, visColorToggleValue ? visColorToggleValue : '#2d4266')
+    if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length
+      && lookerContent[0].dynamicFieldLookUp) //necessary
+    {
+      handleTileToggle(null, tileToggleValue ? tileToggleValue : "Inventory");
+      handleVisColorToggle(null, visColorToggleValue ? visColorToggleValue : '#2d4266');
     }
   }, [dashboardOptions]);
 
@@ -135,6 +141,11 @@ export default function Dashboard(props) {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
     setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
   })
+
+  useEffect(() => {
+    setHeight((window.innerHeight - topBarBottomBarHeight));
+    setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
+  }, [horizontalLayout])
 
   useEffect(() => {
     setApiContent(undefined);
@@ -240,14 +251,18 @@ export default function Dashboard(props) {
     >
       <ThemeProvider theme={theme}>
         <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
-          <Grid container>
-            <div
-              className={`${classes.root}`}
+
+          <div
+            className={`${classes.root} ${classes.height100Percent}`}
+          >
+            <Grid
+              container
+              spacing={3}
             >
               {lookerContent[0].hasOwnProperty("filters") &&
                 apiContent ?
                 <Grid item
-                  sm={12}
+                  sm={horizontalLayout ? 12 : 3}
                   key={validIdHelper(`${demoComponentType}-FilterBar-${lookerContent[0].id}`)}>
                   <FilterBar {...props}
                     classes={classes}
@@ -260,6 +275,8 @@ export default function Dashboard(props) {
                     lightThemeToggleValue={lightThemeToggleValue}
                     fontThemeSelectValue={fontThemeSelectValue}
                     handleThemeChange={handleThemeChange}
+                    horizontalLayout={horizontalLayout}
+                    setHorizontalLayout={setHorizontalLayout}
                   />
                 </Grid> :
                 lookerContent[0].hasOwnProperty("filters") ?
@@ -269,48 +286,49 @@ export default function Dashboard(props) {
                 iFrameExists
                   ? ''
                   :
-                  <Grid item sm={12} style={{ height: height - 30 - expansionPanelHeight }}>
-                    <Card className={`${classes.card} ${classes.flexCentered}`}
-                      elevation={0}
-                      mt={2}
-                      style={{ height: height - 30 - expansionPanelHeight }}>
-                      <CircularProgress className={classes.circularProgress} />
-                    </Card>
-                  </Grid>
+                  <Loader classes={classes}
+                    height={height}
+                    expansionPanelHeight={expansionPanelHeight} />
               }
-              <Box
-                className={iFrameExists ? ` ` : `${classes.hidden} `}
-                style={{ height: height - 30 - expansionPanelHeight }}>
-                <Grid container
-                  spacing={3}
-                  className={`${classes.noContainerScroll}`}>
-                  {codeShow ?
-                    <Grid item sm={6}
-                      className={`${classes.positionFixedTopRight}`}
+              <Grid item
+                sm={horizontalLayout ? 12 : 9}>
+                <Box
+                  className={iFrameExists ? ` ` : `${classes.hidden} `}
+                  style={{ height: height - 30 - expansionPanelHeight }}>
+                  <Grid container
+                    spacing={3}
+                    className={`${classes.noContainerScroll}`}>
+                    {codeShow ?
+                      <Grid item sm={6}
+                        className={`${classes.positionFixedTopRight}`}
+                      >
+                        <CodeFlyout {...props}
+                          classes={classes}
+                          lookerUser={lookerUser}
+                          height={height}
+                        />
+                      </Grid>
+                      : ''}
+                    <Grid item
+                      sm={12}
+                    // sm={horizontalLayout ? 12 : 9}
                     >
-                      <CodeFlyout {...props}
-                        classes={classes}
-                        lookerUser={lookerUser}
-                        height={height}
-                      />
+                      <Box className={`${classes.w100} ${classes.padding10}`} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
+                        <EmbedHighlight classes={classes}>
+                          <div
+                            className={`embedContainer ${validIdHelper(demoComponentType)}`}
+                            id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                            key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                          >
+                          </div>
+                        </EmbedHighlight>
+                      </Box>
                     </Grid>
-                    : ''}
-                  <Grid item sm={12}>
-                    <Box className={`${classes.w100} ${classes.padding10}`} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
-                      <EmbedHighlight classes={classes}>
-                        <div
-                          className={`embedContainer ${validIdHelper(demoComponentType)}`}
-                          id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                          key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                        >
-                        </div>
-                      </EmbedHighlight>
-                    </Box>
                   </Grid>
-                </Grid>
-              </Box>
-            </div>
-          </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </div>
         </Card>
       </ThemeProvider>
     </ div>

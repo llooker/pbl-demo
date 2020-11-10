@@ -2,9 +2,9 @@ import React from 'react';
 import { Grid, FormControl, Select, MenuItem, InputLabel } from '@material-ui/core'
 import { EmbedHighlight } from '../../Highlights/Highlight';
 
-export default function SelectFont({ lookerContent, classes, type, fontThemeSelectValue, handleThemeChange }) {
+export default function SelectFont({ lookerContent, classes, type, fontThemeSelectValue, handleThemeChange, horizontalLayout }) {
   return (
-    <Grid item sm={2}>
+    <Grid item sm={horizontalLayout ? 2 : 12}>
       <EmbedHighlight classes={classes} >
 
         <FormControl className={classes.formControl}>

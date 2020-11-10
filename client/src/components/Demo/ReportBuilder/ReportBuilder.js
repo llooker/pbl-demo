@@ -13,6 +13,7 @@ import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
 import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import AppContext from '../../../contexts/AppContext';
+import { Loader } from '../../Accessories/Loader';
 
 import { SwapVerticalCircleOutlined } from '@material-ui/icons';
 const { validIdHelper } = require('../../../tools');
@@ -32,6 +33,7 @@ export default function ReportBuilder(props) {
   const [clientSideCode, setClientSideCode] = useState('');
   const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
 
   const classes = useStyles();
   const [value, setValue] = useState(0);
@@ -64,6 +66,7 @@ export default function ReportBuilder(props) {
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+    setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
   })
 
 
@@ -315,14 +318,10 @@ export default function ReportBuilder(props) {
           key={validIdHelper(type)} >
           <div className={classes.root}>
             {iFrameExists ? '' :
-              <Grid item sm={12} style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
-                <Card className={`${classes.card} ${classes.flexCentered}`}
-                  elevation={0}
-                  mt={2}
-                  style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
-                  <CircularProgress className={classes.circularProgress} />
-                </Card>
-              </Grid>
+
+              <Loader classes={classes}
+                height={height}
+                expansionPanelHeight={expansionPanelHeight} />
             }
 
             {/* additional loading logic, need embedContainer to exist but want it hidden until iFrame has content...*/}

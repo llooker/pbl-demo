@@ -6,11 +6,11 @@ import { lifetimeRevenueTierMap, lifetimeRevenueTierIconMap } from './helpers';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 const { validIdHelper } = require('../../../tools');
 
-export default function ToggleApi({ lookerContent, apiContent, index, classes, customFilterAction, type }) {
+export default function ToggleApi({ lookerContent, apiContent, index, classes, customFilterAction, type, horizontalLayout }) {
 
   const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
   return (
-    <Grid item sm={3}>
+    <Grid item sm={horizontalLayout ? 3 : 12}>
       <EmbedMethodHighlight classes={classes}
         key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
         <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}

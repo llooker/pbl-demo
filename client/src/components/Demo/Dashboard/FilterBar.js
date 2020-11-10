@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, { useState } from 'react';
 import { Typography, Grid, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
-import { ExpandMore, FilterList } from '@material-ui/icons';
+import { ExpandMore, FilterList, VerticalSplit, HorizontalSplit } from '@material-ui/icons';
 
 import AutoComplete from './AutoComplete'
 import MapFilter from './MapFilter'
@@ -17,25 +17,41 @@ export default function FilterBar(props) {
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
     apiContent, customFilterAction, tileToggleValue, handleTileToggle, visColorToggleValue,
     handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange,
+    horizontalLayout, setHorizontalLayout
   } = props;
 
-
   const [expanded, setExpanded] = useState(true);
+
 
   return (
 
     <ExpansionPanel
       expanded={expanded}
-      onChange={() => setExpanded(!expanded)}
+      // onChange={() => setExpanded(!expanded)}
       className={`${classes.w100} MuiExpansionPanel-root`}
       elevation={0}
     >
       <ExpansionPanelSummary
-        expandIcon={<ExpandMore />}
+        expandIcon={<ExpandMore onClick={() => {
+          setExpanded(!expanded)
+        }} />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
         <FilterList /><Typography className={`${classes.heading} ${classes.ml12}`}>Filter:</Typography>
+
+
+        {horizontalLayout ? <HorizontalSplit
+          className={classes.mlAuto}
+          onClick={(e) => {
+            setHorizontalLayout(!horizontalLayout)
+          }} /> : <VerticalSplit
+            className={classes.mlAuto}
+            onClick={(e) => {
+              setHorizontalLayout(!horizontalLayout)
+            }}
+          />}
+
 
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
@@ -52,6 +68,7 @@ export default function FilterBar(props) {
                     classes={classes}
                     customFilterAction={customFilterAction}
                     type={type}
+                    horizontalLayout={horizontalLayout}
                   />
                   : lookerContent[0].filterComponents[index] === 'mapfilter' ?
                     <MapFilter
@@ -61,6 +78,7 @@ export default function FilterBar(props) {
                       classes={classes}
                       customFilterAction={customFilterAction}
                       type={type}
+                      horizontalLayout={horizontalLayout}
                     />
                     : lookerContent[0].filterComponents[index] === 'rangeslider' ?
                       <RangeSlider
@@ -70,9 +88,9 @@ export default function FilterBar(props) {
                         classes={classes}
                         customFilterAction={customFilterAction}
                         type={type}
+                        horizontalLayout={horizontalLayout}
                       />
                       : lookerContent[0].filterComponents[index] === 'togglebuttonapi' ?
-
                         <ToggleApi
                           lookerContent={lookerContent}
                           apiContent={apiContent[index]}
@@ -80,6 +98,7 @@ export default function FilterBar(props) {
                           classes={classes}
                           customFilterAction={customFilterAction}
                           type={type}
+                          horizontalLayout={horizontalLayout}
                         />
 
                         //couldn't get this to work, for now
@@ -109,6 +128,7 @@ export default function FilterBar(props) {
                 type={type}
                 tileToggleValue={tileToggleValue}
                 handleTileToggle={handleTileToggle}
+                horizontalLayout={horizontalLayout}
               />
               : ''
             }
@@ -119,6 +139,7 @@ export default function FilterBar(props) {
                 type={type}
                 visColorToggleValue={visColorToggleValue}
                 handleVisColorToggle={handleVisColorToggle}
+                horizontalLayout={horizontalLayout}
               />
               : ''
             }
@@ -129,6 +150,7 @@ export default function FilterBar(props) {
                 type={type}
                 lightThemeToggleValue={lightThemeToggleValue}
                 handleThemeChange={handleThemeChange}
+                horizontalLayout={horizontalLayout}
               />
               : ''
             }
@@ -141,9 +163,12 @@ export default function FilterBar(props) {
                 type={type}
                 fontThemeSelectValue={fontThemeSelectValue}
                 handleThemeChange={handleThemeChange}
+                horizontalLayout={horizontalLayout}
               />
               : ''
             }
+
+
           </>
         </Grid>
       </ExpansionPanelDetails>

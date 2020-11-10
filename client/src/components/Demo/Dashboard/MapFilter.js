@@ -5,12 +5,12 @@ import { CheckboxSVGMap } from "./CheckboxSvgMapRegion";
 import { customUsa } from './helpers';
 const { validIdHelper } = require('../../../tools');
 
-export default function MapFilter({ lookerContent, apiContent, index, classes, customFilterAction, type }) {
+export default function MapFilter({ lookerContent, apiContent, index, classes, customFilterAction, type, horizontalLayout }) {
 
   const [regionValue, setRegionValue] = useState('Pacific, South, Mountain, Midwest, Northeast');
 
   return (
-    <Grid item sm={3} >
+    <Grid item sm={horizontalLayout ? 3 : 12}>
       <EmbedMethodHighlight classes={classes}
         key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
         <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}

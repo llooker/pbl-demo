@@ -18,6 +18,8 @@ import { format, endOfDay, addDays } from 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import AppContext from '../../../contexts/AppContext';
+import { Loader } from '../../Accessories/Loader';
+
 
 const { validIdHelper } = require('../../../tools');
 
@@ -36,8 +38,9 @@ export default function CustomVis(props) {
   const [open, setOpen] = React.useState(false);
   const [modalContent, setModalContent] = useState({});
   const [clientSideCode, setClientSideCode] = useState('');
-  // const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
+
 
 
   //declare constants
@@ -156,6 +159,8 @@ export default function CustomVis(props) {
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+    setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
+
   })
 
   const performLookerApiCalls = function (lookerContent) {
@@ -223,14 +228,10 @@ export default function CustomVis(props) {
 
 
             {!apiContent ?
-              <Grid item sm={12} style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
-                <Card className={`${classes.card} ${classes.flexCentered}`}
-                  elevation={0}
-                  mt={2}
-                  style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
-                  <CircularProgress className={classes.circularProgress} />
-                </Card>
-              </Grid>
+
+              <Loader classes={classes}
+                height={height}
+                expansionPanelHeight={expansionPanelHeight} />
 
               : apiContent && apiContent.length ?
                 <Box>
