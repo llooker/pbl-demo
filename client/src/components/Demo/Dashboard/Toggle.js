@@ -17,7 +17,9 @@ export default function Toggle({ lookerContent, apiContent, index, classes, cust
       <EmbedMethodHighlight classes={classes}
         key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
         <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
-        >Lifetime Revenue Tier:</Typography>
+        >
+          {lookerContent[0].filters[index].label}:
+        </Typography>
         <ToggleButtonGroup
           value={lifetimeRevenueTierValue}
           exclusive //for now

@@ -21,21 +21,18 @@ const { validIdHelper } = require('../../../tools');
 export default function FilterBar(props) {
   // console.log('FilterBar')
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
-    apiContent, customFilterAction, regionValue, setRegionValue, tileToggleValue, handleTileToggle, //changeTheme,
-    visColorToggleValue, handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange, isThemeableDashboard
+    apiContent, customFilterAction, tileToggleValue, handleTileToggle, visColorToggleValue,
+    handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange,
+    isThemeableDashboard
   } = props;
 
   const [expanded, setExpanded] = useState(true);
-
-  const handleExpansionPanel = (event, newValue) => {
-    setExpanded(expanded ? false : true);
-  };
 
   return (
 
     <ExpansionPanel
       expanded={expanded}
-      onChange={handleExpansionPanel}
+      onChange={() => setExpanded(!expanded)}
       className={`${classes.w100} MuiExpansionPanel-root`}
       elevation={0}
     >
@@ -51,7 +48,8 @@ export default function FilterBar(props) {
         <Grid
           container spacing={3}>
           {
-            lookerContent[0].filters || lookerContent[0].dynamicFieldLookUp ?
+            // everything should work based on filters prop
+            lookerContent[0].filters ?
               <>
                 {apiContent.map((item, index) => {
                   return (
@@ -72,8 +70,6 @@ export default function FilterBar(props) {
                           classes={classes}
                           customFilterAction={customFilterAction}
                           type={type}
-                          regionValue={regionValue}
-                          setRegionValue={setRegionValue}
                         />
                         : lookerContent[0].filterComponents[index] === "rangeslider"
                           ?
@@ -98,6 +94,7 @@ export default function FilterBar(props) {
                           :
                           '')
                 })}
+                {/* should use Toggle component */}
                 {lookerContent[0].dynamicFieldLookUp ?
                   <>
                     <Grid item sm={3}>
@@ -125,6 +122,7 @@ export default function FilterBar(props) {
                   </>
                   : ''
                 }
+                {/* should use toggle component */}
                 {lookerContent[0].dynamicVisConfig ?
                   <>
                     <Grid item sm={2}>
@@ -156,6 +154,7 @@ export default function FilterBar(props) {
                   </>
                   : ''
                 }
+                {/* need switch component */}
                 {lookerContent[0].dynamicThemeMode ?
                   <>
                     <Grid item sm={1}>
@@ -176,6 +175,7 @@ export default function FilterBar(props) {
                   </>
                   : ''
                 }
+                {/* need Select component */}
                 {lookerContent[0].dynamicThemeFont ?
                   <>
                     <Grid item sm={2}>

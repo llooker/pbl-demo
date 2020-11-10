@@ -30,7 +30,7 @@ export default function Dashboard(props) {
   const [dashboardObj, setDashboardObj] = useState({});
   // const [clientSideCode, setClientSideCode] = useState('');
   const [dashboardOptions, setDashboardOptions] = useState({});
-  const [regionValue, setRegionValue] = useState('Pacific,South,Mountain,Midwest,Northeast');
+  // const [regionValue, setRegionValue] = useState('Pacific,South,Mountain,Midwest,Northeast');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [tileToggleValue, setTileToggleValue] = useState('');
   const [visColorToggleValue, setVisColorToggleValue] = useState('#2d4266');
@@ -77,8 +77,11 @@ export default function Dashboard(props) {
   };
 
   const handleVisColorToggle = (event, newValue) => {
+    console.log("handleVisColorToggle")
+    console.log({ newValue })
     let newColorSeries = lookerContent[0].dynamicVisConfig.colors[newValue];
     let newDashboardElements = { ...dashboardOptions.elements };
+    console.log({ newDashboardElements })
     Object.keys(newDashboardElements).map(key => {
       if (newDashboardElements[key].vis_config.series_colors) {
         Object.keys(newDashboardElements[key].vis_config.series_colors).map((innerKey, index) => {
@@ -266,8 +269,6 @@ export default function Dashboard(props) {
                     classes={classes}
                     apiContent={apiContent}
                     customFilterAction={customFilterAction}
-                    regionValue={regionValue}
-                    setRegionValue={setRegionValue}
                     tileToggleValue={tileToggleValue}
                     handleTileToggle={handleTileToggle}
                     visColorToggleValue={visColorToggleValue}

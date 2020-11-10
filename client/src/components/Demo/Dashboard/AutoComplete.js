@@ -12,8 +12,9 @@ export default function AutoComplete({ lookerContent, apiContent, index, classes
     <Grid item sm={3}>
       <ApiHighlight classes={classes}
         key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
-        <Typography
-        >Filter By Product:</Typography>
+        <Typography>
+          {lookerContent[0].filters[index].label}:
+        </Typography>
         <Autocomplete
           id={`combo-box-dashboard-${lookerContent.id}`}
           options={Array.isArray(apiContent[index]) ?

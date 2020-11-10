@@ -279,12 +279,12 @@
             "isNext": true,
             "filters": [
               {
-                "label": "Select Category",
+                "label": "Select Product Category",
                 "filterName": "Category",
                 "lookerMethod": "runInlineQuery"
               },
               {
-                "label": "Select region",
+                "label": "Select Region",
                 "filterName": "State Region",
                 "lookerMethod": "runInlineQuery"
               },
