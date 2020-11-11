@@ -9,9 +9,10 @@ const { validIdHelper } = require('../../../tools');
 
 export default function AutoComplete({ lookerContent, apiContent, index, classes, customFilterAction, type, horizontalLayout }) {
   return (
-    <Grid item sm={horizontalLayout ? 3 : 12}>
-      <ApiHighlight classes={classes}
-        key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
+    <Grid
+      key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)}
+      item sm={horizontalLayout ? 3 : 12}>
+      <ApiHighlight classes={classes} >
         <Typography>
           {lookerContent[0].filters[index].label}:
         </Typography>

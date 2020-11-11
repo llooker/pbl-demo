@@ -142,13 +142,14 @@ export default function Dashboard(props) {
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
-    setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
+    setExpansionPanelHeight(horizontalLayout ? $('.MuiExpansionPanel-root:visible').innerHeight() || 0 : 0)
   })
 
   useEffect(() => {
     setHeight((window.innerHeight - topBarBottomBarHeight));
-    setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
+    setExpansionPanelHeight(horizontalLayout ? $('.MuiExpansionPanel-root:visible').innerHeight() || 0 : 0)
   }, [horizontalLayout])
+
 
   useEffect(() => {
     setApiContent(undefined);

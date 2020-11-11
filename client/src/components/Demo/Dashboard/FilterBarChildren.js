@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Grid } from '@material-ui/core'
-
 
 import AutoComplete from './AutoComplete'
 import MapFilter from './MapFilter'
@@ -10,6 +9,8 @@ import ToggleTile from './ToggleTile'
 import ToggleVisColor from './ToggleVisColor'
 import SwitchTheme from './SwitchTheme'
 import SelectFont from './SelectFont'
+
+const { validIdHelper } = require('../../../tools');
 
 export default function FilterBarChildren({ classes, apiContent, customFilterAction, tileToggleValue, handleTileToggle, visColorToggleValue,
   handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange, horizontalLayout, setHorizontalLayout,
@@ -28,6 +29,7 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
               customFilterAction={customFilterAction}
               type={type}
               horizontalLayout={horizontalLayout}
+              key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}
             />
             : lookerContent[0].filterComponents[index] === 'mapfilter' ?
               <MapFilter
@@ -38,6 +40,7 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                 customFilterAction={customFilterAction}
                 type={type}
                 horizontalLayout={horizontalLayout}
+                key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}
               />
               : lookerContent[0].filterComponents[index] === 'rangeslider' ?
                 <RangeSlider
@@ -48,6 +51,7 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                   customFilterAction={customFilterAction}
                   type={type}
                   horizontalLayout={horizontalLayout}
+                  key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}
                 />
                 : lookerContent[0].filterComponents[index] === 'togglebuttonapi' ?
                   <ToggleApi
@@ -58,6 +62,7 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                     customFilterAction={customFilterAction}
                     type={type}
                     horizontalLayout={horizontalLayout}
+                    key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}
                   />
 
                   //couldn't get this to work, for now
@@ -79,7 +84,6 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                   :
                   '')
       })}
-      {/* should use Toggle component??? */}
       {lookerContent[0].dynamicFieldLookUp ?
         <ToggleTile
           lookerContent={lookerContent}
@@ -88,6 +92,7 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
           tileToggleValue={tileToggleValue}
           handleTileToggle={handleTileToggle}
           horizontalLayout={horizontalLayout}
+          key={validIdHelper(`${type}-dynamicFieldLookUp`)}
         />
         : ''
       }
@@ -99,6 +104,7 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
           visColorToggleValue={visColorToggleValue}
           handleVisColorToggle={handleVisColorToggle}
           horizontalLayout={horizontalLayout}
+          key={validIdHelper(`${type}-dynamicVisConfig`)}
         />
         : ''
       }
@@ -110,11 +116,11 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
           lightThemeToggleValue={lightThemeToggleValue}
           handleThemeChange={handleThemeChange}
           horizontalLayout={horizontalLayout}
+          key={validIdHelper(`${type}-dynamicThemeMode`)}
         />
         : ''
       }
       {lookerContent[0].dynamicThemeFont ?
-
         <SelectFont
           lookerContent={lookerContent}
           classes={classes}
@@ -122,6 +128,7 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
           fontThemeSelectValue={fontThemeSelectValue}
           handleThemeChange={handleThemeChange}
           horizontalLayout={horizontalLayout}
+          key={validIdHelper(`${type}-dynamicThemeFont`)}
         />
         : ''
       }

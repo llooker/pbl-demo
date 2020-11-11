@@ -30,7 +30,9 @@ export default function LeftDrawer(props) {
       <div className={classes.drawerHeader}>
         <IconButton
           onClick={() => setDrawerOpen(false)}>
-          <ChevronLeft />
+          <ChevronLeft
+            aria-label="close drawer"
+          />
         </IconButton>
       </div>
 

@@ -1,20 +1,9 @@
 import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
-import { Typography, Grid, Accordion, AccordionSummary, AccordionDetails, Hidden, IconButton, Box } from '@material-ui/core'
+import { Typography, Grid, Accordion, AccordionSummary, AccordionDetails, Box } from '@material-ui/core'
 import { ExpandMore, FilterList, VerticalSplit, HorizontalSplit, ChevronLeft, Menu } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab'
 
-
-
-
-import AutoComplete from './AutoComplete'
-import MapFilter from './MapFilter'
-import RangeSlider from './RangeSlider'
-import ToggleApi from './ToggleApi'
-import ToggleTile from './ToggleTile'
-import ToggleVisColor from './ToggleVisColor'
-import SwitchTheme from './SwitchTheme'
-import SelectFont from './SelectFont'
 import FilterBarChildren from './FilterBarChildren'
 
 const { validIdHelper } = require('../../../tools');
@@ -37,18 +26,20 @@ export default function FilterBar(props) {
 
   return (
     <Grid item
-      sm={horizontalLayout ? 12 : drawerOpen ? 3 : ''}
+      sm={horizontalLayout ? 12 : drawerOpen ? 3 : 'auto'}
       key={validIdHelper(`${type}-FilterBar-${lookerContent[0].id}`)}>
       {apiContent ?
         <Accordion
+          onChange={horizontalLayout ? () => setExpanded(!expanded) : () => { }}
           expanded={expanded}
           className={`${classes.w100} MuiExpansionPanel-root`}
           elevation={0}
         >
           <AccordionSummary
-            expandIcon={horizontalLayout ? <ExpandMore onClick={() => {
-              setExpanded(!expanded)
-            }} /> : ''}
+            // expandIcon={horizontalLayout ? <ExpandMore onClick={() => {
+            //   setExpanded(!expanded)
+            // }} /> : ''}
+            expandIcon={horizontalLayout ? <ExpandMore /> : ""}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
@@ -57,21 +48,27 @@ export default function FilterBar(props) {
                 onClick={(e) => {
                   setHorizontalLayout(!horizontalLayout)
                 }}
+                aria-label="vertical view"
               />
               :
               <>
                 {drawerOpen ?
                   <>
                     <ChevronLeft
-                      onClick={() => setDrawerOpen(!drawerOpen)} />
+                      onClick={() => setDrawerOpen(!drawerOpen)}
+                      aria-label="close menu"
+                    />
                     <HorizontalSplit
                       onClick={(e) => {
                         setExpanded(true)
                         setHorizontalLayout(!horizontalLayout)
-                      }} />
+                      }}
+                      aria-label="horizontal view" />
                   </> :
                   <Menu
-                    onClick={() => setDrawerOpen(!drawerOpen)} />}
+                    onClick={() => setDrawerOpen(!drawerOpen)}
+                    aria-label="open menu"
+                  />}
               </>}
             {drawerOpen ?
               <>

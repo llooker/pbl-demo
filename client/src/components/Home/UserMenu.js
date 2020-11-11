@@ -75,12 +75,12 @@ export default function UserMenu(props) {
         onClose={handleClose}
       >
         <MenuItem autoFocus={false}>Select User Level</MenuItem>
-        {/* <MenuItem autoFocus={false} onClick={() => handleClose('basic', 'permission')}>Basic</MenuItem>
-        <MenuItem autoFocus={false} onClick={() => handleClose('advanced', 'permission')}>Advanced</MenuItem>
-        <MenuItem autoFocus={false} onClick={() => handleClose('premium', 'permission')}>Premium</MenuItem> */}
 
         {Object.keys(lookerUserPermissions).map(key => {
-          return (<MenuItem autoFocus={false} onClick={() => handleClose(key, 'permission')}>{_.capitalize(key)}</MenuItem>)
+          return (<MenuItem
+            key={validIdHelper(`$lookerUserPermission-MenuItem-${key}`)}
+            autoFocus={false}
+            onClick={() => handleClose(key, 'permission')}>{_.capitalize(key)}</MenuItem>)
         })}
 
         <Divider className={classes.divider} />
