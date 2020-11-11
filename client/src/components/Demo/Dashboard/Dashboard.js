@@ -1,8 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Grid, CircularProgress, Card } from '@material-ui/core'
-import { Skeleton } from '@material-ui/lab'
+import { Box, Grid, Card } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
@@ -12,6 +11,7 @@ import AppContext from '../../../contexts/AppContext';
 import FilterBar from './FilterBar';
 import { Loader } from '../../Accessories/Loader';
 import { VerticalSplit, HorizontalSplit } from '@material-ui/icons';
+import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 
 
 
@@ -39,6 +39,7 @@ export default function Dashboard(props) {
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
   const [horizontalLayout, setHorizontalLayout] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(true);
 
   const isThemeableDashboard = validIdHelper(`${demoComponentType}${lookerContent[0].id}`) === 'customfilter1';
   const darkThemeBackgroundColor = "#343D4E";
@@ -124,7 +125,9 @@ export default function Dashboard(props) {
       let themeName = lightThemeToggleValue ? 'light' : 'dark';
       themeName += `_${fontThemeSelectValue}`;
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
-      // setClientSideCode(rawSampleCode)
+      setApiContent(undefined);
+      setHorizontalLayout(true);
+      setDrawerOpen(true);
     }
   }, [lookerUser, isReady, selectedMenuItem])
 
@@ -251,7 +254,6 @@ export default function Dashboard(props) {
     >
       <ThemeProvider theme={theme}>
         <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
-
           <div
             className={`${classes.root} ${classes.height100Percent}`}
           >
@@ -259,29 +261,28 @@ export default function Dashboard(props) {
               container
               spacing={3}
             >
-              {lookerContent[0].hasOwnProperty("filters") &&
-                apiContent ?
-                <Grid item
-                  sm={horizontalLayout ? 12 : 3}
-                  key={validIdHelper(`${demoComponentType}-FilterBar-${lookerContent[0].id}`)}>
-                  <FilterBar {...props}
-                    classes={classes}
-                    apiContent={apiContent}
-                    customFilterAction={customFilterAction}
-                    tileToggleValue={tileToggleValue}
-                    handleTileToggle={handleTileToggle}
-                    visColorToggleValue={visColorToggleValue}
-                    handleVisColorToggle={handleVisColorToggle}
-                    lightThemeToggleValue={lightThemeToggleValue}
-                    fontThemeSelectValue={fontThemeSelectValue}
-                    handleThemeChange={handleThemeChange}
-                    horizontalLayout={horizontalLayout}
-                    setHorizontalLayout={setHorizontalLayout}
-                  />
-                </Grid> :
-                lookerContent[0].hasOwnProperty("filters") ?
-                  <Skeleton variant="rect" animation="wave" className={classes.skeleton} /> :
-                  ''}
+              {/* could be improved */}
+              {lookerContent[0].hasOwnProperty("filters") ?
+
+                < FilterBar {...props}
+                  classes={classes}
+                  apiContent={apiContent}
+                  customFilterAction={customFilterAction}
+                  tileToggleValue={tileToggleValue}
+                  handleTileToggle={handleTileToggle}
+                  visColorToggleValue={visColorToggleValue}
+                  handleVisColorToggle={handleVisColorToggle}
+                  lightThemeToggleValue={lightThemeToggleValue}
+                  fontThemeSelectValue={fontThemeSelectValue}
+                  handleThemeChange={handleThemeChange}
+                  horizontalLayout={horizontalLayout}
+                  setHorizontalLayout={setHorizontalLayout}
+                  drawerOpen={drawerOpen}
+                  setDrawerOpen={setDrawerOpen}
+                />
+                :
+                ''}
+
               {
                 iFrameExists
                   ? ''
@@ -290,43 +291,26 @@ export default function Dashboard(props) {
                     height={height}
                     expansionPanelHeight={expansionPanelHeight} />
               }
-              <Grid item
-                sm={horizontalLayout ? 12 : 9}>
-                <Box
-                  className={iFrameExists ? ` ` : `${classes.hidden} `}
-                  style={{ height: height - 30 - expansionPanelHeight }}>
-                  <Grid container
-                    spacing={3}
-                    className={`${classes.noContainerScroll}`}>
-                    {codeShow ?
-                      <Grid item sm={6}
-                        className={`${classes.positionFixedTopRight}`}
-                      >
-                        <CodeFlyout {...props}
-                          classes={classes}
-                          lookerUser={lookerUser}
-                          height={height}
-                        />
-                      </Grid>
-                      : ''}
-                    <Grid item
-                      sm={12}
-                    // sm={horizontalLayout ? 12 : 9}
-                    >
-                      <Box className={`${classes.w100} ${classes.padding10}`} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
-                        <EmbedHighlight classes={classes}>
-                          <div
-                            className={`embedContainer ${validIdHelper(demoComponentType)}`}
-                            id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                            key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                          >
-                          </div>
-                        </EmbedHighlight>
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
+
+              <EmbeddedDashboardContainer
+                classes={classes}
+                lookerContent={lookerContent}
+                type={demoComponentType}
+                width={lookerContent[0].hasOwnProperty("filters") ? horizontalLayout ? 12 : drawerOpen ? 9 : 12 : 12}
+              />
+
+              {codeShow ?
+                <Grid item sm={6}
+                  className={`${classes.positionFixedTopRight}`}
+                >
+                  <CodeFlyout {...props}
+                    classes={classes}
+                    lookerUser={lookerUser}
+                    height={height}
+                  />
+                </Grid>
+                : ''}
+
             </Grid>
           </div>
         </Card>

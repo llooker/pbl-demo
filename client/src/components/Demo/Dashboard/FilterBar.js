@@ -1,7 +1,11 @@
 import _ from 'lodash'
-import React, { useState } from 'react';
-import { Typography, Grid, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
-import { ExpandMore, FilterList, VerticalSplit, HorizontalSplit } from '@material-ui/icons';
+import React, { useState, useEffect } from 'react';
+import { Typography, Grid, Accordion, AccordionSummary, AccordionDetails, Hidden, IconButton, Box } from '@material-ui/core'
+import { ExpandMore, FilterList, VerticalSplit, HorizontalSplit, ChevronLeft, Menu } from '@material-ui/icons';
+import { Skeleton } from '@material-ui/lab'
+
+
+
 
 import AutoComplete from './AutoComplete'
 import MapFilter from './MapFilter'
@@ -11,168 +15,96 @@ import ToggleTile from './ToggleTile'
 import ToggleVisColor from './ToggleVisColor'
 import SwitchTheme from './SwitchTheme'
 import SelectFont from './SelectFont'
+import FilterBarChildren from './FilterBarChildren'
+
+const { validIdHelper } = require('../../../tools');
+
 
 
 export default function FilterBar(props) {
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
     apiContent, customFilterAction, tileToggleValue, handleTileToggle, visColorToggleValue,
     handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange,
-    horizontalLayout, setHorizontalLayout
+    horizontalLayout, setHorizontalLayout, drawerOpen, setDrawerOpen
   } = props;
 
   const [expanded, setExpanded] = useState(true);
 
+  useEffect(() => {
+    if (!expanded) setExpanded(true)
+  }, [horizontalLayout])
+
 
   return (
+    <Grid item
+      sm={horizontalLayout ? 12 : drawerOpen ? 3 : ''}
+      key={validIdHelper(`${type}-FilterBar-${lookerContent[0].id}`)}>
+      {apiContent ?
+        <Accordion
+          expanded={expanded}
+          className={`${classes.w100} MuiExpansionPanel-root`}
+          elevation={0}
+        >
+          <AccordionSummary
+            expandIcon={horizontalLayout ? <ExpandMore onClick={() => {
+              setExpanded(!expanded)
+            }} /> : ''}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            {horizontalLayout ?
+              <VerticalSplit
+                onClick={(e) => {
+                  setHorizontalLayout(!horizontalLayout)
+                }}
+              />
+              :
+              <>
+                {drawerOpen ?
+                  <>
+                    <ChevronLeft
+                      onClick={() => setDrawerOpen(!drawerOpen)} />
+                    <HorizontalSplit
+                      onClick={(e) => {
+                        setExpanded(true)
+                        setHorizontalLayout(!horizontalLayout)
+                      }} />
+                  </> :
+                  <Menu
+                    onClick={() => setDrawerOpen(!drawerOpen)} />}
+              </>}
+            {drawerOpen ?
+              <>
+                <FilterList className={classes.ml12} />
+                <Typography className={`${classes.heading} ${classes.ml12}`}>Filter:</Typography>
+              </> : ''}
 
-    <ExpansionPanel
-      expanded={expanded}
-      // onChange={() => setExpanded(!expanded)}
-      className={`${classes.w100} MuiExpansionPanel-root`}
-      elevation={0}
-    >
-      <ExpansionPanelSummary
-        expandIcon={<ExpandMore onClick={() => {
-          setExpanded(!expanded)
-        }} />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-      >
-        <FilterList /><Typography className={`${classes.heading} ${classes.ml12}`}>Filter:</Typography>
-
-
-        {horizontalLayout ? <HorizontalSplit
-          className={classes.mlAuto}
-          onClick={(e) => {
-            setHorizontalLayout(!horizontalLayout)
-          }} /> : <VerticalSplit
-            className={classes.mlAuto}
-            onClick={(e) => {
-              setHorizontalLayout(!horizontalLayout)
-            }}
-          />}
-
-
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <Grid
-          container spacing={3}>
-          <>
-            {lookerContent[0].filterComponents.map((item, index) => {
-              return (
-                lookerContent[0].filterComponents[index] === 'autocomplete' ?
-                  <AutoComplete
-                    lookerContent={lookerContent}
-                    apiContent={apiContent[index]}
-                    index={index}
-                    classes={classes}
-                    customFilterAction={customFilterAction}
-                    type={type}
-                    horizontalLayout={horizontalLayout}
-                  />
-                  : lookerContent[0].filterComponents[index] === 'mapfilter' ?
-                    <MapFilter
-                      lookerContent={lookerContent}
-                      apiContent={apiContent[index]}
-                      index={index}
-                      classes={classes}
-                      customFilterAction={customFilterAction}
-                      type={type}
-                      horizontalLayout={horizontalLayout}
-                    />
-                    : lookerContent[0].filterComponents[index] === 'rangeslider' ?
-                      <RangeSlider
-                        lookerContent={lookerContent}
-                        apiContent={apiContent[index]}
-                        index={index}
-                        classes={classes}
-                        customFilterAction={customFilterAction}
-                        type={type}
-                        horizontalLayout={horizontalLayout}
-                      />
-                      : lookerContent[0].filterComponents[index] === 'togglebuttonapi' ?
-                        <ToggleApi
-                          lookerContent={lookerContent}
-                          apiContent={apiContent[index]}
-                          index={index}
-                          classes={classes}
-                          customFilterAction={customFilterAction}
-                          type={type}
-                          horizontalLayout={horizontalLayout}
-                        />
-
-                        //couldn't get this to work, for now
-                        // : lookerContent[0].filterComponents[index] === 'togglebutton' ?
-
-                        //   // <h1>togglebuttoncomingsoon!</h1>
-
-                        //   <Toggle
-                        //     lookerContent={lookerContent}
-                        //     // apiContent={apiContent[index]}
-                        //     index={index}
-                        //     classes={classes}
-                        //     // customFilterAction={customFilterAction}
-                        //     type={type}
-                        //     value={props[lookerContent[0].filters[index].value]}
-                        //     onChange={props[lookerContent[0].filters[index].onChangeFunctionName]}
-                        //   />
-
-                        :
-                        '')
-            })}
-            {/* should use Toggle component??? */}
-            {lookerContent[0].dynamicFieldLookUp ?
-              <ToggleTile
-                lookerContent={lookerContent}
+          </AccordionSummary>
+          <Box display={drawerOpen ? "block" : "none"}>
+            <AccordionDetails >
+              <FilterBarChildren {...props}
                 classes={classes}
-                type={type}
+                apiContent={apiContent}
+                customFilterAction={customFilterAction}
                 tileToggleValue={tileToggleValue}
                 handleTileToggle={handleTileToggle}
-                horizontalLayout={horizontalLayout}
-              />
-              : ''
-            }
-            {lookerContent[0].dynamicVisConfig ?
-              <ToggleVisColor
-                lookerContent={lookerContent}
-                classes={classes}
-                type={type}
                 visColorToggleValue={visColorToggleValue}
                 handleVisColorToggle={handleVisColorToggle}
-                horizontalLayout={horizontalLayout}
-              />
-              : ''
-            }
-            {lookerContent[0].dynamicThemeMode ?
-              <SwitchTheme
-                lookerContent={lookerContent}
-                classes={classes}
-                type={type}
                 lightThemeToggleValue={lightThemeToggleValue}
-                handleThemeChange={handleThemeChange}
-                horizontalLayout={horizontalLayout}
-              />
-              : ''
-            }
-            {/* need Select component */}
-            {lookerContent[0].dynamicThemeFont ?
-
-              <SelectFont
-                lookerContent={lookerContent}
-                classes={classes}
-                type={type}
                 fontThemeSelectValue={fontThemeSelectValue}
                 handleThemeChange={handleThemeChange}
                 horizontalLayout={horizontalLayout}
+                setHorizontalLayout={setHorizontalLayout}
+                lookerContent={lookerContent}
+                type={type}
               />
-              : ''
-            }
+            </AccordionDetails>
+          </Box>
 
-
-          </>
-        </Grid>
-      </ExpansionPanelDetails>
-    </ExpansionPanel >
+        </Accordion >
+        :
+        <Skeleton variant="rect" animation="wave" className={classes.skeleton} />}
+    </Grid>
   )
 }
 
