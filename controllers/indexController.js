@@ -10,13 +10,11 @@ const sdk = new Looker40SDK(sdkSession)
 const rp = require('request-promise');
 
 module.exports.readSession = async (req, res, next) => {
-  // console.log('readSession')
   let { session } = req
   res.status(200).send({ session })
 }
 
 module.exports.writeSession = async (req, res, next) => {
-  // console.log('writeSession')
   let { session } = req;
   session.userProfile = req.body.userProfile;
   session.lookerUser = req.body.lookerUser;
@@ -45,7 +43,6 @@ async function tokenHelper(session) {
   // Calling the iframe url to ensure the embed user exists
   const url = await createSignedUrl('/alive', session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
   await rp(url)
-  // console.log({ url })
   // Initialize the API session, sudo and retrieve the bearer token
   const userCred = await sdk.ok(sdk.user_for_credential('embed', session.userProfile.email));
   const embeddedUserSession = new NodeSession(settings) // node wrapper

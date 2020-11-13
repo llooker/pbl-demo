@@ -8,3 +8,13 @@ WITH (OIDS=FALSE);
 ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
 
 CREATE INDEX "IDX_session_expire" ON "session" ("expire");
+
+CREATE USER root WITH password 'root';
+
+/*/Applications/Postgres.app/Contents/Versions/12/bin/psql -U root -d atom_fashion_dev*/
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO root;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO root;
+
+ALTER USER root WITH SUPERUSER 
+

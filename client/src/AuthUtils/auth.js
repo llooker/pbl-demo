@@ -44,9 +44,13 @@ export const endSession = async () => {
 
 export const createSdkHelper = ({ accessToken, lookerHost }) => {
   // console.log('createSdkHelper')
+  // console.log({ accessToken })
+  // console.log({ lookerHost })
+  let baseUrlToUse = lookerHost === 'pbldev' ? `https://${lookerHost}.looker.com` : `https://${lookerHost}.looker.com:19999`
+  // console.log({ baseUrlToUse })
   const pblsession = new PblSessionEmbed({
     ...DefaultSettings(),
-    base_url: `https://${lookerHost}.looker.com:19999`,
+    base_url: baseUrlToUse,
     accessToken
   });
 
