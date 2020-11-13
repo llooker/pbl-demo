@@ -46,7 +46,8 @@ export const createSdkHelper = ({ accessToken, lookerHost }) => {
   // console.log('createSdkHelper')
   // console.log({ accessToken })
   // console.log({ lookerHost })
-  let baseUrlToUse = lookerHost === 'pbldev' ? `https://${lookerHost}.looker.com` : `https://${lookerHost}.looker.com:19999`
+  //this line plus .env file is going to need to change once pbl is migrated
+  let baseUrlToUse = lookerHost === 'pbldev' ? `https://${lookerHost}.looker.com` : `https://${lookerHost}.looker.com:19999`;
   // console.log({ baseUrlToUse })
   const pblsession = new PblSessionEmbed({
     ...DefaultSettings(),
