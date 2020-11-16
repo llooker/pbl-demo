@@ -81,8 +81,8 @@ module.exports = {
       "send_outgoing_webhook",
       "send_to_integration",
       "download_without_limit",
-      "explore"
-    ]
+      "explore",
+      "see_sql"
   },
   lookerUserTimeHorizonMap: {
     "basic": "last 182 days",
