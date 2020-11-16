@@ -79,8 +79,15 @@ export default function Dashboard(props) {
   };
 
   const handleVisColorToggle = (event, newValue) => {
+
+    // console.log("handleVisColorToggle");
+    // console.log({ isThemeableDashboard })
+
     let newColorSeries = lookerContent[0].dynamicVisConfig.colors[newValue];
+    // console.log('0000')
+    // console.log({ ...dashboardOptions.elements })
     let newDashboardElements = { ...dashboardOptions.elements };
+
     Object.keys(newDashboardElements).map(key => {
       if (newDashboardElements[key].vis_config.series_colors) {
         Object.keys(newDashboardElements[key].vis_config.series_colors).map((innerKey, index) => {
@@ -88,7 +95,7 @@ export default function Dashboard(props) {
         })
       }
       if (newDashboardElements[key].vis_config.custom_color) {
-        newDashboardElements[key].vis_config.custom_color = newColorSeries[0]
+        newDashboardElements[key].vis_config.custom_color = newColorSeries[newColorSeries.length - 2];
       }
       if (newDashboardElements[key].vis_config.map_value_colors) {
         newDashboardElements[key].vis_config.map_value_colors.map((item, index) => {
@@ -103,7 +110,20 @@ export default function Dashboard(props) {
           }
         })
       }
+      if (newDashboardElements[key].vis_config.header_font_color) {
+        newDashboardElements[key].vis_config.header_font_color = newColorSeries[newColorSeries.length - 2];
+      }
+      if (isThemeableDashboard) {
+        // console.log("are we here????");
+        if (newDashboardElements[key].vis_config.map_tile_provider) {
+          newDashboardElements[key].vis_config.map_tile_provider = lightThemeToggleValue ? "light" : "dark";
+        }
+
+      }
     })
+    // console.log('1111')
+    // console.log({ newDashboardElements })
+
     setVisColorToggleValue(newValue)
     dashboardObj.setOptions({ "elements": { ...newDashboardElements } })
   };

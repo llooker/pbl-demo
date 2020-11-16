@@ -25,7 +25,7 @@ export default function ToggleVisColor({ lookerContent, classes, type, visColorT
                 key={validIdHelper(`dynamicDashVisConfigToggle-${key}`)}
                 value={key} aria-label="left aligned">
                 <span className={`${classes.dot}`} style={{
-                  backgroundColor: (lookerContent[0].dynamicVisConfig.colors[key][lookerContent[0].dynamicVisConfig.colors[key].length - 1]
+                  backgroundColor: (lookerContent[0].dynamicVisConfig.colors[key][lookerContent[0].dynamicVisConfig.colors[key].length - 2]
                     || key)
                 }}></span>
               </ToggleButton>
