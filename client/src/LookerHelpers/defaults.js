@@ -83,6 +83,7 @@ module.exports = {
       "download_without_limit",
       "explore",
       "see_sql"
+    ]
   },
   lookerUserTimeHorizonMap: {
     "basic": "last 182 days",
