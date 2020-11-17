@@ -7,15 +7,25 @@ const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 
 require('dotenv').config();
-
-const pgPool = new pg.Pool({
-  // Insert pool options here
-  database: process.env.POSTGRES_DATABASE_NAME,
-  user: process.env.POSTGRES_USERNAME,
-  password: process.env.POSTGRES_PASSWORD,
-  port: 5432,
-  host: process.env.POSTGRES_IP_ADDRESS,
-});
+let pgPool;
+if (process.env.NODE_ENV === 'production') {
+  pgPool = new pg.Pool({
+    // Insert pool options here
+    database: process.env.POSTGRES_DATABASE_NAME,
+    user: process.env.POSTGRES_USERNAME,
+    password: process.env.POSTGRES_PASSWORD,
+    host: `cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}/.s.PGSQL.5432`,
+  });
+} else {
+  pgPool = new pg.Pool({
+    // Insert pool options here
+    database: process.env.POSTGRES_DATABASE_NAME,
+    user: process.env.POSTGRES_USERNAME,
+    password: process.env.POSTGRES_PASSWORD,
+    port: 5432,
+    host: process.env.POSTGRES_IP_ADDRESS,
+  });
+}
 
 const sess = {
   store: new pgSession({
