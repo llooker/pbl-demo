@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'production') {
     database: process.env.POSTGRES_DATABASE_NAME,
     user: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,
-    host: `cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}/.s.PGSQL.5432`,
+    host: `cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`,
   });
 } else {
   pgPool = new pg.Pool({
