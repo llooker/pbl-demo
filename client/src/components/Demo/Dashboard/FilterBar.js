@@ -17,6 +17,7 @@ export default function FilterBar(props) {
     horizontalLayout, setHorizontalLayout, drawerOpen, setDrawerOpen
   } = props;
 
+
   const [expanded, setExpanded] = useState(true);
 
   useEffect(() => {
@@ -70,11 +71,6 @@ export default function FilterBar(props) {
                     aria-label="open menu"
                   />}
               </>}
-            {drawerOpen ?
-              <>
-                <FilterList className={classes.ml12} />
-                <Typography className={`${classes.heading} ${classes.ml12}`}>Filter:</Typography>
-              </> : ''}
 
           </AccordionSummary>
           <Box display={drawerOpen ? "block" : "none"}>

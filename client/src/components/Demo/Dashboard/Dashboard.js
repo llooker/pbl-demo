@@ -38,7 +38,7 @@ export default function Dashboard(props) {
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
-  const [horizontalLayout, setHorizontalLayout] = useState(true);
+  const [horizontalLayout, setHorizontalLayout] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(true);
 
   const isThemeableDashboard = validIdHelper(`${demoComponentType}${lookerContent[0].id}`) === 'customfilter1';
@@ -146,7 +146,7 @@ export default function Dashboard(props) {
       themeName += `_${fontThemeSelectValue}`;
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
       setApiContent(undefined);
-      setHorizontalLayout(true);
+      setHorizontalLayout(false);
       setDrawerOpen(true);
     }
   }, [lookerUser, isReady, selectedMenuItem])
