@@ -6,8 +6,11 @@ const session = require('express-session');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 
+
+
 require('dotenv').config();
 let pgPool;
+// let knex;
 if (process.env.NODE_ENV === 'production') {
   pgPool = new pg.Pool({
     // Insert pool options here
@@ -27,14 +30,27 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+pgPool.connect((err, client, release) => {
+  if (err) {
+    return console.error('Error acquiring client', err.stack)
+  }
+  client.query('SELECT NOW()', (err, result) => {
+    release()
+    if (err) {
+      return console.error('Error executing query', err.stack)
+    }
+    console.log(result.rows)
+  })
+})
+
 const sess = {
+  secret: 'keyboard catv1.0.4',
+  resave: true,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days,
   store: new pgSession({
     pool: pgPool,                // Connection pool
     tableName: 'session'   // Use another table-name than the default "session" one
   }),
-  secret: 'keyboard catv1.0.4',
-  resave: true,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
 }
 
 if (app.get('env') === 'production') {
@@ -69,6 +85,5 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
-
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
