@@ -46,9 +46,7 @@ function App(props) {
     else setIsReady(false)
   }, [clientSession, sdk])
 
-  useEffect(() => {
-    // console.log({ isReady })
-  }, [isReady])
+  console.log({ clientSession })
 
   return (
     < Router >
