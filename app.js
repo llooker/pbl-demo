@@ -6,25 +6,38 @@ const session = require('express-session');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 
-require('dotenv').config();
 
-const pgPool = new pg.Pool({
-  // Insert pool options here
-  database: process.env.POSTGRES_DATABASE_NAME,
-  user: process.env.POSTGRES_USERNAME,
-  password: process.env.POSTGRES_PASSWORD,
-  port: 5432,
-  host: process.env.POSTGRES_IP_ADDRESS,
-});
+
+require('dotenv').config();
+let pgPool;
+// let knex;
+if (process.env.NODE_ENV === 'production') {
+  pgPool = new pg.Pool({
+    // Insert pool options here
+    database: process.env.POSTGRES_DATABASE_NAME,
+    user: process.env.POSTGRES_USERNAME,
+    password: process.env.POSTGRES_PASSWORD,
+    host: `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`,
+  });
+} else {
+  pgPool = new pg.Pool({
+    // Insert pool options here
+    database: process.env.POSTGRES_DATABASE_NAME,
+    user: process.env.POSTGRES_USERNAME,
+    password: process.env.POSTGRES_PASSWORD,
+    port: 5432,
+    host: process.env.POSTGRES_IP_ADDRESS,
+  });
+}
 
 const sess = {
+  secret: 'keyboard catv1.0.4',
+  resave: true,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days,
   store: new pgSession({
     pool: pgPool,                // Connection pool
     tableName: 'session'   // Use another table-name than the default "session" one
   }),
-  secret: 'keyboard catv1.0.4',
-  resave: true,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
 }
 
 if (app.get('env') === 'production') {
@@ -59,6 +72,5 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
-
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

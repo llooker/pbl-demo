@@ -19,7 +19,6 @@ function App(props) {
     async function fetchSession() {
 
       const sessionResponse = await checkForExistingSession();
-      // console.log({ sessionResponse })
       if (sessionResponse.session && sessionResponse.session.userProfile) {
 
         const lookerHost = sessionResponse.session.lookerHost ? sessionResponse.session.lookerHost : '';
@@ -45,10 +44,6 @@ function App(props) {
     }
     else setIsReady(false)
   }, [clientSession, sdk])
-
-  useEffect(() => {
-    // console.log({ isReady })
-  }, [isReady])
 
   return (
     < Router >
