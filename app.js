@@ -30,19 +30,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-pgPool.connect((err, client, release) => {
-  if (err) {
-    return console.error('Error acquiring client', err.stack)
-  }
-  client.query('SELECT NOW()', (err, result) => {
-    release()
-    if (err) {
-      return console.error('Error executing query', err.stack)
-    }
-    console.log(result.rows)
-  })
-})
-
 const sess = {
   secret: 'keyboard catv1.0.4',
   resave: true,
