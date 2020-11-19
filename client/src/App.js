@@ -19,7 +19,7 @@ function App(props) {
     async function fetchSession() {
 
       const sessionResponse = await checkForExistingSession();
-      // console.log({ sessionResponse })
+      console.log({ sessionResponse })
       if (sessionResponse.session && sessionResponse.session.userProfile) {
 
         const lookerHost = sessionResponse.session.lookerHost ? sessionResponse.session.lookerHost : '';
