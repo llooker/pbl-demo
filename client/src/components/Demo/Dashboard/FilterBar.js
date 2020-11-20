@@ -3,12 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Grid, Accordion, AccordionSummary, AccordionDetails, Box } from '@material-ui/core'
 import { ExpandMore, FilterList, VerticalSplit, HorizontalSplit, ChevronLeft, Menu } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab'
-
 import FilterBarChildren from './FilterBarChildren'
 
 const { validIdHelper } = require('../../../tools');
-
-
 
 export default function FilterBar(props) {
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
@@ -37,9 +34,6 @@ export default function FilterBar(props) {
           elevation={0}
         >
           <AccordionSummary
-            // expandIcon={horizontalLayout ? <ExpandMore onClick={() => {
-            //   setExpanded(!expanded)
-            // }} /> : ''}
             expandIcon={horizontalLayout ? <ExpandMore /> : ""}
             aria-controls="panel1a-content"
             id="panel1a-header"

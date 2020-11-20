@@ -58,7 +58,6 @@ export function EmbeddedQuery({ lookerContent, classes, id }) {
     // ${classes.overflowHidden} 
     ${classes.lookerCardShadow}
     `}
-    // variant="outlined"
     >
       <div
         className={`${classes.overflowHidden}`}

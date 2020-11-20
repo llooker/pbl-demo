@@ -63,7 +63,7 @@ export default makeStyles((theme) => ({
     position: 'relative'
   },
   skeleton: {
-    height: 160,
+    height: '100%', //changed from 160
     width: '100%'
   },
   height100Percent: {
