@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const sess = {
-  secret: 'keyboard catv1.0.4',
+  secret: 'keyboard catv1.0.5',
   resave: true,
   cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days,
   store: new pgSession({
