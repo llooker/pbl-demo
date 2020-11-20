@@ -21,9 +21,10 @@ function App(props) {
       const sessionResponse = await checkForExistingSession();
       if (sessionResponse.session && sessionResponse.session.userProfile) {
 
-        const lookerHost = sessionResponse.session.lookerHost ? sessionResponse.session.lookerHost : '';
-        const accessToken = sessionResponse.session.lookerApiToken ? sessionResponse.session.lookerApiToken.api_user_token : '';
-        const sdk = createSdkHelper({ lookerHost, accessToken })
+        const lookerBaseUrl = sessionResponse.lookerBaseUrl ? sessionResponse.lookerBaseUrl : '';
+        const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : '';
+        const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
+
         // console.log({ sdk })
         setClientSession(sessionResponse.session)
         setSdk(sdk)
@@ -37,13 +38,14 @@ function App(props) {
     // console.log({ sdk })
     if (clientSession && sdk) setIsReady(true)
     else if (clientSession.userProfile) {
-      const lookerHost = clientSession.lookerHost ? clientSession.lookerHost : '';
+      const lookerBaseUrl = clientSession.lookerBaseUrl ? clientSession.lookerBaseUrl : '';
       const accessToken = clientSession.lookerApiToken ? clientSession.lookerApiToken.api_user_token : '';
-      const sdk = createSdkHelper({ lookerHost, accessToken })
+      const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
       setSdk(sdk)
     }
     else setIsReady(false)
   }, [clientSession, sdk])
+
 
   return (
     < Router >

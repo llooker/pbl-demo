@@ -37,25 +37,18 @@ export const endSession = async () => {
       'Content-Type': 'application/json'
     }
   })
-  localStorage.clear();
   const endSessionResponseData = await endSessionResponse.json();
   return { message: endSessionResponse };
 }
 
-export const createSdkHelper = ({ accessToken, lookerHost }) => {
+export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
   // console.log('createSdkHelper')
   // console.log({ accessToken })
-  // console.log({ lookerHost })
-  //this line plus .env file is going to need to change once pbl is migrated
-  //let baseUrlToUse = lookerHost === 'pbldev' ? `https://${lookerHost}.looker.com` : `https://${lookerHost}.looker.com:19999`;
+  // console.log({ lookerBaseUrl })
 
-  //good to go once looker instance updated, will need to change .env in app engine
-  let baseUrlToUse = `https://${lookerHost}.looker.com`;
-
-  // console.log({ baseUrlToUse })
   const pblsession = new PblSessionEmbed({
     ...DefaultSettings(),
-    base_url: baseUrlToUse,
+    base_url: lookerBaseUrl,
     accessToken
   });
 
@@ -63,34 +56,9 @@ export const createSdkHelper = ({ accessToken, lookerHost }) => {
   return sdk;
 }
 
-export const checkToken = async (expires_in) => { //sdk
+export const checkToken = async (expires_in) => {
   // console.log('checkToken')
 
-  //valid sdk implementation
-  // try {
-  //   let meTest = await sdk.ok(sdk.me())
-  //   // console.log({ meTest })
-  //   return { status: "ok" }
-
-  // } catch (error) {
-  //   // console.log({ error })
-  //   let sessionResponse = await fetch('/refreshlookertoken', {
-  //     method: 'GET',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //   const sessionResponseData = await sessionResponse.json();
-  //   // console.log({ sessionResponseData })
-  //   const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-  //   const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
-  //   const sdk = createSdkHelper({ lookerHost, accessToken })
-
-  //   return { status: "updated", sdk, clientSession: sessionResponseData.session }
-  // }
-
-  //time-based implementation
   if (Date.now() > expires_in) {
     let sessionResponse = await fetch('/refreshlookertoken', {
       method: 'GET',
@@ -100,9 +68,10 @@ export const checkToken = async (expires_in) => { //sdk
       }
     })
     const sessionResponseData = await sessionResponse.json();
-    const lookerHost = sessionResponseData.session.lookerHost ? sessionResponseData.session.lookerHost : this.state.lookerHost;
-    const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
-    const sdk = createSdkHelper({ lookerHost, accessToken })
+
+    const lookerBaseUrl = sessionResponseData.lookerBaseUrl ? sessionResponseData.lookerBaseUrl : '';
+    const accessToken = sessionResponseData.lookerApiToken ? sessionResponseData.lookerApiToken.api_user_token : '';
+    const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
 
     return { status: "updated", sdk, clientSession: sessionResponseData.session }
 

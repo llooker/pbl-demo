@@ -14,8 +14,6 @@ export default function Toggle({ lookerContent,
   value,
   onChange }) {
 
-  console.log({ value })
-  console.log({ onChange })
 
   // const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
   return (

@@ -210,7 +210,8 @@ export default function Dashboard(props) {
         .then((dashboard) => {
           setIFrame(1)
           setDashboardObj(dashboard)
-          LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+          LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+
 
         })
         .catch((error) => {

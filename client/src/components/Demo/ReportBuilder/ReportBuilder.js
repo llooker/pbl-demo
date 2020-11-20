@@ -116,8 +116,6 @@ export default function ReportBuilder(props) {
   }
 
   const performLookerApiCalls = function (lookerContent, animateLoad) {
-    // console.log('performLookerApiCalls')
-    // console.log('lookerContent', lookerContent)
     if (animateLoad) {
       handleChange('refresh', 0)
       setIFrame(0)
@@ -196,7 +194,9 @@ export default function ReportBuilder(props) {
                 .connect()
                 .then((look) => {
                   // setIFrame(1)
-                  LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+                  LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+
+
                 })
                 .catch((error) => {
                   console.error('Connection error', error)
@@ -232,7 +232,8 @@ export default function ReportBuilder(props) {
                   setTimeout(() => {
                     // setIFrame(1)
                   }, 1000)
-                  LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+                  LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+
                 })
                 .catch((error) => {
                   console.error('Connection error', error)
@@ -272,7 +273,8 @@ export default function ReportBuilder(props) {
               setIFrame(1)
               setExploreObj(explore)
               // }, 1000)
-              LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+              LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+
               setQid(null)
             })
             .catch((error) => {
@@ -293,7 +295,8 @@ export default function ReportBuilder(props) {
               setIFrame(1)
               setExploreObj(explore)
               // }, 1000)
-              LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+              LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+
               // setQid(null)
             })
             .catch((error) => {

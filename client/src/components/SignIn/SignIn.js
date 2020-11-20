@@ -25,9 +25,9 @@ export default function SignIn(props) {
     } else {
       let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialLookerUser })
 
-      const lookerHost = newSession.session.lookerHost ? newSession.session.lookerHost : '';
+      const lookerBaseUrl = newSession.session.lookerBaseUrl ? newSession.session.lookerBaseUrl : '';
       const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
-      const sdk = createSdkHelper({ lookerHost, accessToken })
+      const sdk = createSdkHelper({ lookerBaseUrl, accessToken })
 
       setClientSession(newSession.session);
       setSdk(sdk)

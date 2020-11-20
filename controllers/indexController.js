@@ -1,8 +1,5 @@
 'use strict'
-
-const lookerHostNameToUse = process.env.LOOKER_HOST.substr(0, process.env.LOOKER_HOST.indexOf('.'));
-
-const { createSignedUrl, } = require('../server_utils/auth_utils')
+const { createSignedUrl } = require('../server_utils/auth_utils')
 const { Looker40SDK, Looker31SDK, NodeSession, NodeSettingsIniFile } = require('@looker/sdk')
 const settings = new NodeSettingsIniFile()
 const sdkSession = new NodeSession(settings)
@@ -18,7 +15,8 @@ module.exports.writeSession = async (req, res, next) => {
   let { session } = req;
   session.userProfile = req.body.userProfile;
   session.lookerUser = req.body.lookerUser;
-  session.lookerHost = lookerHostNameToUse;
+  session.lookerHost = process.env.LOOKER_HOST;
+  session.lookerBaseUrl = process.env.LOOKERSDK_BASE_URL;
   session.lookerUser.external_user_id = session.userProfile.email;
   session.lookerUser.first_name = session.userProfile.givenName;
   session.lookerUser.last_name = session.userProfile.familyName;

@@ -43,7 +43,9 @@ export function EmbeddedQuery({ lookerContent, classes, id }) {
           .then((explore) => {
             // console.log('then explore', explore)
             setIFrame(1)
-            LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+            // LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
+            LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+
           })
           .catch((error) => {
             // console.log('catch', error)

@@ -66,6 +66,7 @@ export default function Home(props) {
   const corsApiCall = async (func, args = []) => {
     // console.log("corsApiCall")
     let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
+    // console.log({ checkTokenRsp })
     if (checkTokenRsp.sdk) setSdk(checkTokenRsp.sdk)
     if (checkTokenRsp.clientSession) setClientSession(checkTokenRsp.clientSession)
     let res = func(...args)
@@ -77,8 +78,7 @@ export default function Home(props) {
     const usecaseFromUrl = usecaseHelper(UsecaseContent);
     setActiveUsecase(usecaseFromUrl);
 
-    LookerEmbedSDK.init(`https://${clientSession.lookerHost}.looker.com`, '/auth');
-
+    LookerEmbedSDK.init(clientSession.lookerBaseUrl, '/auth')
     window.addEventListener("resize", () => {
       setDrawerOpen(window.innerWidth > 768 ? true : false)
     });
