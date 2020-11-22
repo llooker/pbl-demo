@@ -46,18 +46,22 @@ export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
   // console.log({ accessToken })
   // console.log({ lookerBaseUrl })
 
-  const pblsession = new PblSessionEmbed({
-    ...DefaultSettings(),
-    base_url: lookerBaseUrl,
-    accessToken
-  });
+  if (accessToken && lookerBaseUrl) { //added 11/22
+    const pblsession = new PblSessionEmbed({
+      ...DefaultSettings(),
+      base_url: lookerBaseUrl,
+      accessToken
+    });
 
-  let sdk = new Looker40SDK(pblsession);
-  return sdk;
+    let sdk = new Looker40SDK(pblsession);
+    return sdk;
+  }
+
 }
 
 export const checkToken = async (expires_in) => {
   // console.log('checkToken')
+  // console.log({ expires_in })
 
   if (Date.now() > expires_in) {
     let sessionResponse = await fetch('/refreshlookertoken', {

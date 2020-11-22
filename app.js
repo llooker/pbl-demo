@@ -6,11 +6,9 @@ const session = require('express-session');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 
-
-
 require('dotenv').config();
+
 let pgPool;
-// let knex;
 if (process.env.NODE_ENV === 'production') {
   pgPool = new pg.Pool({
     // Insert pool options here

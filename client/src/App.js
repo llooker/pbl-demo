@@ -25,7 +25,6 @@ function App(props) {
         const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : '';
         const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
 
-        // console.log({ sdk })
         setClientSession(sessionResponse.session)
         setSdk(sdk)
       }
@@ -34,8 +33,6 @@ function App(props) {
   }, [])
 
   useEffect(() => {
-    // console.log({ clientSession })
-    // console.log({ sdk })
     if (clientSession && sdk) setIsReady(true)
     else if (clientSession.userProfile) {
       const lookerBaseUrl = clientSession.lookerBaseUrl ? clientSession.lookerBaseUrl : '';
@@ -91,8 +88,6 @@ const PrivateRoute = ({
   isSignedIn,
   setInitialHref,
   ...rest }) => {
-  // console.log('PrivateRoute')
-  // console.log({ isSignedIn })
 
   if (!isSignedIn) setInitialHref(window.location.href);
   else setInitialHref()
@@ -116,9 +111,6 @@ const PublicRoute = ({ component: Component,
   // restricted, 
   initialHref,
   ...rest }) => {
-  // console.log('PublicRoute')
-  // console.log({ isSignedIn })
-  // console.log({ initialHref })
 
 
   const demoComponentMap = {

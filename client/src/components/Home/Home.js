@@ -67,8 +67,12 @@ export default function Home(props) {
     // console.log("corsApiCall")
     let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
     // console.log({ checkTokenRsp })
-    if (checkTokenRsp.sdk) setSdk(checkTokenRsp.sdk)
-    if (checkTokenRsp.clientSession) setClientSession(checkTokenRsp.clientSession)
+    if (checkTokenRsp.sdk) {
+      setSdk(checkTokenRsp.sdk)
+    }
+    if (checkTokenRsp.clientSession) {
+      setClientSession(checkTokenRsp.clientSession)
+    }
     let res = func(...args)
     return res
   }
@@ -122,6 +126,8 @@ export default function Home(props) {
   const DemoComponentContent = _.find(UsecaseContent[activeUsecase].demoComponents, (o) => {
     return selectedMenuItem === validIdHelper(_.lowerCase(o.label));
   });
+
+  // console.log({ sdk })
 
   return (
     <div className={classes.root} >
