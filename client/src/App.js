@@ -40,7 +40,7 @@ function App(props) {
       const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
       setSdk(sdk)
     }
-    else setIsReady(false)
+    // else setIsReady(false)
   }, [clientSession, sdk])
 
 

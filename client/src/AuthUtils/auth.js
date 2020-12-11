@@ -60,10 +60,14 @@ export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
 }
 
 export const checkToken = async (expires_in) => {
-  // console.log('checkToken')
-  // console.log({ expires_in })
+  // console.log('checkToken');
+  // console.log({ expires_in });
+  // console.log('Date.now()', Date.now());
+  // let dateeee = new Date(expires_in);
+  // console.log({ dateeee })
 
-  if (Date.now() > expires_in) {
+  if ((Date.now()) > expires_in) {
+    // console.log('inside iff')
     let sessionResponse = await fetch('/refreshlookertoken', {
       method: 'GET',
       headers: {
@@ -72,13 +76,15 @@ export const checkToken = async (expires_in) => {
       }
     })
     const sessionResponseData = await sessionResponse.json();
-
-    const lookerBaseUrl = sessionResponseData.lookerBaseUrl ? sessionResponseData.lookerBaseUrl : '';
-    const accessToken = sessionResponseData.lookerApiToken ? sessionResponseData.lookerApiToken.api_user_token : '';
+    const lookerBaseUrl = sessionResponseData.session.lookerBaseUrl ? sessionResponseData.session.lookerBaseUrl : '';
+    const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
     const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
 
     return { status: "updated", sdk, clientSession: sessionResponseData.session }
 
-  } else return { status: "ok" }
+  } else {
+    // console.log("inside ellse")
+    return { status: "ok" }
+  }
 }
 

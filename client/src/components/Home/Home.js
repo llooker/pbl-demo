@@ -64,9 +64,9 @@ export default function Home(props) {
 
 
   const corsApiCall = async (func, args = []) => {
-    // console.log("corsApiCall")
+    // console.log("corsApiCall");
+
     let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
-    // console.log({ checkTokenRsp })
     if (checkTokenRsp.sdk) {
       setSdk(checkTokenRsp.sdk)
     }
@@ -105,8 +105,6 @@ export default function Home(props) {
     setSelectedMenuItem(democomponent)
   }, [democomponent])
 
-
-
   const themeMap = {
     "atom": atomTheme,
   }
@@ -127,7 +125,6 @@ export default function Home(props) {
     return selectedMenuItem === validIdHelper(_.lowerCase(o.label));
   });
 
-  // console.log({ sdk })
 
   return (
     <div className={classes.root} >
