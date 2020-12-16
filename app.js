@@ -6,7 +6,12 @@ const session = require('express-session');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 
-require('dotenv').config();
+
+require('dotenv').config({ path: ".env.vision" });
+console.log('NODE_ENV', process.env.NODE_ENV)
+console.log('HOST', process.env.HOST)
+console.log('LOOKERSDK_BASE_URL', process.env.LOOKERSDK_BASE_URL)
+
 
 let pgPool;
 if (process.env.NODE_ENV === 'production') {

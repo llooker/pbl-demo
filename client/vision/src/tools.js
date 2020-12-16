@@ -1,0 +1,72 @@
+// import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, FindInPage, Code, TableChartOutlined, LibraryBooksOutlined, Menu, ChevronLeft } from '@material-ui/icons';
+// import HomeIcon from '@material-ui/icons/Home';
+
+module.exports = {
+  makeid: (length) => {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  },
+
+
+  validIdHelper: (str) => {
+    // console.log('validIdHelper')
+    // console.log('str', str)
+    //need to replace special characters that may be associated with id...
+    return str.replace(/[^a-zA-Z0-9-.#]/g, "")
+  },
+
+  prettifyString: (str) => {
+    var i, frags = str.split('_');
+    for (i = 0; i < frags.length; i++) {
+      frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+    }
+    return frags.join(' ');
+  },
+
+  getUrlVars: (url) => {
+    var hash;
+    var myJson = {};
+    var hashes = url.slice(url.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+      hash = hashes[i].split('=');
+      myJson[hash[0]] = hash[1];
+      // If you want to get in native datatypes
+      // myJson[hash[0]] = JSON.parse(hash[1]); 
+    }
+    return myJson;
+  },
+
+
+  decodeHtml: (html) => {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  },
+
+
+  usecaseHelper: (usecaseContent) => {
+    let keyArr = Object.keys(usecaseContent);
+    let url = window.location.href;
+    for (let i = 0; i < keyArr.length; i++) {
+      if (url.indexOf(keyArr[i]) > -1) {
+        return keyArr[i];
+      }
+    }
+    return 'atom';
+  },
+  //not working
+  // demoComponentIconMap: {
+  //   "home": HomeIcon,
+  //   "inventoryoverview": VisibilityOutlined,
+  //   "webanalytics": ShowChart,
+  //   "salesoverview": TableChartOutlined,
+  //   "salescalendar": DateRangeOutlined,
+  //   "querybuilder": Search,
+  //   "savedreports": LibraryBooksOutlined
+  // }
+}
