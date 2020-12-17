@@ -1,27 +1,22 @@
 service: atom-fashion
-runtime: nodejs12
+runtime: nodejs
 env: flex
 manual_scaling:
   instances: 1
 
 resources:
-  cpu: .5
-  memory_gb: 0.5
-  disk_size_gb: 1000
+  cpu: 96
+  memory_gb: 12.6
+  disk_size_gb: 10240
 
 handlers:
   - url: /
-    static_files: client/build/index.html
-    upload: client/build/index.html
+    static_files: client/atom/build/index.html
+    upload: client/atom/build/index.html
   - url: /
-    static_dir: client/build
+    static_dir: client/atom/build
 
 includes:
   - env_variables.yaml
 beta_settings:
   cloud_sql_instances: pbl-demo-2020-281322:asia-northeast1:data-applications
-
-# steps:
-#   - name: node:12
-#   entrypoint: npm
-#   args: ['install']
