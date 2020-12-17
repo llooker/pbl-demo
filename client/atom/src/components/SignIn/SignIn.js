@@ -36,10 +36,14 @@ export default function SignIn(props) {
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
   const usecaseFromUrl = usecaseHelper(UsecaseContent);
 
+  console.log({ usecaseFromUrl })
+
   const classes = useStyles();
   const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
-  const backgroundImage = require(`../../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`);
-  const logoImage = require(`../../images/${usecaseFromUrl}_logo_black.svg`)
+
+  const backgroundImage = require(`../../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`).default;
+  const logoImage = require(`../../images/${usecaseFromUrl}_logo_black.svg`).default
+
 
   return (
     <div className={`${classes.root} demoComponent ${classes.h100}`}>

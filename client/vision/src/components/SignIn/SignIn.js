@@ -37,9 +37,9 @@ export default function SignIn(props) {
   const usecaseFromUrl = usecaseHelper(UsecaseContent);
 
   const classes = useStyles();
-  const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
-  const backgroundImage = require(`../../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`);
-  const logoImage = require(`../../images/${usecaseFromUrl}_logo_black.svg`)
+  // const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
+  const backgroundImage = require(`../../images/${usecaseFromUrl}_fraud_background.jpg`).default;
+  const logoImage = require(`../../images/${usecaseFromUrl}_logo_black.svg`).default;
 
   return (
     <div className={`${classes.root} demoComponent ${classes.h100}`}>
@@ -62,7 +62,7 @@ export default function SignIn(props) {
                   Welcome
                             </Typography>
                 <Typography variant="body2" component="p">
-                  Please sign in to access <br /> your merchant portal
+                  Please sign in to access <br /> your fraud examiner portal
                             </Typography>
               </CardContent>
               <CardActions className={`${classes.actions}`} >

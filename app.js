@@ -7,7 +7,7 @@ const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 
 
-require('dotenv').config({ path: ".env.vision" });
+require('dotenv').config({ path: ".env.vision" }); //problematic
 console.log('NODE_ENV', process.env.NODE_ENV)
 console.log('HOST', process.env.HOST)
 console.log('LOOKERSDK_BASE_URL', process.env.LOOKERSDK_BASE_URL)

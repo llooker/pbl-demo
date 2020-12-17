@@ -35,7 +35,7 @@ export default function TopBar(props) {
 
         {activeUsecase ?
           <Avatar alt="Icon"
-            src={require(`../../images/${activeUsecase}.svg`)}
+            src={require(`../../images/${activeUsecase}.svg`).default}
             variant="square"
           /> : ''}
 
