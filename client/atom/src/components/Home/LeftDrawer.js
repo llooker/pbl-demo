@@ -75,6 +75,17 @@ function MenuList(props) {
     "reportbuilder14": LibraryBooksOutlined,
   }
 
+
+  // const demoComponentIconMap = {
+  //   "home": HomeIcon,
+  //   "inventoryoverview": VisibilityOutlined,
+  //   "webanalytics": ShowChart,
+  //   "salesoverview": TableChartOutlined,
+  //   "salescalendar": DateRangeOutlined,
+  //   "querybuilder": Search,
+  //   "savedreports": LibraryBooksOutlined
+  // };
+
   return (<List
     component="nav"
     aria-labelledby="nested-list-subheader"
