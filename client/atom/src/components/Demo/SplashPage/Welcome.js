@@ -3,7 +3,6 @@ import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 
 import AppContext from '../../../contexts/AppContext';
 import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, CircularProgress, Grid, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { NaturalLanguage } from './NaturalLanguage';
 const { validIdHelper } = require('../../../tools');
 
