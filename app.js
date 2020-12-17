@@ -9,7 +9,7 @@ const pgSession = require('connect-pg-simple')(session);
 //how can we make this dynamic???
 //Nick thinks we sholdn't have to use dotenv
 //for node file our env variables should be read automatically b/c of the source command when starting app
-require('dotenv').config({ path: ".env.vision" });
+require('dotenv').config({ path: ".env.atom" });
 console.log('NODE_ENV', process.env.NODE_ENV)
 console.log('HOST', process.env.HOST)
 console.log('LOOKERSDK_BASE_URL', process.env.LOOKERSDK_BASE_URL)
