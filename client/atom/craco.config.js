@@ -1,7 +1,6 @@
 const path = require("path");
 const { getLoader, loaderByName } = require("@craco/craco");
 const absolutePath = path.join(__dirname, "../shared/components");
-console.log({ absolutePath })
 module.exports = {
   webpack: {
     alias: {},
@@ -15,7 +14,7 @@ module.exports = {
         const include = Array.isArray(match.loader.include)
           ? match.loader.include
           : [match.loader.include];
-        match.loader.include = include.concat[absolutePath];
+        match.loader.include = include.concat(absolutePath);
       }
       return webpackConfig;
     }
