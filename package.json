@@ -9,9 +9,9 @@
     "server": "nodemon app.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "start": "node app.js",
-    "atom": "source .env.atom && concurrently --kill-others-on-fail \"npm run server\" \"npm run atom_client\"",
+    "atom": "concurrently --kill-others-on-fail \"npm run server\" \"npm run atom_client\"",
     "atom_client": "cd client/atom && npm start",
-    "vision": "source .env.vision && concurrently --kill-others-on-fail \"npm run server\" \"npm run vision_client\"",
+    "vision": "concurrently --kill-others-on-fail \"npm run server\" \"npm run vision_client\"",
     "vision_client": "cd client/vision && npm start"
   },
   "author": "",
