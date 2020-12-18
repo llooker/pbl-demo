@@ -43,6 +43,8 @@ function App(props) {
     // else setIsReady(false)
   }, [clientSession, sdk])
 
+  console.log({ clientSession })
+
 
   return (
     < Router >

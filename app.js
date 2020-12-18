@@ -13,7 +13,7 @@ const pgSession = require('connect-pg-simple')(session);
 if (process.env.NODE_ENV === 'production') {
   require('dotenv').config();
 } else {
-  require('dotenv').config({ path: ".env.vision" });
+  require('dotenv').config({ path: ".env.atom" });
 }
 
 

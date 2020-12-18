@@ -36,8 +36,6 @@ export default function SignIn(props) {
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
   const usecaseFromUrl = usecaseHelper(UsecaseContent);
 
-  console.log({ usecaseFromUrl })
-
   const classes = useStyles();
   const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
 
