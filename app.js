@@ -10,11 +10,10 @@ const pgSession = require('connect-pg-simple')(session);
 //Nick thinks we sholdn't have to use dotenv
 //for node file our env variables should be read automatically b/c of the source command when starting app
 
-if (process.env.NODE_ENV === 'production') {
-  require('dotenv').config();
-} else {
-  require('dotenv').config({ path: ".env.atom" });
-}
+// if (process.env.NODE_ENV === 'production') {
+require('dotenv').config();
+// require('dotenv').config({ path: ".env.atom" });
+
 
 
 console.log('NODE_ENV', process.env.NODE_ENV)
