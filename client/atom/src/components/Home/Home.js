@@ -16,9 +16,6 @@ import MonetizationModal from '../Demo/MonetizationModal/MonetizationModal';
 
 import SplashPage from '../Demo/SplashPage/SplashPage';
 import Dashboard from '../Demo/Dashboard/Dashboard';
-// import { Button } from "@monorepo/components";
-// import { Dashboard } from "@pbl-demo/components"
-import { Button } from "@pbl-demo/components";
 
 import CustomVis from '../Demo/CustomVis/CustomVis';
 import ReportBuilder from '../Demo/ReportBuilder/ReportBuilder';
@@ -159,7 +156,6 @@ export default function Home(props) {
           >
 
             <div className={classes.drawerHeader} />
-            <Button>Hello world?????</Button>
             {DemoComponentContent ? <DemoComponent staticContent={DemoComponentContent} /> : ''}
           </main>
         </ThemeProvider>

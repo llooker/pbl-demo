@@ -43,7 +43,7 @@ function App(props) {
     // else setIsReady(false)
   }, [clientSession, sdk])
 
-  console.log({ clientSession })
+  // console.log({ clientSession })
 
 
   return (
@@ -123,10 +123,9 @@ const PublicRoute = ({ component: Component,
     "salescalendar": "CustomVis",
     "querybuilder": "QueryBuilder",
     "savedreports": "ReportBuilder",
-    "unemployment": "Dashboard"
   };
 
-  let urlToUse = '/analytics/unemployment';
+  let urlToUse = '/analytics/home';
   if (initialHref) {
     let initialHrefArr = initialHref.split('/');
     let lastTwoHrefArr = initialHrefArr.slice(-2);

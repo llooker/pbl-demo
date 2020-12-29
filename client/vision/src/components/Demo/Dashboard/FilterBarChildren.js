@@ -1,7 +1,6 @@
 import React from 'react';
 import { Grid } from '@material-ui/core'
 
-import AutoComplete from './AutoComplete'
 import MapFilter from './MapFilter'
 import RangeSlider from './RangeSlider'
 import ToggleApi from './ToggleApi'
@@ -9,6 +8,8 @@ import ToggleTile from './ToggleTile'
 import ToggleVisColor from './ToggleVisColor'
 import SwitchTheme from './SwitchTheme'
 import SelectFont from './SelectFont'
+import { AutoComplete } from "@pbl-demo/components";
+
 
 const { validIdHelper } = require('../../../tools');
 
