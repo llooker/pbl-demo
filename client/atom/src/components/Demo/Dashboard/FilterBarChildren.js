@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid } from '@material-ui/core'
 
-import AutoComplete from './AutoComplete'
+// import AutoComplete from './AutoComplete'
 import MapFilter from './MapFilter'
 import RangeSlider from './RangeSlider'
 import ToggleApi from './ToggleApi'
@@ -9,6 +9,10 @@ import ToggleTile from './ToggleTile'
 import ToggleVisColor from './ToggleVisColor'
 import SwitchTheme from './SwitchTheme'
 import SelectFont from './SelectFont'
+
+import { Button } from "@pbl-demo/components";
+import { AutoComplete } from "@pbl-demo/components";
+
 
 const { validIdHelper } = require('../../../tools');
 
@@ -132,6 +136,9 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
         />
         : ''
       }
+
+
+      <Button>Hello world?????</Button>
     </Grid>
   )
 }
