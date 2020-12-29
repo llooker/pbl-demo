@@ -13,5 +13,8 @@
     "atom/*",
     "vision/*",
     "shared/*"
-  ]
+  ],
+  "dependencies": {
+    "@material-ui/styles": "^4.0.0"
+  }
 }

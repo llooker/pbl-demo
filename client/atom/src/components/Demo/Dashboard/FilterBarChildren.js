@@ -18,7 +18,8 @@ const { validIdHelper } = require('../../../tools');
 
 export default function FilterBarChildren({ classes, apiContent, customFilterAction, tileToggleValue, handleTileToggle, visColorToggleValue,
   handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange, horizontalLayout, setHorizontalLayout,
-  lookerContent, type }) {
+  lookerContent, type
+}) {
   return (
     <Grid
       container spacing={3}>

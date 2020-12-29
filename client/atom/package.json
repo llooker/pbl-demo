@@ -12,7 +12,6 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/pickers": "^3.2.10",
-    "@material-ui/styles": "^4.9.10",
     "@nivo/calendar": "^0.61.1",
     "@nivo/line": "^0.61.1",
     "@svg-maps/usa": "^1.1.1",
