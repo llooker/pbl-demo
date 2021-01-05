@@ -16,10 +16,10 @@ require('dotenv').config();
 
 
 
-console.log('NODE_ENV', process.env.NODE_ENV)
-console.log('HOST', process.env.HOST)
-console.log('LOOKERSDK_BASE_URL', process.env.LOOKERSDK_BASE_URL)
-console.log('PACKAGE_NAME', process.env.PACKAGE_NAME)
+// console.log('NODE_ENV', process.env.NODE_ENV)
+// console.log('HOST', process.env.HOST)
+// console.log('LOOKERSDK_BASE_URL', process.env.LOOKERSDK_BASE_URL)
+// console.log('PACKAGE_NAME', process.env.PACKAGE_NAME)
 
 
 let pgPool;
@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const sess = {
-  secret: 'keyboard catv1.0.6',
+  secret: 'keyboard catv1.0.7',
   resave: true,
   cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days,
   store: new pgSession({
