@@ -3,4 +3,4 @@ config.*
 looker.ini
 .DS_Store
 .env*
-env_variables.yaml
+*.yaml

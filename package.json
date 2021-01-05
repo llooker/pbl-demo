@@ -8,7 +8,11 @@
     "client": "cd client && npm start",
     "server": "nodemon app.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "start": "node app.js"
+    "start": "node app.js",
+    "atom": "concurrently --kill-others-on-fail \"npm run server\" \"npm run atom_client\"",
+    "atom_client": "cd client/atom && npm start",
+    "vision": "concurrently --kill-others-on-fail \"npm run server\" \"npm run vision_client\"",
+    "vision_client": "cd client/vision && npm start"
   },
   "author": "",
   "license": "ISC",

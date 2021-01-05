@@ -1,0 +1,28 @@
+{
+  "atom": {
+    "label": "Atom Fashion",
+    "vignette": {
+      "name": "Atom",
+      "logo_url": "../images/atom_logo.png"
+    },
+    "layout": "right-appbar",
+    "demoComponents": [
+      {
+        "type": "simple dashboard",
+        "label": "Unemployment",
+        "menuCategory": "Fraud and Improper Payments",
+        "description": "Overview of all your web traffic",
+        "icon": "fa-search",
+        "lookerContent": [
+          {
+            "type": "dashboard",
+            "lookerMethod": "embedDashboard",
+            "id": "17",
+            "label": "Unemployment",
+            "isNext": false
+          }
+        ]
+      }
+    ]
+  }
+}

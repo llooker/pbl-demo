@@ -6,7 +6,21 @@ const session = require('express-session');
 const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 
+//how can we make this dynamic???
+//Nick thinks we sholdn't have to use dotenv
+//for node file our env variables should be read automatically b/c of the source command when starting app
+
 require('dotenv').config();
+// require('dotenv').config({ path: ".env.atom" });
+// require('dotenv').config({ path: ".env.vision" });
+
+
+
+// console.log('NODE_ENV', process.env.NODE_ENV)
+// console.log('HOST', process.env.HOST)
+// console.log('LOOKERSDK_BASE_URL', process.env.LOOKERSDK_BASE_URL)
+// console.log('PACKAGE_NAME', process.env.PACKAGE_NAME)
+
 
 let pgPool;
 if (process.env.NODE_ENV === 'production') {
@@ -29,7 +43,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const sess = {
-  secret: 'keyboard catv1.0.6',
+  secret: 'keyboard catv1.0.7',
   resave: true,
   cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days,
   store: new pgSession({
@@ -63,11 +77,11 @@ if (process.env.NODE_ENV === 'production') {
     next();
   });
 
-  app.use(express.static(path.join(__dirname, 'client/build')))
+  app.use(express.static(path.join(__dirname, `client/${process.env.PACKAGE_NAME}/build`)))
 
   // Handle React routing, return all requests to React app
   app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    res.sendFile(path.join(__dirname, `client/${process.env.PACKAGE_NAME}/build`, 'index.html'));
   });
 }
 

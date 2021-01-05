@@ -1,63 +1,20 @@
 {
-  "name": "client",
-  "version": "0.1.0",
-  "private": true,
-  "proxy": "http://embed.demo.com:5000/",
-  "dependencies": {
-    "@date-io/date-fns": "^1.3.13",
-    "@looker/embed-sdk": "^1.4.0",
-    "@looker/sdk": "^0.3.4-beta.2",
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56",
-    "@material-ui/pickers": "^3.2.10",
-    "@material-ui/styles": "^4.9.10",
-    "@nivo/calendar": "^0.61.1",
-    "@nivo/line": "^0.61.1",
-    "@svg-maps/taiwan": "^1.1.0",
-    "@svg-maps/usa": "^1.1.1",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "date-fns": "^2.16.1",
-    "jquery": "^3.5.1",
-    "lodash": "^4.17.20",
-    "marked": "^0.8.2",
-    "moment": "^2.29.1",
-    "nivo": "^0.31.0",
-    "react": "latest",
-    "react-addons-css-transition-group": "^15.6.2",
-    "react-dom": "latest",
-    "react-google-login": "^5.1.22",
-    "react-responsive-carousel": "^3.2.10",
-    "react-router-dom": "latest",
-    "react-scripts": "^3.4.4",
-    "react-svg-map": "^2.1.2",
-    "react-syntax-highlighter": "^12.2.1",
-    "recharts": "^1.8.5"
-  },
+  "name": "pbl-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "raw-loader": "^4.0.2"
+  "author": "",
+  "license": "ISC",
+  "private": "true",
+  "workspaces": [
+    "atom/*",
+    "vision/*",
+    "shared/*"
+  ],
+  "dependencies": {
+    "@material-ui/styles": "^4.0.0"
   }
 }
