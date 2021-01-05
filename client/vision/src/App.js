@@ -43,7 +43,7 @@ function App(props) {
     // else setIsReady(false)
   }, [clientSession, sdk])
 
-  // console.log({ clientSession })
+  console.log({ clientSession })
 
 
   return (

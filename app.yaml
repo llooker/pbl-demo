@@ -1,4 +1,4 @@
-service: looker-dat-atom
+service: looker-dat-vision
 runtime: nodejs
 env: flex
 manual_scaling:
@@ -11,10 +11,10 @@ resources:
 
 handlers:
   - url: /
-    static_files: client/atom/build/index.html
-    upload: client/atom/build/index.html
+    static_files: client/vision/build/index.html
+    upload: client/vision/build/index.html
   - url: /
-    static_dir: client/atom/build
+    static_dir: client/vision/build
 
 includes:
   - env_variables.yaml
