@@ -1,5 +1,8 @@
 import React, { useContext } from 'react';
-import AppContext from '../../contexts/AppContext'; //unclear how to deal with context
+// import AppContext from '../../contexts/AppContext'; //unclear how to deal with context
+// import AppContext from `../../${process.env.REACT_APP_PACKAGE_NAME}/src/contexts/AppContext`;
+import AppContextAtom from '../../atom/src/contexts/AppContext';
+import AppContextVision from '../../vision/src/contexts/AppContext';
 import { Chip } from '@material-ui/core';
 
 
@@ -11,10 +14,16 @@ export const EMBED_BACKGROUND_COLOR = 'rgba(18, 181, 203, 0.1)'
 export const EMBED_METHOD_COLOR = '#297AF4'
 export const EMBED_METHOD_BACKGROUND_COLOR = 'rgba(41, 122, 244, 0.1)'
 
+
+const appContextMap = {
+  "atom": AppContextAtom,
+  "vision": AppContextVision
+}
+
 function Highlight({ children, color, height, width, margin, id, backgroundColor, ...props }) {
-  // console.log('Highlight')
-  // console.log('props', props)
-  const { highlightShow } = useContext(AppContext)
+  console.log('Highlight')
+  const { highlightShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  console.log({ highlightShow })
   var style = {};
   if (highlightShow) {
     style = {
@@ -46,7 +55,7 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
 }
 
 export function ApiHighlight({ ...props }) {
-  const { highlightShow } = useContext(AppContext)
+  const { highlightShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]); //useContext(AppContext)
   const { classes } = props
   const { children } = props
 
@@ -90,7 +99,7 @@ export function EmbedHighlight({ ...props }) {
 }
 
 export function EmbedMethodHighlight({ ...props }) {
-  const { highlightShow } = useContext(AppContext)
+  const { highlightShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]); //useContext(AppContext)
   const { classes } = props
   const { children } = props
 

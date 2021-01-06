@@ -210,7 +210,10 @@ export default function Dashboard(props) {
         .then((dashboard) => {
           setIFrame(1)
           setDashboardObj(dashboard)
-          LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+          // LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+          let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+          console.log({ modifiedBaseUrl })
+          LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
 
 
         })

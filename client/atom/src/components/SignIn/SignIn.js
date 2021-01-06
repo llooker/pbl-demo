@@ -33,7 +33,8 @@ export default function SignIn(props) {
       setSdk(sdk)
     }
   }
-  const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
+  const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;
+  console.log({ googleClientId })
   const usecaseFromUrl = usecaseHelper(UsecaseContent);
 
   const classes = useStyles();
