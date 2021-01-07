@@ -3,7 +3,7 @@ import { Typography, Grid, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
 import { ApiHighlight } from './Highlight';
-// import { NumberToColoredPercent } from './NumberToColoredPercent';
+import { NumberToColoredPercent } from './NumberToColoredPercent';
 // const { validIdHelper } = require('../../../tools');
 
 // console.log('process.env', process.env)
@@ -30,13 +30,13 @@ export const AutoComplete = ({ lookerContent, apiContent, index, classes, custom
               <Grid item >
                 {option.label}
               </Grid>
-              {/* {option.trend && <Grid item>
-              <NumberToColoredPercent
-                val={option.trend}
-                positive_good={true}
-                abs_val={Math.abs(option.trend)}
-              />
-            </Grid>} */}
+              {option.trend && <Grid item>
+                <NumberToColoredPercent
+                  val={option.trend}
+                  positive_good={true}
+                  abs_val={Math.abs(option.trend)}
+                />
+              </Grid>}
             </Grid>
           )}
           getOptionLabel={(option) => option.label}

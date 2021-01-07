@@ -1,5 +1,4 @@
 import React from 'react';
-import { TextField } from '@material-ui/core';
 
 export function NumberToColoredPercent({ val, positive_good, abs_val }) {
   const colors = {

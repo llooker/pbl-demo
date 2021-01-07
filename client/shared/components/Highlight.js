@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 // import AppContext from '../../contexts/AppContext'; //unclear how to deal with context
-// import AppContext from `../../${process.env.REACT_APP_PACKAGE_NAME}/src/contexts/AppContext`;
 import AppContextAtom from '../../atom/src/contexts/AppContext';
 import AppContextVision from '../../vision/src/contexts/AppContext';
 import { Chip } from '@material-ui/core';
@@ -21,9 +20,7 @@ const appContextMap = {
 }
 
 function Highlight({ children, color, height, width, margin, id, backgroundColor, ...props }) {
-  console.log('Highlight')
   const { highlightShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
-  console.log({ highlightShow })
   var style = {};
   if (highlightShow) {
     style = {

@@ -83,8 +83,6 @@ export default function Home(props) {
     const usecaseFromUrl = usecaseHelper(UsecaseContent);
     setActiveUsecase(usecaseFromUrl);
 
-    // LookerEmbedSDK.init(clientSession.lookerBaseUrl, '/auth')
-
     let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
     LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
 

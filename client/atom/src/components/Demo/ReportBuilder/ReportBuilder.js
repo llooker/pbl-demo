@@ -193,10 +193,8 @@ export default function ReportBuilder(props) {
                 .build()
                 .connect()
                 .then((look) => {
-                  // setIFrame(1)
-                  LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
-
-
+                  let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+                  LookerEmbedSDK.init(modifiedBaseUrl)
                 })
                 .catch((error) => {
                   console.error('Connection error', error)
@@ -232,7 +230,8 @@ export default function ReportBuilder(props) {
                   setTimeout(() => {
                     // setIFrame(1)
                   }, 1000)
-                  LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+                  let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+                  LookerEmbedSDK.init(modifiedBaseUrl)
 
                 })
                 .catch((error) => {
@@ -273,7 +272,9 @@ export default function ReportBuilder(props) {
               setIFrame(1)
               setExploreObj(explore)
               // }, 1000)
-              LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+
+              let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+              LookerEmbedSDK.init(modifiedBaseUrl)
 
               setQid(null)
             })
@@ -295,7 +296,8 @@ export default function ReportBuilder(props) {
               setIFrame(1)
               setExploreObj(explore)
               // }, 1000)
-              LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
+              let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+              LookerEmbedSDK.init(modifiedBaseUrl)
 
               // setQid(null)
             })
