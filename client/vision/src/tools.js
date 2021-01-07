@@ -1,6 +1,3 @@
-// import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, FindInPage, Code, TableChartOutlined, LibraryBooksOutlined, Menu, ChevronLeft } from '@material-ui/icons';
-// import HomeIcon from '@material-ui/icons/Home';
-
 module.exports = {
   makeid: (length) => {
     var result = '';
@@ -58,15 +55,5 @@ module.exports = {
       }
     }
     return 'atom';
-  },
-  //not working
-  // demoComponentIconMap: {
-  //   "home": HomeIcon,
-  //   "inventoryoverview": VisibilityOutlined,
-  //   "webanalytics": ShowChart,
-  //   "salesoverview": TableChartOutlined,
-  //   "salescalendar": DateRangeOutlined,
-  //   "querybuilder": Search,
-  //   "savedreports": LibraryBooksOutlined
-  // }
+  }
 }

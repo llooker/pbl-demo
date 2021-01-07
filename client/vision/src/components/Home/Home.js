@@ -16,6 +16,7 @@ import MonetizationModal from '../Demo/MonetizationModal/MonetizationModal';
 
 import SplashPage from '../Demo/SplashPage/SplashPage';
 import Dashboard from '../Demo/Dashboard/Dashboard';
+
 import CustomVis from '../Demo/CustomVis/CustomVis';
 import ReportBuilder from '../Demo/ReportBuilder/ReportBuilder';
 import QueryBuilder from '../Demo/QueryBuilder/QueryBuilder';
@@ -84,7 +85,7 @@ export default function Home(props) {
 
     let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
     LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
-    // LookerEmbedSDK.init(clientSession.lookerBaseUrl, '/auth')
+
     window.addEventListener("resize", () => {
       setDrawerOpen(window.innerWidth > 768 ? true : false)
     });
@@ -119,7 +120,7 @@ export default function Home(props) {
     "salescalendar": CustomVis,
     "querybuilder": QueryBuilder,
     "savedreports": ReportBuilder,
-    "unemployment": Dashboard
+    "unemployment": Dashboard,
   };
 
 
@@ -156,6 +157,7 @@ export default function Home(props) {
               [classes.contentShift]: drawerOpen,
             })}
           >
+
             <div className={classes.drawerHeader} />
             {DemoComponentContent ? <DemoComponent staticContent={DemoComponentContent} /> : ''}
           </main>

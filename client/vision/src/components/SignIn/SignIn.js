@@ -33,13 +33,16 @@ export default function SignIn(props) {
       setSdk(sdk)
     }
   }
-  const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`
+  const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;
+  console.log({ googleClientId })
   const usecaseFromUrl = usecaseHelper(UsecaseContent);
 
   const classes = useStyles();
-  // const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
-  const backgroundImage = require(`../../images/${usecaseFromUrl}_fraud_background.jpg`).default;
-  const logoImage = require(`../../images/${usecaseFromUrl}_logo_black.svg`).default;
+  const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
+
+  const backgroundImage = require(`../../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`).default;
+  const logoImage = require(`../../images/${usecaseFromUrl}_logo_black.svg`).default
+
 
   return (
     <div className={`${classes.root} demoComponent ${classes.h100}`}>
@@ -62,7 +65,7 @@ export default function SignIn(props) {
                   Welcome
                             </Typography>
                 <Typography variant="body2" component="p">
-                  Please sign in to access <br /> your fraud examiner portal
+                  Please sign in to access <br /> your merchant portal
                             </Typography>
               </CardContent>
               <CardActions className={`${classes.actions}`} >

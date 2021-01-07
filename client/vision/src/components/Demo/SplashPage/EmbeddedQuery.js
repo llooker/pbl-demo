@@ -41,11 +41,9 @@ export function EmbeddedQuery({ lookerContent, classes, id }) {
           .build()
           .connect()
           .then((explore) => {
-            // console.log('then explore', explore)
             setIFrame(1)
-            // LookerEmbedSDK.init(`https://${lookerHost}.looker.com`);
-            LookerEmbedSDK.init(`${clientSession.lookerBaseUrl}`);
-
+            let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+            LookerEmbedSDK.init(modifiedBaseUrl)
           })
           .catch((error) => {
             // console.log('catch', error)

@@ -9,9 +9,7 @@ import HomeIcon from '@material-ui/icons/Home'; //already declared
 import { useStyles } from './styles.js';
 import BottomBar from './BottomBar'; //needs refactor
 
-const { validIdHelper,
-  // demoComponentIconMap  //not working
-} = require('../../tools');
+const { validIdHelper } = require('../../tools');
 
 export default function LeftDrawer(props) {
   // console.log('LeftDrawer');
@@ -66,16 +64,28 @@ function MenuList(props) {
     }
   })
 
+
   const demoComponentIconMap = {
-    "home": HomeIcon,
-    "inventoryoverview": VisibilityOutlined,
-    "webanalytics": ShowChart,
-    "salesoverview": TableChartOutlined,
-    "salescalendar": DateRangeOutlined,
-    "querybuilder": Search,
-    "savedreports": LibraryBooksOutlined,
-    "unemployment": HomeIcon,
-  };
+    "splashpage19": HomeIcon,
+    "customfilter5": VisibilityOutlined,
+    "simpledashboard9": ShowChart,
+    "customfilter1": TableChartOutlined,
+    "customvis": DateRangeOutlined,
+    "querybuilderexplorelite": Search,
+    "reportbuilder14": LibraryBooksOutlined,
+    "simpledashboard17": HomeIcon,
+  }
+
+
+  // const demoComponentIconMap = {
+  //   "home": HomeIcon,
+  //   "inventoryoverview": VisibilityOutlined,
+  //   "webanalytics": ShowChart,
+  //   "salesoverview": TableChartOutlined,
+  //   "salescalendar": DateRangeOutlined,
+  //   "querybuilder": Search,
+  //   "savedreports": LibraryBooksOutlined
+  // };
 
   return (<List
     component="nav"
@@ -94,8 +104,7 @@ function MenuList(props) {
           < List component="div" disablePadding
             key={`${validIdHelper(outerItem + '-innerList-' + outerIndex)}`}>
             {orderedDemoComponentsForMenuObj[outerItem].map((item, innerIndex) => {
-              // const key = item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) : validIdHelper(item.type);
-              const key = validIdHelper(_.lowerCase(item.label));
+              const key = item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) : validIdHelper(item.type);
               const MatchingIconComponent = demoComponentIconMap[key]
 
               return (

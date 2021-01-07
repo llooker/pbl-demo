@@ -90,7 +90,7 @@ export default function FilterBar(props) {
 
         </Accordion >
         :
-        <Skeleton variant="rect" animation="wave" className={`${classes.skeleton} ${classes.height100Percent}`} />}
+        <Skeleton variant="rect" animation="wave" className={classes.skeleton} />}
     </Grid>
   )
 }

@@ -7,6 +7,7 @@ module.exports = {
     "force_logout_login": true,
     "external_group_id": "",
     "group_ids": [
+      4
     ],
     "permissions": [
       "access_data",
@@ -16,10 +17,14 @@ module.exports = {
       "download_with_limit"
     ],
     "models": [
-      "reference_implementation",
-      "public_sector"
+      "atom_fashion"
     ],
     "user_attributes": {
+      "locale": "en_US",
+      "country": "USA",
+      "brand": "Calvin Klein",
+      "time_horizon": "last 182 days",
+      "permission_level": "basic"
     }
   },
   lookerUserAttributeBrandOptions: [
