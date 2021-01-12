@@ -211,6 +211,8 @@ export default function Dashboard(props) {
           setIFrame(1)
           setDashboardObj(dashboard)
           let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+          //calling init here without second param
+          //enables us to embed content without requiring addional signed urls
           LookerEmbedSDK.init(modifiedBaseUrl)
         })
         .catch((error) => {

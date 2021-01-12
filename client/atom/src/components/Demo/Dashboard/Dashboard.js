@@ -141,7 +141,11 @@ export default function Dashboard(props) {
   }
 
   useEffect(() => {
+    console.log("useEffect outer");
+    console.log({ lookerUser });
+    console.log({ isReady });
     if (isReady) {
+      console.log("useEffect inner")
       let themeName = lightThemeToggleValue ? 'light' : 'dark';
       themeName += `_${fontThemeSelectValue}`;
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
