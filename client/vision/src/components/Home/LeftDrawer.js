@@ -74,7 +74,7 @@ function MenuList(props) {
     "customvis": DateRangeOutlined,
     "querybuilderexplorelite": Search,
     "reportbuilder14": LibraryBooksOutlined,
-    "simpledashboard19": HomeIcon,
+    "customfilter19": HomeIcon,
   }
 
 

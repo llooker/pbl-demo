@@ -41,8 +41,8 @@ export default function Dashboard(props) {
   const [horizontalLayout, setHorizontalLayout] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(true);
 
-  const isThemeableDashboard = validIdHelper(`${demoComponentType}${lookerContent[0].id}`) === 'customfilter1';
-  const darkThemeBackgroundColor = "#343D4E";
+  const isThemeableDashboard = lookerContent[0].dynamicVisConfig ? true : false;
+  const darkThemeBackgroundColor = theme.palette.fill.main;
 
   const classes = useStyles();
 
