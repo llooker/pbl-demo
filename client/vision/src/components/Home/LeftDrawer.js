@@ -73,7 +73,7 @@ function MenuList(props) {
     "customvis": DateRangeOutlined,
     "querybuilderexplorelite": Search,
     "reportbuilder14": LibraryBooksOutlined,
-    "simpledashboard17": HomeIcon,
+    "simpledashboard19": HomeIcon,
   }
 
 
