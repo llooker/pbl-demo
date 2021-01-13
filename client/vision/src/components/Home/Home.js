@@ -21,15 +21,15 @@ import CustomVis from '../Demo/CustomVis/CustomVis';
 import ReportBuilder from '../Demo/ReportBuilder/ReportBuilder';
 import QueryBuilder from '../Demo/QueryBuilder/QueryBuilder';
 import '../Home.css';
-import { useStyles, defaultTheme, atomTheme } from './styles.js';
+import { useStyles, defaultTheme, atomTheme, visionTheme } from './styles.js';
 
 const { validIdHelper, usecaseHelper } = require('../../tools');
 
 export default function Home(props) {
-  // console.log("Home")
+  console.log("Home")
   let { setClientSession, clientSession, sdk, setSdk, isReady } = useContext(AppContext)
   let { democomponent } = useParams();
-  const classes = useStyles();
+  const classes = useStyles(visionTheme);
 
   const didMountRef = useRef(false)
   const [drawerOpen, setDrawerOpen] = useState(window.innerWidth > 768 ? true : false);
@@ -81,6 +81,7 @@ export default function Home(props) {
   //componentDidMount
   useEffect(() => {
     const usecaseFromUrl = usecaseHelper(UsecaseContent);
+    console.log({ usecaseFromUrl })
     setActiveUsecase(usecaseFromUrl);
 
     let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
@@ -110,6 +111,7 @@ export default function Home(props) {
 
   const themeMap = {
     "atom": atomTheme,
+    "vision": visionTheme
   }
 
   const demoComponentMap = {
@@ -128,6 +130,10 @@ export default function Home(props) {
   const DemoComponentContent = _.find(UsecaseContent[activeUsecase].demoComponents, (o) => {
     return selectedMenuItem === validIdHelper(_.lowerCase(o.label));
   });
+
+
+  // console.log({ clientSession })
+  // console.log('themeMap[activeUsecase]', themeMap[activeUsecase])
 
 
   return (

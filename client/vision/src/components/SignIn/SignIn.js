@@ -40,7 +40,8 @@ export default function SignIn(props) {
   const classes = useStyles();
   const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
 
-  const backgroundImage = require(`../../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`).default;
+  // const backgroundImage = require(`../../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`).default;
+  const backgroundImage = require(`../../images/${usecaseFromUrl}_background.jpg`).default;
   const logoImage = require(`../../images/${usecaseFromUrl}_logo_black.svg`).default
 
 

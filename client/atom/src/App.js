@@ -1,6 +1,6 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router, Switch, Route, Redirect, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import AppContext from './contexts/AppContext';
 import { checkForExistingSession, createSdkHelper } from './AuthUtils/auth';
 import SignIn from './components/SignIn/SignIn';
@@ -19,14 +19,17 @@ function App(props) {
     async function fetchSession() {
 
       const sessionResponse = await checkForExistingSession();
-      if (sessionResponse.session && sessionResponse.session.userProfile) {
+      if (sessionResponse.session) {
 
-        const lookerBaseUrl = sessionResponse.lookerBaseUrl ? sessionResponse.lookerBaseUrl : '';
-        const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : '';
-        const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
+        const lookerBaseUrl = sessionResponse.lookerBaseUrl ? sessionResponse.lookerBaseUrl : undefined;
+        const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : undefined;
+
+        if (lookerBaseUrl && accessToken) {
+          const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
+          setSdk(sdk)
+        }
 
         setClientSession(sessionResponse.session)
-        setSdk(sdk)
       }
     }
     fetchSession(); //make async call
@@ -40,12 +43,9 @@ function App(props) {
       const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
       setSdk(sdk)
     }
-    // else setIsReady(false)
   }, [clientSession, sdk])
 
   // console.log({ clientSession })
-
-
 
   return (
     < Router >

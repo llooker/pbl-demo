@@ -21,19 +21,25 @@ import CustomVis from '../Demo/CustomVis/CustomVis';
 import ReportBuilder from '../Demo/ReportBuilder/ReportBuilder';
 import QueryBuilder from '../Demo/QueryBuilder/QueryBuilder';
 import '../Home.css';
-import { useStyles, defaultTheme, atomTheme } from './styles.js';
+import {
+  useStyles
+  // , defaultTheme, atomTheme 
+} from './styles.js';
+import { packageNameTheme } from './theme.js';
 
-const { validIdHelper, usecaseHelper } = require('../../tools');
+// console.log({ theme })
+
+const { validIdHelper } = require('../../tools');
 
 export default function Home(props) {
   // console.log("Home")
   let { setClientSession, clientSession, sdk, setSdk, isReady } = useContext(AppContext)
+  const { packageName } = clientSession
   let { democomponent } = useParams();
   const classes = useStyles();
 
   const didMountRef = useRef(false)
   const [drawerOpen, setDrawerOpen] = useState(window.innerWidth > 768 ? true : false);
-  const [activeUsecase, setActiveUsecase] = useState(usecaseHelper(UsecaseContent));
   const [highlightShow, setHighlightShow] = useState(false);
   const [codeShow, setCodeShow] = useState(false);
   const [payWallModal, setPaywallModal] = useState({});
@@ -80,8 +86,6 @@ export default function Home(props) {
 
   //componentDidMount
   useEffect(() => {
-    const usecaseFromUrl = usecaseHelper(UsecaseContent);
-    setActiveUsecase(usecaseFromUrl);
 
     let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
     LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
@@ -108,9 +112,6 @@ export default function Home(props) {
     setSelectedMenuItem(democomponent)
   }, [democomponent])
 
-  const themeMap = {
-    "atom": atomTheme,
-  }
 
   const demoComponentMap = {
     "home": SplashPage,
@@ -124,7 +125,7 @@ export default function Home(props) {
 
 
   const DemoComponent = demoComponentMap[selectedMenuItem];
-  const DemoComponentContent = _.find(UsecaseContent[activeUsecase].demoComponents, (o) => {
+  const DemoComponentContent = _.find(UsecaseContent[packageName].demoComponents, (o) => {
     return selectedMenuItem === validIdHelper(_.lowerCase(o.label));
   });
 
@@ -137,16 +138,16 @@ export default function Home(props) {
         payWallModal, setPaywallModal,
         handleSwitchLookerUser,
         drawerOpen, setDrawerOpen,
-        activeUsecase,
+        // activeUsecase,
         selectedMenuItem,
         highlightShow, setHighlightShow,
         codeShow, setCodeShow,
         sdk,
         corsApiCall,
-        atomTheme,
+        theme: packageNameTheme,
         isReady
       }}>
-        <ThemeProvider theme={activeUsecase ? themeMap[activeUsecase] : defaultTheme}>
+        <ThemeProvider theme={packageNameTheme}>
           <CssBaseline />
           <TopBar />
           <MonetizationModal />

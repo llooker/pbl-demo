@@ -4,19 +4,18 @@ import {
   AppBar, Toolbar, Badge, Avatar, IconButton
 } from '@material-ui/core/';
 import { AddAlert, ChevronLeft, Menu } from '@material-ui/icons';
-import { endSession } from '../../AuthUtils/auth';
 import AppContext from '../../contexts/AppContext';
 import { useStyles } from './styles.js';
 
 import UserMenu from './UserMenu';
-
 
 export default function TopBar(props) {
   const classes = useStyles();
 
   let { clientSession, setClientSession,
     drawerOpen, setDrawerOpen,
-    activeUsecase } = useContext(AppContext)
+  } = useContext(AppContext)
+  const { packageName } = clientSession
 
   return (
     <AppBar
@@ -33,9 +32,9 @@ export default function TopBar(props) {
           {drawerOpen ? <ChevronLeft /> : <Menu />}
         </IconButton>
 
-        {activeUsecase ?
+        {packageName ?
           <Avatar alt="Icon"
-            src={require(`../../images/${activeUsecase}.svg`).default}
+            src={require(`../../images/${packageName}.svg`).default}
             variant="square"
           /> : ''}
 

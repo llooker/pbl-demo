@@ -21,7 +21,7 @@ export default function Dashboard(props) {
   // console.log('Dashboard');
   const { staticContent: { lookerContent }, staticContent: { type } } = props;
 
-  const { clientSession, codeShow, sdk, corsApiCall, atomTheme, isReady, selectedMenuItem } = useContext(AppContext)
+  const { clientSession, codeShow, sdk, corsApiCall, theme, isReady, selectedMenuItem } = useContext(AppContext)
   const { lookerUser, lookerHost } = clientSession;
 
   const demoComponentType = type || 'code flyout';
@@ -55,9 +55,9 @@ export default function Dashboard(props) {
       }
     }
     :
-    { palette: { ...atomTheme.palette } }
+    { palette: { ...theme.palette } }
 
-  const theme = React.useMemo(
+  const themeToUse = React.useMemo(
     () =>
       createMuiTheme(
         paletteToUse
@@ -277,7 +277,7 @@ export default function Dashboard(props) {
     <div className={`${classes.root} demoComponent`}
       style={{ height }}
     >
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={themeToUse}>
         <Card elevation={1} className={`${classes.padding30} ${classes.height100Percent}`}>
           <div
             className={`${classes.root} ${classes.height100Percent}`}

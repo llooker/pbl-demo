@@ -7,7 +7,9 @@ const sdk = new Looker40SDK(sdkSession)
 const rp = require('request-promise');
 
 module.exports.readSession = async (req, res, next) => {
+  // console.log("readSession")
   let { session } = req
+  session.packageName = process.env.PACKAGE_NAME
   res.status(200).send({ session })
 }
 

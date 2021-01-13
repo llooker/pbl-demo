@@ -1,8 +1,8 @@
 {
-  "atom": {
-    "label": "Atom Fashion",
+  "vision": {
+    "label": "Vision Fraud",
     "vignette": {
-      "name": "Atom",
+      "name": "Vision",
       "logo_url": "../images/atom_logo.png"
     },
     "layout": "right-appbar",
