@@ -13,7 +13,7 @@ const { validIdHelper } = require('../../../tools');
 
 //start of SplashPage Component
 export default function SplashPage(props) {
-  // console.log('SplashPage')
+  console.log('SplashPage')
   //intialize state using hooks
 
   const topBarBottomBarHeight = 112;

@@ -1,9 +1,8 @@
-import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
-import { grey, red } from '@material-ui/core/colors';
+import { packageNameTheme } from './theme.js';
+import { makeStyles } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
-
-export const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     backgroundColor: 'rgb(229, 229, 229)'
@@ -14,7 +13,7 @@ export const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     zIndex: 1201,
-    backgroundColor: visionTheme.palette.fill.main
+    backgroundColor: packageNameTheme.palette.fill.main
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -187,32 +186,3 @@ export const useStyles = makeStyles((theme) => ({
 }), { index: 1 });
 
 
-
-export const defaultTheme = createMuiTheme({})
-export const atomTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: grey[900],
-    },
-    secondary: {
-      main: grey[400],
-    },
-    fill: {
-      main: "#343D4E"
-    },
-  },
-})
-
-export const visionTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: grey[900],
-    },
-    secondary: {
-      main: grey[400],
-    },
-    fill: {
-      main: "#BC403A"
-    }
-  },
-})

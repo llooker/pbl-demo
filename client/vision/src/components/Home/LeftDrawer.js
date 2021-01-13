@@ -48,9 +48,10 @@ function MenuList(props) {
   // console.log("MenuList")
   // console.log({ props })
   const { classes } = props
-  const { activeUsecase, selectedMenuItem } = useContext(AppContext);
+  const { clientSession, selectedMenuItem } = useContext(AppContext);
+  const { packageName } = clientSession;
 
-  let orderedDemoComponentsForMenu = activeUsecase ? _.orderBy(UsecaseContent[activeUsecase].demoComponents, ['menuCategory'], ['asc']) : [];
+  let orderedDemoComponentsForMenu = packageName ? _.orderBy(UsecaseContent[packageName].demoComponents, ['menuCategory'], ['asc']) : [];
   let orderedDemoComponentsForMenuObj = {};
   let expandedTreeItemsArr = [];
   let cumulativePusher = 0;
@@ -92,7 +93,7 @@ function MenuList(props) {
     aria-labelledby="nested-list-subheader"
     className={classes.list}
   >
-    {activeUsecase ? Object.keys(orderedDemoComponentsForMenuObj).map((outerItem, outerIndex) => {
+    {packageName ? Object.keys(orderedDemoComponentsForMenuObj).map((outerItem, outerIndex) => {
       return (
         < React.Fragment
           key={`${validIdHelper(outerItem + '-menuList-' + outerIndex)}`}>

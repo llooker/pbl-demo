@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useHistory, useParams, useLocation } from "react-router-dom";
 import { GoogleLogin } from 'react-google-login';
 import AppContext from '../../contexts/AppContext';
@@ -9,7 +9,7 @@ import { initialLookerUser } from '../../LookerHelpers/defaults'
 import useStyles from './styles.js';
 import '../Home.css';
 import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
-const { validIdHelper, usecaseHelper } = require('../../tools');
+const { validIdHelper } = require('../../tools');
 
 export default function SignIn(props) {
   // console.log('SignIn');
@@ -17,8 +17,8 @@ export default function SignIn(props) {
 
   let { clientSession, setClientSession,
     sdk, setSdk,
-    initialHref, setInitialHref } = useContext(AppContext)
-
+    initialHref, setInitialHref } = useContext(AppContext);
+  const { packageName } = clientSession;
 
   const responseGoogle = async (response) => {
     if (response.error) {
@@ -34,16 +34,12 @@ export default function SignIn(props) {
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;
-  console.log({ googleClientId })
-  const usecaseFromUrl = usecaseHelper(UsecaseContent);
 
   const classes = useStyles();
   const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
 
-  // const backgroundImage = require(`../../images/${usecaseFromUrl}_background${backgroundImageInt}.jpg`).default;
-  const backgroundImage = require(`../../images/${usecaseFromUrl}_background.jpg`).default;
-  const logoImage = require(`../../images/${usecaseFromUrl}_logo_black.svg`).default
-
+  const backgroundImage = packageName ? require(`../../images/${packageName}_background.jpg`).default : "";
+  const logoImage = packageName ? require(`../../images/${packageName}_logo_black.svg`).default : "";
 
   return (
     <div className={`${classes.root} demoComponent ${classes.h100}`}>

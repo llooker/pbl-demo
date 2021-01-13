@@ -18,12 +18,17 @@ export function EmbeddedQuery({ lookerContent, classes, id }) {
   const [apiContent, setApiContent] = useState(undefined);
 
   useEffect(() => {
+    console.log("useEffect outer");
+    console.log({ lookerUser });
+    console.log({ isReady });
     if (isReady) {
+      console.log("useEffect inner");
       fetchData()
     }
   }, [lookerUser, isReady])
 
   const fetchData = async () => {
+    console.log("fetchData")
     $(`#${id}`).html('')
     setIFrame(0)
 
