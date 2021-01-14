@@ -2,19 +2,14 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, CircularProgress, Card } from '@material-ui/core'
 import CodeFlyout from '../CodeFlyout';
-import rawSampleCode from '!!raw-loader!./SplashPage.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
-import { SingleValueVis } from './SingleValueVis';
-import { Welcome } from './Welcome';
-import { PopularAnalysis } from './PopularAnalysis';
 import AppContext from '../../../contexts/AppContext';
-import { EmbeddedQuery } from './EmbeddedQuery';
+import { Welcome, SingleValueVis, PopularAnalysis, EmbeddedQuery } from "@pbl-demo/components";
+
 const { validIdHelper } = require('../../../tools');
 
-//start of SplashPage Component
 export default function SplashPage(props) {
-  console.log('SplashPage')
-  //intialize state using hooks
+  // console.log('SplashPage')
 
   const topBarBottomBarHeight = 112;
   const [value, setValue] = useState(0);
@@ -26,41 +21,18 @@ export default function SplashPage(props) {
   const { clientSession, highlightShow, codeShow } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
 
-
-
-  //declare constants
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type },
-    handleTabChange,
-  } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type } } = props;
   const codeTab = {
     type: 'code flyout', label: 'Code', id: 'codeFlyout',
     lookerContent, lookerUser, clientSideCode, serverSideCode
   }
   const demoComponentType = type || 'code flyout';
 
-  //handle tab change
-  const handleChange = (event, newValue) => {
-    handleTabChange(0);
-    setValue(newValue);
-  };
-
-  /**
-   * listen for lookerContent and call 
-   * setSampleCode
-  */
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   }, [lookerContent]);
 
-  /**
-   * What this return  does:
-   * Rendering of actual html elements,
-   * this section is necessary but less relevant to looker functionality itself
-   */
-
-  // console.log({ staticContent })
-  // console.log({ lookerContent })
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
