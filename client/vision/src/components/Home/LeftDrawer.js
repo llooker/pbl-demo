@@ -2,16 +2,15 @@ import _ from 'lodash'
 import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
-import UsecaseContent from '../../usecaseContent.json';
-import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
-import { AddAlert, ShowChart, VisibilityOutlined, DateRangeOutlined, Search, FindInPage, Code, TableChartOutlined, LibraryBooksOutlined, Menu, ChevronLeft } from '@material-ui/icons';
-import HomeIcon from '@material-ui/icons/Home'; //already declared
+import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Icon } from '@material-ui/core/';
+import { ChevronLeft } from '@material-ui/icons';
+
 import { useStyles } from './styles.js';
 import BottomBar from './BottomBar'; //needs refactor
 
 const { validIdHelper } = require('../../tools');
 
-export default function LeftDrawer(props) {
+export default function LeftDrawer({ DemoComponentsContentArr }) {
   // console.log('LeftDrawer');
 
   const classes = useStyles();
@@ -36,7 +35,9 @@ export default function LeftDrawer(props) {
         </IconButton>
       </div>
 
-      <MenuList classes={classes} />
+      <MenuList
+        classes={classes}
+        DemoComponentsContentArr={DemoComponentsContentArr} />
 
       {/* should be refactored */}
       <BottomBar classes={classes} />
@@ -44,14 +45,12 @@ export default function LeftDrawer(props) {
   )
 }
 
-function MenuList(props) {
+function MenuList({ classes, DemoComponentsContentArr }) {
   // console.log("MenuList")
-  // console.log({ props })
-  const { classes } = props
   const { clientSession, selectedMenuItem } = useContext(AppContext);
   const { packageName } = clientSession;
 
-  let orderedDemoComponentsForMenu = packageName ? _.orderBy(UsecaseContent[packageName].demoComponents, ['menuCategory'], ['asc']) : [];
+  let orderedDemoComponentsForMenu = packageName ? _.orderBy(DemoComponentsContentArr, ['menuCategory'], ['asc']) : [];
   let orderedDemoComponentsForMenuObj = {};
   let expandedTreeItemsArr = [];
   let cumulativePusher = 0;
@@ -63,30 +62,7 @@ function MenuList(props) {
       cumulativePusher += 1;
       expandedTreeItemsArr.push("" + (index + cumulativePusher));
     }
-  })
-
-
-  const demoComponentIconMap = {
-    "splashpage19": HomeIcon,
-    "customfilter5": VisibilityOutlined,
-    "simpledashboard9": ShowChart,
-    "customfilter1": TableChartOutlined,
-    "customvis": DateRangeOutlined,
-    "querybuilderexplorelite": Search,
-    "reportbuilder14": LibraryBooksOutlined,
-    "customfilter19": HomeIcon,
-  }
-
-
-  // const demoComponentIconMap = {
-  //   "home": HomeIcon,
-  //   "inventoryoverview": VisibilityOutlined,
-  //   "webanalytics": ShowChart,
-  //   "salesoverview": TableChartOutlined,
-  //   "salescalendar": DateRangeOutlined,
-  //   "querybuilder": Search,
-  //   "savedreports": LibraryBooksOutlined
-  // };
+  });
 
   return (<List
     component="nav"
@@ -105,9 +81,7 @@ function MenuList(props) {
           < List component="div" disablePadding
             key={`${validIdHelper(outerItem + '-innerList-' + outerIndex)}`}>
             {orderedDemoComponentsForMenuObj[outerItem].map((item, innerIndex) => {
-              const key = item.lookerContent[0].id ? validIdHelper(item.type + item.lookerContent[0].id) : validIdHelper(item.type);
-              const MatchingIconComponent = demoComponentIconMap[key]
-
+              const MatchingIconComponent = item.icon
               return (
                 <ListItem
                   button
@@ -118,7 +92,7 @@ function MenuList(props) {
                   to={validIdHelper(_.lowerCase(item.label))}
                 >
                   <ListItemIcon>
-                    <MatchingIconComponent />
+                    {MatchingIconComponent ? <MatchingIconComponent /> : <></>}
                   </ListItemIcon>
                   <ListItemText primary={_.capitalize(item.label)} />
                 </ListItem>

@@ -64,8 +64,6 @@ function MenuList({ classes, DemoComponentsContentArr }) {
     }
   });
 
-  console.log({ orderedDemoComponentsForMenuObj })
-
   return (<List
     component="nav"
     aria-labelledby="nested-list-subheader"

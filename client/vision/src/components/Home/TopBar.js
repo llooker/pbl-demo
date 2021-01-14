@@ -34,7 +34,7 @@ export default function TopBar(props) {
 
         {packageName ?
           <Avatar alt="Icon"
-            src={require(`../../images/${packageName}.svg`).default}
+            src={require(`../../images/logo.svg`).default}
             variant="square"
           /> : ''}
 

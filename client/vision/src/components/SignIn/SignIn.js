@@ -4,11 +4,13 @@ import { useHistory, useParams, useLocation } from "react-router-dom";
 import { GoogleLogin } from 'react-google-login';
 import AppContext from '../../contexts/AppContext';
 import { writeNewSession, createSdkHelper } from '../../AuthUtils/auth';
-import UsecaseContent from '../../usecaseContent.json';
+// import UsecaseContent from '../../usecaseContent.json';
 import { initialLookerUser } from '../../LookerHelpers/defaults'
 import useStyles from './styles.js';
 import '../Home.css';
 import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
+import { SignInContent } from '../../content'
+
 const { validIdHelper } = require('../../tools');
 
 export default function SignIn(props) {
@@ -36,10 +38,11 @@ export default function SignIn(props) {
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;
 
   const classes = useStyles();
-  const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
+  const logoImage = packageName ? require(`../../images/logo_text.svg`).default : "";
 
-  const backgroundImage = packageName ? require(`../../images/${packageName}_background.jpg`).default : "";
-  const logoImage = packageName ? require(`../../images/${packageName}_logo_black.svg`).default : "";
+  const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
+  const backgroundImage = packageName ? require(`../../images/background${backgroundImageInt}.jpg`).default : "";
+
 
   return (
     <div className={`${classes.root} demoComponent ${classes.h100}`}>
@@ -59,11 +62,11 @@ export default function SignIn(props) {
               />
               <CardContent >
                 <Typography variant="h5" component="h2">
-                  Welcome
-                            </Typography>
+                  {SignInContent.cardHeader}
+                </Typography>
                 <Typography variant="body2" component="p">
-                  Please sign in to access <br /> your merchant portal
-                            </Typography>
+                  {SignInContent.cardBody}
+                </Typography>
               </CardContent>
               <CardActions className={`${classes.actions}`} >
                 <GoogleLogin
