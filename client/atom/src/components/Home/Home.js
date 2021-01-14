@@ -8,33 +8,22 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
 import { lookerUserPermissions, lookerUserTimeHorizonMap } from '../../LookerHelpers/defaults';
-import UsecaseContent from '../../usecaseContent.json';
 
 import TopBar from './TopBar';
 import LeftDrawer from './LeftDrawer';
 import MonetizationModal from '../Demo/MonetizationModal/MonetizationModal';
 
-import SplashPage from '../Demo/SplashPage/SplashPage';
-import Dashboard from '../Demo/Dashboard/Dashboard';
-
-import CustomVis from '../Demo/CustomVis/CustomVis';
-import ReportBuilder from '../Demo/ReportBuilder/ReportBuilder';
-import QueryBuilder from '../Demo/QueryBuilder/QueryBuilder';
 import '../Home.css';
-import {
-  useStyles
-  // , defaultTheme, atomTheme 
-} from './styles.js';
+import { useStyles } from './styles.js';
 import { packageNameTheme } from './theme.js';
 
-// console.log({ theme })
+import * as DemoComponentsContentArr from '../../content'
 
 const { validIdHelper } = require('../../tools');
 
 export default function Home(props) {
   // console.log("Home")
   let { setClientSession, clientSession, sdk, setSdk, isReady } = useContext(AppContext)
-  const { packageName } = clientSession
   let { democomponent } = useParams();
   const classes = useStyles();
 
@@ -96,7 +85,6 @@ export default function Home(props) {
 
   }, [])
 
-  //componentDidUpdate
   useEffect(() => {
     if (didMountRef.current) {
       // doStuff()
@@ -105,30 +93,16 @@ export default function Home(props) {
 
 
   useEffect(() => {
-
     if (highlightShow) setHighlightShow(!highlightShow);
     if (codeShow) setCodeShow(!codeShow);
-
     setSelectedMenuItem(democomponent)
   }, [democomponent])
 
 
-  const demoComponentMap = {
-    "home": SplashPage,
-    "inventoryoverview": Dashboard,
-    "webanalytics": Dashboard,
-    "salesoverview": Dashboard,
-    "salescalendar": CustomVis,
-    "querybuilder": QueryBuilder,
-    "savedreports": ReportBuilder,
-  };
-
-
-  const DemoComponent = demoComponentMap[selectedMenuItem];
-  const DemoComponentContent = _.find(UsecaseContent[packageName].demoComponents, (o) => {
+  const ActiveDemoComponentContent = _.find(DemoComponentsContentArr, (o) => {
     return selectedMenuItem === validIdHelper(_.lowerCase(o.label));
   });
-
+  const ActiveDemoComponent = ActiveDemoComponentContent.component
 
   return (
     <div className={classes.root} >
@@ -138,7 +112,6 @@ export default function Home(props) {
         payWallModal, setPaywallModal,
         handleSwitchLookerUser,
         drawerOpen, setDrawerOpen,
-        // activeUsecase,
         selectedMenuItem,
         highlightShow, setHighlightShow,
         codeShow, setCodeShow,
@@ -151,7 +124,7 @@ export default function Home(props) {
           <CssBaseline />
           <TopBar />
           <MonetizationModal />
-          <LeftDrawer />
+          <LeftDrawer DemoComponentsContentArr={DemoComponentsContentArr} />
           <main
             className={clsx(classes.content, {
               [classes.contentShift]: drawerOpen,
@@ -159,7 +132,7 @@ export default function Home(props) {
           >
 
             <div className={classes.drawerHeader} />
-            {DemoComponentContent ? <DemoComponent staticContent={DemoComponentContent} /> : ''}
+            {ActiveDemoComponent ? <ActiveDemoComponent staticContent={ActiveDemoComponentContent} /> : ''}
           </main>
         </ThemeProvider>
       </AppContext.Provider>

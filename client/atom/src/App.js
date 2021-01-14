@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
@@ -6,6 +7,8 @@ import { checkForExistingSession, createSdkHelper } from './AuthUtils/auth';
 import SignIn from './components/SignIn/SignIn';
 import Home from './components/Home/Home';
 
+import * as DemoComponentsContentArr from './content';
+import { validIdHelper } from './tools';
 
 function App(props) {
 
@@ -115,16 +118,11 @@ const PublicRoute = ({ component: Component,
   initialHref,
   ...rest }) => {
 
-
-  const demoComponentMap = {
-    "home": "SplashPage",
-    "inventoryoverview": "Dashboard",
-    "webanalytics": "Dashboard",
-    "salesoverview": "Dashboard",
-    "salescalendar": "CustomVis",
-    "querybuilder": "QueryBuilder",
-    "savedreports": "ReportBuilder",
-  };
+  const demoComponentMap = {};
+  Object.keys(DemoComponentsContentArr).map(key => {
+    demoComponentMap[validIdHelper(_.lowerCase(DemoComponentsContentArr[key].label))] =
+      validIdHelper(_.startCase(DemoComponentsContentArr[key].type));
+  });
 
   let urlToUse = '/analytics/home';
   if (initialHref) {
