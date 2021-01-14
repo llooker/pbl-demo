@@ -1,21 +1,16 @@
 import $ from 'jquery';
-import React, { useEffect, useRef, useCallback, useState, useContext } from 'react';
-// import AppContext from '../../../AppContext';
-import AppContext from '../../../contexts/AppContext';
-
+import React, { useEffect, useState, useContext } from 'react';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
-import { Typography, Grid, Card, CircularProgress, Box, Chip } from '@material-ui/core';
-import { urlencoded } from 'body-parser';
+import { Typography, Grid, Card, CircularProgress } from '@material-ui/core';
+import { EmbedHighlight } from './Highlight';
+import { appContextMap } from '../utils/tools';
 
 export function EmbeddedQuery({ lookerContent, classes, id }) {
 
   const [iFrameExists, setIFrame] = useState(0);
-  // const { userProfile, lookerUser, show, lookerHost } = useContext(AppContext)
-  const { clientSession, show, sdk, corsApiCall, isReady } = useContext(AppContext)
-  const { userProfile, lookerUser, lookerHost } = clientSession;
+  const { clientSession, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
+  const { lookerUser } = clientSession;
 
-  const [apiContent, setApiContent] = useState(undefined);
 
   useEffect(() => {
     console.log("useEffect outer");
@@ -37,6 +32,7 @@ export function EmbeddedQuery({ lookerContent, classes, id }) {
     await fetch(`/auth?src=${queryUrl}`)
       .then(response => response.json())
       .then(data => {
+
         LookerEmbedSDK.createExploreWithUrl(data.url)
           .appendTo(document.getElementById(id))
           .withClassName('explore')
@@ -46,14 +42,18 @@ export function EmbeddedQuery({ lookerContent, classes, id }) {
           .build()
           .connect()
           .then((explore) => {
-            setIFrame(1)
+            // setIFrame(1)
             let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+            console.log({ modifiedBaseUrl })
             LookerEmbedSDK.init(modifiedBaseUrl)
           })
           .catch((error) => {
             // console.log('catch', error)
-            console.error('Connection error', error)
           })
+      }).then(() => {
+        setIFrame(1)
+      }).catch(error => {
+        console.log({ error })
       });
   }
 

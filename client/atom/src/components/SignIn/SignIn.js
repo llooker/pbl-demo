@@ -9,7 +9,7 @@ import { initialLookerUser } from '../../LookerHelpers/defaults'
 import useStyles from './styles.js';
 import '../Home.css';
 import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
-import { SignInContent } from '../../content'
+import { SignInContent } from '../../config'
 
 const { validIdHelper } = require('../../tools');
 

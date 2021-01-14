@@ -1,16 +1,13 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
-import AppContext from '../../../contexts/AppContext';
-import { ApiHighlight } from '../../Highlights/Highlight';
-import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, CircularProgress, Grid, Chip } from '@material-ui/core';
+import React, { useState, useEffect, useContext } from 'react';
+import { Typography, Card, CircularProgress, Grid, Chip } from '@material-ui/core';
 import { ResponsiveLine } from '@nivo/line';
-const { validIdHelper, decodeHtml } = require('../../../tools');
+import { validIdHelper, decodeHtml, appContextMap } from '../utils/tools';
+import { ApiHighlight } from './Highlight';
 
 export function SingleValueVis({ lookerContent, classes }) {
   // console.log('SingleValueVis')
-  // console.log({ lookerContent })
-
   const [apiContent, setApiContent] = useState(undefined);
-  const { clientSession, sdk, corsApiCall, isReady } = useContext(AppContext)
+  const { clientSession, sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { userProfile, lookerUser } = clientSession;
 
   let dataObjForSparkline = {}

@@ -1,14 +1,8 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
-// import AppContext from '../../../AppContext';
-// import { ApiHighlight } from '../../Highlights/Highlight';
-import { Typography, Card, CardActionArea, CardActions, CardContent, CardMedia, Button, CircularProgress, Grid, Divider } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
-// import { ResponsiveLine } from '@nivo/line';
+import React, { useState } from 'react';
+import { Typography, Card, Grid } from '@material-ui/core';
 import { VectorThumbnail } from './VectorThumbnail';
-// import { NaturalLanguage } from './NaturalLanguage';
-const { validIdHelper } = require('../../../tools');
 
-
+const { validIdHelper } = require('../utils/tools');
 
 export function PopularAnalysis({ lookerContent, classes }) {
   const [apiContent, setApiContent] = useState([]);
@@ -19,7 +13,6 @@ export function PopularAnalysis({ lookerContent, classes }) {
     ${classes.overflowHidden} 
     ${classes.lookerCardShadow}
     `}
-    // variant="outlined"
     >
       <div
         className={`${classes.overflowYScroll}`}

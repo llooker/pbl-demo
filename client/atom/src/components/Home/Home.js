@@ -15,9 +15,9 @@ import MonetizationModal from '../Demo/MonetizationModal/MonetizationModal';
 
 import '../Home.css';
 import { useStyles } from './styles.js';
-import { packageNameTheme } from './theme.js';
+import { packageNameTheme } from '../../config/theme.js';
 
-import * as DemoComponentsContentArr from '../../content/Demo'
+import * as DemoComponentsContentArr from '../../config/Demo'
 
 const { validIdHelper } = require('../../tools');
 

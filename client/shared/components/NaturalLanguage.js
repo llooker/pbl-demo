@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
-import AppContext from '../../../contexts/AppContext';
-import { ApiHighlight } from '../../Highlights/Highlight'; //ooops
 import { Typography, Grid, Chip } from '@material-ui/core';
-const { validIdHelper, decodeHtml } = require('../../../tools');
+import { ApiHighlight } from './Highlight';
+const { validIdHelper, decodeHtml, appContextMap } = require('../utils/tools');
+
 
 export function NaturalLanguage({ lookerContent, inlineQuery, index, classes }) {
 
   const [apiContent, setApiContent] = useState(undefined);
-  const { clientSession, sdk, corsApiCall, isReady } = useContext(AppContext);
+  // const { clientSession, sdk, corsApiCall, isReady } = useContext(AppContext);
+  const { clientSession, sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { userProfile, lookerUser } = clientSession;
 
   useEffect(() => {

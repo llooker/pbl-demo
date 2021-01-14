@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
-import AppContext from '../../../contexts/AppContext';
-import { ApiHighlight } from '../../Highlights/Highlight';
 import { Typography, Grid, Divider } from '@material-ui/core';
+import { ApiHighlight } from './Highlight';
+import { appContextMap } from '../utils/tools';
+
 
 export function VectorThumbnail({ lookerContent, classes, item, index }) {
   // console.log('VectorThumbnail')
 
   const [svg, setSvg] = useState(undefined)
-  // const { userProfile, lookerUser, show, sdk, corsApiCall } = useContext(AppContext);
-  const { clientSession, sdk, corsApiCall, isReady } = useContext(AppContext)
+  const { clientSession, sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const { userProfile, lookerUser } = clientSession;
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { packageNameTheme } from './theme.js';
+import { packageNameTheme } from '../../config/theme.js'
 import { makeStyles } from '@material-ui/core/styles';
 
 const drawerWidth = 240;

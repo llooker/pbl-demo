@@ -1,20 +1,14 @@
 import React from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-
 import { ApiHighlight } from './Highlight';
 import { NumberToColoredPercent } from './NumberToColoredPercent';
-// const { validIdHelper } = require('../../../tools');
-
-// console.log('process.env', process.env)
-
+const { validIdHelper } = require('../utils/tools');
 
 export const AutoComplete = ({ lookerContent, apiContent, index, classes, customFilterAction, type, horizontalLayout }) => {
-
   return (
-
     <Grid
-      // key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)}
+      key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)}
       item sm={horizontalLayout ? 3 : 12}>
       <ApiHighlight classes={classes} >
         <Typography>
