@@ -62,7 +62,9 @@ function MenuList({ classes, DemoComponentsContentArr }) {
       cumulativePusher += 1;
       expandedTreeItemsArr.push("" + (index + cumulativePusher));
     }
-  })
+  });
+
+  console.log({ orderedDemoComponentsForMenuObj })
 
   return (<List
     component="nav"
@@ -92,7 +94,7 @@ function MenuList({ classes, DemoComponentsContentArr }) {
                   to={validIdHelper(_.lowerCase(item.label))}
                 >
                   <ListItemIcon>
-                    <MatchingIconComponent />
+                    {MatchingIconComponent ? <MatchingIconComponent /> : <></>}
                   </ListItemIcon>
                   <ListItemText primary={_.capitalize(item.label)} />
                 </ListItem>

@@ -7,7 +7,7 @@ import { checkForExistingSession, createSdkHelper } from './AuthUtils/auth';
 import SignIn from './components/SignIn/SignIn';
 import Home from './components/Home/Home';
 
-import * as DemoComponentsContentArr from './content';
+import * as DemoComponentsContentArr from './content/Demo';
 import { validIdHelper } from './tools';
 
 function App(props) {

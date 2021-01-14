@@ -17,7 +17,7 @@ import '../Home.css';
 import { useStyles } from './styles.js';
 import { packageNameTheme } from './theme.js';
 
-import * as DemoComponentsContentArr from '../../content'
+import * as DemoComponentsContentArr from '../../content/Demo'
 
 const { validIdHelper } = require('../../tools');
 
