@@ -10,11 +10,10 @@ import SwitchTheme from './SwitchTheme'
 import SelectFont from './SelectFont'
 import { AutoComplete } from "@pbl-demo/components";
 
-
 const { validIdHelper } = require('../../../tools');
 
 export default function FilterBarChildren({ classes, apiContent, customFilterAction, tileToggleValue, handleTileToggle, visColorToggleValue,
-  handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange, horizontalLayout, setHorizontalLayout,
+  handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange, horizontalLayout,
   lookerContent, type
 }) {
   return (
@@ -23,49 +22,51 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
       {lookerContent[0].filterComponents.map((item, index) => {
         return (
           lookerContent[0].filterComponents[index] === 'autocomplete' ?
-            <AutoComplete
-              lookerContent={lookerContent}
-              apiContent={apiContent[index]}
-              index={index}
-              classes={classes}
-              customFilterAction={customFilterAction}
-              type={type}
-              horizontalLayout={horizontalLayout}
-              key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}
-            />
-            : lookerContent[0].filterComponents[index] === 'mapfilter' ?
-              <MapFilter
+            <Grid
+              item sm={horizontalLayout ? 3 : 12}
+              key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}>
+              <AutoComplete
                 lookerContent={lookerContent}
                 apiContent={apiContent[index]}
                 index={index}
                 classes={classes}
-                customFilterAction={customFilterAction}
-                type={type}
-                horizontalLayout={horizontalLayout}
-                key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}
+                action={customFilterAction}
               />
-              : lookerContent[0].filterComponents[index] === 'rangeslider' ?
-                <RangeSlider
+            </Grid>
+            : lookerContent[0].filterComponents[index] === 'mapfilter' ?
+
+              <Grid item sm={horizontalLayout ? 3 : 12}
+                key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}>
+                <MapFilter
                   lookerContent={lookerContent}
                   apiContent={apiContent[index]}
                   index={index}
                   classes={classes}
                   customFilterAction={customFilterAction}
-                  type={type}
-                  horizontalLayout={horizontalLayout}
-                  key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}
                 />
-                : lookerContent[0].filterComponents[index] === 'togglebuttonapi' ?
-                  <ToggleApi
+              </Grid>
+              : lookerContent[0].filterComponents[index] === 'rangeslider' ?
+                <Grid item sm={horizontalLayout ? 3 : 12}
+                  key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}>
+                  <RangeSlider
                     lookerContent={lookerContent}
                     apiContent={apiContent[index]}
                     index={index}
                     classes={classes}
-                    customFilterAction={customFilterAction}
-                    type={type}
-                    horizontalLayout={horizontalLayout}
-                    key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}
+                    action={customFilterAction}
                   />
+                </Grid>
+                : lookerContent[0].filterComponents[index] === 'togglebuttonapi' ?
+                  <Grid item sm={horizontalLayout ? 3 : 12}
+                    key={validIdHelper(`${type}-${lookerContent[0].filterComponents[index]}-${index}`)}>
+                    <ToggleApi
+                      lookerContent={lookerContent}
+                      apiContent={apiContent[index]}
+                      index={index}
+                      classes={classes}
+                      action={customFilterAction}
+                    />
+                  </Grid>
 
                   //couldn't get this to work, for now
                   // : lookerContent[0].filterComponents[index] === 'togglebutton' ?
@@ -87,51 +88,51 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                   '')
       })}
       {lookerContent[0].dynamicFieldLookUp ?
-        <ToggleTile
-          lookerContent={lookerContent}
-          classes={classes}
-          type={type}
-          tileToggleValue={tileToggleValue}
-          handleTileToggle={handleTileToggle}
-          horizontalLayout={horizontalLayout}
-          key={validIdHelper(`${type}-dynamicFieldLookUp`)}
-        />
+        <Grid item sm={horizontalLayout ? 3 : 12}
+          key={validIdHelper(`${type}-dynamicFieldLookUp`)}>
+          <ToggleTile
+            lookerContent={lookerContent}
+            classes={classes}
+            tileToggleValue={tileToggleValue}
+            handleTileToggle={handleTileToggle}
+          />
+        </Grid>
         : ''
       }
       {lookerContent[0].dynamicVisConfig ?
-        <ToggleVisColor
-          lookerContent={lookerContent}
-          classes={classes}
-          type={type}
-          visColorToggleValue={visColorToggleValue}
-          handleVisColorToggle={handleVisColorToggle}
-          horizontalLayout={horizontalLayout}
-          key={validIdHelper(`${type}-dynamicVisConfig`)}
-        />
+        <Grid item sm={horizontalLayout ? 2 : 12}
+          key={validIdHelper(`${type}-dynamicVisConfig`)}>
+          <ToggleVisColor
+            lookerContent={lookerContent}
+            classes={classes}
+            visColorToggleValue={visColorToggleValue}
+            handleVisColorToggle={handleVisColorToggle}
+          />
+        </Grid>
         : ''
       }
       {lookerContent[0].dynamicThemeMode ?
-        <SwitchTheme
-          lookerContent={lookerContent}
-          classes={classes}
-          type={type}
-          lightThemeToggleValue={lightThemeToggleValue}
-          handleThemeChange={handleThemeChange}
-          horizontalLayout={horizontalLayout}
-          key={validIdHelper(`${type}-dynamicThemeMode`)}
-        />
+        <Grid item sm={horizontalLayout ? 1 : 12}
+          key={validIdHelper(`${type}-dynamicThemeMode`)}>
+          <SwitchTheme
+            lookerContent={lookerContent}
+            classes={classes}
+            lightThemeToggleValue={lightThemeToggleValue}
+            handleThemeChange={handleThemeChange}
+          />
+        </Grid>
         : ''
       }
       {lookerContent[0].dynamicThemeFont ?
-        <SelectFont
-          lookerContent={lookerContent}
-          classes={classes}
-          type={type}
-          fontThemeSelectValue={fontThemeSelectValue}
-          handleThemeChange={handleThemeChange}
-          horizontalLayout={horizontalLayout}
-          key={validIdHelper(`${type}-dynamicThemeFont`)}
-        />
+        <Grid item sm={horizontalLayout ? 2 : 12}
+          key={validIdHelper(`${type}-dynamicThemeFont`)}>
+          <SelectFont
+            lookerContent={lookerContent}
+            classes={classes}
+            fontThemeSelectValue={fontThemeSelectValue}
+            handleThemeChange={handleThemeChange}
+          />
+        </Grid>
         : ''
       }
     </Grid>
