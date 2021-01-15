@@ -6,6 +6,9 @@ import { NumberToColoredPercent } from './NumberToColoredPercent';
 const { validIdHelper } = require('../utils/tools');
 
 export const AutoComplete = ({ lookerContent, apiContent, index, classes, customFilterAction, type, horizontalLayout }) => {
+  console.log("AutoComplete");
+  console.log({ apiContent })
+  console.log({ customFilterAction })
   return (
     <Grid
       key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)}

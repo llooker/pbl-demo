@@ -17,7 +17,8 @@ module.exports = {
       "download_with_limit"
     ],
     "models": [
-      "atom_fashion"
+      "atom_fashion",
+      "vision"
     ],
     "user_attributes": {
       "locale": "en_US",
