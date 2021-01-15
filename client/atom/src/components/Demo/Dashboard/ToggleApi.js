@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { Typography } from '@material-ui/core'
-import { EmbedMethodHighlight } from '../../Highlights/Highlight';
 import { lifetimeRevenueTierMap, lifetimeRevenueTierIconMap } from './helpers';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import { EmbedMethodHighlight } from "@pbl-demo/components";
+
+
 const { validIdHelper } = require('../../../tools');
 
 export default function ToggleApi({ lookerContent, apiContent, index, classes, action }) {

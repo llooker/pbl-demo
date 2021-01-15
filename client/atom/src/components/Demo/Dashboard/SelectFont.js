@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormControl, Select, MenuItem, InputLabel } from '@material-ui/core'
-import { EmbedHighlight } from '../../Highlights/Highlight';
+import { EmbedHighlight } from "@pbl-demo/components";
+
 
 export default function SelectFont({ lookerContent, classes, fontThemeSelectValue, handleThemeChange }) {
   return (

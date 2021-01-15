@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Typography, Slider } from '@material-ui/core'
-import { EmbedMethodHighlight } from '../../Highlights/Highlight';
+import { EmbedMethodHighlight } from "@pbl-demo/components";
+
 const { validIdHelper } = require('../../../tools');
 
 export default function RangeSlider({ lookerContent, apiContent, index, classes, action }) {

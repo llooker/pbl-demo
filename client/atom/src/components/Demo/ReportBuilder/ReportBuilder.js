@@ -11,11 +11,8 @@ import rawSampleCode from '!!raw-loader!./ReportBuilder.js'; // eslint-disable-l
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
-import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import AppContext from '../../../contexts/AppContext';
-import { Loader } from '../../Accessories/Loader';
-
-import { SwapVerticalCircleOutlined } from '@material-ui/icons';
+import { Loader, ApiHighlight, EmbedHighlight } from "@pbl-demo/components";
 const { validIdHelper } = require('../../../tools');
 
 //start of ReportBuilder Component

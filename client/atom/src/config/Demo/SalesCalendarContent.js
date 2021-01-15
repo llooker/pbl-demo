@@ -1,4 +1,4 @@
-import CustomVis from '../../components/Demo/ReportBuilder/ReportBuilder'
+import CustomVis from '../../components/Demo/CustomVis/CustomVis'
 import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
 
 

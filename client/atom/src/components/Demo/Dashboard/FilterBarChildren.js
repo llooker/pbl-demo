@@ -42,7 +42,7 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                   apiContent={apiContent[index]}
                   index={index}
                   classes={classes}
-                  customFilterAction={customFilterAction}
+                  action={customFilterAction}
                 />
               </Grid>
               : lookerContent[0].filterComponents[index] === 'rangeslider' ?

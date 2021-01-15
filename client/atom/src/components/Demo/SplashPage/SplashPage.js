@@ -4,7 +4,7 @@ import { Box, Grid, CircularProgress, Card } from '@material-ui/core'
 import CodeFlyout from '../CodeFlyout';
 import useStyles from './styles.js';
 import AppContext from '../../../contexts/AppContext';
-import { Welcome, SingleValueVis, PopularAnalysis, EmbeddedQuery } from "@pbl-demo/components";
+import { Welcome, SingleValueVis, PopularAnalysis, EmbeddedQuery, Loader } from "@pbl-demo/components";
 
 const { validIdHelper } = require('../../../tools');
 
@@ -12,22 +12,23 @@ export default function SplashPage(props) {
   // console.log('SplashPage')
 
   const topBarBottomBarHeight = 112;
-  const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(1);
-  const [clientSideCode, setClientSideCode] = useState('');
-  const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
 
-  const { clientSession, highlightShow, codeShow } = useContext(AppContext)
-  const { userProfile, lookerUser, lookerHost } = clientSession
+  const { clientSession, codeShow } = useContext(AppContext)
+  const { lookerUser, lookerHost } = clientSession
 
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type } } = props;
   const codeTab = {
-    type: 'code flyout', label: 'Code', id: 'codeFlyout',
-    lookerContent, lookerUser, clientSideCode, serverSideCode
+    type: 'code flyout',
+    label: 'Code',
+    id: 'codeFlyout',
+    lookerContent,
+    lookerUser
   }
   const demoComponentType = type || 'code flyout';
+  console.log({ demoComponentType })
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
@@ -44,11 +45,7 @@ export default function SplashPage(props) {
           key={validIdHelper(type)}>
           <div className={classes.root}>
             {iFrameExists ? '' :
-              <Grid item sm={12} >
-                <Card className={`${classes.card} ${classes.flexCentered}`}>
-                  <CircularProgress className={classes.circularProgress} />
-                </Card>
-              </Grid>
+              <Loader classes={classes} height={height} />
             }
             <Box className={iFrameExists ? `` : `${classes.hidden}`}>
               <Grid container

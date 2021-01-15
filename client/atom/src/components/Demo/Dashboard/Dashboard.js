@@ -6,12 +6,11 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import CodeFlyout from '../CodeFlyout';
 import useStyles from './styles.js';
-import { EmbedHighlight } from '../../Highlights/Highlight'; //ooops
 import AppContext from '../../../contexts/AppContext';
 import FilterBar from './FilterBar';
-import { Loader } from '../../Accessories/Loader';
 import { VerticalSplit, HorizontalSplit } from '@material-ui/icons';
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
+import { Loader } from "@pbl-demo/components";
 
 
 

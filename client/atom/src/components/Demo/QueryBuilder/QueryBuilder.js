@@ -12,11 +12,10 @@ import { ExpandMore, Search, Done } from '@material-ui/icons';
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./QueryBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
-import { ApiHighlight } from '../../Highlights/Highlight';
 import { TabPanel, a11yProps, descendingComparator, getComparator, stableSort } from './helpers.js';
 import AppContext from '../../../contexts/AppContext';
 import { lookerUserTimeHorizonMap } from '../../../LookerHelpers/defaults';
-import { Loader } from '../../Accessories/Loader';
+import { Loader, ApiHighlight } from "@pbl-demo/components";
 
 
 const { validIdHelper, prettifyString } = require('../../../tools');

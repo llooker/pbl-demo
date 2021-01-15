@@ -13,12 +13,11 @@ import { ResponsiveCalendar } from '@nivo/calendar'
 import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./CustomVis.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
-import { ApiHighlight } from '../../Highlights/Highlight';
 import { format, endOfDay, addDays } from 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import AppContext from '../../../contexts/AppContext';
-import { Loader } from '../../Accessories/Loader';
+import { Loader, ApiHighlight } from "@pbl-demo/components";
 
 
 const { validIdHelper } = require('../../../tools');

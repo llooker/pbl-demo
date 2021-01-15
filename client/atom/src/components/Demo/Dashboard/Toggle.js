@@ -1,21 +1,20 @@
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { Typography, Grid } from '@material-ui/core'
-import { EmbedMethodHighlight } from '../../Highlights/Highlight';
 import { lifetimeRevenueTierMap, lifetimeRevenueTierIconMap } from './helpers';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import { EmbedMethodHighlight } from "@pbl-demo/components";
+
 const { validIdHelper } = require('../../../tools');
 
 export default function Toggle({ lookerContent,
   // apiContent,
   index, classes,
-  // customFilterAction, 
   type,
   value,
   onChange }) {
 
 
-  // const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
   return (
     <Grid item sm={3}>
       <EmbedMethodHighlight classes={classes}

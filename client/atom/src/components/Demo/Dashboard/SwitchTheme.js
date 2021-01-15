@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Grid, Switch } from '@material-ui/core'
-import { EmbedHighlight } from '../../Highlights/Highlight';
+import { EmbedHighlight } from "@pbl-demo/components";
+
 
 export default function SwitchTheme({ lookerContent, classes, lightThemeToggleValue, handleThemeChange }) {
   return (
