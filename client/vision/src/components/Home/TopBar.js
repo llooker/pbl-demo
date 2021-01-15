@@ -25,14 +25,13 @@ export default function TopBar(props) {
   const [apiContent, setApiContent] = useState(undefined);
 
   useEffect(() => {
-    if (TopBarContent && TopBarContent.length) {
-      let autocompleteFilterItem = _.find(TopBarContent, { component: "autocomplete" });
-      if (autocompleteFilterItem) retrieveAutocompleteOptions()
+    if (TopBarContent && TopBarContent.hasOwnProperty("autocomplete")) {
+      retrieveAutocompleteOptions(TopBarContent.autocomplete);
     }
   }, [])
 
-  const retrieveAutocompleteOptions = async () => {
-    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: TopBarContent[0].resultFormat || "json", body: TopBarContent[0].inlineQuery }))
+  const retrieveAutocompleteOptions = async (autocomplteInfo) => {
+    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: autocomplteInfo.resultFormat || "json", body: autocomplteInfo.inlineQuery }))
     let apiContentObj = {}
     let queryResultsForDropdown = [];
     let desiredProperty = Object.keys(lookerResponseData[0])[0];
@@ -75,9 +74,9 @@ export default function TopBar(props) {
         {apiContent && apiContent.autocomplete ?
           <Grid item sm={3} className={classes.mlAuto}>
             <AutoComplete
-              filterItem={TopBarContent[0]}
+              filterItem={TopBarContent.autocomplete}
               apiContent={apiContent.autocomplete}
-              action={() => { console.log("test") }} // for now
+              action={() => { console.log("test") }}
               classes={classes}
             /></Grid> : ""}
 
