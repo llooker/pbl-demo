@@ -1,31 +1,30 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Grid, CircularProgress, Card } from '@material-ui/core'
-import CodeFlyout from '../CodeFlyout';
+import { Box, Grid, Card } from '@material-ui/core'
 import useStyles from './styles.js';
 import AppContext from '../../../contexts/AppContext';
 import { Welcome, SingleValueVis, PopularAnalysis, EmbeddedQuery } from "@pbl-demo/components";
+import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
 
 const { validIdHelper } = require('../../../tools');
 
 export default function SplashPage(props) {
-  // console.log('SplashPage')
 
   const topBarBottomBarHeight = 112;
-  const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(1);
-  const [clientSideCode, setClientSideCode] = useState('');
-  const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
 
-  const { clientSession, highlightShow, codeShow } = useContext(AppContext)
-  const { userProfile, lookerUser, lookerHost } = clientSession
+  const { clientSession, codeShow } = useContext(AppContext)
+  const { lookerUser, lookerHost } = clientSession
 
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type } } = props;
   const codeTab = {
-    type: 'code flyout', label: 'Code', id: 'codeFlyout',
-    lookerContent, lookerUser, clientSideCode, serverSideCode
+    type: 'code flyout',
+    label: 'Code',
+    id: 'codeFlyout',
+    lookerContent,
+    lookerUser
   }
   const demoComponentType = type || 'code flyout';
 
@@ -44,11 +43,7 @@ export default function SplashPage(props) {
           key={validIdHelper(type)}>
           <div className={classes.root}>
             {iFrameExists ? '' :
-              <Grid item sm={12} >
-                <Card className={`${classes.card} ${classes.flexCentered}`}>
-                  <CircularProgress className={classes.circularProgress} />
-                </Card>
-              </Grid>
+              <Loader classes={classes} height={height} />
             }
             <Box className={iFrameExists ? `` : `${classes.hidden}`}>
               <Grid container
@@ -66,24 +61,25 @@ export default function SplashPage(props) {
                       height={height}
                     />
                   </Grid> : ''}
-                {lookerContent.map((lookerContent, innerIndex) => {
+                {lookerContent.map((lookerContentItem, innerIndex) => {
+                  // console.log({ lookerContentItem })
                   return (
                     <Grid
                       key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
                       item
-                      sm={parseInt(lookerContent.gridWidth)}
+                      sm={parseInt(lookerContentItem.gridWidth)}
                     >
-                      {(lookerContent.type === 'welcome') && <Welcome
-                        {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                      {(lookerContentItem.type === 'welcome') && <Welcome
+                        {...{ lookerContentItem, classes }}
                       />}
-                      {(lookerContent.type === 'single value') && <SingleValueVis
-                        {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                      {(lookerContentItem.type === 'single value') && <SingleValueVis
+                        {...{ lookerContentItem, classes, demoComponentType, lookerHost }}
                       />}
-                      {(lookerContent.type === 'dashboard') && <EmbeddedQuery
-                        {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                      {(lookerContentItem.type === 'embeddedquery') && <EmbeddedQuery
+                        {...{ lookerContentItem, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
                       />}
-                      {(lookerContent.type === 'popular analysis') && <PopularAnalysis
-                        {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                      {(lookerContentItem.type === 'popular analysis') && <PopularAnalysis
+                        {...{ lookerContentItem, classes, demoComponentType, lookerHost }}
                       />}
                     </Grid>
                   )

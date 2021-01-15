@@ -6,55 +6,10 @@ import {
 import { AddAlert, ChevronLeft, Menu } from '@material-ui/icons';
 import AppContext from '../../contexts/AppContext';
 import { useStyles } from './styles.js';
-
 import UserMenu from './UserMenu';
-import { AutoComplete } from "@pbl-demo/components";
 
-
-
-import Dashboard from '../../components/Demo/Dashboard/Dashboard'
-import TableChartOutlinedIcon from '@material-ui/icons/TableChartOutlined';
-
-const InventoryOverviewContent = {
-  "type": "custom filter",
-  "label": "Inventory Overview",
-  "menuCategory": "operations",
-  "description": "Overview of your inventory",
-  "icon": TableChartOutlinedIcon,
-  "component": Dashboard,
-  "lookerContent": [
-    {
-      "type": "dashboard",
-      "lookerMethod": "embedDashboard",
-      "id": "1",
-      "isNext": false,
-      "label": "Inventory Overview",
-      "filters": [
-        {
-          "label": "Select Application ID",
-          "filterName": "Application ID",
-          "lookerMethod": "runInlineQuery"
-        }
-      ],
-      "inlineQueries": [
-        {
-          "model": "vision",
-          "view": "person",
-          "fields": [
-            "person.application_id"
-          ],
-          "query_timezone": "America/Los_Angeles"
-        }
-      ],
-      "desiredFilterNames": [
-        "person.application_id"
-      ],
-      "filterComponents": [
-        "autocomplete"
-      ]
-    }
-  ]
-}
+import { TopBarContent } from '../../config/TopBarContent';
+import { AutoComplete } from '@pbl-demo/components';
 
 export default function TopBar(props) {
   const classes = useStyles();
@@ -66,14 +21,13 @@ export default function TopBar(props) {
   const { packageName } = clientSession;
   const [apiContent, setApiContent] = useState(undefined);
 
-
   useEffect(() => {
-    performLookerApiCalls()
+    if (TopBarContent.hasOwnProperty("autocomplete")) retrieveAutocompleteOptions()
   }, [])
 
-  const performLookerApiCalls = async () => {
-    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: InventoryOverviewContent.lookerContent[0].result_format || "json", body: InventoryOverviewContent.lookerContent[0].inlineQueries[0] }))
-    console.log({ lookerResponseData })
+
+  const retrieveAutocompleteOptions = async () => {
+    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: TopBarContent.autocomplete[0].resultFormat || "json", body: TopBarContent.autocomplete[0].inlineQuery }))
     let orderedArrayForApiContent = []
     let queryResultsForDropdown = [];
     let desiredProperty = Object.keys(lookerResponseData[0])[0];
@@ -113,13 +67,12 @@ export default function TopBar(props) {
             variant="square"
           /> : ''}
 
-        <AutoComplete lookerContent={InventoryOverviewContent.lookerContent}
+        {TopBarContent.autocomplete ? <AutoComplete lookerContent={TopBarContent.autocomplete}
           apiContent={apiContent}
           index={0}
-          classes={classes}
-          horizontalLayout={true} />
+          action={() => { console.log("test") }} classes={classes} /> : ""}
 
-        <Badge badgeContent={3} color="error" className={`${classes.mr12} `} >
+        <Badge badgeContent={3} color="error" className={`${classes.mlAuto} ${classes.mr12} `} >
           <AddAlert />
         </Badge>
         <UserMenu />
@@ -127,5 +80,4 @@ export default function TopBar(props) {
     </AppBar>
   )
 }
-
 

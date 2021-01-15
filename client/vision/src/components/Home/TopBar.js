@@ -1,7 +1,8 @@
+import _ from 'lodash'
 import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import {
-  AppBar, Toolbar, Badge, Avatar, IconButton
+  AppBar, Toolbar, Badge, Avatar, IconButton, Grid
 } from '@material-ui/core/';
 import { AddAlert, ChevronLeft, Menu } from '@material-ui/icons';
 import AppContext from '../../contexts/AppContext';
@@ -9,7 +10,9 @@ import { useStyles } from './styles.js';
 import UserMenu from './UserMenu';
 
 import { TopBarContent } from '../../config/TopBarContent';
-import { AutoComplete } from '@pbl-demo/components';
+import { AutoComplete } from '@pbl-demo/components/Filters';
+
+console.log({ TopBarContent })
 
 export default function TopBar(props) {
   const classes = useStyles();
@@ -18,17 +21,19 @@ export default function TopBar(props) {
     drawerOpen, setDrawerOpen,
     sdk, corsApiCall
   } = useContext(AppContext)
-  const { packageName } = clientSession;
+  const { packageName } = clientSession
   const [apiContent, setApiContent] = useState(undefined);
 
   useEffect(() => {
-    if (TopBarContent.hasOwnProperty("autocomplete")) retrieveAutocompleteOptions()
+    if (TopBarContent && TopBarContent.length) {
+      let autocompleteFilterItem = _.find(TopBarContent, { component: "autocomplete" });
+      if (autocompleteFilterItem) retrieveAutocompleteOptions()
+    }
   }, [])
 
-
   const retrieveAutocompleteOptions = async () => {
-    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: TopBarContent.autocomplete[0].resultFormat || "json", body: TopBarContent.autocomplete[0].inlineQuery }))
-    let orderedArrayForApiContent = []
+    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: TopBarContent[0].resultFormat || "json", body: TopBarContent[0].inlineQuery }))
+    let apiContentObj = {}
     let queryResultsForDropdown = [];
     let desiredProperty = Object.keys(lookerResponseData[0])[0];
 
@@ -38,8 +43,8 @@ export default function TopBar(props) {
         'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined
       })
     }
-    orderedArrayForApiContent = queryResultsForDropdown;
-    setApiContent(orderedArrayForApiContent)
+    apiContentObj["autocomplete"] = queryResultsForDropdown
+    setApiContent(apiContentObj)
   }
 
   useEffect(() => {
@@ -67,10 +72,14 @@ export default function TopBar(props) {
             variant="square"
           /> : ''}
 
-        {TopBarContent.autocomplete ? <AutoComplete lookerContent={TopBarContent.autocomplete}
-          apiContent={apiContent}
-          index={0}
-          action={() => { console.log("test") }} classes={classes} /> : ""}
+        {apiContent && apiContent.autocomplete ?
+          <Grid item sm={3} className={classes.mlAuto}>
+            <AutoComplete
+              filterItem={TopBarContent[0]}
+              apiContent={apiContent.autocomplete}
+              action={() => { console.log("test") }} // for now
+              classes={classes}
+            /></Grid> : ""}
 
         <Badge badgeContent={3} color="error" className={`${classes.mlAuto} ${classes.mr12} `} >
           <AddAlert />

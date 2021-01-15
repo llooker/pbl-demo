@@ -12,7 +12,7 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action }) => {
       key={validIdHelper(`dashEmbed-${filterItem.label}`)}
       classes={classes} >
       <Typography>
-        {filterItem.label}
+        {filterItem.label ? filterItem.label : ""}
       </Typography>
       <Autocomplete
         id={`combo-box-dashboard-${filterItem.label}`}

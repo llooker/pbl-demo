@@ -1,21 +1,17 @@
 import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import { AppBar, Tabs, Tab, Typography, Box, Grid, Icon, CircularProgress, Card, Button } from '@material-ui/core'
+import { AppBar, Tabs, Tab, Box, Grid, Icon, Card, Button } from '@material-ui/core'
 import { TreeView, TreeItem } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./ReportBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
-import { ApiHighlight, EmbedHighlight } from '../../Highlights/Highlight';
 import AppContext from '../../../contexts/AppContext';
-import { Loader } from '../../Accessories/Loader';
-
-import { SwapVerticalCircleOutlined } from '@material-ui/icons';
+import { Loader, ApiHighlight, EmbedHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
 const { validIdHelper } = require('../../../tools');
 
 //start of ReportBuilder Component
@@ -30,8 +26,6 @@ export default function ReportBuilder(props) {
   // const [exploreIFrameExists, setExploreIFrame] = useState(0);
   const [apiContent, setApiContent] = useState([]);
   const [exploreObj, setExploreObj] = useState({});
-  const [clientSideCode, setClientSideCode] = useState('');
-  const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
 
@@ -39,7 +33,6 @@ export default function ReportBuilder(props) {
   const [value, setValue] = useState(0);
   const [qid, setQid] = useState(null);
   const { staticContent, staticContent: { lookerContent }, staticContent: { type },
-    //activeTabValue, handleTabChange, lookerUser, lookerHost 
   } = props;
 
   const demoComponentType = type;
@@ -60,7 +53,6 @@ export default function ReportBuilder(props) {
   useEffect(() => {
     if (isReady) {
       corsApiCall(performLookerApiCalls, [lookerContent, !value])
-      setClientSideCode(rawSampleCode)
     }
   }, [lookerUser, value, isReady, value]);
 

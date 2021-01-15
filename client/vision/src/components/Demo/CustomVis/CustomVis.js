@@ -10,15 +10,13 @@ import { Skeleton } from '@material-ui/lab';
 import { ExpandMore, FilterList } from '@material-ui/icons';
 import ModalTable from '../../Material/ModalTable';
 import { ResponsiveCalendar } from '@nivo/calendar'
-import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./CustomVis.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
-import { ApiHighlight } from '../../Highlights/Highlight';
 import { format, endOfDay, addDays } from 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import AppContext from '../../../contexts/AppContext';
-import { Loader } from '../../Accessories/Loader';
+import { Loader, ApiHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
 
 
 const { validIdHelper } = require('../../../tools');

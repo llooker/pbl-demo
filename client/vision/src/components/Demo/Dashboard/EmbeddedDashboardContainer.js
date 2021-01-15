@@ -1,6 +1,6 @@
 import React from 'react'
 import { Grid, Box } from '@material-ui/core';
-import { EmbedHighlight } from '../../Highlights/Highlight'; //ooops
+import { EmbedHighlight } from "@pbl-demo/components/Accessories";
 
 const { validIdHelper } = require('../../../tools');
 
