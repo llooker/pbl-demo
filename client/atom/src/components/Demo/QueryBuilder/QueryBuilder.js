@@ -3,19 +3,18 @@ import _ from 'lodash';
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
-  AppBar, Tabs, Tab, Typography, Box, Grid, Icon, CircularProgress, Card, Button,
+  Typography, Box, Grid, Card, Button,
   ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, InputLabel, MenuItem, FormControl,
   Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
   TableSortLabel, FormControlLabel, Switch, Chip, Divider
 } from '@material-ui/core'
 import { ExpandMore, Search, Done } from '@material-ui/icons';
-import CodeFlyout from '../CodeFlyout';
 import rawSampleCode from '!!raw-loader!./QueryBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
 import useStyles from './styles.js';
-import { TabPanel, a11yProps, descendingComparator, getComparator, stableSort } from './helpers.js';
+import { getComparator, stableSort } from './helpers.js';
 import AppContext from '../../../contexts/AppContext';
 import { lookerUserTimeHorizonMap } from '../../../LookerHelpers/defaults';
-import { Loader, ApiHighlight } from "@pbl-demo/components";
+import { Loader, ApiHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
 
 
 const { validIdHelper, prettifyString } = require('../../../tools');
@@ -26,34 +25,15 @@ export default function QueryBuilder(props) {
   const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
 
-
   const topBarBottomBarHeight = 112;
   const sideBarWidth = 240 + 152; //24 + 24 + 30 + 30 + 12 + 12 + 10 + 10
-  const [value, setValue] = useState(0);
   const [apiContent, setApiContent] = useState({});
-  const [clientSideCode, setClientSideCode] = useState('');
-  const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [width, setWidth] = useState((window.innerWidth - sideBarWidth));
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
-
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, } = props;
 
-
-  // const handleChange = (event, newValue) => {
-  //   handleTabChange(0);
-  //   setValue(newValue);
-  // };
-
-  useEffect(() => {
-    // call this is filterBar instead to make field chip dynamic
-    // lookerContent.map(lookerContent => {
-    //   setTimeout(() => performLookerApiCalls(lookerContent.queryBody, lookerContent.resultFormat), 100);
-    // })
-    setClientSideCode(rawSampleCode);
-    // setApiContent([])
-  }, [lookerContent, lookerUser])
 
   useEffect(() => {
     window.addEventListener("resize", () => {

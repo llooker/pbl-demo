@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
 import { Typography, Grid, Divider } from '@material-ui/core';
-import { ApiHighlight } from './Highlight';
+import { ApiHighlight } from './Accessories/Highlight';
 import { appContextMap } from '../utils/tools';
 
 
-export function VectorThumbnail({ lookerContent, classes, item, index }) {
+export function VectorThumbnail({ lookerContentItem, classes, vectorItem, index }) {
   // console.log('VectorThumbnail')
 
   const [svg, setSvg] = useState(undefined)
@@ -26,7 +26,7 @@ export function VectorThumbnail({ lookerContent, classes, item, index }) {
   }, [lookerUser, isReady])
 
   const getThumbnail = async () => {
-    let clientLookerResponse = await sdk.ok(sdk.content_thumbnail({ type: item.resourceType, resource_id: item.id }));
+    let clientLookerResponse = await sdk.ok(sdk.content_thumbnail({ type: vectorItem.resourceType, resource_id: vectorItem.id }));
     const blob = new Blob([clientLookerResponse], { type: 'image/svg+xml' });
     let url = URL.createObjectURL(blob);
     return url;
@@ -37,7 +37,7 @@ export function VectorThumbnail({ lookerContent, classes, item, index }) {
       className={`${classes.cursorPointer}`}
       spacing={3}
       component={Link}
-      to={item.url}
+      to={vectorItem.url}
     >
       {svg ?
         <>
@@ -56,7 +56,7 @@ export function VectorThumbnail({ lookerContent, classes, item, index }) {
             </ApiHighlight>
           </Grid>
           <Grid item sm={4}>
-            <Typography variant="subtitle1"  >{item.label}</Typography>
+            <Typography variant="subtitle1"  >{vectorItem.label}</Typography>
           </Grid>
           {index < 2 ?
             <Grid item sm={12}>

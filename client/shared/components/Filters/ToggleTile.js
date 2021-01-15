@@ -2,28 +2,30 @@ import _ from 'lodash';
 import React from 'react';
 import { Typography } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
-import { EmbedMethodHighlight } from "@pbl-demo/components";
-const { validIdHelper } = require('../../../tools');
+import { EmbedMethodHighlight } from '../Accessories/Highlight';
+const { validIdHelper } = require('../../utils/tools');
 
 
-export default function ToggleTile({ lookerContent, classes, tileToggleValue, handleTileToggle }) {
+export const ToggleTile = ({ classes, tileToggleValue, handleTileToggle, filterItem }) => {
   return (
 
     <EmbedMethodHighlight classes={classes} >
       <Typography
       >
-        Dynamic Tiles:        </Typography>
+        {filterItem.label}
+      </Typography>
       <ToggleButtonGroup
         value={tileToggleValue}
         exclusive
         onChange={handleTileToggle}
         aria-label="text alignment"
       >
-        {Object.keys(lookerContent[0].dynamicFieldLookUp).map(key => {
+        {Object.keys(filterItem.tileLookUp).map(key => {
           return (
             <ToggleButton
               key={validIdHelper(`dynamicDashTileToggle-${key}`)}
-              value={key} aria-label="left aligned">
+              value={key}
+              aria-label="left aligned">
               {key}
             </ToggleButton>
           )

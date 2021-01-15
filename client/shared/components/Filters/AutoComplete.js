@@ -1,23 +1,21 @@
 import React from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import { ApiHighlight } from './Highlight';
-import { NumberToColoredPercent } from './NumberToColoredPercent';
-const { validIdHelper } = require('../utils/tools');
+import { ApiHighlight } from '../Accessories/Highlight';
+import { NumberToColoredPercent } from '../Accessories/NumberToColoredPercent';
+const { validIdHelper } = require('../../utils/tools');
 
-export const AutoComplete = ({ lookerContent, apiContent, index, classes, action }) => {
+export const AutoComplete = ({ filterItem, apiContent, classes, action }) => {
   // console.log("AutoComplete");
-  // console.log({ apiContent })
-  // console.log({ action })
   return (
     <ApiHighlight
-      key={validIdHelper(`dashEmbed-${lookerContent.id}-${index}`)}
+      key={validIdHelper(`dashEmbed-${filterItem.label}`)}
       classes={classes} >
       <Typography>
-        {lookerContent[0].filters[index].label}:
-        </Typography>
+        {filterItem.label}
+      </Typography>
       <Autocomplete
-        id={`combo-box-dashboard-${lookerContent.id}`}
+        id={`combo-box-dashboard-${filterItem.label}`}
         options={Array.isArray(apiContent) ?
           apiContent :
           []}
@@ -37,12 +35,12 @@ export const AutoComplete = ({ lookerContent, apiContent, index, classes, action
         )}
         getOptionLabel={(option) => option.label}
         onChange={(event, newValue) => {
-          action(lookerContent[0].id,
-            lookerContent[0].filters[index].filterName,
+          action(
+            filterItem.filterName,
             (newValue) ? newValue.label : '')
         }}
         renderInput={(params) => <TextField {...params}
-          label={lookerContent[0].filters[index].filterName}
+          label={filterItem.filterName}
           variant="outlined"
         />}
         loadingText="Loading..."

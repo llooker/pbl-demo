@@ -1,16 +1,14 @@
 import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Grid, Card } from '@material-ui/core'
+import { Grid, Card } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import CodeFlyout from '../CodeFlyout';
 import useStyles from './styles.js';
 import AppContext from '../../../contexts/AppContext';
 import FilterBar from './FilterBar';
-import { VerticalSplit, HorizontalSplit } from '@material-ui/icons';
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
-import { Loader } from "@pbl-demo/components";
+import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
 
 
 
@@ -40,7 +38,8 @@ export default function Dashboard(props) {
   const [horizontalLayout, setHorizontalLayout] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(true);
 
-  const isThemeableDashboard = lookerContent[0].dynamicVisConfig ? true : false;
+  let dynamicVisConfigFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Vis Config" });
+  const isThemeableDashboard = dynamicVisConfigFilterItem && Object.keys(dynamicVisConfigFilterItem).length ? true : false;
   const darkThemeBackgroundColor = theme.palette.fill.main;
 
   const classes = useStyles();
@@ -65,66 +64,64 @@ export default function Dashboard(props) {
   );
 
   const handleTileToggle = (event, newValue) => {
-    setTileToggleValue(newValue)
-    const filteredLayout = _.filter(dashboardOptions.layouts[0].dashboard_layout_components, (row) => {
-      return (lookerContent[0].dynamicFieldLookUp[newValue].indexOf(dashboardOptions.elements[row.dashboard_element_id].title) > -1)
-    })
+    let dynamicTileFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Tiles" });
 
-    const newDashboardLayout = {
-      ...dashboardOptions.layouts[0],
-      dashboard_layout_components: filteredLayout
+    if (dynamicTileFilterItem) {
+      setTileToggleValue(newValue)
+      const filteredLayout = _.filter(dashboardOptions.layouts[0].dashboard_layout_components, (row) => {
+        return (dynamicTileFilterItem.tileLookUp[newValue].indexOf(dashboardOptions.elements[row.dashboard_element_id].title) > -1)
+      })
+
+      const newDashboardLayout = {
+        ...dashboardOptions.layouts[0],
+        dashboard_layout_components: filteredLayout
+      }
+      dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
+
     }
-    dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
   };
 
   const handleVisColorToggle = (event, newValue) => {
+    let dynamicVisConfigFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Vis Config" });
+    if (dynamicVisConfigFilterItem) {
+      let newColorSeries = dynamicVisConfigFilterItem.colors[newValue]
+      let newDashboardElements = { ...dashboardOptions.elements };
 
-    // console.log("handleVisColorToggle");
-    // console.log({ isThemeableDashboard })
-
-    let newColorSeries = lookerContent[0].dynamicVisConfig.colors[newValue];
-    // console.log('0000')
-    // console.log({ ...dashboardOptions.elements })
-    let newDashboardElements = { ...dashboardOptions.elements };
-
-    Object.keys(newDashboardElements).map(key => {
-      if (newDashboardElements[key].vis_config.series_colors) {
-        Object.keys(newDashboardElements[key].vis_config.series_colors).map((innerKey, index) => {
-          newDashboardElements[key].vis_config.series_colors[innerKey] = newColorSeries[index] || newColorSeries[0];
-        })
-      }
-      if (newDashboardElements[key].vis_config.custom_color) {
-        newDashboardElements[key].vis_config.custom_color = newColorSeries[newColorSeries.length - 2];
-      }
-      if (newDashboardElements[key].vis_config.map_value_colors) {
-        newDashboardElements[key].vis_config.map_value_colors.map((item, index) => {
-          newDashboardElements[key].vis_config.map_value_colors[index] = newColorSeries[index] || newColorSeries[0];
-        })
-      }
-      // loss some fidelity here
-      if (newDashboardElements[key].vis_config.series_cell_visualizations) {
-        Object.keys(newDashboardElements[key].vis_config.series_cell_visualizations).map((innerKey, index) => {
-          if (newDashboardElements[key].vis_config.series_cell_visualizations[innerKey].hasOwnProperty("palette")) {
-            newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"] = { ...lookerContent[0].dynamicVisConfig.series_cell_visualizations[newValue] }
-          }
-        })
-      }
-      if (newDashboardElements[key].vis_config.header_font_color) {
-        newDashboardElements[key].vis_config.header_font_color = newColorSeries[newColorSeries.length - 2];
-      }
-      if (isThemeableDashboard) {
-        // console.log("are we here????");
-        if (newDashboardElements[key].vis_config.map_tile_provider) {
-          newDashboardElements[key].vis_config.map_tile_provider = lightThemeToggleValue ? "light" : "dark";
+      Object.keys(newDashboardElements).map(key => {
+        if (newDashboardElements[key].vis_config.series_colors) {
+          Object.keys(newDashboardElements[key].vis_config.series_colors).map((innerKey, index) => {
+            newDashboardElements[key].vis_config.series_colors[innerKey] = newColorSeries[index] || newColorSeries[0];
+          })
         }
+        if (newDashboardElements[key].vis_config.custom_color) {
+          newDashboardElements[key].vis_config.custom_color = newColorSeries[newColorSeries.length - 2];
+        }
+        if (newDashboardElements[key].vis_config.map_value_colors) {
+          newDashboardElements[key].vis_config.map_value_colors.map((item, index) => {
+            newDashboardElements[key].vis_config.map_value_colors[index] = newColorSeries[index] || newColorSeries[0];
+          })
+        }
+        // loss some fidelity here
+        if (newDashboardElements[key].vis_config.series_cell_visualizations) {
+          Object.keys(newDashboardElements[key].vis_config.series_cell_visualizations).map((innerKey, index) => {
+            if (newDashboardElements[key].vis_config.series_cell_visualizations[innerKey].hasOwnProperty("palette")) {
+              newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"] = { ...dynamicVisConfigFilterItem.series_cell_visualizations[newValue] }
+            }
+          })
+        }
+        if (newDashboardElements[key].vis_config.header_font_color) {
+          newDashboardElements[key].vis_config.header_font_color = newColorSeries[newColorSeries.length - 2];
+        }
+        if (isThemeableDashboard) {
+          if (newDashboardElements[key].vis_config.map_tile_provider) {
+            newDashboardElements[key].vis_config.map_tile_provider = lightThemeToggleValue ? "light" : "dark";
+          }
 
-      }
-    })
-    // console.log('1111')
-    // console.log({ newDashboardElements })
-
-    setVisColorToggleValue(newValue)
-    dashboardObj.setOptions({ "elements": { ...newDashboardElements } })
+        }
+      })
+      setVisColorToggleValue(newValue)
+      dashboardObj.setOptions({ "elements": { ...newDashboardElements } })
+    }
   };
 
   const handleThemeChange = (event, newValue) => {
@@ -136,6 +133,7 @@ export default function Dashboard(props) {
       themeName = lightThemeToggleValue ? `light_${newValue}` : `dark_${newValue}`
       setFontThemeSelectValue(newValue)
     }
+
     corsApiCall(performLookerApiCalls, [lookerContent, themeName])
   }
 
@@ -156,9 +154,8 @@ export default function Dashboard(props) {
 
   useEffect(() => {
     if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length
-      && lookerContent[0].dynamicFieldLookUp) //necessary
-    {
-      handleTileToggle(null, tileToggleValue ? tileToggleValue : "Inventory");
+    ) {
+      handleTileToggle(null, tileToggleValue ? tileToggleValue : "Inventory")
       handleVisColorToggle(null, visColorToggleValue ? visColorToggleValue : '#2d4266');
     }
   }, [dashboardOptions]);
@@ -173,7 +170,6 @@ export default function Dashboard(props) {
     setExpansionPanelHeight(horizontalLayout ? $('.MuiExpansionPanel-root:visible').innerHeight() || 0 : 0)
   }, [horizontalLayout])
 
-
   useEffect(() => {
     setApiContent(undefined);
   }, [])
@@ -182,32 +178,24 @@ export default function Dashboard(props) {
 
     setIFrame(0)
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
-    lookerContent.map(async lookerContent => {
+    lookerContent.map(async lookerContentItem => {
       //dashboard creation
-      let dashboardId = lookerContent.id;
+      let dashboardId = lookerContentItem.id;
       let themeToUse = dynamicTheme && isThemeableDashboard ?
         dynamicTheme :
-        lookerContent.theme ?
-          lookerContent.theme :
+        lookerContentItem.theme ?
+          lookerContentItem.theme :
           'atom_fashion';
 
-      LookerEmbedSDK.createDashboardWithId(dashboardId) //dashboardSlug
+      LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
         .withClassName('iframe')
         .withNext()
-        // .withNext(lookerContent.isNext || false) //how can I make this dynamic based on prop??
         .withTheme(themeToUse)
         .withParams({ 'schedule_modal': 'true' })
-        .on('page:property:change', (event) => {
-          // console.log('page property is changing!!!!')
-          changeHeight(event)
-        }) // dashboards-next
         .on('dashboard:loaded', (event) => {
           setDashboardOptions(event.dashboard.options)
         })
-        // .on('drillmenu:click', (event) => {
-        //   drillMenuClick(event)
-        // })
         .build()
         .connect()
         .then((dashboard) => {
@@ -219,22 +207,22 @@ export default function Dashboard(props) {
         .catch((error) => {
           // console.error('Connection error', error)
         })
-      //additional api calls
-      //only want to perform when there's not apiContent
-      if (lookerContent.hasOwnProperty('filters') //&& !apiContent
+
+      //api calls
+      if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
       ) {
         // setApiContent(undefined)
         // get inline query from usecase file & set user attribute dynamically
         // iterating over filters
-        let orderedArrayForApiContent = []
-        lookerContent.filters.map(async (item, index) => {
-          if (lookerContent.inlineQueries[index]) {
-            let jsonQuery = lookerContent.inlineQueries[index];
+        let apiContentObj = {}
+        lookerContentItem.filters.map(async (filterItem, index) => {
+          if (filterItem.inlineQuery) {
+            let jsonQuery = filterItem.inlineQuery
             jsonQuery.filters = {
               ...jsonQuery.filters,
-              [item.desiredFilterName]: lookerUser.user_attributes.brand
+              [filterItem.desiredFilterName]: lookerUser.user_attributes.brand
             };
-            let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.result_format || 'json', body: jsonQuery }));
+            let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: filterItem.resultFormat || 'json', body: jsonQuery }));
             let queryResultsForDropdown = [];
             let desiredProperty = Object.keys(lookerResponseData[0])[0];
 
@@ -244,32 +232,19 @@ export default function Dashboard(props) {
                 'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined
               })
             }
-            orderedArrayForApiContent[index] = queryResultsForDropdown
+            apiContentObj[filterItem.component] = queryResultsForDropdown
           }
-          setApiContent([...orderedArrayForApiContent])
+          setApiContent(apiContentObj)
         })
       }
     })
   }
 
-  const customFilterAction = (dashboardId, filterName, newFilterValue) => {
+  const customFilterAction = (filterName, newFilterValue) => {
     if (Object.keys(dashboardObj).length) {
       dashboardObj.updateFilters({ [filterName]: newFilterValue })
       dashboardObj.run()
     }
-  }
-
-  // const drillMenuClick = (event) => {
-  //   const basicLookerUser = lookerUser.user_attributes.permission_level === 'basic' ? true : false;
-  //   if (basicLookerUser) {
-  //     togglePayWallModal()
-  //     return { cancel: (basicLookerUser) ? true : false }
-  //   }
-  // }
-
-  const changeHeight = (event) => {
-    // console.log('changeHeight')
-    // console.log('event', event)
   }
 
   return (

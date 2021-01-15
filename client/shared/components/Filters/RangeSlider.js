@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Typography, Slider } from '@material-ui/core'
-import { EmbedMethodHighlight } from "@pbl-demo/components";
+import { EmbedMethodHighlight } from '../Accessories/Highlight';
+const { validIdHelper } = require('../../utils/tools');
 
-const { validIdHelper } = require('../../../tools');
 
-export default function RangeSlider({ lookerContent, apiContent, index, classes, action }) {
+export const RangeSlider = ({ apiContent, classes, action, filterItem }) => {
 
   const [sliderValue, setSliderValue] = useState([]);
 
   return (
     <EmbedMethodHighlight classes={classes}
-      key={validIdHelper(`dashEmbed-${lookerContent.id}-${index}`)} >
+      key={validIdHelper(`dashEmbed-${filterItem.label}`)} >
       <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}>
-        {lookerContent[0].filters[index].label}:
+        {filterItem.label}:
         </Typography>
       <Slider
         value={sliderValue.length ? sliderValue : Array.isArray(apiContent) ? [apiContent[0].label, apiContent[apiContent.length - 1].label] : []}
@@ -22,8 +22,8 @@ export default function RangeSlider({ lookerContent, apiContent, index, classes,
         valueLabelDisplay="auto"
         aria-labelledby="range-slider"
         onChangeCommitted={(event, newValue) => {
-          action(lookerContent[0].id,
-            lookerContent[0].filters[index].filterName,
+          action(
+            filterItem.filterName,
             (newValue) ? `[${newValue}]` : '[]')
         }}
         min={Array.isArray(apiContent) && apiContent.length ? apiContent[0].label : 0}

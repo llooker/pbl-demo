@@ -1,15 +1,14 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Grid, CircularProgress, Card } from '@material-ui/core'
-import CodeFlyout from '../CodeFlyout';
+import { Box, Grid, Card } from '@material-ui/core'
 import useStyles from './styles.js';
 import AppContext from '../../../contexts/AppContext';
-import { Welcome, SingleValueVis, PopularAnalysis, EmbeddedQuery, Loader } from "@pbl-demo/components";
+import { Welcome, SingleValueVis, PopularAnalysis, EmbeddedQuery } from "@pbl-demo/components";
+import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
 
 const { validIdHelper } = require('../../../tools');
 
 export default function SplashPage(props) {
-  // console.log('SplashPage')
 
   const topBarBottomBarHeight = 112;
   const [iFrameExists, setIFrame] = useState(1);
@@ -28,7 +27,6 @@ export default function SplashPage(props) {
     lookerUser
   }
   const demoComponentType = type || 'code flyout';
-  console.log({ demoComponentType })
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
@@ -63,24 +61,25 @@ export default function SplashPage(props) {
                       height={height}
                     />
                   </Grid> : ''}
-                {lookerContent.map((lookerContent, innerIndex) => {
+                {lookerContent.map((lookerContentItem, innerIndex) => {
+                  // console.log({ lookerContentItem })
                   return (
                     <Grid
                       key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
                       item
-                      sm={parseInt(lookerContent.gridWidth)}
+                      sm={parseInt(lookerContentItem.gridWidth)}
                     >
-                      {(lookerContent.type === 'welcome') && <Welcome
-                        {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                      {(lookerContentItem.type === 'welcome') && <Welcome
+                        {...{ lookerContentItem, classes }}
                       />}
-                      {(lookerContent.type === 'single value') && <SingleValueVis
-                        {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                      {(lookerContentItem.type === 'single value') && <SingleValueVis
+                        {...{ lookerContentItem, classes, demoComponentType, lookerHost }}
                       />}
-                      {(lookerContent.type === 'dashboard') && <EmbeddedQuery
-                        {...{ lookerContent, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
+                      {(lookerContentItem.type === 'embeddedquery') && <EmbeddedQuery
+                        {...{ lookerContentItem, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
                       />}
-                      {(lookerContent.type === 'popular analysis') && <PopularAnalysis
-                        {...{ lookerContent, classes, demoComponentType, lookerHost }}
+                      {(lookerContentItem.type === 'popular analysis') && <PopularAnalysis
+                        {...{ lookerContentItem, classes, demoComponentType, lookerHost }}
                       />}
                     </Grid>
                   )

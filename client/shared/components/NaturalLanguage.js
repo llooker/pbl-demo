@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Typography, Grid, Chip } from '@material-ui/core';
-import { ApiHighlight } from './Highlight';
+import { ApiHighlight } from './Accessories/Highlight';
 const { validIdHelper, decodeHtml, appContextMap } = require('../utils/tools');
 
 
-export function NaturalLanguage({ lookerContent, inlineQuery, index, classes }) {
+export function NaturalLanguage({ lookerContentItem, inlineQuery, index, classes }) {
 
   const [apiContent, setApiContent] = useState(undefined);
   // const { clientSession, sdk, corsApiCall, isReady } = useContext(AppContext);
@@ -24,8 +24,7 @@ export function NaturalLanguage({ lookerContent, inlineQuery, index, classes }) 
   }, [lookerUser, isReady])
 
   const runInlineQuery = async () => {
-    // setApiContent(undefined)
-    let clientLookerResponse = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.resultFormat || 'json', body: inlineQuery }));
+    let clientLookerResponse = await sdk.ok(sdk.run_inline_query({ result_format: lookerContentItem.resultFormat || 'json', body: inlineQuery }));
     return clientLookerResponse[0];
   }
 
@@ -37,7 +36,7 @@ export function NaturalLanguage({ lookerContent, inlineQuery, index, classes }) 
         <React.Fragment >
           <ApiHighlight classes={classes} >
             <Typography variant="subtitle1" display="inline">
-              Your {lookerContent.inlineQueriesMap[index]} category, <b>{apiContent['products.category']}</b>, is {apiContent.change > 0 ? 'up ' : 'down '}
+              Your {lookerContentItem.inlineQueriesMap[index]} category, <b>{apiContent['products.category']}</b>, is {apiContent.change > 0 ? 'up ' : 'down '}
             </Typography>
             <Chip size="small"
               label={`${decodeHtml(upOrDownArrow)} ${parseInt(apiContent.change * 100).toFixed(0)}% `}
@@ -50,13 +49,6 @@ export function NaturalLanguage({ lookerContent, inlineQuery, index, classes }) 
           </ApiHighlight>
         </React.Fragment>
         : <div style={{ height: '56px' }}></div>
-
-        // <Grid item sm={12} >
-        //   <Card className={`${classes.card} ${classes.flexCentered}`}>
-        //     <CircularProgress className={classes.circularProgress}
-        //       style={{ color: `${lookerContent.visColor} ` }} />
-        //   </Card>
-        // </Grid>
       }
     </Grid >
   );

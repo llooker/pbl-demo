@@ -1,15 +1,15 @@
 import React from 'react';
 import { FormControl, Select, MenuItem, InputLabel } from '@material-ui/core'
-import { EmbedHighlight } from "@pbl-demo/components";
+import { EmbedHighlight } from '../Accessories/Highlight';
+const { validIdHelper } = require('../../utils/tools');
 
 
-export default function SelectFont({ lookerContent, classes, fontThemeSelectValue, handleThemeChange }) {
+export const SelectFont = ({ classes, fontThemeSelectValue, handleThemeChange, filterItem }) => {
   return (
     <EmbedHighlight classes={classes} >
-
       <FormControl className={classes.formControl}>
         <InputLabel id="demo-simple-select-label"
-        >Change font</InputLabel>
+        >{filterItem.label}</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
@@ -18,12 +18,14 @@ export default function SelectFont({ lookerContent, classes, fontThemeSelectValu
             handleThemeChange(null, event.target.value)
           }}
         >
-          <MenuItem value="arial">Arial</MenuItem>
-          <MenuItem value="roboto">Roboto</MenuItem>
-          <MenuItem value="vollkorn">Vollkorn</MenuItem>
+          {filterItem.options.map(item => {
+            return < MenuItem
+              key={validIdHelper(`filter-select${item}`)}
+              value={item.toLowerCase()} > {item}</MenuItem>
+          })}
         </Select>
       </FormControl>
 
-    </EmbedHighlight>
+    </EmbedHighlight >
   )
 }

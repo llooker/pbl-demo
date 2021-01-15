@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import { Typography } from '@material-ui/core'
 import { CheckboxSVGMap } from "./CheckboxSvgMapRegion";
 import { customUsa } from './helpers';
-import { EmbedMethodHighlight } from "@pbl-demo/components";
+import { EmbedMethodHighlight } from '../Accessories/Highlight';
+const { validIdHelper } = require('../../utils/tools');
 
-const { validIdHelper } = require('../../../tools');
 
-export default function MapFilter({ lookerContent, apiContent, index, classes, action }) {
+export function MapFilter({ classes, action, filterItem }) {
 
   const [regionValue, setRegionValue] = useState('Pacific, South, Mountain, Midwest, Northeast');
 
   return (
     <EmbedMethodHighlight classes={classes}
-      key={validIdHelper(`dashEmbed-${lookerContent.id}-${index}`)} >
+      key={validIdHelper(`dashEmbed-${filterItem.label}`)} >
       <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
       >
-        {lookerContent[0].filters[index].label}: <b>{regionValue ? regionValue : "Outside US"}</b>
+        {filterItem.label}: <b>{regionValue ? regionValue : "Outside US"}</b>
       </Typography>
 
       <CheckboxSVGMap map={customUsa}
@@ -29,8 +29,8 @@ export default function MapFilter({ lookerContent, apiContent, index, classes, a
           }
           let allUniqueRegionsFromSelectedLocationsCommaSep = allUniqueRegionsFromSelectedLocations.join(",")
           setRegionValue(allUniqueRegionsFromSelectedLocationsCommaSep)
-          action(lookerContent[0].id,
-            lookerContent[0].filters[index].filterName,
+          action(
+            filterItem.filterName,
             (regionValue) ? regionValue : '')
         }}
       />

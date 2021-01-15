@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Chip } from '@material-ui/core';
-import { appContextMap } from '../utils/tools';
+import { appContextMap } from '../../utils/tools';
 
 // maybe move this to config?
 export const API_COLOR = '#A142F4'

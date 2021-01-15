@@ -4,7 +4,7 @@ import { VectorThumbnail } from './VectorThumbnail';
 
 const { validIdHelper } = require('../utils/tools');
 
-export function PopularAnalysis({ lookerContent, classes }) {
+export function PopularAnalysis({ lookerContentItem, classes }) {
   const [apiContent, setApiContent] = useState([]);
 
   return (
@@ -16,7 +16,7 @@ export function PopularAnalysis({ lookerContent, classes }) {
     >
       <div
         className={`${classes.overflowYScroll}`}
-        style={{ height: lookerContent.height }}
+        style={{ height: lookerContentItem.height }}
       >
         <Grid container
           spacing={3}>
@@ -24,11 +24,11 @@ export function PopularAnalysis({ lookerContent, classes }) {
             <Typography variant="h6" align="center" color="secondary">
               Helpful Dashboards
           </Typography></Grid>
-          {lookerContent.vectors.map((item, index) => {
+          {lookerContentItem.vectors.map((vectorItem, index) => {
             return (
               <VectorThumbnail
                 key={`${validIdHelper('vectorThumbnail-splashPage-' + index)}`}
-                {...{ lookerContent, item, classes, index }}
+                {...{ lookerContentItem, vectorItem, classes, index }}
               />
             )
           }

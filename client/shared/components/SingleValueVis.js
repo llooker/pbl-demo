@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { ApiHighlight } from './Accessories/Highlight';
 import { Typography, Card, CircularProgress, Grid, Chip } from '@material-ui/core';
 import { ResponsiveLine } from '@nivo/line';
 import { validIdHelper, decodeHtml, appContextMap } from '../utils/tools';
-import { ApiHighlight } from './Highlight';
 
-export function SingleValueVis({ lookerContent, classes }) {
+export function SingleValueVis({ lookerContentItem, classes }) {
   // console.log('SingleValueVis')
   const [apiContent, setApiContent] = useState(undefined);
   const { clientSession, sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
@@ -28,20 +28,20 @@ export function SingleValueVis({ lookerContent, classes }) {
   const runInlineQuery = async () => {
 
     // setApiContent(undefined)
-    let { inlineQuery } = lookerContent;
-    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContent.resultFormat || 'json', body: inlineQuery }));
+    let { inlineQuery } = lookerContentItem;
+    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContentItem.resultFormat || 'json', body: inlineQuery }));
     // console.log({ lookerResponseData })
-    dataObjForSparkline.id = validIdHelper(`singleVisValue-${lookerContent.id}`);
+    dataObjForSparkline.id = validIdHelper(`singleVisValue-${lookerContentItem.id}`);
     dataObjForSparkline.data = [];
 
     let dataArrForDataObj = [];
     lookerResponseData.map(item => {
-      if (item[lookerContent.inlineQuery.fields[0]]
+      if (item[lookerContentItem.inlineQuery.fields[0]]
         // && item['order_items.count']['order_items.previous_period']["This Period" ? "This Period" : "Previous Period"]
       ) {
         let thisDataItem = {
-          "x": item[lookerContent.inlineQuery.fields[0]].toString(),
-          "y": item[lookerContent.inlineQuery.fields[1]] || 0,
+          "x": item[lookerContentItem.inlineQuery.fields[0]].toString(),
+          "y": item[lookerContentItem.inlineQuery.fields[1]] || 0,
           "change": item.change
         }
         if (thisDataItem && thisDataItem.y !== "null") dataArrForDataObj.push(thisDataItem)
@@ -53,9 +53,9 @@ export function SingleValueVis({ lookerContent, classes }) {
   }
 
   const upOrDownArrow = apiContent && apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
-  const labelText = !apiContent ? '' : lookerContent.chipFormat === "revenue" ?
+  const labelText = !apiContent ? '' : lookerContentItem.chipFormat === "revenue" ?
     `$${(apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '').replace(/\d(?=(\d{3})+\.)/g, '$&,')}` :
-    lookerContent.chipFormat === "integer" ? parseInt(apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '') : lookerContent.chipFormat === 'percent' ?
+    lookerContentItem.chipFormat === "integer" ? parseInt(apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '') : lookerContentItem.chipFormat === 'percent' ?
       `${((apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '') * 100)
       }% `
       : '';
@@ -67,7 +67,7 @@ export function SingleValueVis({ lookerContent, classes }) {
     >
       <div
         style={{
-          height: lookerContent.height,
+          height: lookerContentItem.height,
         }}
       >
         {apiContent ?
@@ -76,7 +76,7 @@ export function SingleValueVis({ lookerContent, classes }) {
               <Grid container className={`${classes.textCenter} `}>
                 <Grid item sm={12}>
                   <Typography variant="body2" align="left" color="secondary">
-                    {lookerContent.label}
+                    {lookerContentItem.label}
                   </Typography>
                 </Grid>
                 <Grid item sm={6}>
@@ -115,23 +115,20 @@ export function SingleValueVis({ lookerContent, classes }) {
                   tickPadding: 5,
                   tickRotation: 0,
                   format: () => null,
-                  // legend: lookerContent.label,
-                  // legendOffset: 15,
-                  // legendPosition: 'middle'
                 }}
                 enablePoints={false}
                 enableGridX={false}
                 enableGridY={false}
                 height={100}
-                colors={lookerContent.visColor}
+                colors={lookerContentItem.visColor}
                 animate={true}
               />
             </ApiHighlight>
           </React.Fragment>
           :
-          <Grid item sm={12} className={`${classes.flexCentered} `} style={{ height: lookerContent.height }}>
+          <Grid item sm={12} className={`${classes.flexCentered} `} style={{ height: lookerContentItem.height }}>
             <CircularProgress className={classes.circularProgress}
-              style={{ color: `${lookerContent.visColor} ` }} />
+              style={{ color: `${lookerContentItem.visColor} ` }} />
           </Grid>
         }
       </div >

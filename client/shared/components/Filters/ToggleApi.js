@@ -3,28 +3,26 @@ import React, { useState } from 'react';
 import { Typography } from '@material-ui/core'
 import { lifetimeRevenueTierMap, lifetimeRevenueTierIconMap } from './helpers';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
-import { EmbedMethodHighlight } from "@pbl-demo/components";
+import { EmbedMethodHighlight } from '../Accessories/Highlight';
+const { validIdHelper } = require('../../utils/tools');
 
-
-const { validIdHelper } = require('../../../tools');
-
-export default function ToggleApi({ lookerContent, apiContent, index, classes, action }) {
+export const ToggleApi = ({ apiContent, classes, action, filterItem }) => {
 
   const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
   return (
     <EmbedMethodHighlight classes={classes}
-      key={validIdHelper(`dashEmbed-${lookerContent.id}-${index}`)} >
+      key={validIdHelper(`dashEmbed-${filterItem.label}`)} >
       <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
       >
-        {lookerContent[0].filters[index].label}:
+        {filterItem.label}:
         </Typography>
       <ToggleButtonGroup
         value={lifetimeRevenueTierValue}
         exclusive //for now
         onChange={(event, newValue) => {
           setLifetimeRevenueTierValue(newValue)
-          action(lookerContent[0].id,
-            lookerContent[0].filters[index].filterName,
+          action(
+            filterItem.filterName,
             (newValue) ? newValue : '')
         }}
         aria-label="ageTier"
@@ -34,7 +32,7 @@ export default function ToggleApi({ lookerContent, apiContent, index, classes, a
             const Icon = lifetimeRevenueTierIconMap[ageTier.label];
             return (
               <ToggleButton
-                key={validIdHelper(`$FilterBar-ToggleButton-${lookerContent[0].id}-${index}`)}
+                key={validIdHelper(`$FilterBar-ToggleButton-${filterItem.label}-${index}`)}
                 value={ageTier.label}
                 aria-label={ageTier.label}
                 className={classes.w33}>
