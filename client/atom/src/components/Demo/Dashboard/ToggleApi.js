@@ -1,17 +1,17 @@
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { Typography, Grid } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 import { EmbedMethodHighlight } from '../../Highlights/Highlight';
 import { lifetimeRevenueTierMap, lifetimeRevenueTierIconMap } from './helpers';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 const { validIdHelper } = require('../../../tools');
 
-export default function ToggleApi({ lookerContent, apiContent, index, classes, customFilterAction, type, horizontalLayout }) {
+export default function ToggleApi({ lookerContent, apiContent, index, classes, action }) {
 
   const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
   return (
     <EmbedMethodHighlight classes={classes}
-      key={validIdHelper(`dashEmbed-${type}${lookerContent.id}-${index}`)} >
+      key={validIdHelper(`dashEmbed-${lookerContent.id}-${index}`)} >
       <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
       >
         {lookerContent[0].filters[index].label}:
@@ -21,7 +21,7 @@ export default function ToggleApi({ lookerContent, apiContent, index, classes, c
         exclusive //for now
         onChange={(event, newValue) => {
           setLifetimeRevenueTierValue(newValue)
-          customFilterAction(lookerContent[0].id,
+          action(lookerContent[0].id,
             lookerContent[0].filters[index].filterName,
             (newValue) ? newValue : '')
         }}
@@ -32,7 +32,7 @@ export default function ToggleApi({ lookerContent, apiContent, index, classes, c
             const Icon = lifetimeRevenueTierIconMap[ageTier.label];
             return (
               <ToggleButton
-                key={validIdHelper(`${type}-FilterBar-ToggleButton-${lookerContent[0].id}-${index}`)}
+                key={validIdHelper(`$FilterBar-ToggleButton-${lookerContent[0].id}-${index}`)}
                 value={ageTier.label}
                 aria-label={ageTier.label}
                 className={classes.w33}>

@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import React from 'react';
-import { Typography, Grid } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 import { EmbedMethodHighlight } from '../../Highlights/Highlight';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 const { validIdHelper } = require('../../../tools');
 
 
-export default function ToggleTile({ lookerContent, classes, type, tileToggleValue, handleTileToggle, horizontalLayout }) {
+export default function ToggleTile({ lookerContent, classes, tileToggleValue, handleTileToggle }) {
   return (
 
     <EmbedMethodHighlight classes={classes} >

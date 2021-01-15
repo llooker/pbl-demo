@@ -43,8 +43,6 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                   index={index}
                   classes={classes}
                   customFilterAction={customFilterAction}
-                  type={type}
-                  horizontalLayout={horizontalLayout}
                 />
               </Grid>
               : lookerContent[0].filterComponents[index] === 'rangeslider' ?
@@ -55,9 +53,7 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                     apiContent={apiContent[index]}
                     index={index}
                     classes={classes}
-                    customFilterAction={customFilterAction}
-                    type={type}
-                    horizontalLayout={horizontalLayout}
+                    action={customFilterAction}
                   />
                 </Grid>
                 : lookerContent[0].filterComponents[index] === 'togglebuttonapi' ?
@@ -68,9 +64,7 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                       apiContent={apiContent[index]}
                       index={index}
                       classes={classes}
-                      customFilterAction={customFilterAction}
-                      type={type}
-                      horizontalLayout={horizontalLayout}
+                      action={customFilterAction}
                     />
                   </Grid>
 
@@ -99,10 +93,8 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
           <ToggleTile
             lookerContent={lookerContent}
             classes={classes}
-            type={type}
             tileToggleValue={tileToggleValue}
             handleTileToggle={handleTileToggle}
-            horizontalLayout={horizontalLayout}
           />
         </Grid>
         : ''
@@ -113,10 +105,8 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
           <ToggleVisColor
             lookerContent={lookerContent}
             classes={classes}
-            type={type}
             visColorToggleValue={visColorToggleValue}
             handleVisColorToggle={handleVisColorToggle}
-            horizontalLayout={horizontalLayout}
           />
         </Grid>
         : ''
@@ -127,10 +117,8 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
           <SwitchTheme
             lookerContent={lookerContent}
             classes={classes}
-            type={type}
             lightThemeToggleValue={lightThemeToggleValue}
             handleThemeChange={handleThemeChange}
-            horizontalLayout={horizontalLayout}
           />
         </Grid>
         : ''
@@ -141,10 +129,8 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
           <SelectFont
             lookerContent={lookerContent}
             classes={classes}
-            type={type}
             fontThemeSelectValue={fontThemeSelectValue}
             handleThemeChange={handleThemeChange}
-            horizontalLayout={horizontalLayout}
           />
         </Grid>
         : ''
