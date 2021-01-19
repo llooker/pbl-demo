@@ -1,16 +1,19 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
-import useStyles from './styles.js';
+// import useStyles from './styles.js';
+import { useStyles, topBarBottomBarHeight } from './styles.js';
 import AppContext from '../../../contexts/AppContext';
 import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
-import PDFViewer from 'pdf-viewer-reactjs'
+import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
+import samplePDF from './sample.pdf';
+
 
 const { validIdHelper } = require('../../../tools');
 
 export default function ApplicationViewer(props) {
 
-  const topBarBottomBarHeight = 112;
+  // const topBarBottomBarHeight = 112;
   const [iFrameExists, setIFrame] = useState(1);
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
 
@@ -31,6 +34,7 @@ export default function ApplicationViewer(props) {
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   }, [lookerContent]);
+
 
   return (
     <div className={`${classes.root} demoComponent`}
@@ -61,35 +65,14 @@ export default function ApplicationViewer(props) {
                       height={height}
                     />
                   </Grid> : ''}
-                {/* {lookerContent.map((lookerContentItem, innerIndex) => {
-                  // console.log({ lookerContentItem })
-                  return (
-                    <Grid
-                      key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
-                      item
-                      sm={parseInt(lookerContentItem.gridWidth)}
-                    >
-                      {(lookerContentItem.type === 'welcome') && <Welcome
-                        {...{ lookerContentItem, classes }}
-                      />}
-                      {(lookerContentItem.type === 'single value') && <SingleValueVis
-                        {...{ lookerContentItem, classes, demoComponentType, lookerHost }}
-                      />}
-                      {(lookerContentItem.type === 'embeddedquery') && <EmbeddedQuery
-                        {...{ lookerContentItem, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
-                      />}
-                      {(lookerContentItem.type === 'popular analysis') && <PopularAnalysis
-                        {...{ lookerContentItem, classes, demoComponentType, lookerHost }}
-                      />}
-                    </Grid>
-                  )
-                })} */}
                 <h1>I'm the new PDF Viewer demo component</h1>
-                <PDFViewer
-                  document={{
-                    url: 'https://arxiv.org/pdf/quant-ph/0410100.pdf',
-                  }}
-                />
+
+                <Document
+                  file={samplePDF}
+                // file="https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf"
+                >
+                  <Page pageNumber={1} />
+                </Document>
               </Grid>
             </Box >
           </div >

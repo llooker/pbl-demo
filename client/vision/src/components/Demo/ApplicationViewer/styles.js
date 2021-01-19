@@ -2,12 +2,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import { red, green } from '@material-ui/core/colors';
 const redPrimary = red[500];
 const greenPrimary = green[500];
-const redDark = red[900];
-const greenDark = green[900];
 const redLight = red[100];
 const greenLight = green[100];
 
-export default makeStyles((theme) => ({
+export const topBarBottomBarHeight = 112;
+export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,

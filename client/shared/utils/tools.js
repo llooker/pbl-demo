@@ -48,5 +48,5 @@ export const decodeHtml = (html) => {
 
 export const appContextMap = {
   "atom": AppContextAtom,
-  "vision": AppContextVision
+  "vision": AppContextVision,
 }
