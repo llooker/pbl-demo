@@ -8,16 +8,14 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
 import { lookerUserPermissions, lookerUserTimeHorizonMap } from '../../LookerHelpers/defaults';
-
 import TopBar from './TopBar';
 import LeftDrawer from './LeftDrawer';
 import MonetizationModal from '../Demo/MonetizationModal/MonetizationModal';
-
 import '../Home.css';
 import { useStyles } from './styles.js';
 import { packageNameTheme } from '../../config/theme.js';
+import * as DemoComponentsContentArr from '../../config/Demo';
 
-import * as DemoComponentsContentArr from '../../config/Demo'
 
 const { validIdHelper } = require('../../tools');
 

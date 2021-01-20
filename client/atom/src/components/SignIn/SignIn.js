@@ -4,7 +4,6 @@ import { useHistory, useParams, useLocation } from "react-router-dom";
 import { GoogleLogin } from 'react-google-login';
 import AppContext from '../../contexts/AppContext';
 import { writeNewSession, createSdkHelper } from '../../AuthUtils/auth';
-// import UsecaseContent from '../../usecaseContent.json';
 import { initialLookerUser } from '../../LookerHelpers/defaults'
 import useStyles from './styles.js';
 import '../Home.css';
