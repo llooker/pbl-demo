@@ -9,12 +9,11 @@ import {
   TableSortLabel, FormControlLabel, Switch, Chip, Divider
 } from '@material-ui/core'
 import { ExpandMore, Search, Done } from '@material-ui/icons';
-import rawSampleCode from '!!raw-loader!./QueryBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
-import useStyles from './styles.js';
 import { getComparator, stableSort } from './helpers.js';
 import AppContext from '../../../contexts/AppContext';
 import { lookerUserTimeHorizonMap } from '../../../LookerHelpers/defaults';
 import { Loader, ApiHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
+import { useStyles, topBarBottomBarHeight } from '../styles.js';
 
 
 const { validIdHelper, prettifyString } = require('../../../tools');
@@ -22,10 +21,9 @@ const { validIdHelper, prettifyString } = require('../../../tools');
 export default function QueryBuilder(props) {
   // console.log('QueryBuilder')
 
-  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
+  const { clientSession, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
 
-  const topBarBottomBarHeight = 112;
   const sideBarWidth = 240 + 152; //24 + 24 + 30 + 30 + 12 + 12 + 10 + 10
   const [apiContent, setApiContent] = useState({});
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
@@ -95,54 +93,49 @@ export default function QueryBuilder(props) {
         <Grid container
           key={validIdHelper(type)} >
           <div className={`${classes.root}`}>
-            <Grid item sm={12}>
-              <FilterBar {...props}
-                classes={classes}
-                action={performLookerApiCalls}
-                corsApiCall={corsApiCall}
-              />
-            </Grid>
-            {apiContent.status === 'running' ?
 
-              <Loader classes={classes}
-                height={height}
-                expansionPanelHeight={expansionPanelHeight} />
+            <Loader
+              hide={apiContent && apiContent.status !== "running"}
+              classes={classes}
+              height={height - expansionPanelHeight}
+            />
 
-              : apiContent.data && apiContent.data.length ?
-                <Box>
-                  <Grid container
-                    spacing={3}
-                    className={`${classes.noContainerScroll}`}>
-                    {codeShow ?
-                      <Grid item sm={6}
-                        className={`${classes.positionFixedTopRight}`}
-                      >
-                        <CodeFlyout {...props}
-                          classes={classes}
-                          lookerUser={lookerUser}
-                          height={height}
-                        />
-                      </Grid> : ''}
-                    <Divider className={classes.divider} />
-                    <Grid item sm={12}>
-                      <Box className={`${classes.w100}`} mt={2}>
-                        < EnhancedTable
-                          {...props}
-                          classes={classes}
-                          rows={apiContent.data}
-                          lookerContent={lookerContent}
-                          width={width}
-                        />
-                      </Box>
-                    </Grid>
+            <FilterBar {...props}
+              classes={classes}
+              action={performLookerApiCalls}
+              corsApiCall={corsApiCall}
+            />
+            {apiContent.data && apiContent.data.length ?
+              <Box>
+                <Grid container
+                  spacing={3}
+                  className={`${classes.noContainerScroll}`}>
+
+                  <CodeFlyout {...props}
+                    classes={classes}
+                    lookerUser={lookerUser}
+                    height={height}
+                  />
+                  <Divider className={classes.divider} />
+                  <Grid item sm={12}>
+                    <Box className={`${classes.w100}`} mt={2}>
+                      < EnhancedTable
+                        {...props}
+                        classes={classes}
+                        rows={apiContent.data}
+                        lookerContent={lookerContent}
+                        width={width}
+                      />
+                    </Box>
                   </Grid>
-                </Box>
-                :
-                <Grid item sm={12} >
-                  <Typography variant="h6" component="h6" className={`${classes.gridTitle} ${classes.textCenter}`}>
-                    No results found, try a new query<br />
-                  </Typography>
                 </Grid>
+              </Box>
+              :
+              <Grid item sm={12} >
+                <Typography variant="h6" component="h6" className={`${classes.gridTitle} ${classes.textCenter}`}>
+                  No results found, try a new query<br />
+                </Typography>
+              </Grid>
             }
           </div >
         </Grid >

@@ -1,14 +1,13 @@
 import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
-import { Typography, Grid, Accordion, AccordionSummary, AccordionDetails, Box } from '@material-ui/core'
-import { ExpandMore, FilterList, VerticalSplit, HorizontalSplit, ChevronLeft, Menu } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab'
+import { Grid, Accordion, AccordionSummary, AccordionDetails, Box } from '@material-ui/core'
+import { ExpandMore, VerticalSplit, HorizontalSplit, ChevronLeft, Menu } from '@material-ui/icons';
 import FilterBarChildren from './FilterBarChildren'
 
 const { validIdHelper } = require('../../../tools');
 
 export default function FilterBar(props) {
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, classes,
+  const { staticContent: { lookerContent }, staticContent: { type }, classes,
     apiContent, customFilterAction, tileToggleValue, handleTileToggle, visColorToggleValue,
     handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange,
     horizontalLayout, setHorizontalLayout, drawerOpen, setDrawerOpen
@@ -90,7 +89,8 @@ export default function FilterBar(props) {
 
         </Accordion >
         :
-        <Skeleton variant="rect" animation="wave" className={classes.skeleton} />}
+        ""
+      }
     </Grid>
   )
 }

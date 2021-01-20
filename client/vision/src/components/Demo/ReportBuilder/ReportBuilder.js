@@ -6,12 +6,12 @@ import { TreeView, TreeItem } from '@material-ui/lab';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import rawSampleCode from '!!raw-loader!./ReportBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
-import useStyles from './styles.js';
 import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
 import AppContext from '../../../contexts/AppContext';
 import { Loader, ApiHighlight, EmbedHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
+import { useStyles, topBarBottomBarHeight } from '../styles.js';
+
 const { validIdHelper } = require('../../../tools');
 
 //start of ReportBuilder Component
@@ -21,9 +21,7 @@ export default function ReportBuilder(props) {
   const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession;
 
-  const topBarBottomBarHeight = 112;
   const [iFrameExists, setIFrame] = useState(0);
-  // const [exploreIFrameExists, setExploreIFrame] = useState(0);
   const [apiContent, setApiContent] = useState([]);
   const [exploreObj, setExploreObj] = useState({});
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
@@ -32,14 +30,13 @@ export default function ReportBuilder(props) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [qid, setQid] = useState(null);
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type },
-  } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type } } = props;
 
   const demoComponentType = type;
   const tabContent = [...lookerContent]
 
   const handleChange = (event, newValue) => {
-    if (newValue == 1 && lookerUser.user_attributes.permission_level != 'premium') {
+    if (newValue == 1 && lookerUser.user_attributes.permission_level !== 'premium') {
       // handleChange(0)
       setPaywallModal({
         'show': true,
@@ -314,13 +311,11 @@ export default function ReportBuilder(props) {
         <Grid container
           key={validIdHelper(type)} >
           <div className={classes.root}>
-            {iFrameExists ? '' :
-
-              <Loader classes={classes}
-                height={height}
-                expansionPanelHeight={expansionPanelHeight} />
-            }
-
+            <Loader
+              hide={iFrameExists}
+              classes={classes}
+              height={height - expansionPanelHeight}
+            />
             {/* additional loading logic, need embedContainer to exist but want it hidden until iFrame has content...*/}
             <Box className={iFrameExists ? `` : `${classes.hidden}`}>
               <AppBar position="static" elevation={0}>
@@ -355,16 +350,12 @@ export default function ReportBuilder(props) {
                 <Grid container
                   spacing={3}
                   className={`${classes.noContainerScroll}`}>
-                  {codeShow ?
-                    <Grid item sm={6}
-                      className={`${classes.positionFixedTopRight}`}
-                    >
-                      <CodeFlyout {...props}
-                        classes={classes}
-                        lookerUser={lookerUser}
-                        height={height}
-                      />
-                    </Grid> : ''}
+
+                  <CodeFlyout {...props}
+                    classes={classes}
+                    lookerUser={lookerUser}
+                    height={height - expansionPanelHeight}
+                  />
                   {tabContent.map((tabContentItem, tabContentItemIndex) => (
                     <TabPanel
                       key={`${validIdHelper(demoComponentType + '-tabPanel-' + tabContentItemIndex)}`}

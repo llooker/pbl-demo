@@ -4,27 +4,20 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Grid, Card } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import useStyles from './styles.js';
 import AppContext from '../../../contexts/AppContext';
 import FilterBar from './FilterBar';
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
-
-
+import { useStyles, topBarBottomBarHeight } from '../styles.js';
 
 const { validIdHelper } = require('../../../tools');
 
 export default function Dashboard(props) {
   // console.log('Dashboard');
+  const { clientSession, clientSession: { lookerUser }, sdk, corsApiCall, theme, isReady, selectedMenuItem } = useContext(AppContext)
   const { staticContent: { lookerContent }, staticContent: { type } } = props;
-
-  const { clientSession, codeShow, sdk, corsApiCall, theme, isReady, selectedMenuItem } = useContext(AppContext)
-  const { lookerUser, lookerHost } = clientSession;
-
   const demoComponentType = type || 'code flyout';
-  const topBarBottomBarHeight = 112;
 
-  const [value, setValue] = useState(0);
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState(undefined);
   const [dashboardObj, setDashboardObj] = useState({});
@@ -260,7 +253,11 @@ export default function Dashboard(props) {
               container
               spacing={3}
             >
-              {/* could be improved */}
+              <Loader
+                hide={iFrameExists}
+                classes={classes}
+                height={height - expansionPanelHeight} />
+
               {lookerContent[0].hasOwnProperty("filters") ?
 
                 < FilterBar {...props}
@@ -282,14 +279,6 @@ export default function Dashboard(props) {
                 :
                 ''}
 
-              {
-                iFrameExists
-                  ? ''
-                  :
-                  <Loader classes={classes}
-                    height={height}
-                    expansionPanelHeight={expansionPanelHeight} />
-              }
 
               <EmbeddedDashboardContainer
                 classes={classes}
@@ -298,17 +287,11 @@ export default function Dashboard(props) {
                 width={lookerContent[0].hasOwnProperty("filters") ? horizontalLayout ? 12 : drawerOpen ? 9 : 12 : 12}
               />
 
-              {codeShow ?
-                <Grid item sm={6}
-                  className={`${classes.positionFixedTopRight}`}
-                >
-                  <CodeFlyout {...props}
-                    classes={classes}
-                    lookerUser={lookerUser}
-                    height={height}
-                  />
-                </Grid>
-                : ''}
+              <CodeFlyout {...props}
+                classes={classes}
+                lookerUser={lookerUser}
+                height={height}
+              />
 
             </Grid>
           </div>

@@ -2,21 +2,19 @@ import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  AppBar, Tabs, Tab, Typography, Box, Grid, CircularProgress, Card, TextField,
+  Typography, Box, Grid, Card,
   ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Divider, InputLabel, MenuItem,
-  FormControl, Select, Modal
+  FormControl, Select
 } from '@material-ui/core'
-import { Skeleton } from '@material-ui/lab';
 import { ExpandMore, FilterList } from '@material-ui/icons';
 import ModalTable from '../../Material/ModalTable';
 import { ResponsiveCalendar } from '@nivo/calendar'
-import rawSampleCode from '!!raw-loader!./CustomVis.js'; // eslint-disable-line import/no-webpack-loader-syntax
-import useStyles from './styles.js';
-import { format, endOfDay, addDays } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import AppContext from '../../../contexts/AppContext';
 import { Loader, ApiHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
+import { useStyles, topBarBottomBarHeight } from '../styles.js';
 
 
 const { validIdHelper } = require('../../../tools');
@@ -25,8 +23,6 @@ export default function CustomVis(props) {
   // console.log('CustomVis')
   const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
-
-  const topBarBottomBarHeight = 112;
   const [value, setValue] = useState(0);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
@@ -35,17 +31,11 @@ export default function CustomVis(props) {
   const [apiContent, setApiContent] = useState(undefined);
   const [open, setOpen] = React.useState(false);
   const [modalContent, setModalContent] = useState({});
-  const [clientSideCode, setClientSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
 
-
-
-  //declare constants
   const classes = useStyles();
-  const { staticContent, staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange,
-    //lookerUser, lookerHost 
-  } = props;
+  const { staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange } = props;
 
   //handle opening of modal for advanced and premium users
   const handleModalOpen = async ({ day }) => {
@@ -67,16 +57,9 @@ export default function CustomVis(props) {
     setModalContent(modalObj);
   };
 
-  //handle modal close
   const handleModalClose = () => {
     setModalContent({})
     setOpen(false);
-  };
-
-  //handle tab change
-  const handleChange = (event, newValue) => {
-    handleTabChange(0);
-    setValue(newValue);
   };
 
   const handleFromDate = newValue => {
@@ -102,8 +85,6 @@ export default function CustomVis(props) {
     setDesiredField(newValue)
   }
 
-  //format response from initial api call based on LookerContent array
-  //to match format required by Nivo Calendar component
   let filterData = [];
   if (apiContent) {
     //filtering for fromDate, toDate and category
@@ -151,7 +132,6 @@ export default function CustomVis(props) {
     if (isReady) {
       corsApiCall(performLookerApiCalls, [lookerContent])
       setDesiredField(lookerContent[0].desiredFields[0])
-      setClientSideCode(rawSampleCode)
     }
   }, [lookerUser, isReady])
 
@@ -163,8 +143,6 @@ export default function CustomVis(props) {
 
   const performLookerApiCalls = function (lookerContent) {
     // console.log('performLookerApiCalls')
-    // console.log({ lookerContent })
-
     setApiContent(undefined); //set to empty array to show progress bar and skeleton
     lookerContent.map(async lookerContent => {
       let { inlineQuery } = lookerContent;
@@ -206,95 +184,87 @@ export default function CustomVis(props) {
         <Grid container
           key={validIdHelper(type)} >
           <div className={`${classes.root} `}>
+            <Loader
+              hide={apiContent && apiContent.length}
+              classes={classes}
+              height={height - expansionPanelHeight}
+            />
 
-            {!apiContent ?
-              <Skeleton variant="rect" animation="wave" className={classes.skeleton} />
-              :
-              <FilterBar {...props}
-                classes={classes}
-                apiContent={apiContent}
-                fromDate={fromDate}
-                toDate={toDate}
-                category={category}
-                desiredField={desiredField}
-                handleFromDate={handleFromDate}
-                handleToDate={handleToDate}
-                handleCategory={handleCategory}
-                handleDesiredField={handleDesiredField}
-              />
-            }
+            <FilterBar {...props}
+              classes={classes}
+              apiContent={apiContent}
+              fromDate={fromDate}
+              toDate={toDate}
+              category={category}
+              desiredField={desiredField}
+              handleFromDate={handleFromDate}
+              handleToDate={handleToDate}
+              handleCategory={handleCategory}
+              handleDesiredField={handleDesiredField}
+            />
 
 
-            {!apiContent ?
+            {apiContent && apiContent.length ?
+              <Box>
+                <Grid container
+                  spacing={3}
+                  className={`${classes.noContainerScroll}`}>
 
-              <Loader classes={classes}
-                height={height}
-                expansionPanelHeight={expansionPanelHeight} />
+                  <CodeFlyout {...props}
+                    classes={classes}
+                    lookerUser={lookerUser}
+                    height={height}
+                  />
 
-              : apiContent && apiContent.length ?
-                <Box>
-                  <Grid container
-                    spacing={3}
-                    className={`${classes.noContainerScroll}`}>
-                    {codeShow ?
-                      <Grid item sm={6}
-                        className={`${classes.positionFixedTopRight}`}
-                      >
-                        <CodeFlyout {...props}
-                          classes={classes}
-                          lookerUser={lookerUser}
-                          height={height}
+                  <Divider className={classes.divider} />
+                  <Grid item sm={12} >
+
+                    <Box className={`${classes.w100} ${classes.padding10}`} mt={2}>
+
+                      <ApiHighlight height={400} classes={classes}>
+                        <ResponsiveCalendar
+                          data={filterData}
+                          align="top"
+                          from={incrementDate(fromDate, 1)}
+                          to={incrementDate(toDate, 1)}
+                          emptyColor="#eeeeee"
+                          colors={desiredField === lookerContent[0].desiredFields[0] ? googleColorScale : nivoColorScale}
+                          yearSpacing={40}
+                          monthBorderColor="#ffffff"
+                          dayBorderWidth={2}
+                          dayBorderColor="#ffffff"
+                          margin={{ bottom: 40, left: 40 }}
+                          legends={[
+                            {
+                              anchor: 'bottom-right',
+                              direction: 'row',
+                              translateY: 36,
+                              itemCount: 4,
+                              itemWidth: 42,
+                              itemHeight: 36,
+                              itemsSpacing: 14,
+                              itemDirection: 'right-to-left'
+                            }
+                          ]}
+                          onClick={(day, event) => {
+                            if (!day.value) {
+                            } else if (lookerUser.user_attributes.permission_level === 'basic') {
+                              setPaywallModal({
+                                'show': true,
+                                'permissionNeeded': 'see_drill_overlay'
+                              });
+                            } else {
+                              corsApiCall(handleModalOpen, [day])
+                              event.stopPropagation();
+                            }
+                          }}
                         />
-                      </Grid> : ''}
-                    <Divider className={classes.divider} />
-                    <Grid item sm={12} >
-
-                      <Box className={`${classes.w100} ${classes.padding10}`} mt={2}>
-
-                        <ApiHighlight height={400} classes={classes}>
-                          <ResponsiveCalendar
-                            data={filterData}
-                            align="top"
-                            from={incrementDate(fromDate, 1)}
-                            to={incrementDate(toDate, 1)}
-                            emptyColor="#eeeeee"
-                            colors={desiredField === lookerContent[0].desiredFields[0] ? googleColorScale : nivoColorScale}
-                            yearSpacing={40}
-                            monthBorderColor="#ffffff"
-                            dayBorderWidth={2}
-                            dayBorderColor="#ffffff"
-                            margin={{ bottom: 40, left: 40 }}
-                            legends={[
-                              {
-                                anchor: 'bottom-right',
-                                direction: 'row',
-                                translateY: 36,
-                                itemCount: 4,
-                                itemWidth: 42,
-                                itemHeight: 36,
-                                itemsSpacing: 14,
-                                itemDirection: 'right-to-left'
-                              }
-                            ]}
-                            onClick={(day, event) => {
-                              if (!day.value) {
-                              } else if (lookerUser.user_attributes.permission_level === 'basic') {
-                                setPaywallModal({
-                                  'show': true,
-                                  'permissionNeeded': 'see_drill_overlay'
-                                });
-                              } else {
-                                corsApiCall(handleModalOpen, [day])
-                                event.stopPropagation();
-                              }
-                            }}
-                          />
-                        </ApiHighlight>
-                      </Box>
-                    </Grid>
+                      </ApiHighlight>
+                    </Box>
                   </Grid>
-                </Box> :
-                ''
+                </Grid>
+              </Box> :
+              ''
             }
           </div>
         </Grid >

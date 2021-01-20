@@ -1,16 +1,14 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
-import useStyles from './styles.js';
 import AppContext from '../../../contexts/AppContext';
 import { Welcome, SingleValueVis, PopularAnalysis, EmbeddedQuery } from "@pbl-demo/components";
 import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
-
+import { useStyles, topBarBottomBarHeight } from '../styles.js';
 const { validIdHelper } = require('../../../tools');
 
 export default function SplashPage(props) {
 
-  const topBarBottomBarHeight = 112;
   const [iFrameExists, setIFrame] = useState(1);
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
 
@@ -19,13 +17,7 @@ export default function SplashPage(props) {
 
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type } } = props;
-  const codeTab = {
-    type: 'code flyout',
-    label: 'Code',
-    id: 'codeFlyout',
-    lookerContent,
-    lookerUser
-  }
+
   const demoComponentType = type || 'code flyout';
 
   useEffect(() => {
@@ -42,25 +34,19 @@ export default function SplashPage(props) {
         <Grid container
           key={validIdHelper(type)}>
           <div className={classes.root}>
-            {iFrameExists ? '' :
-              <Loader classes={classes} height={height} />
-            }
+            <Loader hide={iFrameExists} classes={classes} height={height} />
+
             <Box className={iFrameExists ? `` : `${classes.hidden}`}>
               <Grid container
                 spacing={3}
                 key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
                 className={`${classes.noContainerScroll}`}
               >
-                {
-                  codeShow ? <Grid item sm={6}
-                    className={`${classes.positionFixedTopRight}`}
-                  >
-                    <CodeFlyout {...props}
-                      classes={classes}
-                      lookerUser={lookerUser}
-                      height={height}
-                    />
-                  </Grid> : ''}
+                <CodeFlyout {...props}
+                  classes={classes}
+                  lookerUser={lookerUser}
+                  height={height}
+                />
                 {lookerContent.map((lookerContentItem, innerIndex) => {
                   // console.log({ lookerContentItem })
                   return (

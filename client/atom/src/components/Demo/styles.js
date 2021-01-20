@@ -9,7 +9,6 @@ export const topBarBottomBarHeight = 112;
 export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
     overflow: 'scroll',
     borderRadius: 8
   },
@@ -52,12 +51,21 @@ export const useStyles = makeStyles((theme) => ({
   mlAuto: {
     marginLeft: 'auto'
   },
+  mrAuto: {
+    marginRight: 'auto'
+  },
   skeleton: {
     minWidth: 275,
     minHeight: 600,
   },
   card: {
     minWidth: 275,
+  },
+  padding30: {
+    padding: 30
+  },
+  minHeight680: {
+    minHeight: 680,
   },
   maxHeight200: {
     maxHeight: 200,
@@ -140,7 +148,6 @@ export const useStyles = makeStyles((theme) => ({
   },
   carouselLegendBody: {
     fontSize: '16px !important',
-
   },
   positionRelative: {
     position: 'relative'
@@ -179,12 +186,6 @@ export const useStyles = makeStyles((theme) => ({
     overflow: 'scroll',
     borderRadius: '0 8px 8px 0'
   },
-  overflowScroll: {
-    overflow: 'scroll'
-  },
-  overflowHidden: {
-    overflow: 'hidden'
-  },
   height100Percent: {
     height: '100%'
   },
@@ -208,5 +209,86 @@ export const useStyles = makeStyles((theme) => ({
   maxHeight80Percent: {
     maxHeight: '80%',
     height: '80%'
-  }
+  },
+  faSm: {
+    fontSize: '.75em'
+  },
+  mr12: {
+    marginRight: 12
+  },
+  ml12: {
+    marginLeft: 12
+  },
+  dot: {
+    height: "25px",
+    width: "25px",
+    borderRadius: "50%",
+    display: "inline-block"
+  },
+  borderRadius0: { borderRadius: 0 },
+  w33: {
+    width: "33%"
+  },
+  verticalAlignTop: {
+    verticalAlign: 'top'
+  },
+  padding10: {
+    padding: 10
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1,
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  bluePrimary: {
+    backgroundColor: 'rgba(69, 149, 236, 1)'
+  },
+  blueSecondary: {
+    backgroundColor: 'rgba(69, 149, 236, .5)',
+  },
+  orangePrimary: {
+    backgroundColor: 'rgba(243, 167, 89, 1)'
+  },
+  orangeSecondary: {
+    backgroundColor: 'rgba(243, 167, 89, .5)'
+  },
+  positionTopRight: {
+    position: 'absolute',
+    top: -30,
+    right: -50,
+    bottom: 0,
+    zIndex: 100
+  },
+  bottomBarSpacer: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  },
+  maxHeight600: {
+    maxHeight: 600,
+    overflow: 'scroll'
+  },
+  m12: {
+    margin: 12
+  },
+  m6: {
+    margin: 6
+  },
 }));

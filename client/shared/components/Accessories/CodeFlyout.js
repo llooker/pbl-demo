@@ -10,32 +10,37 @@ export const CodeFlyout = (props) => {
 
   const { classes, lookerUser, height } = props
   return (
-    <ClickAwayListener onClickAway={() => {
-      setCodeShow()
-    }}
-    >
-      <Fade in={codeShow || false}>
-        {Object.keys(lookerUser).length ?
-          <Grid container spacing={3}
-            className={`${classes.padding20} ${classes.codeFlyoutContainer}`}
-            style={{ height }}>
-            <Grid item sm={11}>
-              <Typography variant="h6" className={` ${classes.mrAuto}`} style={{ color: 'white' }}>
-                Looker User Object
-            </Typography>
-            </Grid>
-            <Grid item sm={1}
-              style={{ textAlign: 'right' }}
-            >
-              <CloseIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => setCodeShow()} />
-            </Grid>
-            <Grid item sm={12}>
-              <CodeSnippet code={lookerUser} />
-            </Grid>
-          </Grid> : ''
-        }
-      </Fade >
-    </ClickAwayListener >
+
+    codeShow ?
+      <Grid item sm={6}
+        className={`${classes.positionFixedTopRight}`}>
+        <ClickAwayListener onClickAway={() => setCodeShow()}>
+          <Fade in={true}>
+            {
+              Object.keys(lookerUser).length ?
+                <Grid container spacing={3}
+                  className={`${classes.padding20} ${classes.codeFlyoutContainer}`}
+                  style={{ height }}>
+                  <Grid item sm={11}>
+                    <Typography variant="h6" className={` ${classes.mrAuto}`} style={{ color: 'white' }}>
+                      Looker User Object
+              </Typography>
+                  </Grid>
+                  <Grid item sm={1}
+                    style={{ textAlign: 'right' }}
+                  >
+                    <CloseIcon style={{ color: 'white', cursor: 'pointer' }} onClick={() => setCodeShow()} />
+                  </Grid>
+                  <Grid item sm={12}>
+                    <CodeSnippet code={lookerUser} />
+                  </Grid>
+                </Grid> : ''
+            }
+          </Fade >
+        </ClickAwayListener >
+      </Grid>
+      : ""
+
   )
 }
 
