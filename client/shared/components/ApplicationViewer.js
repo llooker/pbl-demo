@@ -7,14 +7,15 @@ import { Document, Page, pdfjs } from 'react-pdf'; //'react-pdf/dist/esm/entry.w
 //https://github.com/wojtekmaj/react-pdf/issues/97#issuecomment-585547230
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 import { useStyles, topBarBottomBarHeight } from './styles.js';
-const { validIdHelper, appContextMap } = require('../utils/tools');
+const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
+
 
 
 export const ApplicationViewer = (props) => {
   const [iFrameExists, setIFrame] = useState(1);
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const { clientSession: { lookerUser, lookerHost } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
-  const { staticContent: { lookerContent }, staticContent: { type } } = props;
+  const { staticContent: { lookerContent, type, schema } } = props;
   const demoComponentType = type;
   const classes = useStyles();
 
@@ -22,7 +23,8 @@ export const ApplicationViewer = (props) => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   }, [lookerContent]);
 
-  console.log({ lookerContent })
+
+  validateContent(lookerContent[0], schema)
 
   return (
     <div className={`${classes.root} demoComponent`}

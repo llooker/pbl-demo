@@ -2,6 +2,15 @@ import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import samplePDF from './sample.pdf';
 import { ApplicationViewer } from "@pbl-demo/components";
 
+const schema = {
+  type: (value) => {
+    return typeof value === "string";
+  },
+  label: (value) => {
+    return typeof value === "string";
+  }
+}
+
 export const ApplicationViewerContent = {
   "type": "customfilter",
   "label": "PDF Viewer",
@@ -17,9 +26,8 @@ export const ApplicationViewerContent = {
       "isNext": false,
       "filters": [],
       "pdf": samplePDF
-    }]
+    }],
+  "schema": schema
 }
 
-//valid usecase for exploring proptypes
-//require type to be a string and then check that in pdfviewer component
-//proptypes will help in testing
+
