@@ -1,5 +1,6 @@
-import ApplicationViewer from '../../components/Demo/ApplicationViewer/ApplicationViewer'
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
+import samplePDF from './sample.pdf';
+import { ApplicationViewer } from "@pbl-demo/components";
 
 export const ApplicationViewerContent = {
   "type": "customfilter",
@@ -14,7 +15,8 @@ export const ApplicationViewerContent = {
       "id": "20",
       "label": "PDF Viewer",
       "isNext": false,
-      "filters": []
+      "filters": [],
+      "pdf": samplePDF
     }]
 }
 

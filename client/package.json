@@ -15,6 +15,7 @@
     "shared/*"
   ],
   "dependencies": {
-    "@material-ui/styles": "^4.0.0"
+    "@material-ui/styles": "^4.0.0",
+    "react-pdf": "^5.1.0"
   }
 }
