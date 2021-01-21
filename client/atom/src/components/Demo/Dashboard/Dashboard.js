@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash'
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { useLocation } from "react-router-dom";
 import { Grid, Card } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
@@ -9,6 +10,7 @@ import FilterBar from './FilterBar';
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
 import { useStyles, topBarBottomBarHeight } from '../styles.js';
+import queryString from 'query-string';
 
 const { validIdHelper } = require('../../../tools');
 
@@ -36,6 +38,9 @@ export default function Dashboard(props) {
   const darkThemeBackgroundColor = theme.palette.fill.main;
 
   const classes = useStyles();
+  const location = useLocation();
+
+
 
   //condtional theming for dark mode :D
   let paletteToUse = !lightThemeToggleValue && isThemeableDashboard ?
@@ -165,7 +170,7 @@ export default function Dashboard(props) {
 
   useEffect(() => {
     setApiContent(undefined);
-  }, [])
+  }, []);
 
   const performLookerApiCalls = function (lookerContent, dynamicTheme) {
 
@@ -233,15 +238,22 @@ export default function Dashboard(props) {
     })
   }
 
-  const customFilterAction = (filterName, newFilterValue) => {
-    console.log("customFilterAction")
-    console.log({ filterName })
-    console.log({ newFilterValue })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const customFilterAction = useCallback((filterName, newFilterValue) => {
     if (Object.keys(dashboardObj).length) {
       dashboardObj.updateFilters({ [filterName]: newFilterValue })
       dashboardObj.run()
     }
-  }
+  })
+
+
+  useEffect(() => {
+    let params = queryString.parse(location.search);
+    let paramMatchesFilterName = params[lookerContent[0].filterName] > 0 ? true : false;
+    if (paramMatchesFilterName)
+      customFilterAction(lookerContent[0].filterName, params[lookerContent[0].filterName])
+
+  }, [customFilterAction, location.search, lookerContent])
 
   return (
     <div className={`${classes.root} demoComponent`}

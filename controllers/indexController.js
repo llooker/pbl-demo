@@ -14,7 +14,7 @@ module.exports.readSession = async (req, res, next) => {
 }
 
 module.exports.writeSession = async (req, res, next) => {
-  console.log("writeSession")
+  // console.log("writeSession")
   let { session } = req;
   session.userProfile = req.body.userProfile;
   session.lookerUser = req.body.lookerUser;
@@ -25,7 +25,6 @@ module.exports.writeSession = async (req, res, next) => {
   session.lookerUser.last_name = session.userProfile.familyName;
   session.lookerApiToken = await tokenHelper(session);
   session.packageName = process.env.PACKAGE_NAME;
-  console.log({ session })
 
   res.status(200).send({ session: session });
 }
