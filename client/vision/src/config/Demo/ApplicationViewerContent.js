@@ -14,7 +14,7 @@ const schema = {
 export const ApplicationViewerContent = {
   "type": "customfilter",
   "label": "PDF Viewer",
-  "menuCategory": "Fraud and Improper Payments",
+  "menuCategory": "Home",
   "description": "Overview of all your web traffic",
   "icon": PictureAsPdfIcon,
   "component": ApplicationViewer,

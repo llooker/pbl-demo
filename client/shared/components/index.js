@@ -3,3 +3,4 @@ export { SingleValueVis } from "./SingleValueVis";
 export { PopularAnalysis } from "./PopularAnalysis";
 export { EmbeddedQuery } from "./EmbeddedQuery";
 export { ApplicationViewer } from "./ApplicationViewer";
+export { EmbeddedExplore } from "./EmbeddedExplore";
