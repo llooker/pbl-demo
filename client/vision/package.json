@@ -23,6 +23,7 @@
     "lodash": "^4.17.20",
     "marked": "^0.8.2",
     "moment": "^2.29.1",
+    "query-string": "^6.13.8",
     "react": "latest",
     "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "latest",

@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import clsx from 'clsx';
 import {
   AppBar, Toolbar, Badge, Avatar, IconButton, Grid
@@ -11,11 +11,11 @@ import { useStyles } from './styles.js';
 import UserMenu from './UserMenu';
 import { TopBarContent } from '../../config/TopBarContent';
 import { AutoComplete } from '@pbl-demo/components/Filters';
-import { urlencoded } from 'body-parser';
 
 export default function TopBar(props) {
   const classes = useStyles();
   let history = useHistory();
+  let { democomponent } = useParams();
 
   let { clientSession, setClientSession,
     drawerOpen, setDrawerOpen,
@@ -38,14 +38,22 @@ export default function TopBar(props) {
     }
   }, [lookerUser, isReady])
 
+  useEffect(() => {
+    console.log({ democomponent })
+  }, [democomponent])
+
 
 
   const retrieveAutocompleteOptions = async () => {
     let autoComplteInfo = TopBarContent.autocomplete
     let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: autoComplteInfo.resultFormat || "json", body: autoComplteInfo.inlineQuery }))
+    console.log({ lookerResponseData })
     let apiContentObj = {}
     let queryResultsForDropdown = [];
     let desiredProperty = Object.keys(lookerResponseData[0])[0];
+    // TO DO, present dropdown label to match mocks
+    // let desiredProperties = Object.keys(lookerResponseData[0]);
+    // console.log({ desiredProperties })
 
     for (let i = 0; i < lookerResponseData.length; i++) {
       queryResultsForDropdown.push({
@@ -56,6 +64,11 @@ export default function TopBar(props) {
     apiContentObj["autocomplete"] = queryResultsForDropdown
     return apiContentObj;
   }
+
+  const filterNamesUrlsMap = {
+    "Household ID": "households"
+  }
+
   return (
     <AppBar
       position="fixed"
@@ -83,9 +96,12 @@ export default function TopBar(props) {
               filterItem={TopBarContent.autocomplete}
               apiContent={apiContent.autocomplete}
               action={(filterName, newValue) => {
-                console.log({ filterName })
-                console.log({ newValue })
-                history.push({ search: encodeURIComponent(`${filterName}=${newValue}`) })
+                if (filterName && newValue) {
+                  history.push({
+                    pathname: filterNamesUrlsMap[filterName],
+                    search: (`${encodeURIComponent(filterName)}=${newValue}`)
+                  })
+                }
               }}
               classes={classes}
             /></Grid> : ""}

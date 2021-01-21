@@ -234,6 +234,9 @@ export default function Dashboard(props) {
   }
 
   const customFilterAction = (filterName, newFilterValue) => {
+    console.log("customFilterAction")
+    console.log({ filterName })
+    console.log({ newFilterValue })
     if (Object.keys(dashboardObj).length) {
       dashboardObj.updateFilters({ [filterName]: newFilterValue })
       dashboardObj.run()

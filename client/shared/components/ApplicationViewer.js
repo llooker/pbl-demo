@@ -53,7 +53,6 @@ export const ApplicationViewer = (props) => {
                   lookerUser={lookerUser}
                   height={height}
                 />
-                <h1>I'm the new PDF Viewer demo component</h1>
 
                 <Document
                   file={lookerContent[0].pdf}
