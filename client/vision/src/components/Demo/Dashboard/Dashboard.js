@@ -197,14 +197,15 @@ export default function Dashboard(props) {
         .build()
         .connect()
         .then((dashboard) => {
-          setIFrame(1)
+          // setIFrame(1)
           setDashboardObj(dashboard)
           let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
           LookerEmbedSDK.init(modifiedBaseUrl)
-        })
-        .catch((error) => {
-          // console.error('Connection error', error)
-        })
+        }).then(() => {
+          setIFrame(1)
+        }).catch(error => {
+          console.log({ error })
+        });
 
       //api calls
       if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
