@@ -1,5 +1,3 @@
-// https://www.npmjs.com/package/@looker/sdk#using-a-proxy-for-authentication
-
 import { AuthToken, AuthSession, BrowserTransport } from "@looker/sdk";
 
 export class PblSession extends AuthSession {

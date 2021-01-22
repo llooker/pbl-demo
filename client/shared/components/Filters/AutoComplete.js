@@ -5,7 +5,7 @@ import { ApiHighlight } from '../Accessories/Highlight';
 import { NumberToColoredPercent } from '../Accessories/NumberToColoredPercent';
 const { validIdHelper } = require('../../utils/tools');
 
-export const AutoComplete = ({ filterItem, apiContent, classes, action }) => {
+export const AutoComplete = ({ filterItem, apiContent, classes, action, bgColor }) => {
   // console.log("AutoComplete");
   return (
     <ApiHighlight
@@ -42,8 +42,12 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action }) => {
         renderInput={(params) => <TextField {...params}
           label={filterItem.filterName}
           variant="outlined"
+          type={"search"}
         />}
         loadingText="Loading..."
+        style={{
+          backgroundColor: bgColor || ""
+        }}
       />
     </ApiHighlight>
   )

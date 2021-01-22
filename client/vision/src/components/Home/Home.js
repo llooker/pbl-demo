@@ -8,14 +8,14 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
 import { lookerUserPermissions, lookerUserTimeHorizonMap } from '../../LookerHelpers/defaults';
-import TopBar from './TopBar';
 import LeftDrawer from './LeftDrawer';
 import MonetizationModal from '../Demo/MonetizationModal/MonetizationModal';
 import '../Home.css';
 import { useStyles } from './styles.js';
 import { packageNameTheme } from '../../config/theme.js';
 import * as DemoComponentsContentArr from '../../config/Demo';
-
+import { TopBar } from "@pbl-demo/components";
+import { TopBarContent } from '../../config/TopBarContent'
 
 const { validIdHelper } = require('../../tools');
 
@@ -120,7 +120,11 @@ export default function Home(props) {
       }}>
         <ThemeProvider theme={packageNameTheme}>
           <CssBaseline />
-          <TopBar />
+          <TopBar
+            content={TopBarContent}
+            theme={packageNameTheme}
+            classes={classes}
+          />
           <MonetizationModal />
           <LeftDrawer DemoComponentsContentArr={DemoComponentsContentArr} />
           <main

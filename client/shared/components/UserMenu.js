@@ -1,29 +1,15 @@
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, } from "react-router-dom";
-import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Menu, MenuItem, Typography, Divider, TextField, Avatar } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { lookerUserAttributeBrandOptions, lookerUserPermissions } from '../../LookerHelpers/defaults';
-import { endSession } from '../../AuthUtils/auth';
-import AppContext from '../../contexts/AppContext';
-const { validIdHelper } = require('../../tools');
+import { lookerUserAttributeBrandOptions, lookerUserPermissions } from '../LookerHelpers/defaults';
+import { endSession } from '../utils/auth';
+import { appContextMap, validIdHelper } from '../utils/tools';
 
-const useStyles = makeStyles((theme) => ({
-  zIndex1500: {
-    zIndex: 1500
-  },
-  mr12: {
-    marginRight: 12
-  }
-}))
-
-export default function UserMenu(props) {
+export const UserMenu = ({ classes }) => {
   let history = useHistory();
-  const classes = useStyles();
-
-  let { setPaywallModal, clientSession, setClientSession, handleSwitchLookerUser } = useContext(AppContext)
-
+  let { setPaywallModal, clientSession, setClientSession, handleSwitchLookerUser } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(clientSession.lookerUser.user_attributes.brand || '');
 

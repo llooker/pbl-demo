@@ -2,14 +2,8 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
 import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
-import { Document, Page, pdfjs } from 'react-pdf'; //'react-pdf/dist/esm/entry.webpack';
-//don't ask me about this next line, see here: 
-//https://github.com/wojtekmaj/react-pdf/issues/97#issuecomment-585547230
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 import { useStyles, topBarBottomBarHeight } from './styles.js';
 const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
-
-
 
 export const ApplicationViewer = (props) => {
   const [iFrameExists, setIFrame] = useState(1);
@@ -22,7 +16,6 @@ export const ApplicationViewer = (props) => {
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
   }, [lookerContent]);
-
 
   validateContent(lookerContent[0], schema)
 
@@ -54,12 +47,10 @@ export const ApplicationViewer = (props) => {
                   height={height}
                 />
 
-                <Document
-                  file={lookerContent[0].pdf}
-                // file="https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf"
-                >
-                  <Page pageNumber={1} />
-                </Document>
+                <object data={lookerContent[0].pdf} type="application/pdf" className={`${classes.minHeight680} ${classes.w100}`}>
+                  <iframe src={`https://docs.google.com/viewer?url=${lookerContent[0].pdf}&embedded=true`} style={{ height: "100%", width: "100%" }}></iframe>
+                </object>
+
               </Grid>
             </Box >
           </div >

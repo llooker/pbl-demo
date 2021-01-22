@@ -28,7 +28,6 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
     setIFrame(0)
 
     let queryUrl = encodeURIComponent(`${lookerContentItem.queryUrl}${document.location.origin}`)
-
     await fetch(`/auth?src=${queryUrl}`)
       .then(response => response.json())
       .then(data => {
@@ -50,6 +49,8 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
           .catch((error) => {
             // console.log('catch', error)
           })
+      }).then(() => {
+        setIFrame(1)
       })
   }
 
