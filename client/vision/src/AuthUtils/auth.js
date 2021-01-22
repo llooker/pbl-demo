@@ -15,8 +15,7 @@ export const checkForExistingSession = async () => {
 }
 
 export const writeNewSession = async (newSession) => {
-  console.log('writeNewSession')
-  console.log({ newSession })
+  // console.log('writeNewSession')
   let newSessionResponse = await fetch('/writesession', {
     method: 'POST',
     headers: {
@@ -25,9 +24,7 @@ export const writeNewSession = async (newSession) => {
     },
     body: JSON.stringify({ ...newSession })
   })
-  console.log({ newSession })
   const newSessionResponseData = await newSessionResponse.json();
-  console.log({ newSessionResponseData })
   return { session: newSessionResponseData.session };
 }
 

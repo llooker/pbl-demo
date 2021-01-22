@@ -200,11 +200,12 @@ export default function Dashboard(props) {
           setIFrame(1)
           setDashboardObj(dashboard)
           let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+          // more robust regex solution
+          // let modifiedBaseUrl = clientSession.lookerBaseUrl.replace(/:443$/, "")
           LookerEmbedSDK.init(modifiedBaseUrl)
-        })
-        .catch((error) => {
-          // console.error('Connection error', error)
-        })
+        }).catch(error => {
+          console.log({ error })
+        });
 
       //api calls
       if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent

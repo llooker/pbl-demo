@@ -197,15 +197,12 @@ export default function Dashboard(props) {
         .build()
         .connect()
         .then((dashboard) => {
-          console.log("first then")
-          console.log({ dashboard })
           setIFrame(1)
           setDashboardObj(dashboard)
           let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+          // more robust regex solution
+          // let modifiedBaseUrl = clientSession.lookerBaseUrl.replace(/:443$/, "")
           LookerEmbedSDK.init(modifiedBaseUrl)
-        }).then(() => {
-          console.log("second then")
-          setIFrame(1)
         }).catch(error => {
           console.log({ error })
         });
@@ -258,12 +255,6 @@ export default function Dashboard(props) {
       customFilterAction(lookerContent[0].filterName, params[lookerContent[0].filterName])
 
   }, [customFilterAction, location.search, lookerContent])
-
-
-  useEffect(() => {
-    console.log("useEffect")
-    console.log({ iFrameExists })
-  }, [iFrameExists])
 
   return (
     <div className={`${classes.root} demoComponent`}
