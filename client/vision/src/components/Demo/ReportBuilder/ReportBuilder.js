@@ -10,7 +10,7 @@ import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
 import AppContext from '../../../contexts/AppContext';
 import { Loader, ApiHighlight, EmbedHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
-import { useStyles, topBarBottomBarHeight } from '../styles.js';
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 
 const { validIdHelper } = require('../../../tools');
 
@@ -354,7 +354,7 @@ export default function ReportBuilder(props) {
                   <CodeFlyout {...props}
                     classes={classes}
                     lookerUser={lookerUser}
-                    height={height - expansionPanelHeight}
+                    height={height - expansionPanelHeight - additionalHeightForFlyout}
                   />
                   {tabContent.map((tabContentItem, tabContentItemIndex) => (
                     <TabPanel

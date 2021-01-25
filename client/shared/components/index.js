@@ -6,3 +6,4 @@ export { ApplicationViewer } from "./ApplicationViewer";
 export { EmbeddedExplore } from "./EmbeddedExplore";
 export { TopBar } from "./TopBar";
 export { UserMenu } from "./UserMenu";
+export { BottomBar } from "./BottomBar";

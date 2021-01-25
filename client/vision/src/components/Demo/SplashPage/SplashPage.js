@@ -4,7 +4,7 @@ import { Box, Grid, Card } from '@material-ui/core'
 import AppContext from '../../../contexts/AppContext';
 import { Welcome, SingleValueVis, PopularAnalysis, EmbeddedQuery } from "@pbl-demo/components";
 import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
-import { useStyles, topBarBottomBarHeight } from '../styles.js';
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 const { validIdHelper } = require('../../../tools');
 
 export default function SplashPage(props) {
@@ -45,7 +45,7 @@ export default function SplashPage(props) {
                 <CodeFlyout {...props}
                   classes={classes}
                   lookerUser={lookerUser}
-                  height={height}
+                  height={height - additionalHeightForFlyout} //expansionPanelHeight
                 />
                 {lookerContent.map((lookerContentItem, innerIndex) => {
                   // console.log({ lookerContentItem })

@@ -9,7 +9,7 @@ import AppContext from '../../../contexts/AppContext';
 import FilterBar from './FilterBar';
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
-import { useStyles, topBarBottomBarHeight } from '../styles.js';
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 import queryString from 'query-string';
 
 const { validIdHelper } = require('../../../tools');
@@ -306,7 +306,7 @@ export default function Dashboard(props) {
               <CodeFlyout {...props}
                 classes={classes}
                 lookerUser={lookerUser}
-                height={height}
+                height={height - expansionPanelHeight - additionalHeightForFlyout}
               />
 
             </Grid>

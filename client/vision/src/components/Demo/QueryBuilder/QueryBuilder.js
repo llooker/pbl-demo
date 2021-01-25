@@ -13,7 +13,7 @@ import { getComparator, stableSort } from './helpers.js';
 import AppContext from '../../../contexts/AppContext';
 import { lookerUserTimeHorizonMap } from '../../../LookerHelpers/defaults';
 import { Loader, ApiHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
-import { useStyles, topBarBottomBarHeight } from '../styles.js';
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 
 
 const { validIdHelper, prettifyString } = require('../../../tools');
@@ -114,7 +114,7 @@ export default function QueryBuilder(props) {
                   <CodeFlyout {...props}
                     classes={classes}
                     lookerUser={lookerUser}
-                    height={height}
+                    height={height - expansionPanelHeight - additionalHeightForFlyout}
                   />
                   <Divider className={classes.divider} />
                   <Grid item sm={12}>

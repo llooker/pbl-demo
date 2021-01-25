@@ -8,7 +8,10 @@ import { appContextMap } from '../../utils/tools';
 export const CodeFlyout = (props) => {
   const { codeShow, setCodeShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
-  const { classes, lookerUser, height } = props
+  const { classes, lookerUser, height } = props;
+
+  console.log("CodeFlyout")
+  console.log({ height })
   return (
 
     codeShow ?
@@ -20,7 +23,8 @@ export const CodeFlyout = (props) => {
               Object.keys(lookerUser).length ?
                 <Grid container spacing={3}
                   className={`${classes.padding20} ${classes.codeFlyoutContainer}`}
-                  style={{ height }}>
+                  style={{ height }}
+                >
                   <Grid item sm={11}>
                     <Typography variant="h6" className={` ${classes.mrAuto}`} style={{ color: 'white' }}>
                       Looker User Object

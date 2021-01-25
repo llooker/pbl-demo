@@ -1,20 +1,18 @@
 import _ from 'lodash'
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import clsx from 'clsx';
 import { AppBar, Toolbar, Badge, Avatar, IconButton, Grid } from '@material-ui/core';
 import { AddAlert, ChevronLeft, Menu } from '@material-ui/icons';
-import { useStyles } from './styles.js';
 import { UserMenu } from './UserMenu';
 import { AutoComplete } from '@pbl-demo/components/Filters';
 import { appContextMap } from '../utils/tools';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 export const TopBar = ({ content, theme, classes }) => {
-  console.log({ theme })
-  // const classes = useStyles();
+  console.log("TopBar")
+  // console.log({ theme })
   let history = useHistory();
-  let { democomponent } = useParams();
 
   const { clientSession, setClientSession,
     drawerOpen, setDrawerOpen,
@@ -35,12 +33,6 @@ export const TopBar = ({ content, theme, classes }) => {
       return () => isSubscribed = false
     }
   }, [lookerUser, isReady])
-
-  useEffect(() => {
-    console.log({ democomponent })
-  }, [democomponent])
-
-
 
   const retrieveAutocompleteOptions = async () => {
     let autoComplteInfo = content.autocomplete

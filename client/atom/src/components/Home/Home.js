@@ -14,7 +14,7 @@ import '../Home.css';
 import { useStyles } from './styles.js';
 import { packageNameTheme } from '../../config/theme.js';
 import * as DemoComponentsContentArr from '../../config/Demo';
-import { TopBar } from "@pbl-demo/components";
+import { TopBar, BottomBar } from "@pbl-demo/components";
 import { TopBarContent } from '../../config/TopBarContent'
 
 const { validIdHelper } = require('../../tools');
@@ -136,6 +136,8 @@ export default function Home(props) {
             <div className={classes.drawerHeader} />
             {ActiveDemoComponent ? <ActiveDemoComponent staticContent={ActiveDemoComponentContent} /> : ''}
           </main>
+
+          <BottomBar classes={classes} />
         </ThemeProvider>
       </AppContext.Provider>
     </div>

@@ -2,11 +2,9 @@ import _ from 'lodash'
 import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
-import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Icon } from '@material-ui/core/';
+import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
 import { ChevronLeft } from '@material-ui/icons';
-
 import { useStyles } from './styles.js';
-import BottomBar from './BottomBar'; //needs refactor
 
 const { validIdHelper } = require('../../tools');
 
@@ -39,8 +37,6 @@ export default function LeftDrawer({ DemoComponentsContentArr }) {
         classes={classes}
         DemoComponentsContentArr={DemoComponentsContentArr} />
 
-      {/* should be refactored */}
-      <BottomBar classes={classes} />
     </Drawer>
   )
 }

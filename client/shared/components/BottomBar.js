@@ -1,22 +1,20 @@
 import React, { useContext } from 'react';
-import { Button, Grid } from '@material-ui/core';
+import { AppBar, Toolbar, Button } from '@material-ui/core';
 import { Code, HighlightOutlined } from '@material-ui/icons';
-import AppContext from '../../contexts/AppContext';
+import { appContextMap } from '../utils/tools';
 
 
-export default function BottomBar(props) {
+export const BottomBar = ({ classes }) => {
   // console.log('BottomBar')
-  // console.log('props', props)
 
-  const { classes } = props
   const { highlightShow, setHighlightShow,
-    codeShow, setCodeShow } = useContext(AppContext)
+    codeShow, setCodeShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
 
   return (
-    <Grid container
-      className={`${classes.mtAuto} ${classes.mb10}`}>
-      <Grid item sm={6}>
+    <AppBar position="fixed" color="transparent" className={classes.appBarBottom} >
+      <Toolbar variant="dense">
         <Button
+          className={`${classes.mlAuto} ${classes.mr12}`}
           display="inline"
           startIcon={<HighlightOutlined />}
           onClick={() => {
@@ -24,11 +22,8 @@ export default function BottomBar(props) {
             setHighlightShow(!highlightShow)
           }
           }>Source
-      </Button>
-      </Grid>
-      <Grid item sm={6}>
+    </Button>
         <Button
-          className={`${classes.ml12}`}
           display="inline"
           startIcon={<Code />}
           onClick={() => {
@@ -36,7 +31,7 @@ export default function BottomBar(props) {
             setCodeShow(!codeShow)
           }}>Code
       </Button>
-      </Grid>
-    </Grid >
+      </Toolbar>
+    </AppBar >
   );
 }

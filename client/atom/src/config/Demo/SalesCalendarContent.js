@@ -1,4 +1,4 @@
-import CustomVis from '../../components/Demo/CustomVis/CustomVis'
+import SalesCalendar from '../../components/Demo/SalesCalendar/SalesCalendar'
 import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
 
 
@@ -8,7 +8,7 @@ export const SalesCalendarContent = {
   "menuCategory": "sales",
   "description": "Ayeeeeeee",
   "icon": DateRangeOutlinedIcon,
-  "component": CustomVis,
+  "component": SalesCalendar,
   "lookerContent": [
     {
       "type": "custom vis",

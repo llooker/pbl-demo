@@ -1,11 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  Typography, Box, Grid, Card,
-  ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Divider, InputLabel, MenuItem,
-  FormControl, Select
-} from '@material-ui/core'
+import { Typography, Box, Grid, Card, Accordion, AccordionSummary, AccordionDetails, Divider, InputLabel, MenuItem, FormControl, Select } from '@material-ui/core'
 import { ExpandMore, FilterList } from '@material-ui/icons';
 import ModalTable from '../../Material/ModalTable';
 import { ResponsiveCalendar } from '@nivo/calendar'
@@ -14,13 +10,11 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import AppContext from '../../../contexts/AppContext';
 import { Loader, ApiHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
-import { useStyles, topBarBottomBarHeight } from '../styles.js';
-
-
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 const { validIdHelper } = require('../../../tools');
 
-export default function CustomVis(props) {
-  // console.log('CustomVis')
+export default function SalesCalendar(props) {
+  // console.log('SalesCalendar')
   const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
   const [value, setValue] = useState(0);
@@ -213,7 +207,7 @@ export default function CustomVis(props) {
                   <CodeFlyout {...props}
                     classes={classes}
                     lookerUser={lookerUser}
-                    height={height}
+                    height={height - expansionPanelHeight - additionalHeightForFlyout}
                   />
 
                   <Divider className={classes.divider} />
@@ -300,16 +294,16 @@ function FilterBar(props) {
   // console.log('toDate', toDate)
 
   return (
-    <ExpansionPanel expanded={expanded} onChange={handleExpansionPanel} className={classes.w100} elevation={0}>
-      <ExpansionPanelSummary
+    <Accordion expanded={expanded} onChange={handleExpansionPanel} className={classes.w100} elevation={0}>
+      <AccordionSummary
         expandIcon={<ExpandMore />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
         <FilterList /><Typography className={`${classes.heading} ${classes.ml12}`}>Filter:</Typography>
 
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
+      </AccordionSummary>
+      <AccordionDetails>
         <Grid container spacing={3}>
           {apiContent ?
             <>
@@ -410,8 +404,8 @@ function FilterBar(props) {
             </>
             : ''}
         </Grid>
-      </ExpansionPanelDetails>
-    </ExpansionPanel >
+      </AccordionDetails>
+    </Accordion >
   )
 }
 
