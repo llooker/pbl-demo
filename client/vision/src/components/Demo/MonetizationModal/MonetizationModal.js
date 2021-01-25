@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import AppContext from '../../../contexts/AppContext';
 import {
   Modal, Fade, Grid, Card, CardContent, CardActions, Button, Typography, Divider, List, ListItem, ListItemText
@@ -9,7 +8,7 @@ import { Rating } from '@material-ui/lab'
 import { ListItemIcon } from '@material-ui/core'; //already declared
 import { Check } from '@material-ui/icons';
 import useStyles from './styles.js';
-import { lookerUserPermissions } from '../../../LookerHelpers/defaults';
+import { lookerUserPermissions } from '@pbl-demo/components/LookerHelpers/defaults';
 const { validIdHelper } = require('../../../tools');
 
 function getModalStyle() {
@@ -88,14 +87,17 @@ export default function MonetizationModal(props) {
                       setPaywallModal({})
                     }}>
                     <CardContent>
-                      <Typography variant="h6" display="justify">
+                      <Typography variant="h6"
+                      // display="justify"
+                      >
                         {_.capitalize(key)}
                       </Typography>
                       <Typography
-                        display="justify">
+                      // display="justify"
+                      >
                         <Rating
                           name="read-only"
-                          value={key === 'basic' ? "3" : key === "advanced" ? "4" : "5"}
+                          value={key === 'basic' ? 3 : key === "advanced" ? 4 : 5}
                           readOnly /></Typography>
                       <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}>
                         {key === 'basic' ?

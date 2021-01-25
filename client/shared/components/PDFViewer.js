@@ -2,10 +2,10 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
 import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
-import { useStyles, topBarBottomBarHeight } from './styles.js';
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from './styles.js';
 const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
 
-export const ApplicationViewer = (props) => {
+export const PDFViewer = (props) => {
   const [iFrameExists, setIFrame] = useState(1);
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const { clientSession: { lookerUser, lookerHost } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
@@ -44,7 +44,7 @@ export const ApplicationViewer = (props) => {
                 <CodeFlyout {...props}
                   classes={classes}
                   lookerUser={lookerUser}
-                  height={height}
+                  height={height - additionalHeightForFlyout}
                 />
 
                 <object data={lookerContent[0].pdf} type="application/pdf" className={`${classes.minHeight680} ${classes.w100}`}>

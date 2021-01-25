@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import AppContext from './contexts/AppContext';
-import { checkForExistingSession, createSdkHelper } from './AuthUtils/auth';
-// import { checkForExistingSession, createSdkHelper } from '@pbl-demo/utils/auth' //couldn't get this to work
+import { checkForExistingSession, createSdkHelper } from '@pbl-demo/components/Utils/auth';
 import SignIn from './components/SignIn/SignIn';
 import Home from './components/Home/Home';
 

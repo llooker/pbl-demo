@@ -1,14 +1,13 @@
 import _ from 'lodash'
 import React, { useContext, useEffect } from 'react';
-import { useHistory, useParams, useLocation } from "react-router-dom";
 import { GoogleLogin } from 'react-google-login';
 import AppContext from '../../contexts/AppContext';
-import { writeNewSession, createSdkHelper } from '../../AuthUtils/auth';
-import { initialLookerUser } from '../../LookerHelpers/defaults'
 import useStyles from './styles.js';
 import '../Home.css';
 import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
 import { SignInContent } from '../../config'
+import { writeNewSession, createSdkHelper } from '@pbl-demo/components/Utils/auth';
+import { initialLookerUser } from '@pbl-demo/components/LookerHelpers/defaults';
 
 const { validIdHelper } = require('../../tools');
 
@@ -16,9 +15,7 @@ export default function SignIn(props) {
   // console.log('SignIn');
   // console.log('props', props)
 
-  let { clientSession, setClientSession,
-    sdk, setSdk,
-    initialHref, setInitialHref } = useContext(AppContext);
+  let { clientSession, setClientSession, sdk, setSdk, initialHref, setInitialHref } = useContext(AppContext);
   const { packageName } = clientSession;
 
   const responseGoogle = async (response) => {

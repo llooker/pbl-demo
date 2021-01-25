@@ -1,5 +1,5 @@
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import { ApplicationViewer } from "@pbl-demo/components";
+import { PDFViewer } from "@pbl-demo/components";
 
 const schema = {
   type: (value) => {
@@ -10,13 +10,13 @@ const schema = {
   }
 }
 
-export const ApplicationViewerContent = {
+export const PDFViewerContent = {
   "type": "customfilter",
   "label": "PDF Viewer",
   "menuCategory": "Home",
   "description": "Overview of all your web traffic",
   "icon": PictureAsPdfIcon,
-  "component": ApplicationViewer,
+  "component": PDFViewer,
   "lookerContent": [
     {
       "type": "pdfviewer",

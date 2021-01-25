@@ -2,12 +2,10 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useParams } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
-import { checkToken } from '../../AuthUtils/auth';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
-import { lookerUserPermissions, lookerUserTimeHorizonMap } from '../../LookerHelpers/defaults';
 import LeftDrawer from './LeftDrawer';
 import MonetizationModal from '../Demo/MonetizationModal/MonetizationModal';
 import '../Home.css';
@@ -15,7 +13,9 @@ import { useStyles } from './styles.js';
 import { packageNameTheme } from '../../config/theme.js';
 import * as DemoComponentsContentArr from '../../config/Demo';
 import { TopBar, BottomBar } from "@pbl-demo/components";
-import { TopBarContent } from '../../config/TopBarContent'
+import { TopBarContent } from '../../config/TopBarContent';
+import { checkToken } from '@pbl-demo/components/Utils/auth';
+import { lookerUserPermissions, lookerUserTimeHorizonMap } from '@pbl-demo/components/LookerHelpers/defaults';
 
 const { validIdHelper } = require('../../tools');
 
