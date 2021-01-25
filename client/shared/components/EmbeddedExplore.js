@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
 import { Loader, CodeFlyout, EmbedHighlight } from '@pbl-demo/components/Accessories'
-import { useStyles, topBarBottomBarHeight } from './styles.js';
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from './styles.js';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
 
@@ -81,7 +81,7 @@ export const EmbeddedExplore = (props) => {
                 <CodeFlyout {...props}
                   classes={classes}
                   lookerUser={lookerUser}
-                  height={height}
+                  height={height - additionalHeightForFlyout}
                 />
                 <Grid item
                   sm={12}

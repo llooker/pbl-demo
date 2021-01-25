@@ -10,7 +10,7 @@ import { appContextMap } from '../utils/tools';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 export const TopBar = ({ content, theme, classes }) => {
-  console.log("TopBar")
+  // console.log("TopBar")
   // console.log({ theme })
   let history = useHistory();
 

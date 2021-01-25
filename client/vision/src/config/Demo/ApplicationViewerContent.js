@@ -1,5 +1,4 @@
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-// import samplePDF from './sample.pdf';
 import { ApplicationViewer } from "@pbl-demo/components";
 
 const schema = {

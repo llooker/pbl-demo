@@ -5,7 +5,9 @@ const greenPrimary = green[500];
 const redLight = red[100];
 const greenLight = green[100];
 
-export const topBarBottomBarHeight = 112;
+export const topBarBottomBarHeight = 140;
+export const additionalHeightForFlyout = 15; //hack for now
+
 export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,

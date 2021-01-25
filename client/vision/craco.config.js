@@ -1,6 +1,7 @@
 const path = require("path");
 const { getLoader, loaderByName } = require("@craco/craco");
 const absolutePath = path.join(__dirname, "../shared/components");
+
 module.exports = {
   webpack: {
     alias: {
