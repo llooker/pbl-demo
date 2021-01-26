@@ -37,7 +37,6 @@ export const TopBar = ({ content, theme, classes }) => {
   const retrieveAutocompleteOptions = async () => {
     let autoComplteInfo = content.autocomplete
     let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: autoComplteInfo.resultFormat || "json", body: autoComplteInfo.inlineQuery }))
-    console.log({ lookerResponseData })
     let apiContentObj = {}
     let queryResultsForDropdown = [];
     for (let i = 0; i < lookerResponseData.length; i++) {

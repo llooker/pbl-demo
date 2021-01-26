@@ -50,7 +50,7 @@ function App(props) {
     }
   }, [clientSession, sdk])
 
-  // console.log({ clientSession })
+  console.log({ clientSession })
 
   return (
     < Router >

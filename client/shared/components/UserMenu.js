@@ -7,6 +7,8 @@ import { lookerUserAttributeBrandOptions, lookerUserPermissions } from '../Looke
 import { endSession } from '../utils/auth';
 import { appContextMap, validIdHelper } from '../utils/tools';
 
+console.log({ lookerUserPermissions })
+
 export const UserMenu = ({ classes }) => {
   let history = useHistory();
   let { setPaywallModal, clientSession, setClientSession, handleSwitchLookerUser } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
