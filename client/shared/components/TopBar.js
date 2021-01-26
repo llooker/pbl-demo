@@ -37,16 +37,15 @@ export const TopBar = ({ content, theme, classes }) => {
   const retrieveAutocompleteOptions = async () => {
     let autoComplteInfo = content.autocomplete
     let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: autoComplteInfo.resultFormat || "json", body: autoComplteInfo.inlineQuery }))
+    console.log({ lookerResponseData })
     let apiContentObj = {}
     let queryResultsForDropdown = [];
-    let desiredProperty = Object.keys(lookerResponseData[0])[0];
-    // TO DO, present dropdown label to match mocks
-    // let desiredProperties = Object.keys(lookerResponseData[0]);
-    // console.log({ desiredProperties })
-
     for (let i = 0; i < lookerResponseData.length; i++) {
+      let formattedLabel = autoComplteInfo.formattedLabel.map(field => lookerResponseData[i][field]).join(", ")
+      let value = autoComplteInfo.value.map(value => lookerResponseData[i][value]).toString();
       queryResultsForDropdown.push({
-        'label': lookerResponseData[i][desiredProperty].toString(),
+        'value': value,
+        'label': formattedLabel,
         'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined
       })
     }

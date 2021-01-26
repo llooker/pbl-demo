@@ -4,14 +4,23 @@ export const TopBarContent = {
     "lookerMethod": "runInlineQuery",
     "inlineQuery": {
       "model": "vision",
-      "view": "person",
+      "view": "_application",
       "fields": [
-        "person.household_id",
-        "person.first_name",
-        "person.last_name",
+        "_person.household_id",
+        "_person.first_name",
+        "_person.last_name",
       ],
+      "filters": {
+        "_person.household_id": "not null"
+      },
       "query_timezone": "America/Los_Angeles"
     },
     "resultFormat": "json",
+    "formattedLabel": [
+      "_person.first_name",
+      "_person.last_name",
+      "_person.household_id"],
+    "value": [
+      "_person.household_id"]
   }
 }

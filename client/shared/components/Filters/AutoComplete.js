@@ -37,12 +37,12 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, bgColor 
         onChange={(event, newValue) => {
           action(
             filterItem.filterName,
-            (newValue) ? newValue.label : '')
+            newValue.value ? newValue.value : newValue.label ? newValue.label : "")
         }}
         renderInput={(params) => <TextField {...params}
           label={filterItem.filterName}
           variant="outlined"
-          type={"search"}
+        // type={"search"}
         />}
         loadingText="Loading..."
         style={{

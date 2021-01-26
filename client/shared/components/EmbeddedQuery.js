@@ -23,7 +23,7 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
   }, [lookerUser, isReady])
 
   const fetchData = async () => {
-    console.log("fetchData")
+    // console.log("fetchData")
     $(`#${id}`).html('')
     setIFrame(0)
 
