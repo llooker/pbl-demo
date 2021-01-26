@@ -11,10 +11,9 @@ import {
 import { ExpandMore, Search, Done } from '@material-ui/icons';
 import { getComparator, stableSort } from './helpers.js';
 import AppContext from '../../../contexts/AppContext';
-import { lookerUserTimeHorizonMap } from '../../../LookerHelpers/defaults';
 import { Loader, ApiHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
-
+import { lookerUserTimeHorizonMap } from '@pbl-demo/components/LookerHelpers/defaults';
 
 const { validIdHelper, prettifyString } = require('../../../tools');
 

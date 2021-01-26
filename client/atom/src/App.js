@@ -3,14 +3,16 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import AppContext from './contexts/AppContext';
-import { checkForExistingSession, createSdkHelper } from './AuthUtils/auth';
+import { checkForExistingSession, createSdkHelper } from '@pbl-demo/components/Utils/auth';
 import SignIn from './components/SignIn/SignIn';
 import Home from './components/Home/Home';
 
 import * as DemoComponentsContentArr from './config/Demo';
 import { validIdHelper } from './tools';
 
+
 function App(props) {
+  // console.log("App")
 
   const [clientSession, setClientSession] = useState({});
   const [sdk, setSdk] = useState();
