@@ -13,7 +13,7 @@ import { getComparator, stableSort } from './helpers.js';
 import AppContext from '../../../contexts/AppContext';
 import { Loader, ApiHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
-import { lookerUserTimeHorizonMap } from '@pbl-demo/components/LookerHelpers/defaults';
+import { userTimeHorizonMap } from '../../../config';
 
 const { validIdHelper, prettifyString } = require('../../../tools');
 
@@ -230,7 +230,7 @@ function FilterBar(props) {
     // console.log('useEffect lookerUser')
     if (isReady) {
       let updatedFiltersData = [...filtersData]
-      updatedFiltersData[3].value = lookerUserTimeHorizonMap[lookerUser.user_attributes.permission_level] || "182 days";
+      updatedFiltersData[3].value = userTimeHorizonMap[lookerUser.user_attributes.permission_level] || "182 days";
       setFilterData(updatedFiltersData);
       setFieldsChipData(initializeFieldChipDataHelper())
 

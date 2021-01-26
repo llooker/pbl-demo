@@ -1,3 +1,6 @@
+
+// import { EmbeddedExplore } from "@pbl-demo/components";
+import { permissionLevels } from "./UserPermissionsContent"
 export const TopBarContent = {
   "autocomplete": {
     "filterName": "Household ID",
@@ -22,5 +25,6 @@ export const TopBarContent = {
       "_person.household_id"],
     "value": [
       "_person.household_id"]
-  }
+  },
+  "usermenu": { permissionLevels }
 }

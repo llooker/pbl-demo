@@ -7,7 +7,6 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
 import LeftDrawer from './LeftDrawer';
-import MonetizationModal from '../Demo/MonetizationModal/MonetizationModal';
 import '../Home.css';
 import { useStyles } from './styles.js';
 import { packageNameTheme } from '../../config/theme.js';
@@ -15,7 +14,8 @@ import * as DemoComponentsContentArr from '../../config/Demo';
 import { TopBar, BottomBar } from "@pbl-demo/components";
 import { TopBarContent } from '../../config/TopBarContent';
 import { checkToken } from '@pbl-demo/components/Utils/auth';
-import { lookerUserPermissions, lookerUserTimeHorizonMap } from '@pbl-demo/components/LookerHelpers/defaults';
+import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
+import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
 
 const { validIdHelper } = require('../../tools');
 
@@ -38,9 +38,9 @@ export default function Home(props) {
     if (property === 'brand') {
       newLookerUser.user_attributes.brand = newValue
     } else if (property === 'permission') {
-      newLookerUser.permissions = lookerUserPermissions[newValue] || lookerUserPermissions['basic']
+      newLookerUser.permissions = permissionLevels[newValue]
       newLookerUser.user_attributes.permission_level = newValue
-      newLookerUser.user_attributes.time_horizon = lookerUserTimeHorizonMap[newValue]
+      newLookerUser.user_attributes.time_horizon = userTimeHorizonMap[newValue]
     }
 
     const lookerUserResponse = await fetch('/updatelookeruser', {
@@ -125,7 +125,8 @@ export default function Home(props) {
             theme={packageNameTheme}
             classes={classes}
           />
-          <MonetizationModal />
+          {/* <MonetizationModal /> */}
+          <UserPermissionsModal content={{ permissionLevels, modalPermissionsMap }} classes={classes} />
           <LeftDrawer DemoComponentsContentArr={DemoComponentsContentArr} />
           <main
             className={clsx(classes.content, {

@@ -3,17 +3,21 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, } from "react-router-dom";
 import { IconButton, Menu, MenuItem, Typography, Divider, TextField, Avatar } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { lookerUserAttributeBrandOptions, lookerUserPermissions } from '../LookerHelpers/defaults';
 import { endSession } from '../utils/auth';
 import { appContextMap, validIdHelper } from '../utils/tools';
 
-console.log({ lookerUserPermissions })
 
-export const UserMenu = ({ classes }) => {
+export const UserMenu = ({ classes, content }) => {
+  // console.log("UserMenu");
+  // console.log({ content })
+
   let history = useHistory();
   let { setPaywallModal, clientSession, setClientSession, handleSwitchLookerUser } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(clientSession.lookerUser.user_attributes.brand || '');
+  const { permissionLevels } = content
+
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -64,7 +68,7 @@ export const UserMenu = ({ classes }) => {
       >
         <MenuItem autoFocus={false}>Select User Level</MenuItem>
 
-        {Object.keys(lookerUserPermissions).map(key => {
+        {Object.keys(permissionLevels).map(key => {
           return (<MenuItem
             key={validIdHelper(`$lookerUserPermission-MenuItem-${key}`)}
             autoFocus={false}
@@ -77,7 +81,8 @@ export const UserMenu = ({ classes }) => {
         <MenuItem onClick={() => handleClose('modal')}>Show Monetization Modal</MenuItem>
         <Divider className={classes.divider} />
         <MenuItem>Current brand: {selectedBrand}</MenuItem>
-        <MenuItem>
+        {/* for now */}
+        {/* <MenuItem>
           <Autocomplete
             id="combo-box-usermenu"
             options={lookerUserAttributeBrandOptions || []}
@@ -92,7 +97,7 @@ export const UserMenu = ({ classes }) => {
             disableautofocus="true"
             onKeyDown={(event) => event.stopPropagation()}
           />
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
     </div>
   );

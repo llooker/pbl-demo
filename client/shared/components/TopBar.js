@@ -12,6 +12,8 @@ import { ThemeProvider } from '@material-ui/core/styles';
 export const TopBar = ({ content, theme, classes }) => {
   // console.log("TopBar")
   // console.log({ theme })
+  // console.log({ content })
+
   let history = useHistory();
 
   const { clientSession, setClientSession,
@@ -98,7 +100,7 @@ export const TopBar = ({ content, theme, classes }) => {
           <Badge badgeContent={3} color="error" className={apiContent && apiContent.autocomplete ? `${classes.mr12}` : `${classes.mlAuto} ${classes.mr12}`} >
             <AddAlert />
           </Badge>
-          <UserMenu classes={classes} />
+          <UserMenu classes={classes} content={content.usermenu} />
         </Toolbar>
       </AppBar>
     </ThemeProvider>

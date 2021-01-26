@@ -137,11 +137,6 @@ export const useStyles = makeStyles(theme => ({
   mb5: {
     marginBottom: 5
   },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   paper: {
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
@@ -182,7 +177,26 @@ export const useStyles = makeStyles(theme => ({
   },
   mb10: {
     marginBottom: 10
-  }
+  },
+  modalPopover: {
+    position: 'absolute',
+    width: 1000,
+    height: 604,
+    overflow: 'scroll',
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2, 4, 3),
+  },
+  modalCard: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    overflow: 'scroll',
+    cursor: 'pointer',
+    '&:hover': {
+      transform: 'scale(1.05)',
+      transition: 'transform .2s'
+    }
+  },
 }), { index: 1 });
 
 

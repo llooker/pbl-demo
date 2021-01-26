@@ -1,15 +1,10 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import AppContext from '../../../contexts/AppContext';
-import {
-  Modal, Fade, Grid, Card, CardContent, CardActions, Button, Typography, Divider, List, ListItem, ListItemText
-} from '@material-ui/core';
+import { Modal, Fade, Grid, Card, CardContent, CardActions, Button, Typography, Divider, List, ListItem, ListItemText } from '@material-ui/core';
 import { Rating } from '@material-ui/lab'
 import { ListItemIcon } from '@material-ui/core'; //already declared
 import { Check } from '@material-ui/icons';
-import useStyles from './styles.js';
-import { lookerUserPermissions } from '@pbl-demo/components/LookerHelpers/defaults';
-const { validIdHelper } = require('../../../tools');
+import { appContextMap, validIdHelper } from '../../utils/tools';
 
 function getModalStyle() {
   const top = 10 //+ rand();
@@ -22,37 +17,11 @@ function getModalStyle() {
   };
 }
 
-export default function MonetizationModal(props) {
+export const UserPermissionsModal = ({ content, classes }) => {
   // console.log('MonetizationModal')
-  let { clientSession, payWallModal, setPaywallModal, handleSwitchLookerUser } = useContext(AppContext)
-
-
+  const { clientSession, payWallModal, setPaywallModal, handleSwitchLookerUser } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const [modalStyle] = React.useState(getModalStyle);
-  const classes = useStyles();
-
-  const modalListMap = {
-    'basic': [
-      '6 months of order data history',
-      'Atom Merchant Dashboards',
-      'Download PDFs, CSVs'
-    ],
-    'advanced': [
-      'Full year of order data history',
-      'Drill to row level information',
-      'Download row level information',
-      'Schedule dashboards for delivery (to you or others)',
-      'Set alerts and key threshold notifications'],
-    'premium': [
-      '2 Full years of order data history',
-      'Analyze your own data and save custom reports',
-      'View premium level, productivity enhancing reports',
-      'Share your reports with colleagues in Atom',
-      'Text message alerts',
-      // 'Notify active shoppers on Atom',
-      // 'Apply Atom’s advanced AI insights to stay ahead of trends'
-    ]
-  }
-
+  const { permissionLevels, modalPermissionsMap } = content;
 
   return (
     < Modal
@@ -63,19 +32,18 @@ export default function MonetizationModal(props) {
       <Fade in={payWallModal.show || false}>
         <div
           style={modalStyle}
-          className={`${classes.paper} ${classes.padding30}`}>
+          className={`${classes.modalPopover} ${classes.padding30}`}
+        >
           <Grid container
             spacing={3}>
-            {Object.keys(lookerUserPermissions).map(key => {
+            {Object.keys(permissionLevels).map((key, index) => {
               return (
-                <Grid item sm={4}
+                <Grid item sm={12 / Object.keys(permissionLevels).length}
                   key={validIdHelper(`monetizationModal-gridItem-${key}`)}
                 >
-                  <Card className={`${classes.card} ${classes[key]}`}
+                  <Card className={`${classes.modalCard} ${classes[key]}`}
                     elevation={1}
                     style={key === clientSession.lookerUser.user_attributes.permission_level ? {
-                      // transform: 'scale(1.05)',
-                      // transition: 'transform .2s',
                       backgroundColor: '#5F6BD8',
                       color: '#ffffff',
                       height: 519
@@ -87,34 +55,24 @@ export default function MonetizationModal(props) {
                       setPaywallModal({})
                     }}>
                     <CardContent>
-                      <Typography variant="h6"
-                      // display="justify"
-                      >
+                      <Typography variant="h6">
                         {_.capitalize(key)}
                       </Typography>
-                      <Typography
-                      // display="justify"
-                      >
+                      <Typography>
                         <Rating
                           name="read-only"
-                          value={key === 'basic' ? 3 : key === "advanced" ? 4 : 5}
+                          value={5 - Object.keys(permissionLevels).length + index + 1}
                           readOnly /></Typography>
                       <Typography variant="subtitle1" style={{ fontStyle: 'italic' }}>
-                        {key === 'basic' ?
-                          'Drive your business with clear KPIs' :
-                          key === 'advanced' ?
-                            'Deeper insights, operations' :
-                            'Drive your business with Atom'
-                        }
+                        {modalPermissionsMap[key].title}
                       </Typography>
 
                       <Divider className={`${classes.divider} `} />
 
-                      <List className={classes.root}>
+                      <List>
                         {
-                          modalListMap[key].map((item, index) => (
+                          modalPermissionsMap[key].list.map((item, index) => (
                             <ListItem dense={true}
-                              className={classes.font875}
                               key={`monetizationModal-ListItem-${key}-${index}`}
                             >
                               <ListItemIcon
@@ -131,7 +89,6 @@ export default function MonetizationModal(props) {
                       <Button
                         color="primary"
                         variant="outlined"
-                        // disabled={key === lookerUser.user_attributes.permission_level ? true : false}
                         fullWidth
                         onClick={() => {
                           handleSwitchLookerUser(key, 'permission')
@@ -139,7 +96,7 @@ export default function MonetizationModal(props) {
                         }}
                         style={key === clientSession.lookerUser.user_attributes.permission_level ? { color: '#ffffff', borderColor: "#ffffff" } : {}}>
                         {key === clientSession.lookerUser.user_attributes.permission_level ? "Active" :
-                          Object.keys(modalListMap).indexOf(clientSession.lookerUser.user_attributes.permission_level) < Object.keys(modalListMap).indexOf(key) ?
+                          Object.keys(modalPermissionsMap).indexOf(clientSession.lookerUser.user_attributes.permission_level) < Object.keys(modalPermissionsMap).indexOf(key) ?
                             'Upgrade' :
                             'Switch'}
                       </Button>

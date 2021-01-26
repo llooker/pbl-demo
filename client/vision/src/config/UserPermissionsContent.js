@@ -1,5 +1,3 @@
-
-
 export const permissionLevels = {
   "viewer": [
     "access_data",
@@ -56,5 +54,26 @@ export const initialUser = {
     "country": "USA",
     "time_horizon": "last 182 days",
     "permission_level": Object.keys(permissionLevels)[0]
+  }
+}
+
+export const modalPermissionsMap = {
+  'viewer': {
+    "title": "I'm a viewer",
+    "list": [
+      '6 months of order data history',
+      'Atom Merchant Dashboards',
+      'Download PDFs, CSVs'
+    ]
+  },
+  'manager': {
+    "title": "I'm a manager",
+    "list": [
+      '2 Full years of order data history',
+      'Analyze your own data and save custom reports',
+      'View premium level, productivity enhancing reports',
+      'Share your reports with colleagues in Atom',
+      'Text message alerts',
+    ]
   }
 }

@@ -7,9 +7,7 @@ import '../Home.css';
 import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
 import { SignInContent } from '../../config'
 import { writeNewSession, createSdkHelper } from '@pbl-demo/components/Utils/auth';
-import { initialLookerUser } from '@pbl-demo/components/LookerHelpers/defaults';
-// import { initialUser, permissionLevels, userTimeHorizonMap } from '../../config'
-// console.log({ initialUser, permissionLevels, userTimeHorizonMap })
+import { initialUser } from '../../config';
 
 const { validIdHelper } = require('../../tools');
 
@@ -23,7 +21,7 @@ export default function SignIn(props) {
   const responseGoogle = async (response) => {
     if (response.error) {
     } else {
-      let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialLookerUser }) //initialUser
+      let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialUser }) //
 
       const lookerBaseUrl = newSession.session.lookerBaseUrl ? newSession.session.lookerBaseUrl : '';
       const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';

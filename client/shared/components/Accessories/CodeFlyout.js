@@ -8,9 +8,7 @@ import { appContextMap } from '../../utils/tools';
 export const CodeFlyout = (props) => {
   // console.log("CodeFlyout")
   const { codeShow, setCodeShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
-
   const { classes, lookerUser, height } = props;
-  // console.log({ height })
 
   return (
 
