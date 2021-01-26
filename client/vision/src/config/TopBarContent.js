@@ -1,5 +1,5 @@
 
-import { permissionLevels } from "./UserPermissionsContent";
+import { permissionLevels, rowLevelAttribute } from "./UserPermissionsContent";
 export const TopBarContent = {
   "autocomplete": {
     "filterName": "Household ID",
@@ -25,5 +25,5 @@ export const TopBarContent = {
     "value": [
       "_person.household_id"]
   },
-  "usermenu": { permissionLevels }
+  "usermenu": { permissionLevels, rowLevelAttribute }
 }

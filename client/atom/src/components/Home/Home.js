@@ -14,7 +14,7 @@ import * as DemoComponentsContentArr from '../../config/Demo';
 import { TopBar, BottomBar } from "@pbl-demo/components";
 import { TopBarContent } from '../../config/TopBarContent';
 import { checkToken } from '@pbl-demo/components/Utils/auth';
-import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
+import { permissionLevels, userTimeHorizonMap, modalPermissionsMap, rowLevelOptions } from '../../config';
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
 
 const { validIdHelper } = require('../../tools');
@@ -125,7 +125,6 @@ export default function Home(props) {
             theme={packageNameTheme}
             classes={classes}
           />
-          {/* <MonetizationModal /> */}
           <UserPermissionsModal content={{ permissionLevels, modalPermissionsMap }} classes={classes} />
           <LeftDrawer DemoComponentsContentArr={DemoComponentsContentArr} />
           <main

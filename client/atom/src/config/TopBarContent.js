@@ -1,5 +1,5 @@
 
-import { permissionLevels } from "./UserPermissionsContent";
+import { permissionLevels, rowLevelAttribute } from "./UserPermissionsContent";
 export const TopBarContent = {
-  "usermenu": { permissionLevels }
+  "usermenu": { permissionLevels, rowLevelAttribute }
 }

@@ -18,7 +18,8 @@ function getModalStyle() {
 }
 
 export const UserPermissionsModal = ({ content, classes }) => {
-  // console.log('MonetizationModal')
+  // console.log('MonetizationModal');
+  // console.log({ content })
   const { clientSession, payWallModal, setPaywallModal, handleSwitchLookerUser } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const [modalStyle] = React.useState(getModalStyle);
   const { permissionLevels, modalPermissionsMap } = content;

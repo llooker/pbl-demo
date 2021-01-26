@@ -15,7 +15,7 @@ export const UserMenu = ({ classes, content }) => {
   let { setPaywallModal, clientSession, setClientSession, handleSwitchLookerUser } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(clientSession.lookerUser.user_attributes.brand || '');
-  const { permissionLevels } = content
+  const { permissionLevels, rowLevelAttribute } = content
 
 
 
@@ -39,7 +39,6 @@ export const UserMenu = ({ classes, content }) => {
     }
   };
   useEffect(() => {
-    // console.log('useEffect')
     setSelectedBrand(clientSession.lookerUser.user_attributes.brand || '')
   }, [clientSession.lookerUser]);
 
@@ -79,25 +78,25 @@ export const UserMenu = ({ classes, content }) => {
         <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
         <Divider className={classes.divider} />
         <MenuItem onClick={() => handleClose('modal')}>Show Monetization Modal</MenuItem>
-        <Divider className={classes.divider} />
-        <MenuItem>Current brand: {selectedBrand}</MenuItem>
-        {/* for now */}
-        {/* <MenuItem>
-          <Autocomplete
-            id="combo-box-usermenu"
-            options={lookerUserAttributeBrandOptions || []}
-            getOptionLabel={(option) => option.label}
-            style={{ width: 300 }}
-            onChange={(event) => handleClose((event.target.innerText || ''), 'brand')}
-            renderInput={(params) => <TextField {...params}
-              label="Change merchant brand"
-              variant="outlined"
-            />}
-            loadingText="Loading..."
-            disableautofocus="true"
-            onKeyDown={(event) => event.stopPropagation()}
-          />
-        </MenuItem> */}
+        {Object.keys(rowLevelAttribute).length ? <div>
+          <Divider className={classes.divider} />
+          <MenuItem>{rowLevelAttribute.menuItemLabel}: {selectedBrand}</MenuItem>
+          <MenuItem>
+            <Autocomplete
+              id="combo-box-usermenu"
+              options={rowLevelAttribute.options || []}
+              getOptionLabel={(option) => option.label}
+              style={{ width: 300 }}
+              onChange={(event) => handleClose((event.target.innerText || ''), 'brand')}
+              renderInput={(params) => <TextField {...params}
+                label={rowLevelAttribute.autoCompleteLabel}
+                variant="outlined"
+              />}
+              loadingText="Loading..."
+              disableautofocus="true"
+              onKeyDown={(event) => event.stopPropagation()}
+            />
+          </MenuItem></div> : ""}
       </Menu>
     </div>
   );

@@ -102,3 +102,25 @@ export const modalPermissionsMap = {
     ]
   }
 }
+
+export const rowLevelAttribute = {
+  "autoCompleteLabel": "Change brand",
+  "menuItemLabel": "Current brand",
+  "options": [
+    {
+      "label": "Columbia"
+    },
+    {
+      "label": "Calvin Klein"
+    },
+    {
+      "label": "Carhartt"
+    },
+    {
+      "label": "Levi's"
+    },
+    {
+      "label": "Dockers"
+    }
+  ]
+}

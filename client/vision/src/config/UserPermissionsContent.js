@@ -77,3 +77,25 @@ export const modalPermissionsMap = {
     ]
   }
 }
+
+export const rowLevelAttribute = {
+  // "autoCompleteLabel": "Change zip",
+  // "menuItemLabel": "Current zip",
+  // "options": [
+  //   {
+  //     "label": "10012"
+  //   },
+  //   {
+  //     "label": "10013"
+  //   },
+  //   {
+  //     "label": "10014"
+  //   },
+  //   {
+  //     "label": "10015"
+  //   },
+  //   {
+  //     "label": "10016"
+  //   }
+  // ]
+}
