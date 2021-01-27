@@ -13,5 +13,6 @@ export const ExploreContent = {
       "type": "explore",
       "id": "vision::_application",
       "label": "Explore Applications"
-    }]
+    }],
+  "requiredPermissionLevel": 1
 }

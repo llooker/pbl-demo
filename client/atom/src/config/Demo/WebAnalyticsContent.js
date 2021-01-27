@@ -17,5 +17,6 @@ export const WebAnalyticsContent = {
       "isNext": false,
       "theme": "atom_fashion_filters"
     }
-  ]
+  ],
+  "requiredPermissionLevel": 0
 }

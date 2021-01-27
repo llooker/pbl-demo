@@ -20,5 +20,6 @@ export const ReportBuilderContent = {
       "id": "atom_fashion::order_items",
       "label": "Create New Report"
     }
-  ]
+  ],
+  "requiredPermissionLevel": 1
 }

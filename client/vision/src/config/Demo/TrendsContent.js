@@ -15,5 +15,6 @@ export const TrendsContent = {
       "id": "19",
       "label": "Trends",
       "isNext": false
-    }]
+    }],
+  "requiredPermissionLevel": 0
 }

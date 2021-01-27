@@ -15,5 +15,6 @@ export const HomeContent = {
       "id": "18",
       "label": "Home",
       "isNext": false
-    }]
+    }],
+  "requiredPermissionLevel": 0
 }

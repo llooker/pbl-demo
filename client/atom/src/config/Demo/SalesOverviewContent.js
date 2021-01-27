@@ -97,5 +97,6 @@ export const SalesOverviewContent = {
       "label": "Sales Overview",
       "isNext": true,
       "filters": [productCategoryFilter, regionFilter, ageFilter, revenueTierFilter]
-    }]
+    }],
+  "requiredPermissionLevel": 0
 }

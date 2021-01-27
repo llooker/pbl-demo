@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -14,7 +14,7 @@ import * as DemoComponentsContentArr from '../../config/Demo';
 import { TopBar, BottomBar } from "@pbl-demo/components";
 import { TopBarContent } from '../../config/TopBarContent';
 import { checkToken } from '@pbl-demo/components/Utils/auth';
-import { permissionLevels, userTimeHorizonMap, modalPermissionsMap, rowLevelOptions } from '../../config';
+import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
 
 const { validIdHelper } = require('../../tools');
@@ -23,14 +23,23 @@ export default function Home(props) {
   // console.log("Home")
   let { setClientSession, clientSession, sdk, setSdk, isReady } = useContext(AppContext)
   let { democomponent } = useParams();
+  let history = useHistory();
   const classes = useStyles();
-
   const didMountRef = useRef(false)
   const [drawerOpen, setDrawerOpen] = useState(window.innerWidth > 768 ? true : false);
   const [highlightShow, setHighlightShow] = useState(false);
   const [codeShow, setCodeShow] = useState(false);
   const [payWallModal, setPaywallModal] = useState({});
   const [selectedMenuItem, setSelectedMenuItem] = useState(democomponent);
+
+  const { lookerUser: { user_attributes: { permission_level } } = { user_attributes: 'No match' } } = clientSession;
+  const currentPermissionLevel = Object.keys(permissionLevels).indexOf(permission_level);
+  const demoComponentsContentArr = _.filter(DemoComponentsContentArr, demoComponent => demoComponent.requiredPermissionLevel <= currentPermissionLevel);
+
+  let topBarContent = { ...TopBarContent };
+  if (topBarContent.autocomplete && currentPermissionLevel < topBarContent.autocomplete.correspondingComponentContent.requiredPermissionLevel) {
+    delete topBarContent.autocomplete
+  }
 
   const handleSwitchLookerUser = async (newValue, property) => {
 
@@ -96,11 +105,12 @@ export default function Home(props) {
     setSelectedMenuItem(democomponent)
   }, [democomponent])
 
-
-  const ActiveDemoComponentContent = _.find(DemoComponentsContentArr, (o) => {
-    return selectedMenuItem === validIdHelper(_.lowerCase(o.label));
+  let ActiveDemoComponent;
+  const ActiveDemoComponentContent = _.find(demoComponentsContentArr, (o) => {
+    return selectedMenuItem === validIdHelper(_.lowerCase(o.label))
   });
-  const ActiveDemoComponent = ActiveDemoComponentContent.component
+  if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
+  else ActiveDemoComponent = ActiveDemoComponentContent.component
 
   return (
     <div className={classes.root} >
@@ -121,12 +131,12 @@ export default function Home(props) {
         <ThemeProvider theme={packageNameTheme}>
           <CssBaseline />
           <TopBar
-            content={TopBarContent}
+            content={topBarContent}
             theme={packageNameTheme}
             classes={classes}
           />
           <UserPermissionsModal content={{ permissionLevels, modalPermissionsMap }} classes={classes} />
-          <LeftDrawer DemoComponentsContentArr={DemoComponentsContentArr} />
+          <LeftDrawer DemoComponentsContentArr={demoComponentsContentArr} />
           <main
             className={clsx(classes.content, {
               [classes.contentShift]: drawerOpen,

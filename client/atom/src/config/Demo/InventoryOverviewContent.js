@@ -127,5 +127,6 @@ export const InventoryOverivewContent = {
       "isNext": false,
       "label": "Inventory Overview",
       "filters": [productNameFilter, tilesFilter, visConfigFilter, themeColorFilter, themeFontFilter]
-    }]
+    }],
+  "requiredPermissionLevel": 0
 }

@@ -15,5 +15,6 @@ export const FlagsConent = {
       "id": "20",
       "label": "Flags",
       "isNext": false
-    }]
+    }],
+  "requiredPermissionLevel": 1
 }

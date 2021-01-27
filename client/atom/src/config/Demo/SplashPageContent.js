@@ -252,5 +252,6 @@ export const SplashPageContent = {
     averageTimeByWeek,
     embeddedQuery,
     popularAnalysis
-  ]
+  ],
+  "requiredPermissionLevel": 0
 }

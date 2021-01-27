@@ -26,7 +26,8 @@ export const PDFViewerContent = {
       "filters": [],
       "pdf": "https://storage.googleapis.com/looker-dat-vision/1099.pdf"
     }],
-  "schema": schema
+  "schema": schema,
+  "requiredPermissionLevel": 1
 }
 
 

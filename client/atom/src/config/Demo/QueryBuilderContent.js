@@ -58,5 +58,6 @@ export const QueryBuilderContent = {
         "order_items.created_date": "date"
       }
     }
-  ]
+  ],
+  "requiredPermissionLevel": 0
 }

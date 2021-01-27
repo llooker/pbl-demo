@@ -33,5 +33,6 @@ export const SalesCalendarContent = {
       ],
       "resultFormat": "json"
     }
-  ]
+  ],
+  "requiredPermissionLevel": 0
 }

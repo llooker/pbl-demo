@@ -15,8 +15,7 @@ export const HouseholdsContent = {
       "id": "21",
       "label": "Households",
       "isNext": false,
-      // "filters": [householdIdFilter],
-      // "theme": "atom_fashion_filters",
       "filterName": "Household ID"
-    }]
+    }],
+  "requiredPermissionLevel": 1
 }
