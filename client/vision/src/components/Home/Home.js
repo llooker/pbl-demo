@@ -17,6 +17,8 @@ import { checkToken } from '@pbl-demo/components/Utils/auth';
 import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
 
+console.log({ DemoComponentsContentArr })
+
 const { validIdHelper } = require('../../tools');
 
 export default function Home(props) {
@@ -110,7 +112,9 @@ export default function Home(props) {
     return selectedMenuItem === validIdHelper(_.lowerCase(o.label))
   });
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
-  else ActiveDemoComponent = ActiveDemoComponentContent.component
+  else ActiveDemoComponent = ActiveDemoComponentContent.component;
+
+  console.log({ demoComponentsContentArr })
 
   return (
     <div className={classes.root} >
