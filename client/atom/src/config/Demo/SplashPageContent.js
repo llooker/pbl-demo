@@ -64,42 +64,14 @@ const bestWorstAnalysis = {
   ],
   "resultFormat": "json"
 }
-const revenueByWeek =
-{
-  "id": "18",
-  "gridWidth": 3,
-  "type": "single value",
-  "height": 120,
-  "inlineQuery": {
-    "model": "atom_fashion",
-    "view": "order_items",
-    "fields": [
-      "order_items.created_week",
-      "order_items.total_gross_margin"
-    ],
-    "fill_fields": [
-      "order_items.created_week"
-    ],
-    "filters": {
-      "order_items.created_date": "12 weeks ago for 12 weeks"
-    },
-    "sorts": [
-      "order_items.created_week desc"
-    ],
-    "limit": "500",
-    "dynamic_fields": "[{\"table_calculation\":\"change\",\"label\":\"Week over Week %25 Change\",\"expression\":\"(${order_items.total_gross_margin}-offset(${order_items.total_gross_margin},1))/offset(${order_items.total_gross_margin},1)\",\"value_format\":null,\"value_format_name\":\"percent_2\",\"_kind_hint\":\"measure\",\"_type_hint\":\"number\"}]"
-  },
-  "resultFormat": "json",
-  "label": "Revenue by Week",
-  "visColor": "#4595EC",
-  "chipFormat": "revenue"
-}
+
+
 
 const visitsByWeek =
 {
   "id": "20",
   "gridWidth": 3,
-  "type": "single value",
+  "type": "spark line",
   "height": 120,
   "inlineQuery": {
     "model": "atom_fashion",
@@ -130,7 +102,7 @@ const bounceRateByWeek =
 {
   "id": "21",
   "gridWidth": 3,
-  "type": "single value",
+  "type": "spark line",
   "height": 120,
   "inlineQuery": {
     "model": "atom_fashion",
@@ -162,7 +134,7 @@ const averageTimeByWeek =
 {
   "id": "22",
   "gridWidth": 3,
-  "type": "single value",
+  "type": "spark line",
   "height": 120,
   "inlineQuery": {
     "model": "atom_fashion",

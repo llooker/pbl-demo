@@ -1,12 +1,12 @@
 export const permissionLevels = {
-  "viewer": [
+  "partner": [
     "access_data",
     "see_looks",
     "see_user_dashboards",
     "see_lookml_dashboards",
     "download_with_limit"
   ],
-  "manager": [
+  "administrator": [
     "access_data",
     "see_looks",
     "see_user_dashboards",
@@ -30,8 +30,8 @@ export const permissionLevels = {
 }
 
 export const userTimeHorizonMap = {
-  "viewer": "last 182 days",
-  "manager": "last 365 days"
+  "partner": "last 182 days",
+  "administrator": "last 365 days"
 }
 
 export const initialUser = {
@@ -58,7 +58,7 @@ export const initialUser = {
 }
 
 export const modalPermissionsMap = {
-  'viewer': {
+  "partner": {
     "title": "I'm a viewer",
     "list": [
       '6 months of order data history',
@@ -66,7 +66,7 @@ export const modalPermissionsMap = {
       'Download PDFs, CSVs'
     ]
   },
-  'manager': {
+  "administrator": {
     "title": "I'm a manager",
     "list": [
       '2 Full years of order data history',

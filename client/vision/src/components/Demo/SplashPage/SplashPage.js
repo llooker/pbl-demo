@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
 import AppContext from '../../../contexts/AppContext';
-import { Welcome, SingleValueVis, PopularAnalysis, EmbeddedQuery } from "@pbl-demo/components";
+import { Welcome, SparkLine, PopularAnalysis, EmbeddedQuery, SingleValue } from "@pbl-demo/components";
 import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 const { validIdHelper } = require('../../../tools');
@@ -58,13 +58,16 @@ export default function SplashPage(props) {
                       {(lookerContentItem.type === 'welcome') && <Welcome
                         {...{ lookerContentItem, classes }}
                       />}
-                      {(lookerContentItem.type === 'single value') && <SingleValueVis
+                      {(lookerContentItem.type === 'spark line') && <SparkLine
                         {...{ lookerContentItem, classes, demoComponentType, lookerHost }}
                       />}
                       {(lookerContentItem.type === 'embeddedquery') && <EmbeddedQuery
                         {...{ lookerContentItem, classes, lookerHost }} id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent.id}`)}
                       />}
                       {(lookerContentItem.type === 'popular analysis') && <PopularAnalysis
+                        {...{ lookerContentItem, classes, demoComponentType, lookerHost }}
+                      />}
+                      {(lookerContentItem.type === 'single value') && <SingleValue
                         {...{ lookerContentItem, classes, demoComponentType, lookerHost }}
                       />}
                     </Grid>
