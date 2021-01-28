@@ -32,7 +32,7 @@ export function SingleValue({ lookerContentItem, classes }) {
     return lookerResponseData
   }
 
-  const labelText = apiContent ? lookerContentItem.chipFormat === "revenue" ? `$${apiContent[0][lookerContentItem.inlineQuery.fields[0]].toFixed(2)}` : "" : ""
+  const labelText = apiContent ? apiContent.data[0][lookerContentItem.inlineQuery.fields[0]].rendered : "";
 
   return (
     <Card className={`${classes.padding15} 
@@ -55,7 +55,7 @@ export function SingleValue({ lookerContentItem, classes }) {
                   </Typography>
                 </Grid>
                 <Grid item sm={6}>
-                  <Typography variant="subtitle1" align="left">
+                  <Typography variant="h6" align="left">
                     <b>{labelText}</b>
                   </Typography>
                 </Grid>

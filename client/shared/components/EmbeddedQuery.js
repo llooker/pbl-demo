@@ -3,9 +3,11 @@ import React, { useEffect, useState, useContext } from 'react';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { Typography, Grid, Card, CircularProgress } from '@material-ui/core';
 import { EmbedHighlight } from './Accessories/Highlight';
-import { appContextMap } from '../utils/tools';
+import { appContextMap, validIdHelper } from '../utils/tools';
 
 export function EmbeddedQuery({ lookerContentItem, classes, id }) {
+  // console.log("EmbeddedQuery")
+  // console.log({ lookerContentItem })
 
   const [iFrameExists, setIFrame] = useState(0);
   const { clientSession, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
@@ -22,9 +24,11 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
     }
   }, [lookerUser, isReady])
 
+  const idToUse = validIdHelper(`embedContainer-${lookerContentItem.type}-${lookerContentItem.id}`);
+
   const fetchData = async () => {
     // console.log("fetchData")
-    $(`#${id}`).html('')
+    $(`#${idToUse}`).html('')
     setIFrame(0)
 
     let queryUrl = encodeURIComponent(`${lookerContentItem.queryUrl}${document.location.origin}`)
@@ -33,7 +37,7 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
       .then(data => {
 
         LookerEmbedSDK.createExploreWithUrl(data.url)
-          .appendTo(document.getElementById(id))
+          .appendTo(document.getElementById(idToUse))
           .withClassName('explore')
           .withClassName('splashPage')
           .withClassName(lookerContentItem.id)
@@ -57,7 +61,6 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
   return (
 
     <Card className={`${classes.padding15} 
-    // ${classes.overflowHidden} 
     ${classes.lookerCardShadow}
     `}
     >
@@ -85,8 +88,8 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
               </Typography>
               <div
                 className={`embedContainer embedContainerNoHeader splashPage ${classes.overflowHidden} ${classes.maxHeight80Percent}`}
-                id={id}
-                key={id}
+                id={idToUse}
+                key={idToUse}
               >
               </div>
             </EmbedHighlight>
