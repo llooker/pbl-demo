@@ -1,5 +1,4 @@
-// import SplashPage from '../../components/Demo/SplashPage/SplashPage';
-import HomeIcon from '@material-ui/icons/Home'; //already declared
+import HomeIcon from '@material-ui/icons/Home';
 import { SingleValue, EmbeddedQuery, SplashPage } from '@pbl-demo/components'
 
 

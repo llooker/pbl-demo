@@ -16,7 +16,6 @@ export function SparkLine({ lookerContentItem, classes }) {
     if (isReady) {
       let isSubscribed = true
       corsApiCall(runInlineQuery).then(response => {
-        console.log({ response })
         if (isSubscribed) {
           setApiContent(response)
         }
@@ -30,7 +29,6 @@ export function SparkLine({ lookerContentItem, classes }) {
     // setApiContent(undefined)
     let { inlineQuery } = lookerContentItem;
     let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContentItem.resultFormat || 'json', body: inlineQuery }));
-    // console.log({ lookerResponseData })
     dataObjForSparkline.id = validIdHelper(`singleVisValue-${lookerContentItem.id}`);
     dataObjForSparkline.data = [];
 

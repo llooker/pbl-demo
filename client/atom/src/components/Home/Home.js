@@ -16,7 +16,6 @@ import { TopBarContent } from '../../config/TopBarContent';
 import { checkToken } from '@pbl-demo/components/Utils/auth';
 import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
-
 const { validIdHelper } = require('../../tools');
 
 export default function Home(props) {
@@ -35,7 +34,6 @@ export default function Home(props) {
   const { lookerUser: { user_attributes: { permission_level } } = { user_attributes: 'No match' } } = clientSession;
   const currentPermissionLevel = Object.keys(permissionLevels).indexOf(permission_level);
   const demoComponentsContentArr = _.filter(DemoComponentsContentArr, demoComponent => demoComponent.requiredPermissionLevel <= currentPermissionLevel);
-
   let topBarContent = { ...TopBarContent };
   if (topBarContent.autocomplete && currentPermissionLevel < topBarContent.autocomplete.correspondingComponentContent.requiredPermissionLevel) {
     delete topBarContent.autocomplete
@@ -110,7 +108,7 @@ export default function Home(props) {
     return selectedMenuItem === validIdHelper(_.lowerCase(o.label))
   });
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
-  else ActiveDemoComponent = ActiveDemoComponentContent.component
+  else ActiveDemoComponent = ActiveDemoComponentContent.component;
 
   return (
     <div className={classes.root} >
