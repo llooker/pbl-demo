@@ -4,3 +4,4 @@ export * from "./FlagsContent";
 export * from "./HouseholdsContent";
 export * from "./ExploreContent";
 export * from "./PDFViewerContent";
+export * from "./ApplicationContent";
