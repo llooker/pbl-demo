@@ -14,7 +14,8 @@ export const FlagsConent = {
       "lookerMethod": "embedDashboard",
       "id": "20",
       "label": "Flags",
-      "isNext": false
+      "isNext": false,
+      "theme": "vision_theme"
     }],
   "requiredPermissionLevel": 1
 }

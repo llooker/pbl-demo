@@ -32,7 +32,9 @@ export function SingleValue({ lookerContentItem, classes }) {
     return lookerResponseData
   }
 
-  const labelText = apiContent ? apiContent.data[0][lookerContentItem.inlineQuery.fields[0]].rendered : "";
+  // console.log({ apiContent })
+
+  const labelText = apiContent && apiContent.data.length ? apiContent.data[0][lookerContentItem.inlineQuery.fields[0]].rendered : "";
 
   return (
     <Card className={`${classes.padding15} 

@@ -14,7 +14,8 @@ export const TrendsContent = {
       "lookerMethod": "embedDashboard",
       "id": "19",
       "label": "Trends",
-      "isNext": false
+      "isNext": false,
+      "theme": "vision_theme"
     }],
   "requiredPermissionLevel": 0
 }

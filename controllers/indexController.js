@@ -23,6 +23,7 @@ module.exports.writeSession = async (req, res, next) => {
   session.lookerUser.external_user_id = session.userProfile.email;
   session.lookerUser.first_name = session.userProfile.givenName;
   session.lookerUser.last_name = session.userProfile.familyName;
+  session.lookerUser.user_attributes.email = session.userProfile.email;
   session.lookerApiToken = await tokenHelper(session);
   session.packageName = process.env.PACKAGE_NAME;
 

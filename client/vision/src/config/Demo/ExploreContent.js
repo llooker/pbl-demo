@@ -11,7 +11,7 @@ export const ExploreContent = {
   "lookerContent": [
     {
       "type": "explore",
-      "id": "vision::_application",
+      "id": "vision::application",
       "label": "Explore Applications"
     }],
   "requiredPermissionLevel": 1

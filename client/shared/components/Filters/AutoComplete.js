@@ -7,6 +7,7 @@ const { validIdHelper } = require('../../utils/tools');
 
 export const AutoComplete = ({ filterItem, apiContent, classes, action, bgColor }) => {
   // console.log("AutoComplete");
+  // console.log({ filterItem })
   return (
     filterItem ?
       <ApiHighlight
@@ -41,7 +42,7 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, bgColor 
               newValue.value ? newValue.value : newValue.label ? newValue.label : "")
           }}
           renderInput={(params) => <TextField {...params}
-            label={filterItem.filterName}
+            label={filterItem.alternateName ? filterItem.alternateName : filterItem.filterName}
             variant="outlined"
           // type={"search"}
           />}

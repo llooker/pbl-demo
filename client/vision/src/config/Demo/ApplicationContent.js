@@ -14,7 +14,8 @@ export const ApplicationContent = {
       "lookerMethod": "embedDashboard",
       "id": "22",
       "label": "Application",
-      "isNext": false
+      "isNext": false,
+      "theme": "vision_theme"
     }],
   "requiredPermissionLevel": 0
 }

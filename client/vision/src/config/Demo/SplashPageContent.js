@@ -10,12 +10,12 @@ const distributionsCurrentMonth =
   "height": 80,
   "inlineQuery": {
     "model": "vision",
-    "view": "_application",
+    "view": "application",
     "fields": [
-      "_payments.total_distribution"
+      "payments.distirbution_amount"
     ],
     "filters": {
-      "_payments.date_date": "this month"
+      "payments.date": "this month"
     },
     "limit": "500"
   },
@@ -34,12 +34,12 @@ const distributionsPreviousMonth =
   "height": 80,
   "inlineQuery": {
     "model": "vision",
-    "view": "_application",
+    "view": "application",
     "fields": [
-      "_payments.total_distribution"
+      "payments.distirbution_amount"
     ],
     "filters": {
-      "_payments.date_date": "last month"
+      "payments.date_date": "last month"
     },
     "limit": "500"
   },
@@ -59,12 +59,12 @@ const distributionsFlaggedForReivew =
   "height": 80,
   "inlineQuery": {
     "model": "vision",
-    "view": "_application",
+    "view": "application",
     "fields": [
-      "_payments.total_distribution"
+      "payments.distirbution_amount"
     ],
     "filters": {
-      "_case.status": "pending"
+      "case.status": "pending"
     },
     "limit": "500"
   },
@@ -81,7 +81,7 @@ const embeddedQuery =
   "height": 350,
   "type": "embeddedquery",
   "id": "12",
-  "queryUrl": "embed/query/vision/_application?fields=_case.id,_application.id,_case.opened_date,_person.first_name,_person.last_name,_person.email_address,_person.gender,_application.household_id,_case.reason_code,_application.date_date,_person.ssn,_person.phone_number,_case.status,_payments.total_distribution&f[_case.status]=pending&f[_person.first_name]=-NULL&sorts=_person.last_name&limit=500&column_limit=50&vis=%7B%22show_view_names%22%3Afalse%2C%22show_row_numbers%22%3Atrue%2C%22transpose%22%3Afalse%2C%22truncate_text%22%3Atrue%2C%22hide_totals%22%3Afalse%2C%22hide_row_totals%22%3Afalse%2C%22size_to_fit%22%3Atrue%2C%22table_theme%22%3A%22white%22%2C%22limit_displayed_rows%22%3Afalse%2C%22enable_conditional_formatting%22%3Afalse%2C%22header_text_alignment%22%3A%22left%22%2C%22header_font_size%22%3A12%2C%22rows_font_size%22%3A12%2C%22conditional_formatting_include_totals%22%3Afalse%2C%22conditional_formatting_include_nulls%22%3Afalse%2C%22type%22%3A%22looker_grid%22%2C%22defaults_version%22%3A1%7D&filter_config=%7B%22_case.status%22%3A%5B%7B%22type%22%3A%22%3D%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22pending%22%7D%2C%7B%7D%5D%2C%22id%22%3A0%2C%22error%22%3Afalse%7D%5D%2C%22_person.first_name%22%3A%5B%7B%22type%22%3A%22%21null%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22%22%7D%2C%7B%7D%5D%2C%22id%22%3A1%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%5D&origin=share-expanded&sdk=2&embed_domain=",
+  "queryUrl": "embed/query/vision/application?fields=case.case_id,application.application_id,case.opened_date,case.flag,case.status,case.time_open,case.closed_date,person.email_address,case.fips_score_&f[case.flag]=-NULL&f[case.closed_date]=NULL&sorts=case.opened_date&limit=500&vis=%7B%22show_view_names%22%3Afalse%2C%22show_row_numbers%22%3Atrue%2C%22transpose%22%3Afalse%2C%22truncate_text%22%3Atrue%2C%22hide_totals%22%3Afalse%2C%22hide_row_totals%22%3Afalse%2C%22size_to_fit%22%3Atrue%2C%22table_theme%22%3A%22white%22%2C%22limit_displayed_rows%22%3Afalse%2C%22enable_conditional_formatting%22%3Afalse%2C%22header_text_alignment%22%3A%22left%22%2C%22header_font_size%22%3A%2212%22%2C%22rows_font_size%22%3A%2212%22%2C%22conditional_formatting_include_totals%22%3Afalse%2C%22conditional_formatting_include_nulls%22%3Afalse%2C%22show_sql_query_menu_options%22%3Afalse%2C%22show_totals%22%3Atrue%2C%22show_row_totals%22%3Atrue%2C%22series_cell_visualizations%22%3A%7B%22case.fips_score_%22%3A%7B%22is_active%22%3Afalse%7D%7D%2C%22type%22%3A%22looker_grid%22%2C%22defaults_version%22%3A1%7D&filter_config=%7B%22case.flag%22%3A%5B%7B%22type%22%3A%22%21null%22%2C%22values%22%3A%5B%7B%22constant%22%3A%22%22%7D%2C%7B%7D%5D%2C%22id%22%3A9%2C%22error%22%3Afalse%7D%5D%2C%22case.closed_date%22%3A%5B%7B%22type%22%3A%22null%22%2C%22values%22%3A%5B%7B%22constant%22%3A%227%22%2C%22unit%22%3A%22day%22%7D%2C%7B%7D%5D%2C%22id%22%3A10%2C%22error%22%3Afalse%7D%5D%7D&dynamic_fields=%5B%5D&origin=share-expanded&sdk=2&embed_domain=",
   "title": "Top Records for Investigation",
   "component": EmbeddedQuery
 }
