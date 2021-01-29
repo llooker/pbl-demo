@@ -29,5 +29,6 @@ export const TopBarContent = {
     "correspondingComponentContent": HouseholdsContent,
     "alternateName": "Search"
   },
-  "usermenu": { permissionLevels, rowLevelAttribute }
+  "usermenu": { permissionLevels, rowLevelAttribute },
+  "label": "Benefits Investigator"
 }

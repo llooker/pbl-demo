@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import clsx from 'clsx';
-import { AppBar, Toolbar, Badge, Avatar, IconButton, Grid } from '@material-ui/core';
+import { AppBar, Toolbar, Badge, Avatar, IconButton, Grid, Typography } from '@material-ui/core';
 import { AddAlert, ChevronLeft, Menu } from '@material-ui/icons';
 import { UserMenu } from './UserMenu';
 import { AutoComplete } from '@pbl-demo/components/Filters';
@@ -77,8 +77,11 @@ export const TopBar = ({ content, theme, classes }) => {
           {packageName ?
             <Avatar alt="Icon"
               src={require(`../../${process.env.REACT_APP_PACKAGE_NAME}/src/images/logo.svg`).default}
+              style={{ fill: "white" }}
               variant="square"
             /> : ''}
+
+          {content.label ? <Typography className={classes.ml12} variant="h6">{content.label}</Typography> : ""}
 
           {apiContent && apiContent.autocomplete ?
             <Grid item sm={2} className={`${classes.mlAuto} ${classes.mr12}`}>

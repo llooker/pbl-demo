@@ -293,4 +293,8 @@ export const useStyles = makeStyles((theme) => ({
   m6: {
     margin: 6
   },
+  small: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
 }));
