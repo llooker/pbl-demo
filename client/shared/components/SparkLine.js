@@ -51,6 +51,10 @@ export function SparkLine({ lookerContentItem, classes }) {
   }
 
   const upOrDownArrow = apiContent && apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
+  /**
+   * TO DO
+   * convert to using rendered value the way single value does
+   */
   const labelText = !apiContent ? '' : lookerContentItem.chipFormat === "revenue" ?
     `$${(apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '').replace(/\d(?=(\d{3})+\.)/g, '$&,')}` :
     lookerContentItem.chipFormat === "integer" ? parseInt(apiContent[0].data && apiContent[0].data[0] ? apiContent[0].data[0].y.toFixed(2) : '') : lookerContentItem.chipFormat === 'percent' ?
@@ -93,7 +97,7 @@ export function SparkLine({ lookerContentItem, classes }) {
               </Grid>
               <ResponsiveLine
                 data={apiContent}
-                margin={{ top: 25, right: 25, bottom: 25, left: 25 }}
+                margin={{ top: 10, right: 25, bottom: 50, left: 25 }}
                 xScale={{
                   type: 'time',
                   format: '%Y-%m-%d',
