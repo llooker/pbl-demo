@@ -23,7 +23,7 @@ export default function QueryBuilder(props) {
   const { clientSession, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
 
-  const sideBarWidth = 240 + 152; //24 + 24 + 30 + 30 + 12 + 12 + 10 + 10
+  const sideBarWidth = 240 + 122; //24 + 24 + 30 + 30 + 12 + 12 + 10 + 10
   const [apiContent, setApiContent] = useState({});
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [width, setWidth] = useState((window.innerWidth - sideBarWidth));
@@ -83,12 +83,7 @@ export default function QueryBuilder(props) {
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
-      <Card elevation={1} className={`
-      ${classes.padding30} 
-      ${classes.height100Percent}
-      ${classes.overflowYScroll}`
-      }
-      >
+      <Card elevation={1} className={`${classes.padding15} ${classes.height100Percent} ${classes.overflowYScroll}`}>
         <Grid container
           key={validIdHelper(type)} >
           <div className={`${classes.root}`}>
@@ -446,7 +441,9 @@ function EnhancedTable(props) {
   return (
     <div className={`${classes.root} ${classes.padding10}`}>
       <ApiHighlight classes={classes} >
-        <TableContainer style={{ maxWidth: width }}>
+        <TableContainer
+          style={{ maxWidth: width }}
+        >
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"

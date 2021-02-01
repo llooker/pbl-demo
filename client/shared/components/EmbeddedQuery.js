@@ -86,7 +86,7 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
             alignContent="center"
             justify="center"
           >
-            <Grid item sm={11}>
+            <Grid item sm={12}>
               <EmbedHighlight
                 classes={classes}>
                 <div

@@ -54,7 +54,7 @@ export function ApiHighlight({ ...props }) {
       className={highlightShow ? 'test' : `${classes.hidden}`}
       display="inline"
       align="right"
-      style={{ backgroundColor: "#A142F4", color: '#fff', top: '-10px', left: '-10px', position: 'absolute' }}
+      style={{ backgroundColor: "#A142F4", color: '#fff', top: '-10px', right: '10px', position: 'absolute' }}
     />
     {children}
 
@@ -78,7 +78,7 @@ export function EmbedHighlight({ ...props }) {
         backgroundColor: "#12B5CB",
         color: '#fff',
         top: '-10px',
-        left: '-10px',
+        right: '10px',
         position: 'absolute',
       }}
     />
@@ -103,7 +103,7 @@ export function EmbedMethodHighlight({ ...props }) {
         backgroundColor: "#297AF4",
         color: '#fff',
         top: '-10px',
-        left: '-10px',
+        right: '10px',
         position: 'absolute'
       }}
     />

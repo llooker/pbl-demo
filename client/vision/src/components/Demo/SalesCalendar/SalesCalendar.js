@@ -169,12 +169,7 @@ export default function SalesCalendar(props) {
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
-      <Card elevation={1} className={`
-      ${classes.padding30} 
-      ${classes.height100Percent}
-      ${classes.overflowScroll}`
-      }
-      >
+      <Card elevation={1} className={`${classes.padding15} ${classes.height100Percent} ${classes.overflowScroll}`}>
         <Grid container
           key={validIdHelper(type)} >
           <div className={`${classes.root} `}>
