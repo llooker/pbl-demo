@@ -4,6 +4,8 @@ import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { Typography, Grid, Card, CircularProgress } from '@material-ui/core';
 import { EmbedHighlight } from './Accessories/Highlight';
 import { appContextMap, validIdHelper } from '../utils/tools';
+import { Loader } from "./Accessories";
+
 
 export function EmbeddedQuery({ lookerContentItem, classes, id }) {
   // console.log("EmbeddedQuery")
@@ -59,42 +61,46 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
   }
 
   return (
+    <Card className={`${classes.padding15} ${classes.overflowHidden} ${classes.lookerCardShadow}`}>
 
-    <Card className={`${classes.padding15} 
-    ${classes.lookerCardShadow}
-    `}
-    >
+      <Loader
+        hide={iFrameExists}
+        classes={classes}
+        height={lookerContentItem} />
+
       <div
-        className={`${classes.overflowHidden}`}
+        className={`${classes.overflowYScroll}`}
         style={{ height: lookerContentItem.height }}
       >
-        {
-          iFrameExists ? '' :
-
-            <Grid item sm={12} >
-              <Card className={`${classes.card} ${classes.flexCentered} ${classes.maxHeight350} ${classes.overflowHidden}`} elevation={0}>
-                <CircularProgress className={classes.circularProgress}
-                />
-              </Card>
-            </Grid>
-        }
-        <Grid container spacing={4}>
+        <Grid container
+          spacing={0}>
           <Grid item sm={12}>
-            <EmbedHighlight classes={classes}
-              height={iFrameExists ? 350 : 0}
-            >
-              <Typography variant="h6" align="center" color="secondary">
-                {lookerContentItem.title}
-              </Typography>
-              <div
-                className={`embedContainer embedContainerNoHeader splashPage ${classes.overflowHidden} ${classes.maxHeight80Percent}`}
-                id={idToUse}
-                key={idToUse}
-              >
-              </div>
-            </EmbedHighlight>
-          </Grid></Grid>
+            <Typography variant="h6" align="center" color="secondary">
+              {lookerContentItem.title}
+            </Typography>
+          </Grid>
+
+          <Grid container
+            spacing={0}
+            alignItems="center"
+            alignContent="center"
+            justify="center"
+          >
+            <Grid item sm={11}>
+              <EmbedHighlight
+                classes={classes}>
+                <div
+                  className={`embedContainer embedContainerNoHeader splashPage 
+                 ${classes.overflowHidden} ${classes.maxHeight80Percent}`}
+                  id={idToUse}
+                  key={idToUse}
+                >
+                </div>
+              </EmbedHighlight>
+            </Grid>
+          </Grid>
+        </Grid>
       </div >
-    </Card >
+    </Card>
   );
 }

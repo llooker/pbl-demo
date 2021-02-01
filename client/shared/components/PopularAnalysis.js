@@ -9,11 +9,7 @@ export function PopularAnalysis({ lookerContentItem, classes }) {
 
   return (
 
-    <Card className={`${classes.padding15} 
-    ${classes.overflowHidden} 
-    ${classes.lookerCardShadow}
-    `}
-    >
+    <Card className={`${classes.padding15} ${classes.overflowHidden} ${classes.lookerCardShadow}`}>
       <div
         className={`${classes.overflowYScroll}`}
         style={{ height: lookerContentItem.height }}
@@ -34,7 +30,6 @@ export function PopularAnalysis({ lookerContentItem, classes }) {
           }
           )}
         </Grid>
-
       </div >
     </Card>
   );
