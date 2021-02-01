@@ -39,22 +39,48 @@ export const EmbeddedExplore = (props) => {
     lookerContent.map(async lookerContentItem => {
       if (lookerContentItem.type === "explore") {
         let exploreId = lookerContentItem.id;
-        LookerEmbedSDK.createExploreWithId(exploreId)
-          .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContentItem.id}`))
-          .withClassName('exploreIframe')
-          .on('explore:state:changed', (event) => {
-          })
-          .build()
-          .connect()
-          .then((explore) => {
-            setIFrame(1)
-            setExploreObj(explore)
-            let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
-            LookerEmbedSDK.init(modifiedBaseUrl)
-          })
-          .catch((error) => {
-            console.error('Connection error', error)
-          })
+        let qid = lookerContentItem.qid;
+        console.log({ qid })
+        if (qid) {
+
+          LookerEmbedSDK.createExploreWithId(exploreId)
+            .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContentItem.id}`))
+            .withClassName('exploreIframe')
+            .withParams({
+              qid: lookerContentItem.qid,
+              toggle: "&toggle=fil,pik"
+            })
+            .on('explore:state:changed', (event) => {
+            })
+            .build()
+            .connect()
+            .then((explore) => {
+              setIFrame(1)
+              setExploreObj(explore)
+              let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+              LookerEmbedSDK.init(modifiedBaseUrl)
+            })
+            .catch((error) => {
+              console.error('Connection error', error)
+            })
+        } else {
+          LookerEmbedSDK.createExploreWithId(exploreId)
+            .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContentItem.id}`))
+            .withClassName('exploreIframe')
+            .on('explore:state:changed', (event) => {
+            })
+            .build()
+            .connect()
+            .then((explore) => {
+              setIFrame(1)
+              setExploreObj(explore)
+              let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+              LookerEmbedSDK.init(modifiedBaseUrl)
+            })
+            .catch((error) => {
+              console.error('Connection error', error)
+            })
+        }
       }
     })
   }
@@ -63,7 +89,7 @@ export const EmbeddedExplore = (props) => {
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
       <Card elevation={1}
-        className={`${classes.padding30} ${classes.height100Percent} ${classes.overflowScroll}`}
+        className={`${classes.padding15} ${classes.height100Percent} ${classes.overflowScroll}`}
       >
         <Grid container
           key={validIdHelper(type)}>
