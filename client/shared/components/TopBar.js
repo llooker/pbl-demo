@@ -23,22 +23,33 @@ export const TopBar = ({ content, theme, classes }) => {
 
   const { packageName } = clientSession
   const [apiContent, setApiContent] = useState(undefined);
+  const [dynamicSearch, setDynamicSearch] = useState(undefined);
 
   useEffect(() => {
+    // console.log("this use effect???")
+    // console.log({ dynamicSearch })
     if (isReady && content && content.hasOwnProperty("autocomplete")) {
       let isSubscribed = true
-      corsApiCall(retrieveAutocompleteOptions).then(response => {
+      corsApiCall(retrieveAutocompleteOptions, [dynamicSearch]).then(response => {
         if (isSubscribed) {
           setApiContent(response)
         }
       })
       return () => isSubscribed = false
     }
-  }, [lookerUser, isReady])
+  }, [lookerUser, isReady, dynamicSearch]);
 
-  const retrieveAutocompleteOptions = async () => {
-    let autoComplteInfo = content.autocomplete
-    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: autoComplteInfo.resultFormat || "json", body: autoComplteInfo.inlineQuery }))
+  const retrieveAutocompleteOptions = async (inputValue) => {
+    // console.log("retrieveAutocompleteOptions")
+    // console.log({ inputValue })
+
+
+    let autoComplteInfo = content.autocomplete;
+    let queryToUse = autoComplteInfo.inlineQuery;
+    if (inputValue) {
+      queryToUse.filters["person._search"] = `%${inputValue}%`
+    }
+    let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: autoComplteInfo.resultFormat || "json", body: queryToUse }))
     let apiContentObj = {}
     let queryResultsForDropdown = [];
     for (let i = 0; i < lookerResponseData.length; i++) {
@@ -49,13 +60,13 @@ export const TopBar = ({ content, theme, classes }) => {
         'label': formattedLabel,
         'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined
       })
-    }
+    };
     apiContentObj["autocomplete"] = queryResultsForDropdown
     return apiContentObj;
   }
 
   const filterNamesUrlsMap = {
-    "Household ID": "households"
+    "Person ID": "households"
   }
 
   return (
@@ -77,14 +88,14 @@ export const TopBar = ({ content, theme, classes }) => {
           {packageName ?
             <Avatar alt="Icon"
               src={require(`../../${process.env.REACT_APP_PACKAGE_NAME}/src/images/logo.svg`).default}
-              style={{ fill: "white" }}
+              style={{ fill: "white", height: "40px" }}
               variant="square"
             /> : ''}
 
           {content.label ? <Typography className={classes.ml12} variant="h6">{content.label}</Typography> : ""}
 
           {apiContent && apiContent.autocomplete ?
-            <Grid item sm={2} className={`${classes.mlAuto} ${classes.mr12}`}>
+            <Grid item sm={6} className={`${classes.mlAuto} ${classes.mr12}`}>
               <AutoComplete
                 filterItem={content.autocomplete}
                 apiContent={apiContent.autocomplete}
@@ -98,6 +109,7 @@ export const TopBar = ({ content, theme, classes }) => {
                 }}
                 classes={classes}
                 bgColor={"white"}
+                setDynamicSearch={setDynamicSearch}
               /></Grid> : ""}
 
           <Badge badgeContent={3} color="error" className={apiContent && apiContent.autocomplete ? `${classes.mr12}` : `${classes.mlAuto} ${classes.mr12}`} >

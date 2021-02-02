@@ -4,30 +4,29 @@ import { HouseholdsContent } from './Demo/HouseholdsContent'
 
 export const TopBarContent = {
   "autocomplete": {
-    "filterName": "Household ID",
+    "filterName": "Person ID", //needs to match filter name in corresponding component file
     "lookerMethod": "runInlineQuery",
     "inlineQuery": {
       "model": "vision",
       "view": "application",
       "fields": [
-        "_person.household_id",
-        "_person.first_name",
-        "_person.last_name",
+        "person._search",
+        "person.person_id",
       ],
       "filters": {
-        "_person.household_id": "not null"
+        "person.person_id": "not null"
       },
-      "query_timezone": "America/Los_Angeles"
+      "query_timezone": "America/Los_Angeles",
+      "limit": 50
     },
     "resultFormat": "json",
     "formattedLabel": [
-      "_person.first_name",
-      "_person.last_name",
-      "_person.household_id"],
+      "person._search"],
     "value": [
-      "_person.household_id"],
+      "person.person_id"],
     "correspondingComponentContent": HouseholdsContent,
-    "alternateName": "Search"
+    "alternateName": "Search",
+    "apiDrivenSearch": true
   },
   "usermenu": { permissionLevels, rowLevelAttribute },
   "label": "Benefits Investigator"

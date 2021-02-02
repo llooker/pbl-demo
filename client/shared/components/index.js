@@ -9,3 +9,4 @@ export { BottomBar } from "./BottomBar";
 export { SparkLine } from "./SparkLine";
 export { SingleValue } from "./SingleValue";
 export { SplashPage } from "./SplashPage";
+export { SignIn } from "./SignIn";

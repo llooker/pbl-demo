@@ -1,22 +1,22 @@
 import _ from 'lodash'
 import React, { useContext, useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
-import AppContext from '../../contexts/AppContext';
-import useStyles from './styles.js';
-import '../Home.css';
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from './styles.js';
+// import '../Home.css';
 import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
-import { SignInContent } from '../../config'
+// import { SignInContent } from '../../config'
 import { writeNewSession, createSdkHelper } from '@pbl-demo/components/Utils/auth';
-import { initialUser } from '../../config';
+const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
+// import { initialUser } from './LookerHelpers/'
 
-const { validIdHelper } = require('../../tools');
+export const SignIn = ({ content, initialUser }) => {
+  console.log('SignIn');
+  console.log({ content })
+  console.log({ initialUser })
 
-export default function SignIn(props) {
-  // console.log('SignIn');
-  // console.log('props', props)
-
-  let { clientSession, setClientSession, sdk, setSdk, initialHref, setInitialHref } = useContext(AppContext);
+  let { clientSession, setClientSession, sdk, setSdk, initialHref, setInitialHref } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { packageName } = clientSession;
+  const { signInBackgroundImage, signInLogo } = content
 
   const responseGoogle = async (response) => {
     if (response.error) {
@@ -34,10 +34,9 @@ export default function SignIn(props) {
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;
 
   const classes = useStyles();
-  const logoImage = packageName ? require(`../../images/logo_text.svg`).default : "";
-
-  const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
-  const backgroundImage = packageName ? require(`../../images/background${backgroundImageInt}.jpg`).default : "";
+  // const logoImage = packageName ? require(`../../images/logo_text.svg`).default : "";
+  // const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
+  // const backgroundImage = packageName ? require(`../../images/background${backgroundImageInt}.jpg`).default : "";
 
 
   return (
@@ -47,22 +46,21 @@ export default function SignIn(props) {
         className={`${classes.h100}`}>
         <Grid item sm={12} className={'sign-in-background-img'}
           style={{
-            backgroundImage: `url(${backgroundImage})`,
+            backgroundImage: `url(${signInBackgroundImage})`,
             backgroundSize: 'cover'
           }}
         >
           <Card className={classes.card}>
             <div className={classes.cardCopy}>
-              <img
+              {/* <img
                 src={logoImage}
-                style={{ height: '100px' }}
-              />
+              /> */}
               <CardContent >
                 <Typography variant="h5" component="h2">
-                  {SignInContent.cardHeader}
+                  {content.cardHeader}
                 </Typography>
                 <Typography variant="body2" component="p">
-                  {SignInContent.cardBody}
+                  {content.cardBody}
                 </Typography>
               </CardContent>
               <CardActions className={`${classes.actions}`} >

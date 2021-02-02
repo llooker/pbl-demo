@@ -15,7 +15,7 @@ export const HouseholdsContent = {
       "id": "21",
       "label": "Households",
       "isNext": false,
-      "filterName": "Household ID",
+      "filterName": "Person ID",
       "theme": "vision_theme"
     }],
   "requiredPermissionLevel": 1

@@ -40,9 +40,7 @@ export const EmbeddedExplore = (props) => {
       if (lookerContentItem.type === "explore") {
         let exploreId = lookerContentItem.id;
         let qid = lookerContentItem.qid;
-        console.log({ qid })
         if (qid) {
-
           LookerEmbedSDK.createExploreWithId(exploreId)
             .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContentItem.id}`))
             .withClassName('exploreIframe')

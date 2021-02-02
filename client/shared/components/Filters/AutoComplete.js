@@ -1,13 +1,20 @@
+import _ from 'lodash';
 import React from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { ApiHighlight } from '../Accessories/Highlight';
 import { NumberToColoredPercent } from '../Accessories/NumberToColoredPercent';
+
+// import parse from "autosuggest-highlight/parse";
+// import match from "autosuggest-highlight/match";
+
 const { validIdHelper } = require('../../utils/tools');
 
-export const AutoComplete = ({ filterItem, apiContent, classes, action, bgColor }) => {
+export const AutoComplete = ({ filterItem, apiContent, classes, action, bgColor, setDynamicSearch }) => {
   // console.log("AutoComplete");
   // console.log({ filterItem })
+  // console.log({ apiContent })
+
   return (
     filterItem ?
       <ApiHighlight
@@ -37,20 +44,51 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, bgColor 
           )}
           getOptionLabel={(option) => option.label}
           onChange={(event, newValue) => {
+            let newValueToUse = '';
+            if (newValue && newValue.value) newValueToUse = newValue.value
+            else if (newValue && newValue.label) newValueToUse = newValue.label
             action(
               filterItem.filterName,
-              newValue.value ? newValue.value : newValue.label ? newValue.label : "")
+              newValueToUse)
           }}
           renderInput={(params) => <TextField {...params}
             label={filterItem.alternateName ? filterItem.alternateName : filterItem.filterName}
             variant="outlined"
-          // type={"search"}
           />}
           loadingText="Loading..."
           style={{
             backgroundColor: bgColor || ""
           }}
+          onInputChange={_.debounce((event) => {
+            if (filterItem.apiDrivenSearch && event.target.value) setDynamicSearch(event.target.value)
+          }, 1000)}
+
         />
       </ApiHighlight> : ""
   )
 }
+
+// const handleRenderOption = (option, { inputValue }) => {
+//   const matches = match(option.label, inputValue);
+//   const parts = parse(option.label, matches);
+//   console.log({ matches })
+//   console.log({ parts })
+
+//   const highlightStyle = {
+//     fontWeight: 700,
+//     backgroundColor: "lightyellow",
+//     padding: "5px 2px"
+//   };
+
+//   return (
+//     <div>
+//       {parts.map((part, index) => (
+//         <span key={index} style={part.highlight ? highlightStyle : {}}>
+//           {part.text}
+//         </span>
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default handleRenderOption;

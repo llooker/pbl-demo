@@ -1,3 +1,63 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M497.94 233.56C497.94 288.32 453.48 332.78 398.72 332.78C343.96 332.78 299.5 288.32 299.5 233.56C299.5 178.8 343.96 134.34 398.72 134.34C453.48 134.34 497.94 178.8 497.94 233.56Z" id="a3eVhpSV1"></path><path d="M453.17 477.37C453.17 512.09 424.97 540.28 390.25 540.28C355.52 540.28 327.33 512.09 327.33 477.37C327.33 442.64 355.52 414.45 390.25 414.45C424.97 414.45 453.17 442.64 453.17 477.37Z" id="a4dj9AAkzi"></path><path d="M278.93 387.83C278.93 434.24 241.25 471.92 194.84 471.92C148.43 471.92 110.75 434.24 110.75 387.83C110.75 341.42 148.43 303.74 194.84 303.74C241.25 303.74 278.93 341.42 278.93 387.83Z" id="cNUErV5qq"></path></defs><g><g><g><use xlink:href="#a3eVhpSV1" opacity="1" fill="#5421ad" fill-opacity="0"></use><g><use xlink:href="#a3eVhpSV1" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="40" stroke-opacity="1"></use></g></g><g><use xlink:href="#a4dj9AAkzi" opacity="1" fill="#5421ad" fill-opacity="0"></use><g><use xlink:href="#a4dj9AAkzi" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="40" stroke-opacity="1"></use></g></g><g><use xlink:href="#cNUErV5qq" opacity="1" fill="#5421ad" fill-opacity="0"></use><g><use xlink:href="#cNUErV5qq" opacity="1" fill-opacity="0" stroke="#ffffff" stroke-width="40" stroke-opacity="1"></use></g></g></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="216" height="216" viewBox="0 0 216 216">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: none;
+      }
+
+      .cls-1 {
+        stroke: #333;
+        stroke-width: 20.96px;
+        fill-rule: evenodd;
+        filter: url(#filter);
+      }
+
+      .cls-2 {
+        stroke: #fff;
+        filter: url(#filter-2);
+      }
+
+      .cls-2, .cls-3 {
+        stroke-width: 21px;
+      }
+
+      .cls-3 {
+        stroke: #3c467c;
+        filter: url(#filter-3);
+      }
+    </style>
+    <filter id="filter" x="24" y="29" width="123" height="123" filterUnits="userSpaceOnUse">
+      <feOffset result="offset" dy="3" in="SourceAlpha"/>
+      <feGaussianBlur result="blur" stdDeviation="3.162"/>
+      <feFlood result="flood" flood-opacity="0.3"/>
+      <feComposite result="composite" operator="in" in2="blur"/>
+      <feBlend result="blend" in="SourceGraphic"/>
+    </filter>
+    <filter id="filter-2" x="60" y="67" width="148" height="148" filterUnits="userSpaceOnUse">
+      <feOffset result="offset" dy="3" in="SourceAlpha"/>
+      <feGaussianBlur result="blur" stdDeviation="3.162"/>
+      <feFlood result="flood" flood-opacity="0.3"/>
+      <feComposite result="composite" operator="in" in2="blur"/>
+      <feBlend result="blend" in="SourceGraphic"/>
+    </filter>
+    <filter id="filter-3" x="-1" y="4" width="173" height="173" filterUnits="userSpaceOnUse">
+      <feOffset result="offset" dy="3" in="SourceAlpha"/>
+      <feGaussianBlur result="blur" stdDeviation="3.162"/>
+      <feFlood result="flood" flood-opacity="0.3"/>
+      <feComposite result="composite" operator="in" in2="blur"/>
+      <feBlend result="blend" in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g style="fill: none; filter: url(#filter)">
+    <path id="path" class="cls-1" d="M88,40A50,50,0,1,1,38,90,50,50,0,0,1,88,40Zm0,0A50,50,0,1,1,38,90,50,50,0,0,1,88,40Z" style="stroke: inherit; filter: none; fill: inherit"/>
+  </g>
+  <use xlink:href="#path" style="stroke: #333; filter: none; fill: none"/>
+  <g style="fill: none; filter: url(#filter-2)">
+    <circle id="circle-2" class="cls-2" cx="136.5" cy="140.5" r="62.5" style="stroke: inherit; filter: none; fill: inherit"/>
+  </g>
+  <use xlink:href="#circle-2" style="stroke: #fff; filter: none; fill: none"/>
+  <g style="fill: none; filter: url(#filter-3)">
+    <circle id="circle" class="cls-3" cx="88" cy="90" r="75" style="stroke: inherit; filter: none; fill: inherit"/>
+  </g>
+  <use xlink:href="#circle" style="stroke: #3c467c; filter: none; fill: none"/>
+</svg>
