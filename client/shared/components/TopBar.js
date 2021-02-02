@@ -85,12 +85,12 @@ export const TopBar = ({ content, theme, classes }) => {
             {drawerOpen ? <ChevronLeft /> : <Menu />}
           </IconButton>
 
-          {packageName ?
+          {content.avatar ?
             <Avatar alt="Icon"
-              src={require(`../../${process.env.REACT_APP_PACKAGE_NAME}/src/images/logo.svg`).default}
-              style={{ fill: "white", height: "40px" }}
+              src={content.avatar}
+              style={content.avatarStyle ? content.avatarStyle : ""}
               variant="square"
-            /> : ''}
+            /> : ""}
 
           {content.label ? <Typography className={classes.ml12} variant="h6">{content.label}</Typography> : ""}
 

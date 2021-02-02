@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="507" height="219" viewBox="0 0 507 219">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-6 {
+        fill: none;
+      }
+
+      .cls-1 {
+        stroke: #333;
+        stroke-width: 20.96px;
+        fill-rule: evenodd;
+        filter: url(#filter);
+      }
+
+      .cls-2 {
+        stroke: #fff;
+        filter: url(#filter-2);
+      }
+
+      .cls-2, .cls-6 {
+        stroke-width: 21px;
+      }
+
+      .cls-3 {
+        font-size: 120px;
+        fill: #615f5f;
+      }
+
+      .cls-3, .cls-4 {
+        font-family: "Gill Sans";
+      }
+
+      .cls-4 {
+        font-size: 60px;
+        fill: #777;
+      }
+
+      .cls-5 {
+        font-style: italic;
+      }
+
+      .cls-6 {
+        stroke: #3c467c;
+        filter: url(#filter-3);
+      }
+    </style>
+    <filter id="filter" x="27" y="32" width="123" height="123" filterUnits="userSpaceOnUse">
+      <feOffset result="offset" dy="3" in="SourceAlpha"/>
+      <feGaussianBlur result="blur" stdDeviation="3.162"/>
+      <feFlood result="flood" flood-opacity="0.3"/>
+      <feComposite result="composite" operator="in" in2="blur"/>
+      <feBlend result="blend" in="SourceGraphic"/>
+    </filter>
+    <filter id="filter-2" x="63" y="70" width="148" height="148" filterUnits="userSpaceOnUse">
+      <feOffset result="offset" dy="3" in="SourceAlpha"/>
+      <feGaussianBlur result="blur" stdDeviation="3.162"/>
+      <feFlood result="flood" flood-opacity="0.3"/>
+      <feComposite result="composite" operator="in" in2="blur"/>
+      <feBlend result="blend" in="SourceGraphic"/>
+    </filter>
+    <filter id="filter-3" x="2" y="7" width="173" height="173" filterUnits="userSpaceOnUse">
+      <feOffset result="offset" dy="3" in="SourceAlpha"/>
+      <feGaussianBlur result="blur" stdDeviation="3.162"/>
+      <feFlood result="flood" flood-opacity="0.3"/>
+      <feComposite result="composite" operator="in" in2="blur"/>
+      <feBlend result="blend" in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g style="fill: none; filter: url(#filter)">
+    <path id="path" class="cls-1" d="M88,40A50,50,0,1,1,38,90,50,50,0,0,1,88,40Zm0,0A50,50,0,1,1,38,90,50,50,0,0,1,88,40Z" style="stroke: inherit; filter: none; fill: inherit"/>
+  </g>
+  <use xlink:href="#path" style="stroke: #333; filter: none; fill: none"/>
+  <g style="fill: none; filter: url(#filter-2)">
+    <circle id="circle-2" class="cls-2" cx="136.5" cy="140.5" r="62.5" style="stroke: inherit; filter: none; fill: inherit"/>
+  </g>
+  <use xlink:href="#circle-2" style="stroke: #fff; filter: none; fill: none"/>
+  <text id="Vision_" data-name="Vision " class="cls-3" x="188.087" y="134.255">Vision </text>
+  <text id="Claims_Investigator" data-name="Claims Investigator" class="cls-4" x="209.165" y="188.951">Claims <tspan class="cls-5">ai</tspan></text>
+  <g style="fill: none; filter: url(#filter-3)">
+    <circle id="circle" class="cls-6" cx="88" cy="90" r="75" style="stroke: inherit; filter: none; fill: inherit"/>
+  </g>
+  <use xlink:href="#circle" style="stroke: #3c467c; filter: none; fill: none"/>
+</svg>

@@ -10,7 +10,7 @@ export const SignIn = ({ content, initialUser }) => {
 
   let { clientSession, setClientSession, sdk, setSdk, initialHref, setInitialHref } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { packageName } = clientSession;
-  const { backgroundImage, logo } = content
+  const { backgroundImage, logo, logoStyle, backgroundImageStyle } = content
 
   const responseGoogle = async (response) => {
     if (response.error) {
@@ -34,15 +34,13 @@ export const SignIn = ({ content, initialUser }) => {
         key={validIdHelper('sign in page')}
         className={`${classes.height100Percent}`}>
         <Grid item sm={12} className={'sign-in-background-img'}
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: 'cover'
-          }}
+          style={backgroundImageStyle ? backgroundImageStyle : ''}
         >
           <Card className={classes.signInCard}>
             <div className={classes.signInCardCopy}>
               <img
                 src={logo}
+                style={logoStyle ? logoStyle : ''}
               />
               <CardContent >
                 <Typography variant="h5" component="h2">

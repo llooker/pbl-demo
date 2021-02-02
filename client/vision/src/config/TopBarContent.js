@@ -1,6 +1,7 @@
 
 import { permissionLevels, rowLevelAttribute } from "./UserPermissionsContent";
 import { HouseholdsContent } from './Demo/HouseholdsContent'
+const logo = require('../images/logo.svg').default
 
 export const TopBarContent = {
   "autocomplete": {
@@ -29,5 +30,10 @@ export const TopBarContent = {
     "apiDrivenSearch": true
   },
   "usermenu": { permissionLevels, rowLevelAttribute },
-  "label": "Benefits Investigator"
+  "label": "Benefits Investigator",
+  "avatar": logo,
+  "avatarStyle": {
+    "height": "40px",
+    "fill": "white"
+  }
 }
