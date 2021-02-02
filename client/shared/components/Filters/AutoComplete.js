@@ -5,8 +5,8 @@ import { Autocomplete } from '@material-ui/lab';
 import { ApiHighlight } from '../Accessories/Highlight';
 import { NumberToColoredPercent } from '../Accessories/NumberToColoredPercent';
 
-// import parse from "autosuggest-highlight/parse";
-// import match from "autosuggest-highlight/match";
+import parse from "autosuggest-highlight/parse";
+import match from "autosuggest-highlight/match";
 
 const { validIdHelper } = require('../../utils/tools');
 
@@ -28,20 +28,7 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, bgColor,
           options={Array.isArray(apiContent) ?
             apiContent :
             []}
-          renderOption={(option) => (
-            <Grid container justify="space-between">
-              <Grid item >
-                {option.label}
-              </Grid>
-              {option.trend && <Grid item>
-                <NumberToColoredPercent
-                  val={option.trend}
-                  positive_good={true}
-                  abs_val={Math.abs(option.trend)}
-                />
-              </Grid>}
-            </Grid>
-          )}
+          renderOption={handleRenderOption} // highlighter
           getOptionLabel={(option) => option.label}
           onChange={(event, newValue) => {
             let newValueToUse = '';
@@ -68,27 +55,32 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, bgColor,
   )
 }
 
-// const handleRenderOption = (option, { inputValue }) => {
-//   const matches = match(option.label, inputValue);
-//   const parts = parse(option.label, matches);
-//   console.log({ matches })
-//   console.log({ parts })
+const handleRenderOption = (option, { inputValue }) => {
+  const matches = match(option.label, inputValue);
+  const parts = parse(option.label, matches);
 
-//   const highlightStyle = {
-//     fontWeight: 700,
-//     backgroundColor: "lightyellow",
-//     padding: "5px 2px"
-//   };
+  const highlightStyle = {
+    fontWeight: 700,
+    backgroundColor: "lightyellow",
+    padding: "5px 2px"
+  };
 
-//   return (
-//     <div>
-//       {parts.map((part, index) => (
-//         <span key={index} style={part.highlight ? highlightStyle : {}}>
-//           {part.text}
-//         </span>
-//       ))}
-//     </div>
-//   );
-// };
+  return (
+    <div>
+      {parts.map((part, index) => (
+        <span key={index} style={part.highlight ? highlightStyle : {}}>
+          {part.text}
+        </span>
+      ))}
+      {option.trend &&
+        <NumberToColoredPercent
+          val={option.trend}
+          positive_good={true}
+          abs_val={Math.abs(option.trend)}
+        />
+      }
+    </div>
+  );
+};
 
-// export default handleRenderOption;
+export default handleRenderOption;
