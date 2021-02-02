@@ -1,10 +1,10 @@
-const signInLogo = require('../images/logo.svg').default
+const logo = require('../images/logo.svg').default
 const backgroundImageInt = Math.floor(Math.random() * 4) + 1;
-const signInBackgroundImage = require(`../images/background${backgroundImageInt}.jpg`)
-console.log({ signInBackgroundImage })
+const backgroundImage = require(`../images/background${backgroundImageInt}.jpg`).default
+
 export const SignInContent = {
   "cardHeader": "Welcome",
   "cardBody": "Please sign in to access your fraud portal",
-  "signInLogo": signInLogo,
-  "signInBackgroundImage": signInBackgroundImage
+  "logo": logo,
+  "backgroundImage": backgroundImage
 }

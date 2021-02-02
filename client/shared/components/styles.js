@@ -1,9 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { red, green } from '@material-ui/core/colors';
+import { red, green, grey } from '@material-ui/core/colors';
 const redPrimary = red[500];
 const greenPrimary = green[500];
 const redLight = red[100];
 const greenLight = green[100];
+const lightGrey = grey[200];
 
 export const topBarBottomBarHeight = 140;
 export const additionalHeightForFlyout = 15; //hack for now
@@ -136,20 +137,6 @@ export const useStyles = makeStyles((theme) => ({
   minHeight150: {
     minHeight: 150,
     overflow: 'scroll'
-  },
-  carouselLegend: {
-    backgroundColor: 'rgb(192,192,192, .5)	 !important',
-    textAlign: 'center !important',
-    opacity: `100 !important`,
-    fontWeight: 800,
-    // width: `${25}% !important`,
-  },
-  carouselLegendTitle: {
-    fontSize: '24px !important',
-
-  },
-  carouselLegendBody: {
-    fontSize: '16px !important',
   },
   positionRelative: {
     position: 'relative'
@@ -297,4 +284,22 @@ export const useStyles = makeStyles((theme) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
   },
+  signInCard: {
+    minWidth: 350,
+    minHeight: 500,
+    left: '75%',
+    top: '50%',
+    transform: `translate(-75%, -50%)`,
+    position: 'absolute',
+    textAlign: 'center',
+    backgroundColor: lightGrey
+  },
+  signInCardCopy: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: `translate(-50%, -50%)`,
+    margin: '0',
+    width: '80%',
+  }
 }));

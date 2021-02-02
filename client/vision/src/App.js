@@ -4,15 +4,13 @@ import PropTypes from 'prop-types'
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import AppContext from './contexts/AppContext';
 import { checkForExistingSession, createSdkHelper } from '@pbl-demo/components/Utils/auth';
-import SignIn from './components/SignIn/SignIn';
 import Home from './components/Home/Home';
-
 import * as DemoComponentsContentArr from './config/Demo';
 import { validIdHelper } from './tools';
-
+import { SignIn } from '@pbl-demo/components';
+import { SignInContent, initialUser } from './config';
 
 function App(props) {
-  // console.log("App")
 
   const [clientSession, setClientSession] = useState({});
   const [sdk, setSdk] = useState();
@@ -75,7 +73,10 @@ function App(props) {
             exact
             isSignedIn={clientSession.userProfile ? true : false}
             component={SignIn}
-            initialHref={initialHref}>
+            initialHref={initialHref}
+            content={SignInContent}
+            initialUser={initialUser}
+          >
           </PublicRoute>
           {/* catach all route */}
           <Route render={() => <Redirect to="/" />} />
@@ -118,6 +119,8 @@ const PublicRoute = ({ component: Component,
   isSignedIn,
   // restricted, 
   initialHref,
+  content,
+  initialUser,
   ...rest }) => {
 
   const demoComponentMap = {};
@@ -144,7 +147,9 @@ const PublicRoute = ({ component: Component,
           <Redirect
             to={urlToUse}
           />
-          : <Component {...props} />
+          : <Component {...props}
+            content={content}
+            initialUser={initialUser} />
       )} />
   );
 };

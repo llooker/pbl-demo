@@ -36,7 +36,7 @@ npm install
 open /etc/hosts using sudo
 Add
 ```
-127.0.0.1   embed.demo
+127.0.0.1   embed.demo.com
 ```
 
 ## Running th demo
