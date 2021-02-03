@@ -12,8 +12,7 @@ export const ExploreContent = {
     {
       "type": "explore",
       "id": "vision::application",
-      "label": "Explore Applications",
-      "qid": "AvEXx4gGk2bW4DVwcemYdk"
+      "label": "Explore Applications"
     }],
   "requiredPermissionLevel": 1,
 }

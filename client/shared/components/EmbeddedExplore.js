@@ -46,7 +46,7 @@ export const EmbeddedExplore = (props) => {
             .withClassName('exploreIframe')
             .withParams({
               qid: lookerContentItem.qid,
-              toggle: "&toggle=fil,pik"
+              toggle: "&toggle=vis "
             })
             .on('explore:state:changed', (event) => {
             })
@@ -65,6 +65,9 @@ export const EmbeddedExplore = (props) => {
           LookerEmbedSDK.createExploreWithId(exploreId)
             .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContentItem.id}`))
             .withClassName('exploreIframe')
+            .withParams({
+              toggle: "&toggle=vis"
+            })
             .on('explore:state:changed', (event) => {
             })
             .build()
