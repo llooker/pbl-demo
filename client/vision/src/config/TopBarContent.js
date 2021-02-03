@@ -30,7 +30,7 @@ export const TopBarContent = {
     "apiDrivenSearch": true
   },
   "usermenu": { permissionLevels, rowLevelAttribute },
-  "label": "Benefits Investigator",
+  "label": "Benefits Investigator", //<br/>
   "avatar": logo,
   "avatarStyle": {
     "height": "40px",

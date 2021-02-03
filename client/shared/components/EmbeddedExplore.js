@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
@@ -36,6 +37,8 @@ export const EmbeddedExplore = (props) => {
   const performLookerApiCalls = function (lookerContent) {
     // console.log("performLookerApiCalls")
     // console.log({ lookerContent })
+    $(`.embedContainer.${validIdHelper(type)}:visible`).html('')
+
     lookerContent.map(async lookerContentItem => {
       if (lookerContentItem.type === "explore") {
         let exploreId = lookerContentItem.id;
