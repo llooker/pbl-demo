@@ -3,8 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, } from "react-router-dom";
 import { IconButton, Menu, MenuItem, Typography, Divider, TextField, Avatar } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { endSession } from '../utils/auth';
-import { appContextMap, validIdHelper } from '../utils/tools';
+import { appContextMap, validIdHelper, endSession } from '../utils'
 
 
 export const UserMenu = ({ classes, content }) => {

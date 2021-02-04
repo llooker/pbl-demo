@@ -7,7 +7,6 @@ const { validIdHelper, decodeHtml, appContextMap } = require('../utils/tools');
 export function NaturalLanguage({ lookerContentItem, inlineQuery, index, classes }) {
 
   const [apiContent, setApiContent] = useState(undefined);
-  // const { clientSession, sdk, corsApiCall, isReady } = useContext(AppContext);
   const { clientSession, sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { userProfile, lookerUser } = clientSession;
 

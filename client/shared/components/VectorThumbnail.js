@@ -4,7 +4,6 @@ import { Typography, Grid, Divider } from '@material-ui/core';
 import { ApiHighlight } from './Accessories/Highlight';
 import { appContextMap } from '../utils/tools';
 
-
 export function VectorThumbnail({ lookerContentItem, classes, vectorItem, index }) {
   // console.log('VectorThumbnail')
 

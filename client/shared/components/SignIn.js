@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useContext, useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
-import { writeNewSession, createSdkHelper } from '@pbl-demo/components/Utils/auth';
+import { writeNewSession, createSdkHelper } from '../utils'
 const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from './styles.js';
 

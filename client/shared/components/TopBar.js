@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { AppBar, Toolbar, Badge, Avatar, IconButton, Grid, Typography } from '@material-ui/core';
 import { AddAlert, ChevronLeft, Menu } from '@material-ui/icons';
 import { UserMenu } from './UserMenu';
-import { AutoComplete } from '@pbl-demo/components/Filters';
+import { AutoComplete } from './Filters';
 import { appContextMap } from '../utils/tools';
 import { ThemeProvider } from '@material-ui/core/styles';
 

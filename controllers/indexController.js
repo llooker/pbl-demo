@@ -9,6 +9,7 @@ const rp = require('request-promise');
 module.exports.readSession = async (req, res, next) => {
   // console.log("readSession")
   let { session } = req
+  // console.log({ session })
   session.packageName = process.env.PACKAGE_NAME
   res.status(200).send({ session })
 }
@@ -43,6 +44,7 @@ module.exports.refreshLookerToken = async (req, res, next) => {
 }
 
 async function tokenHelper(session) {
+  // console.log("tokenHelper")
   // Calling the iframe url to ensure the embed user exists
   const url = await createSignedUrl('/alive', session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
   await rp(url)

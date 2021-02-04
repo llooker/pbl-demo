@@ -13,7 +13,8 @@ import { packageNameTheme } from '../../config/theme.js';
 import * as DemoComponentsContentArr from '../../config/Demo';
 import { TopBar, BottomBar } from "@pbl-demo/components";
 import { TopBarContent } from '../../config/TopBarContent';
-import { checkToken } from '@pbl-demo/components/Utils/auth';
+// import { checkToken, endSession } from '@pbl-demo/components/Utils/auth';
+import { checkToken, endSession } from '@pbl-demo/utils/auth';
 import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
 const { validIdHelper } = require('../../tools');
@@ -65,20 +66,26 @@ export default function Home(props) {
 
 
   const corsApiCall = async (func, args = []) => {
-    // console.log("corsApiCall");
+    console.log("corsApiCall");
 
     let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
-    if (checkTokenRsp.sdk) {
-      setSdk(checkTokenRsp.sdk)
+    console.log({ checkTokenRsp })
+    // if (checkTokenRsp.sdk) {
+    //   setSdk(checkTokenRsp.sdk)
+    // }
+    // if (checkTokenRsp.clientSession) {
+    //   setClientSession(checkTokenRsp.clientSession)
+    // }
+    if (checkTokenRsp.status === 'expired') {
+      console.log("inside this ifff")
+      history.push("/")
+      endSession();
+    } else {
+      let res = func(...args)
+      return res
     }
-    if (checkTokenRsp.clientSession) {
-      setClientSession(checkTokenRsp.clientSession)
-    }
-    let res = func(...args)
-    return res
   }
 
-  //componentDidMount
   useEffect(() => {
 
     let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));

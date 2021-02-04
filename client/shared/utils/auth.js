@@ -1,5 +1,6 @@
 import { Looker40SDK, DefaultSettings } from "@looker/sdk";
-// import { PblSessionEmbed } from '../LookerHelpers/pblsession'
+import { PblSessionEmbed } from './pblsession';
+console.log({ PblSessionEmbed })
 
 export const checkForExistingSession = async () => {
   // console.log('checkForExistingSession')
@@ -60,7 +61,7 @@ export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
 }
 
 export const checkToken = async (expires_in) => {
-  // console.log('checkToken2');
+  console.log('checkToken?????');
   // console.log({ expires_in });
   // console.log('Date.now()', Date.now());
   // let dateeee = new Date(expires_in);
@@ -68,19 +69,19 @@ export const checkToken = async (expires_in) => {
 
   if ((Date.now()) > expires_in) {
     // console.log('inside iff')
-    let sessionResponse = await fetch('/refreshlookertoken', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    const sessionResponseData = await sessionResponse.json();
-    const lookerBaseUrl = sessionResponseData.session.lookerBaseUrl ? sessionResponseData.session.lookerBaseUrl : '';
-    const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
-    const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
-
-    return { status: "updated", sdk, clientSession: sessionResponseData.session }
+    // let sessionResponse = await fetch('/refreshlookertoken', {
+    //   method: 'GET',
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    // const sessionResponseData = await sessionResponse.json();
+    // const lookerBaseUrl = sessionResponseData.session.lookerBaseUrl ? sessionResponseData.session.lookerBaseUrl : '';
+    // const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
+    // const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
+    // return { status: "updated", sdk, clientSession: sessionResponseData.session }
+    return { status: "expired" }
 
   } else {
     // console.log("inside ellse")

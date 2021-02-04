@@ -1,0 +1,207 @@
+ul li {
+    list-style: none;
+}
+.dropdown-menu-right { 
+    right: 0; 
+    left: auto; 
+}
+
+.iframe, .exploreIframe{
+    width: 100%;
+    /* height: 100%; */
+    /* min-height: 100%; */
+    height: 800px; /*used to be 680*/
+}
+
+
+.slide-appear,
+.slide-enter {
+  opacity: 0;
+  transform: translateX(250px);
+}
+.slide-appear.slide-appear-active,
+.slide-enter.slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: 0.5s;
+}
+
+.slide-leave {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-leave.slide-leave-active {
+  opacity: 0;
+  transform: translateX(250px);
+  transition: 0.5s;
+}
+
+.abs {
+  position: absolute;
+}
+
+.right-abs{
+    right: 0px;
+}
+.top-abs-0{
+  top: 0px
+}
+.top-abs-20{
+    top: 20px;
+}
+.top-abs--20{
+    top: -20px;
+}
+
+.abs-center{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#logoUrlNav{
+  height: 75%;
+  width: auto;
+  max-height: 50px;
+}
+
+/* .navbar li  a{
+  line-height: 50px;
+ } */
+.nav li a.sudo-disabled{
+  color:red;
+  opacity: 50%;
+ }
+
+ .dropdown-toggle::after{
+   margin-left: .5rem;
+ }
+
+ .dialog {
+  display: inline-block;
+}
+.modal {
+  display: block !important; /* I added this to see the modal, you don't need this */
+  top: 3em;
+}
+
+.modal-dialog {
+  overflow-y: initial !important;
+}
+.modal-body {
+  height: 300px;
+  overflow-y: auto;
+}
+
+iframe{
+  display: none;
+}
+
+.embedContainer iframe {
+  display: block;
+  width: 100%;
+}
+.embedContainer iframe.splashPage {
+  height: 340px;
+  margin-top: -35px;
+  /* overflow: hidden; */
+}
+
+/* override */
+.embedContainer iframe.dNone {
+  display: none;
+}
+.embedContainer iframe.dBlock {
+  display: block;
+}
+
+.modal-footer {
+  display: block;
+}
+
+/*#parentTabContent a{
+  color: #6c757d!important;
+  background-color: transparent;
+}*/
+
+.card-body{
+  min-height: 100px;
+}
+
+.min-height-200{
+  min-height: 200px;
+}
+
+.pointer{
+  cursor: pointer;
+}
+
+hr {
+  align-self: stretch;
+  height: auto;
+}
+/* hide scrollbars */
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar {
+  width: 0px;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  /* background: #FF0000; */
+}
+
+/* material overrides */
+.MuiListItemIcon-root {
+  min-width: 40px !important;
+}
+
+/* .MuiTreeItem-iconContainer{
+  width: 0px !important;
+} */
+
+.MuiTreeItem-group{
+  margin-left: 0px !important;
+}
+
+/* .embedContainerNoHeader {
+  position: relative;
+}
+.embedContainerNoHeader > iframe {
+  position: absolute;
+  top: -75px;
+  width: 100%;
+  height: calc(100% + 75px);
+} */
+
+/* svg map style override */
+.svg-map {
+  
+  width: 200px;
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  stroke: #666;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round; }
+  .svg-map__location {
+    fill: #e5e5e5;
+    cursor: pointer; }
+    .svg-map__location:focus, .svg-map__location:hover {
+      fill: #e5e5e5;
+      outline: 0; }
+    .svg-map__location[aria-checked=true] {
+      fill: #343D4E; }
+
+
+
+html, body, #root, #root>div {
+  height: 100%
+}

@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import { Grid, Card } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
@@ -39,6 +39,7 @@ export default function Dashboard(props) {
 
   const classes = useStyles();
   const location = useLocation();
+  let history = useHistory();
 
 
 
@@ -194,6 +195,7 @@ export default function Dashboard(props) {
         .on('dashboard:loaded', (event) => {
           setDashboardOptions(event.dashboard.options)
         })
+        .on('drillmenu:click', drillMenuClick)
         .build()
         .connect()
         .then((dashboard) => {
@@ -247,6 +249,15 @@ export default function Dashboard(props) {
     }
   })
 
+  const drillMenuClick = (event) => {
+    if (_.includes(_.lowerCase(event.label), "view")) {
+      history.push({
+        pathname: 'pdfviewer',
+        search: (`pdf_url=${event.url}`)
+      })
+      return { cancel: true }
+    }
+  }
 
   useEffect(() => {
     let params = queryString.parse(location.search);

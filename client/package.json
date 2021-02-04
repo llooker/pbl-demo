@@ -15,7 +15,6 @@
     "shared/*"
   ],
   "dependencies": {
-    "@material-ui/styles": "^4.0.0",
-    "autosuggest-highlight": "^3.1.1"
+    "@material-ui/styles": "^4.0.0"
   }
 }

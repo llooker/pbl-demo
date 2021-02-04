@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
-import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
+import { Loader, CodeFlyout } from './Accessories'
 import { appContextMap, validIdHelper } from '../utils/tools';
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from './styles.js';
 
