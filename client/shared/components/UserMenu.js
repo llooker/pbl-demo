@@ -26,9 +26,9 @@ export const UserMenu = ({ classes, content }) => {
     setAnchorEl(null);
     if (newValue == null) {
       setIsReady(false);
-      setClientSession({});
-      history.push("/")
       endSession();
+      setClientSession({})
+      history.push("/");
     } else if (newValue === 'modal') {
       setPaywallModal({
         'show': true,

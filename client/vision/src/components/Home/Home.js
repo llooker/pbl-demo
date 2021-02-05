@@ -79,9 +79,9 @@ export default function Home(props) {
     //new method of signing user out
     if (checkTokenRsp.status === 'expired') {
       setIsReady(false);
-      setClientSession({})
-      history.push("/")
       endSession();
+      setClientSession({})
+      history.push("/");
     } else {
       let res = func(...args)
       return res
@@ -101,17 +101,10 @@ export default function Home(props) {
     //listen to refresh or closing tab event
     window.addEventListener("beforeunload", (e) => {
       setIsReady(false);
-      setClientSession({})
-      history.push("/")
       endSession();
-
-      // return undefined; //doesn't work with close tab, only refresh
-
-      //works with both close tab and refresh
-      let confirmationMessage = "\o/";
-      (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-      return confirmationMessage;                            //Webkit, Safari, Chrome
-
+      setClientSession({})
+      history.push("/");
+      delete e['returnValue'];
     });
 
   }, []) //onload
