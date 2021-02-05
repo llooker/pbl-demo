@@ -13,7 +13,6 @@ import { packageNameTheme } from '../../config/theme.js';
 import * as DemoComponentsContentArr from '../../config/Demo';
 import { TopBar, BottomBar } from "@pbl-demo/components";
 import { TopBarContent } from '../../config/TopBarContent';
-// import { checkToken, endSession } from '@pbl-demo/components/Utils/auth';
 import { checkToken, endSession } from '@pbl-demo/utils/auth';
 import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
@@ -21,7 +20,7 @@ const { validIdHelper } = require('../../tools');
 
 export default function Home(props) {
   // console.log("Home")
-  let { setClientSession, clientSession, sdk, setSdk, isReady } = useContext(AppContext)
+  let { setClientSession, clientSession, sdk, setSdk, isReady, setIsReady } = useContext(AppContext)
   let { democomponent } = useParams();
   let history = useHistory();
   const classes = useStyles();
@@ -69,15 +68,18 @@ export default function Home(props) {
     console.log("corsApiCall");
 
     let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
-    console.log({ checkTokenRsp })
+    //old method of renewing token and client session
     // if (checkTokenRsp.sdk) {
     //   setSdk(checkTokenRsp.sdk)
     // }
     // if (checkTokenRsp.clientSession) {
     //   setClientSession(checkTokenRsp.clientSession)
     // }
+
+    //new method of signing user out
     if (checkTokenRsp.status === 'expired') {
-      console.log("inside this ifff")
+      setIsReady(false);
+      setClientSession({})
       history.push("/")
       endSession();
     } else {
@@ -91,11 +93,28 @@ export default function Home(props) {
     let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
     LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
 
+    //listen to resize event
     window.addEventListener("resize", () => {
       setDrawerOpen(window.innerWidth > 768 ? true : false)
     });
 
-  }, [])
+    //listen to refresh or closing tab event
+    window.addEventListener("beforeunload", (e) => {
+      setIsReady(false);
+      setClientSession({})
+      history.push("/")
+      endSession();
+
+      // return undefined; //doesn't work with close tab, only refresh
+
+      //works with both close tab and refresh
+      let confirmationMessage = "\o/";
+      (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+      return confirmationMessage;                            //Webkit, Safari, Chrome
+
+    });
+
+  }, []) //onload
 
   useEffect(() => {
     if (didMountRef.current) {
@@ -131,7 +150,7 @@ export default function Home(props) {
         sdk,
         corsApiCall,
         theme: packageNameTheme,
-        isReady
+        isReady, setIsReady
       }}>
         <ThemeProvider theme={packageNameTheme}>
           <CssBaseline />

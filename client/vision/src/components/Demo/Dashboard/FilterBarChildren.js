@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@material-ui/core'
-import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, SelectFont, MapFilter, RangeSlider, ToggleApi } from "@pbl-demo/components/Filters";
+import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, SelectFont, MapFilter, RangeSlider, ToggleApi, ActionButton } from "@pbl-demo/components/Filters";
 
 const { validIdHelper } = require('../../../tools');
 
@@ -94,8 +94,12 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                             filterItem={filterItem}
                           />
                         </Grid>
-                        :
-                        '')
+                        : filterItem.component === 'actionbutton' ?
+                          <Grid item sm={horizontalLayout ? 3 : 12}
+                            key={validIdHelper(`${type}-${filterItem.component}-${index}`)}>
+                            <ActionButton classes={classes} filterItem={filterItem} />
+                          </Grid> :
+                          '')
       })}
     </Grid>
   )

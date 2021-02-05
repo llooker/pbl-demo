@@ -209,6 +209,8 @@ export default function Dashboard(props) {
           console.log({ error })
         });
 
+      localStorage.debug = 'looker:chatty:*'
+
       //api calls
       if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
       ) {
@@ -266,6 +268,7 @@ export default function Dashboard(props) {
       customFilterAction(lookerContent[0].filterName, params[lookerContent[0].filterName])
 
   }, [customFilterAction, location.search, lookerContent])
+
 
   return (
     <div className={`${classes.root} demoComponent`}

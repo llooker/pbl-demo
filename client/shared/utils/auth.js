@@ -61,7 +61,7 @@ export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
 }
 
 export const checkToken = async (expires_in) => {
-  console.log('checkToken?????');
+  // console.log('checkToken?????');
   // console.log({ expires_in });
   // console.log('Date.now()', Date.now());
   // let dateeee = new Date(expires_in);

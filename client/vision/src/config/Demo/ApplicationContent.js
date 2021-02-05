@@ -1,6 +1,13 @@
 import Dashboard from '../../components/Demo/Dashboard/Dashboard'
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
+const createCaseButton = {
+  label: "Create Case",
+  component: "actionbutton",
+  // options
+}
+
+
 export const ApplicationContent = {
   "type": "dashboard",
   "label": "Application",
@@ -15,7 +22,8 @@ export const ApplicationContent = {
       "id": "22",
       "label": "Application",
       "isNext": false,
-      "theme": "vision_theme"
+      "theme": "vision_theme",
+      "filters": []//[createCaseButton]
     }],
   "requiredPermissionLevel": 0
 }

@@ -11,7 +11,7 @@ export const UserMenu = ({ classes, content }) => {
   // console.log({ content })
 
   let history = useHistory();
-  let { setPaywallModal, clientSession, setClientSession, handleSwitchLookerUser } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
+  let { setPaywallModal, clientSession, setClientSession, handleSwitchLookerUser, setIsReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(clientSession.lookerUser.user_attributes.brand || '');
   const { permissionLevels, rowLevelAttribute } = content
@@ -25,7 +25,8 @@ export const UserMenu = ({ classes, content }) => {
   const handleClose = (newValue, property) => {
     setAnchorEl(null);
     if (newValue == null) {
-      setClientSession({})
+      setIsReady(false);
+      setClientSession({});
       history.push("/")
       endSession();
     } else if (newValue === 'modal') {
