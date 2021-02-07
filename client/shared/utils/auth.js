@@ -1,6 +1,5 @@
 import { Looker40SDK, DefaultSettings } from "@looker/sdk";
 import { PblSessionEmbed } from './pblsession';
-console.log({ PblSessionEmbed })
 
 export const checkForExistingSession = async () => {
   // console.log('checkForExistingSession')
@@ -47,7 +46,7 @@ export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
   // console.log({ accessToken })
   // console.log({ lookerBaseUrl })
 
-  if (accessToken && lookerBaseUrl) { //added 11/22
+  if (accessToken && lookerBaseUrl) {
     const pblsession = new PblSessionEmbed({
       ...DefaultSettings(),
       base_url: lookerBaseUrl,

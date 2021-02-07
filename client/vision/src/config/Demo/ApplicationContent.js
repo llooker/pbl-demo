@@ -23,7 +23,7 @@ export const ApplicationContent = {
       "label": "Application",
       "isNext": false,
       "theme": "vision_theme",
-      "filters": []//[createCaseButton]
+      // "filters": []//[createCaseButton]
     }],
   "requiredPermissionLevel": 0
 }

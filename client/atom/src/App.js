@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import AppContext from './contexts/AppContext';
-// import { checkForExistingSession, createSdkHelper } from '@pbl-demo/components/Utils/auth';
 import { checkForExistingSession, createSdkHelper } from '@pbl-demo/utils/auth';
 import Home from './components/Home/Home';
 import * as DemoComponentsContentArr from './config/Demo';
@@ -50,8 +49,7 @@ function App(props) {
   }, [clientSession, sdk])
 
   console.log({ clientSession })
-
-  console.log(clientSession.lookerApiToken ? Date(clientSession.lookerApiToken.expires_in) : "")
+  // console.log(clientSession.lookerApiToken ? Date(clientSession.lookerApiToken.expires_in) : "")
 
   return (
     < Router >
@@ -59,7 +57,7 @@ function App(props) {
         clientSession, setClientSession,
         sdk, setSdk,
         initialHref, setInitialHref,
-        isReady
+        isReady, setIsReady
       }}>
         <Switch>
           <PrivateRoute

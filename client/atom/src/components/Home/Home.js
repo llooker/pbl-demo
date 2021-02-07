@@ -13,7 +13,6 @@ import { packageNameTheme } from '../../config/theme.js';
 import * as DemoComponentsContentArr from '../../config/Demo';
 import { TopBar, BottomBar } from "@pbl-demo/components";
 import { TopBarContent } from '../../config/TopBarContent';
-// import { checkToken, endSession } from '@pbl-demo/components/Utils/auth';
 import { checkToken, endSession } from '@pbl-demo/utils/auth';
 import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
@@ -21,7 +20,7 @@ const { validIdHelper } = require('../../tools');
 
 export default function Home(props) {
   // console.log("Home")
-  let { setClientSession, clientSession, sdk, setSdk, isReady } = useContext(AppContext)
+  let { setClientSession, clientSession, sdk, setSdk, isReady, setIsReady } = useContext(AppContext)
   let { democomponent } = useParams();
   let history = useHistory();
   const classes = useStyles();
@@ -66,20 +65,23 @@ export default function Home(props) {
 
 
   const corsApiCall = async (func, args = []) => {
-    console.log("corsApiCall");
+    // console.log("corsApiCall");
 
     let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
-    console.log({ checkTokenRsp })
+    //old method of renewing token and client session
     // if (checkTokenRsp.sdk) {
     //   setSdk(checkTokenRsp.sdk)
     // }
     // if (checkTokenRsp.clientSession) {
     //   setClientSession(checkTokenRsp.clientSession)
     // }
+
+    //new method of signing user out
     if (checkTokenRsp.status === 'expired') {
-      console.log("inside this ifff")
-      history.push("/")
+      setIsReady(false);
       endSession();
+      setClientSession({})
+      history.push("/");
     } else {
       let res = func(...args)
       return res
@@ -91,11 +93,22 @@ export default function Home(props) {
     let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
     LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
 
+    //listen to resize event
     window.addEventListener("resize", () => {
       setDrawerOpen(window.innerWidth > 768 ? true : false)
     });
 
-  }, [])
+    //listen to refresh or closing tab event
+    //comment out for now
+    // window.addEventListener("beforeunload", (e) => {
+    //   setIsReady(false);
+    //   endSession();
+    //   setClientSession({})
+    //   history.push("/");
+    //   delete e['returnValue'];
+    // });
+
+  }, []) //onload
 
   useEffect(() => {
     if (didMountRef.current) {
@@ -131,7 +144,7 @@ export default function Home(props) {
         sdk,
         corsApiCall,
         theme: packageNameTheme,
-        isReady
+        isReady, setIsReady
       }}>
         <ThemeProvider theme={packageNameTheme}>
           <CssBaseline />

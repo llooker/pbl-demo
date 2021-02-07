@@ -209,6 +209,8 @@ export default function Dashboard(props) {
           console.log({ error })
         });
 
+      // localStorage.debug = 'looker:chatty:*'
+
       //api calls
       if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
       ) {
@@ -228,10 +230,12 @@ export default function Dashboard(props) {
             let desiredProperty = Object.keys(lookerResponseData[0])[0];
 
             for (let i = 0; i < lookerResponseData.length; i++) {
-              queryResultsForDropdown.push({
-                'label': lookerResponseData[i][desiredProperty],
-                'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined
-              })
+              if (lookerResponseData[i][desiredProperty]) {
+                queryResultsForDropdown.push({
+                  'label': lookerResponseData[i][desiredProperty] ? lookerResponseData[i][desiredProperty] : undefined,
+                  'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined
+                })
+              }
             }
             apiContentObj[filterItem.component] = queryResultsForDropdown
           }
@@ -266,6 +270,7 @@ export default function Dashboard(props) {
       customFilterAction(lookerContent[0].filterName, params[lookerContent[0].filterName])
 
   }, [customFilterAction, location.search, lookerContent])
+
 
   return (
     <div className={`${classes.root} demoComponent`}

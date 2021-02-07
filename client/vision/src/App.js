@@ -49,7 +49,6 @@ function App(props) {
   }, [clientSession, sdk])
 
   console.log({ clientSession })
-
   // console.log(clientSession.lookerApiToken ? Date(clientSession.lookerApiToken.expires_in) : "")
 
   return (

@@ -99,13 +99,14 @@ export default function Home(props) {
     });
 
     //listen to refresh or closing tab event
-    window.addEventListener("beforeunload", (e) => {
-      setIsReady(false);
-      endSession();
-      setClientSession({})
-      history.push("/");
-      delete e['returnValue'];
-    });
+    //comment out for now
+    // window.addEventListener("beforeunload", (e) => {
+    //   setIsReady(false);
+    //   endSession();
+    //   setClientSession({})
+    //   history.push("/");
+    //   delete e['returnValue'];
+    // });
 
   }, []) //onload
 

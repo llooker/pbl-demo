@@ -29,7 +29,7 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, bgColor,
             apiContent :
             []}
           renderOption={handleRenderOption} // highlighter
-          getOptionLabel={(option) => option.label}
+          getOptionLabel={option => typeof option === 'string' ? option : option.label}
           onChange={(event, newValue) => {
             let newValueToUse = '';
             if (newValue && newValue.value) newValueToUse = newValue.value
