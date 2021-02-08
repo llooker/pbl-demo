@@ -65,7 +65,7 @@ export default function Home(props) {
 
 
   const corsApiCall = async (func, args = []) => {
-    console.log("corsApiCall");
+    // console.log("corsApiCall");
 
     let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
     //old method of renewing token and client session

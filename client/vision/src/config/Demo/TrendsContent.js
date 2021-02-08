@@ -1,5 +1,5 @@
-import Dashboard from '../../components/Demo/Dashboard/Dashboard'
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
 
 export const TrendsContent = {
   "type": "dashboard",

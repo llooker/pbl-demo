@@ -1,5 +1,5 @@
-import Dashboard from '../../components/Demo/Dashboard/Dashboard'
 import ShowChartIcon from '@material-ui/icons/ShowChart';
+import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
 
 export const WebAnalyticsContent = {
   "type": "simple dashboard",

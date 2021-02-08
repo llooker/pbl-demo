@@ -1,5 +1,5 @@
-import Dashboard from '../../components/Demo/Dashboard/Dashboard'
 import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
+import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
 
 
 const productCategoryFilter = {

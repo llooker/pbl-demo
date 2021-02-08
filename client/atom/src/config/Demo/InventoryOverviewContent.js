@@ -1,5 +1,5 @@
-import Dashboard from '../../components/Demo/Dashboard/Dashboard'
 import TableChartOutlinedIcon from '@material-ui/icons/TableChartOutlined';
+import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
 
 const productNameFilter = {
   "label": "Select Product Name",

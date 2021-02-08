@@ -1,5 +1,5 @@
-import Dashboard from '../../components/Demo/Dashboard/Dashboard'
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
 
 const createCaseButton = {
   label: "Create Case",

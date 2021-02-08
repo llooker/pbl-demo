@@ -1,5 +1,5 @@
-import Dashboard from '../../components/Demo/Dashboard/Dashboard'
 import PeopleIcon from '@material-ui/icons/People';
+import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
 
 export const HouseholdsContent = {
   "type": "dashboard",
