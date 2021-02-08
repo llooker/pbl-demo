@@ -108,7 +108,6 @@ export default function Dashboard(props) {
         tileResponse = handleTileToggle(tileToggleFilterItem.options[0],
           tileToggleFilterItem,
           dashboardOptions);
-
       }
 
       if (visColorFilterItem) {
