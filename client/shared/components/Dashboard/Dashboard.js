@@ -5,20 +5,17 @@ import { useLocation, useHistory } from "react-router-dom";
 import { Grid, Card } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-// import AppContext from '../../../contexts/AppContext';
 import FilterBar from './FilterBar';
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 import queryString from 'query-string';
 import { appContextMap, validIdHelper } from '../../utils/tools';
+import { handleTileToggle, handleVisColorToggle } from './helpers';
 
-
-// const { validIdHelper } = require('../../../tools');
 
 export default function Dashboard(props) {
-  // console.log('Dashboard');
-  // const { clientSession, clientSession: { lookerUser }, sdk, corsApiCall, theme, isReady, selectedMenuItem } = useContext(AppContext)
+  console.log('Dashboard');
   const { clientSession, clientSession: { lookerUser }, sdk, corsApiCall, theme, isReady, selectedMenuItem } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
   const { staticContent: { lookerContent }, staticContent: { type } } = props;
@@ -29,8 +26,6 @@ export default function Dashboard(props) {
   const [dashboardObj, setDashboardObj] = useState({});
   const [dashboardOptions, setDashboardOptions] = useState({});
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
-  //const [tileToggleValue, setTileToggleValue] = useState('');
-  const [visColorToggleValue, setVisColorToggleValue] = useState('#2d4266');
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
@@ -44,8 +39,6 @@ export default function Dashboard(props) {
   const classes = useStyles();
   const location = useLocation();
   let history = useHistory();
-
-
 
   //condtional theming for dark mode :D
   let paletteToUse = !lightThemeToggleValue && isThemeableDashboard ?
@@ -66,67 +59,15 @@ export default function Dashboard(props) {
     [lightThemeToggleValue, lookerContent],
   );
 
-  //moved to helpers
-  const handleTileToggle = (event, newValue, lookerContent, dashboardOptions) => {
-    let dynamicTileFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Tiles" });
-
-    if (dynamicTileFilterItem) {
-      // setTileToggleValue(newValue)
-      const filteredLayout = _.filter(dashboardOptions.layouts[0].dashboard_layout_components, (row) => {
-        return (dynamicTileFilterItem.tileLookUp[newValue].indexOf(dashboardOptions.elements[row.dashboard_element_id].title) > -1)
-      })
-
-      const newDashboardLayout = {
-        ...dashboardOptions.layouts[0],
-        dashboard_layout_components: filteredLayout
-      }
-      dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
-
-    }
-  };
-
-  const handleVisColorToggle = (event, newValue) => {
-    let dynamicVisConfigFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Vis Config" });
-    if (dynamicVisConfigFilterItem) {
-      let newColorSeries = dynamicVisConfigFilterItem.colors[newValue]
-      let newDashboardElements = { ...dashboardOptions.elements };
-
-      Object.keys(newDashboardElements).map(key => {
-        if (newDashboardElements[key].vis_config.series_colors) {
-          Object.keys(newDashboardElements[key].vis_config.series_colors).map((innerKey, index) => {
-            newDashboardElements[key].vis_config.series_colors[innerKey] = newColorSeries[index] || newColorSeries[0];
-          })
-        }
-        if (newDashboardElements[key].vis_config.custom_color) {
-          newDashboardElements[key].vis_config.custom_color = newColorSeries[newColorSeries.length - 2];
-        }
-        if (newDashboardElements[key].vis_config.map_value_colors) {
-          newDashboardElements[key].vis_config.map_value_colors.map((item, index) => {
-            newDashboardElements[key].vis_config.map_value_colors[index] = newColorSeries[index] || newColorSeries[0];
-          })
-        }
-        // loss some fidelity here
-        if (newDashboardElements[key].vis_config.series_cell_visualizations) {
-          Object.keys(newDashboardElements[key].vis_config.series_cell_visualizations).map((innerKey, index) => {
-            if (newDashboardElements[key].vis_config.series_cell_visualizations[innerKey].hasOwnProperty("palette")) {
-              newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"] = { ...dynamicVisConfigFilterItem.series_cell_visualizations[newValue] }
-            }
-          })
-        }
-        if (newDashboardElements[key].vis_config.header_font_color) {
-          newDashboardElements[key].vis_config.header_font_color = newColorSeries[newColorSeries.length - 2];
-        }
-        if (isThemeableDashboard) {
-          if (newDashboardElements[key].vis_config.map_tile_provider) {
-            newDashboardElements[key].vis_config.map_tile_provider = lightThemeToggleValue ? "light" : "dark";
-          }
-
-        }
-      })
-      setVisColorToggleValue(newValue)
-      dashboardObj.setOptions({ "elements": { ...newDashboardElements } })
-    }
-  };
+  const helperFunctionMapper = (event, newValue, filterItem) => {
+    // console.log("helperFunctionMapper")
+    // console.log({ newValue })
+    // console.log({ filterItem })
+    let helperResponse = filterItem.method(newValue, filterItem, dashboardOptions,
+      isThemeableDashboard, lightThemeToggleValue)
+    // console.log({ helperResponse })
+    dashboardObj.setOptions(helperResponse)
+  }
 
   const handleThemeChange = (event, newValue) => {
     let themeName = '';
@@ -159,8 +100,28 @@ export default function Dashboard(props) {
   useEffect(() => {
     if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length
     ) {
-      // handleTileToggle(null, tileToggleValue ? tileToggleValue : "Inventory")
-      handleVisColorToggle(null, visColorToggleValue ? visColorToggleValue : '#2d4266');
+      let tileToggleFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Tiles" })
+      let visColorFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Vis Config" })
+
+      let tileResponse, visColorResponse
+      if (tileToggleFilterItem) {
+        tileResponse = handleTileToggle(tileToggleFilterItem.options[0],
+          tileToggleFilterItem,
+          dashboardOptions);
+
+      }
+
+      if (visColorFilterItem) {
+        visColorResponse = handleVisColorToggle(visColorFilterItem.options[0],
+          visColorFilterItem,
+          dashboardOptions,
+          isThemeableDashboard,
+          lightThemeToggleValue);
+      }
+      dashboardObj.setOptions({
+        tileResponse,
+        visColorResponse
+      })
     }
   }, [dashboardOptions]);
 
@@ -305,8 +266,8 @@ export default function Dashboard(props) {
                   customFilterAction={customFilterAction}
                   // tileToggleValue={tileToggleValue}
                   // handleTileToggle={handleTileToggle}
-                  visColorToggleValue={visColorToggleValue}
-                  handleVisColorToggle={handleVisColorToggle}
+                  // visColorToggleValue={visColorToggleValue}
+                  // handleVisColorToggle={handleVisColorToggle}
                   lightThemeToggleValue={lightThemeToggleValue}
                   fontThemeSelectValue={fontThemeSelectValue}
                   handleThemeChange={handleThemeChange}
@@ -314,10 +275,10 @@ export default function Dashboard(props) {
                   setHorizontalLayout={setHorizontalLayout}
                   drawerOpen={drawerOpen}
                   setDrawerOpen={setDrawerOpen}
+                  helperFunctionMapper={helperFunctionMapper}
                 />
                 :
                 ''}
-
 
               <EmbeddedDashboardContainer
                 classes={classes}

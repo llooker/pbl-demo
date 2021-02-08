@@ -1,20 +1,68 @@
-import _ from 'lodash'
-export const handleTileToggle = (event, newValue, lookerContent, dashboardOptions) => {
-  let dynamicTileFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Tiles" });
+import _ from 'lodash';
+export const handleTileToggle = (newValue, filterItem, dashboardOptions) => {
+  // console.log("handleTileToggle")
 
-  if (dynamicTileFilterItem) {
-    // setTileToggleValue(newValue)
+  if (filterItem) {
     const filteredLayout = _.filter(dashboardOptions.layouts[0].dashboard_layout_components, (row) => {
-      return (dynamicTileFilterItem.tileLookUp[newValue].indexOf(dashboardOptions.elements[row.dashboard_element_id].title) > -1)
+      return (filterItem.tileLookUp[newValue].indexOf(dashboardOptions.elements[row.dashboard_element_id].title) > -1)
     })
 
     const newDashboardLayout = {
       ...dashboardOptions.layouts[0],
       dashboard_layout_components: filteredLayout
     }
-    // dashboardObj.setOptions({ "layouts": [newDashboardLayout] })
-    return newDashboardLayout;
-
+    return { "layouts": [newDashboardLayout] };
   }
 };
 
+
+export const handleVisColorToggle = (newValue, filterItem, dashboardOptions,
+  isThemeableDashboard, lightThemeToggleValue //would like to see these go away if possible
+) => {
+
+  // console.log("handleVisColorToggle")
+  // console.log({ newValue })
+  // console.log({ filterItem })
+  // console.log({ dashboardOptions })
+
+  if (filterItem) {
+    let newColorSeries = filterItem.colors[newValue]
+    let newDashboardElements = { ...dashboardOptions.elements };
+
+    Object.keys(newDashboardElements).map(key => {
+      if (newDashboardElements[key].vis_config.series_colors) {
+        Object.keys(newDashboardElements[key].vis_config.series_colors).map((innerKey, index) => {
+          newDashboardElements[key].vis_config.series_colors[innerKey] = newColorSeries[index] || newColorSeries[0];
+        })
+      }
+      if (newDashboardElements[key].vis_config.custom_color) {
+        newDashboardElements[key].vis_config.custom_color = newColorSeries[newColorSeries.length - 2];
+      }
+      if (newDashboardElements[key].vis_config.map_value_colors) {
+        newDashboardElements[key].vis_config.map_value_colors.map((item, index) => {
+          newDashboardElements[key].vis_config.map_value_colors[index] = newColorSeries[index] || newColorSeries[0];
+        })
+      }
+      // loss some fidelity here
+      if (newDashboardElements[key].vis_config.series_cell_visualizations) {
+        Object.keys(newDashboardElements[key].vis_config.series_cell_visualizations).map((innerKey, index) => {
+          if (newDashboardElements[key].vis_config.series_cell_visualizations[innerKey].hasOwnProperty("palette")) {
+            newDashboardElements[key].vis_config.series_cell_visualizations[innerKey]["palette"] = { ...filterItem.series_cell_visualizations[newValue] }
+          }
+        })
+      }
+      if (newDashboardElements[key].vis_config.header_font_color) {
+        newDashboardElements[key].vis_config.header_font_color = newColorSeries[newColorSeries.length - 2];
+      }
+      if (isThemeableDashboard) {
+        if (newDashboardElements[key].vis_config.map_tile_provider) {
+          newDashboardElements[key].vis_config.map_tile_provider = lightThemeToggleValue ? "light" : "dark";
+        }
+
+      }
+    })
+    return {
+      "elements": { ...newDashboardElements }
+    }
+  }
+}

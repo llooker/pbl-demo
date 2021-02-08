@@ -6,8 +6,9 @@ import { validIdHelper } from '../../utils/tools';
 
 export default function FilterBarChildren({ classes, apiContent, customFilterAction,
   // tileToggleValue, handleTileToggle, 
-  visColorToggleValue,
-  handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange, horizontalLayout, lookerContent, type
+  // visColorToggleValue,handleVisColorToggle, 
+  lightThemeToggleValue, fontThemeSelectValue, handleThemeChange, horizontalLayout, lookerContent, type,
+  helperFunctionMapper
 }) {
   return (
     <Grid
@@ -37,12 +38,14 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                     // tileToggleValue={tileToggleValue}
                     // handleTileToggle={handleTileToggle}
                     filterItem={filterItem}
+                    helperFunctionMapper={helperFunctionMapper}
                   /> :
                   <ToggleVisColor
                     classes={classes}
-                    visColorToggleValue={visColorToggleValue}
-                    handleVisColorToggle={handleVisColorToggle}
+                    // visColorToggleValue={visColorToggleValue}
+                    // handleVisColorToggle={handleVisColorToggle}
                     filterItem={filterItem}
+                    helperFunctionMapper={helperFunctionMapper}
                   />}
               </Grid>
               :

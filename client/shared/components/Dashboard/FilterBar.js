@@ -8,9 +8,11 @@ import { validIdHelper } from '../../utils/tools';
 
 export default function FilterBar(props) {
   const { staticContent: { lookerContent }, staticContent: { type }, classes,
-    apiContent, customFilterAction, tileToggleValue, handleTileToggle, visColorToggleValue,
-    handleVisColorToggle, lightThemeToggleValue, fontThemeSelectValue, handleThemeChange,
-    horizontalLayout, setHorizontalLayout, drawerOpen, setDrawerOpen
+    apiContent, customFilterAction,
+    // tileToggleValue, handleTileToggle, visColorToggleValue, handleVisColorToggle, 
+    lightThemeToggleValue, fontThemeSelectValue, handleThemeChange,
+    horizontalLayout, setHorizontalLayout, drawerOpen, setDrawerOpen,
+    helperFunctionMapper
   } = props;
 
 
@@ -72,10 +74,10 @@ export default function FilterBar(props) {
                 classes={classes}
                 apiContent={apiContent}
                 customFilterAction={customFilterAction}
-                tileToggleValue={tileToggleValue}
-                handleTileToggle={handleTileToggle}
-                visColorToggleValue={visColorToggleValue}
-                handleVisColorToggle={handleVisColorToggle}
+                // tileToggleValue={tileToggleValue}
+                // handleTileToggle={handleTileToggle}
+                // visColorToggleValue={visColorToggleValue}
+                // handleVisColorToggle={handleVisColorToggle}
                 lightThemeToggleValue={lightThemeToggleValue}
                 fontThemeSelectValue={fontThemeSelectValue}
                 handleThemeChange={handleThemeChange}
@@ -83,6 +85,7 @@ export default function FilterBar(props) {
                 setHorizontalLayout={setHorizontalLayout}
                 lookerContent={lookerContent}
                 type={type}
+                helperFunctionMapper={helperFunctionMapper}
               />
             </AccordionDetails>
           </Box>
