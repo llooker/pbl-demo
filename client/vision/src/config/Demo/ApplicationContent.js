@@ -3,7 +3,7 @@ import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
 import { createCase } from '@pbl-demo/components/Dashboard/helpers'
 
 const createCaseSelect = {
-  "label": "Create case",
+  "label": "Case type",
   "component": "dropdown",
   "options": [
     { label: "Suspicious Email", value: "human_suspicious_email" },
@@ -13,7 +13,11 @@ const createCaseSelect = {
     { label: "Multiple Head of Household one Address", value: "human_multiple_head_of_household" },
     { label: "Facts Changing in Multiple Applications", value: "human_eligibility_fact_change" }
   ],
-  "method": createCase
+  "method": createCase,
+  "secondaryComponent": {
+    "component": "button",
+    "label": "Create case"
+  }
 }
 
 

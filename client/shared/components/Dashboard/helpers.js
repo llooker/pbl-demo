@@ -83,6 +83,20 @@ export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue,
   return themeName
 }
 
-export const createCase = ({ }) => {
-  console.log("createCase")
+export const createCase = async ({ newValue, filterItem }) => {
+  // console.log("createCase")
+  // console.log({ newValue })
+  // console.log({ filterItem })
+
+  let newCaseResponse = await fetch('/createcase', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ caseType: newValue })
+  })
+  const newCaseResponseData = await newCaseResponse.json();
+  console.log({ newCaseResponseData })
+  return newCaseResponseData;
 }

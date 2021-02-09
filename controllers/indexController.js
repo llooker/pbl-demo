@@ -27,6 +27,7 @@ module.exports.writeSession = async (req, res, next) => {
   session.lookerUser.user_attributes.email = session.userProfile.email;
   session.lookerApiToken = await tokenHelper(session);
   session.packageName = process.env.PACKAGE_NAME;
+  session.cloudFunctionSecret = process.env.CLOUD_FUNCTION_SECRET;
 
   res.status(200).send({ session: session });
 }
@@ -62,4 +63,38 @@ async function tokenHelper(session) {
   }
   return { ...u }
 
+}
+
+module.exports.createCase = async (req, res, next) => {
+  // console.log("createCase")
+  let { session, body } = req;
+  // console.log({ session })
+  // console.log({ body })
+
+  let options = {
+    method: 'POST',
+    uri: 'https://us-central1-vision-302704.cloudfunctions.net/create_case',
+    body: {
+      "type": "cell",
+      "scheduled_plan": null,
+      "attachment": null,
+      "data": {
+        "value": 84014,
+        "rendered": "84014",
+        "application_id": "84014",
+        "security_key": session.cloudFunctionSecret,
+        "email": session.userProfile.email
+      },
+      "form_params": {
+        "reason_code": body.caseType
+      }
+    },
+    json: true // Automatically stringifies the body to JSON
+  };
+
+  let postRsp = await rp(options)
+  res.status(200).send({
+    status: "success",
+    message: "Case created! Reload dashboard to see it"
+  })
 }

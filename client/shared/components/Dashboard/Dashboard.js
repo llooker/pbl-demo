@@ -59,26 +59,27 @@ export default function Dashboard(props) {
     [lightThemeToggleValue, lookerContent],
   );
 
-  const helperFunctionMapper = (event, newValue, filterItem) => {
+  const helperFunctionMapper = async (event, newValue, filterItem) => {
     // console.log("helperFunctionMapper")
     // console.log({ newValue })
     // console.log({ filterItem })
-    let helperResponse = filterItem.method({
+    let helperResponse = await filterItem.method({
       newValue, filterItem, dashboardOptions,
       isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue
     })
-    // console.log({ helperResponse })
+    let methodName = filterItem.method.name;
+    console.log({ helperResponse })
     // console.log(typeof helperResponse)
-    if (typeof helperResponse === "object") {
-      // let dashboardOptionsCopy = { ...dashboardOptions, ...helperResponse }
-      // console.log({ dashboardOptionsCopy })
-      // setDashboardOptions(...dashboardOptionsCopy)
+    if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
       dashboardObj.setOptions(helperResponse);
-    } else if (typeof helperResponse === "string") {
+    } else if (methodName === "handleThemeChange") {
       if (typeof newValue === "boolean") {
         setLightThemeToggleValue(newValue)
       } else setFontThemeSelectValue(newValue)
       corsApiCall(performLookerApiCalls, [lookerContent, helperResponse])
+    } else if (methodName === "createCase") {
+      // corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh dashboard
+      return helperResponse
     }
   }
 
