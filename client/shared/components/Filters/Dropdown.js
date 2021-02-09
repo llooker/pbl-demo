@@ -13,9 +13,6 @@ export const Dropdown = ({ classes, filterItem, helperFunctionMapper, }) => {
   const [processing, setProcessing] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
 
-  useEffect(() => {
-    console.log({ processing })
-  }, [processing])
 
   return (
     <EmbedHighlight classes={classes} >
@@ -44,7 +41,6 @@ export const Dropdown = ({ classes, filterItem, helperFunctionMapper, }) => {
               onClick={async () => {
                 setProcessing(true);
                 let caseResponse = await helperFunctionMapper(null, selectValue, filterItem);
-                console.log({ caseResponse })
                 if (caseResponse.status === "success") {
                   setProcessing(false);
                   setSuccessMessage(caseResponse.message)

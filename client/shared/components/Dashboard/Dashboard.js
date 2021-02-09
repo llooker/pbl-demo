@@ -68,7 +68,7 @@ export default function Dashboard(props) {
       isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue
     })
     let methodName = filterItem.method.name;
-    console.log({ helperResponse })
+    // console.log({ helperResponse })
     // console.log(typeof helperResponse)
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
       dashboardObj.setOptions(helperResponse);

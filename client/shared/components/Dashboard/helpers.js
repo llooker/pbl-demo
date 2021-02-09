@@ -97,6 +97,6 @@ export const createCase = async ({ newValue, filterItem }) => {
     body: JSON.stringify({ caseType: newValue })
   })
   const newCaseResponseData = await newCaseResponse.json();
-  console.log({ newCaseResponseData })
+  // console.log({ newCaseResponseData })
   return newCaseResponseData;
 }
