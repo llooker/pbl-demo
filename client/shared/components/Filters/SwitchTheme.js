@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography, Grid, Switch } from '@material-ui/core'
 import { EmbedHighlight } from '../Accessories/Highlight';
 
+export const SwitchTheme = ({ classes, filterItem, helperFunctionMapper }) => {
+  const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
 
-export const SwitchTheme = ({ classes, lightThemeToggleValue, handleThemeChange }) => {
   return (
     <EmbedHighlight classes={classes} >
       <Typography
@@ -11,7 +12,10 @@ export const SwitchTheme = ({ classes, lightThemeToggleValue, handleThemeChange 
 
       <Switch
         checked={!lightThemeToggleValue}
-        onChange={() => handleThemeChange(null, !lightThemeToggleValue)}
+        onChange={(event, newValue) => {
+          setLightThemeToggleValue(!event.target.checked)
+          helperFunctionMapper(event, !event.target.checked, filterItem)
+        }}
         color="primary"
         name="light theme toggle"
         inputProps={{ 'aria-label': 'primary checkbox' }}

@@ -4,12 +4,7 @@ import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, SelectFont, MapF
 import { validIdHelper } from '../../utils/tools';
 
 
-export default function FilterBarChildren({ classes, apiContent, customFilterAction,
-  // tileToggleValue, handleTileToggle, 
-  // visColorToggleValue,handleVisColorToggle, 
-  lightThemeToggleValue, fontThemeSelectValue, handleThemeChange, horizontalLayout, lookerContent, type,
-  helperFunctionMapper
-}) {
+export const FilterBarChildren = ({ classes, apiContent, customFilterAction, horizontalLayout, lookerContent, type, helperFunctionMapper, lightThemeToggleValue, fontThemeSelectValue }) => {
   return (
     <Grid
       container spacing={3}>
@@ -35,17 +30,17 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                 {filterItem.label === "Dynamic Tiles" ?
                   <ToggleTile
                     classes={classes}
-                    // tileToggleValue={tileToggleValue}
-                    // handleTileToggle={handleTileToggle}
                     filterItem={filterItem}
                     helperFunctionMapper={helperFunctionMapper}
+                    lightThemeToggleValue={lightThemeToggleValue}
+                    fontThemeSelectValue={fontThemeSelectValue}
                   /> :
                   <ToggleVisColor
                     classes={classes}
-                    // visColorToggleValue={visColorToggleValue}
-                    // handleVisColorToggle={handleVisColorToggle}
                     filterItem={filterItem}
                     helperFunctionMapper={helperFunctionMapper}
+                    lightThemeToggleValue={lightThemeToggleValue}
+                    fontThemeSelectValue={fontThemeSelectValue}
                   />}
               </Grid>
               :
@@ -55,18 +50,20 @@ export default function FilterBarChildren({ classes, apiContent, customFilterAct
                   key={validIdHelper(`${type}-dynamicThemeMode`)}>
                   <SwitchTheme
                     classes={classes}
-                    lightThemeToggleValue={lightThemeToggleValue}
-                    handleThemeChange={handleThemeChange}
+                    filterItem={filterItem}
+                    helperFunctionMapper={helperFunctionMapper}
                   />
                 </Grid>
                 :
                 filterItem.component === "select" ? <Grid item sm={horizontalLayout ? 2 : 12}
                   key={validIdHelper(`${type}-dynamicThemeFont`)}>
+                  {/* test for now */}
                   <SelectFont
                     classes={classes}
-                    fontThemeSelectValue={fontThemeSelectValue}
-                    handleThemeChange={handleThemeChange}
+                    // fontThemeSelectValue={fontThemeSelectValue}
+                    // handleThemeChange={handleThemeChange}
                     filterItem={filterItem}
+                    helperFunctionMapper={helperFunctionMapper}
                   />
                 </Grid> :
                   filterItem.component === 'mapfilter' ?

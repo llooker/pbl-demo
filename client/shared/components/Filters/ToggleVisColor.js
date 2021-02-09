@@ -1,21 +1,23 @@
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { EmbedMethodHighlight } from '../Accessories/Highlight';
 const { validIdHelper } = require('../../utils/tools');
 
 
-export const ToggleVisColor = ({ classes, filterItem, helperFunctionMapper }) => {
+export const ToggleVisColor = ({ classes, filterItem, helperFunctionMapper, lightThemeToggleValue, fontThemeSelectValue }) => {
   // console.log("ToggleVisColor")
   // console.log({ classes })
   // console.log({ filterItem })
   // console.log({ helperFunctionMapper })
-  /**
-   * TO DO 
-   * fix initialization bug that currently requires options to be set to 1
-   */
-  const [visColorToggleValue, setVisColorToggleValue] = useState(filterItem ? filterItem.options[1] : "");
+
+  const [visColorToggleValue, setVisColorToggleValue] = useState(filterItem ? filterItem.options[0] : "");
+
+
+  useEffect(() => {
+    setVisColorToggleValue(filterItem ? filterItem.options[0] : "")
+  }, [fontThemeSelectValue, lightThemeToggleValue])
 
   return (
 
@@ -44,7 +46,6 @@ export const ToggleVisColor = ({ classes, filterItem, helperFunctionMapper }) =>
           )
         })}
       </ToggleButtonGroup>
-
     </EmbedMethodHighlight>
   )
 }

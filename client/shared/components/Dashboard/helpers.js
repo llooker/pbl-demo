@@ -1,5 +1,5 @@
 import _ from 'lodash';
-export const handleTileToggle = (newValue, filterItem, dashboardOptions) => {
+export const handleTileToggle = ({ newValue, filterItem, dashboardOptions }) => {
   // console.log("handleTileToggle")
 
   if (filterItem) {
@@ -16,8 +16,8 @@ export const handleTileToggle = (newValue, filterItem, dashboardOptions) => {
 };
 
 
-export const handleVisColorToggle = (newValue, filterItem, dashboardOptions,
-  isThemeableDashboard, lightThemeToggleValue //would like to see these go away if possible
+export const handleVisColorToggle = ({ newValue, filterItem, dashboardOptions,
+  isThemeableDashboard, lightThemeToggleValue } //would like to see these go away if possible
 ) => {
 
   // console.log("handleVisColorToggle")
@@ -65,4 +65,20 @@ export const handleVisColorToggle = (newValue, filterItem, dashboardOptions,
       "elements": { ...newDashboardElements }
     }
   }
+}
+
+export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue, fontThemeSelectValue }) => {
+  // console.log("handleThemeChange")
+  // console.log({ newValue })
+  // console.log({ filterItem })
+  // console.log({ fontThemeSelectValue })
+  // console.log({ lightThemeToggleValue })
+
+  let themeName = '';
+  if (typeof newValue === "boolean") {
+    themeName = newValue ? `light_${fontThemeSelectValue}` : `dark_${fontThemeSelectValue}`
+  } else {
+    themeName = lightThemeToggleValue ? `light_${newValue}` : `dark_${newValue}`
+  }
+  return themeName
 }

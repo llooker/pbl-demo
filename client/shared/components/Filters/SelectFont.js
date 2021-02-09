@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormControl, Select, MenuItem, InputLabel } from '@material-ui/core'
 import { EmbedHighlight } from '../Accessories/Highlight';
 const { validIdHelper } = require('../../utils/tools');
 
 
-export const SelectFont = ({ classes, fontThemeSelectValue, handleThemeChange, filterItem }) => {
+export const SelectFont = ({ classes, filterItem, helperFunctionMapper }) => {
+  // console.log("SelectFont");
+  // console.log({ filterItem })
+  // console.log({ helperFunctionMapper })
+
+  const [fontThemeSelectValue, setFontThemeSelectValue] = useState(filterItem ? filterItem.options[0].toLowerCase() : "");
+
   return (
     <EmbedHighlight classes={classes} >
       <FormControl className={classes.formControl}>
@@ -15,7 +21,8 @@ export const SelectFont = ({ classes, fontThemeSelectValue, handleThemeChange, f
           id="demo-simple-select"
           value={fontThemeSelectValue}
           onChange={(event) => {
-            handleThemeChange(null, event.target.value)
+            setFontThemeSelectValue(event.target.value)
+            helperFunctionMapper(event, event.target.value, filterItem)
           }}
         >
           {filterItem.options.map(item => {
@@ -25,7 +32,6 @@ export const SelectFont = ({ classes, fontThemeSelectValue, handleThemeChange, f
           })}
         </Select>
       </FormControl>
-
     </EmbedHighlight >
   )
 }

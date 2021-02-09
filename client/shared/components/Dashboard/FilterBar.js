@@ -2,20 +2,11 @@ import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
 import { Grid, Accordion, AccordionSummary, AccordionDetails, Box } from '@material-ui/core'
 import { ExpandMore, VerticalSplit, HorizontalSplit, ChevronLeft, Menu } from '@material-ui/icons';
-import FilterBarChildren from './FilterBarChildren'
-
+import { FilterBarChildren } from './FilterBarChildren'
 import { validIdHelper } from '../../utils/tools';
 
 export default function FilterBar(props) {
-  const { staticContent: { lookerContent }, staticContent: { type }, classes,
-    apiContent, customFilterAction,
-    // tileToggleValue, handleTileToggle, visColorToggleValue, handleVisColorToggle, 
-    lightThemeToggleValue, fontThemeSelectValue, handleThemeChange,
-    horizontalLayout, setHorizontalLayout, drawerOpen, setDrawerOpen,
-    helperFunctionMapper
-  } = props;
-
-
+  const { staticContent: { lookerContent }, staticContent: { type }, classes, apiContent, customFilterAction, horizontalLayout, setHorizontalLayout, drawerOpen, setDrawerOpen, helperFunctionMapper, lightThemeToggleValue, fontThemeSelectValue } = props;
   const [expanded, setExpanded] = useState(true);
 
   useEffect(() => {
@@ -74,18 +65,13 @@ export default function FilterBar(props) {
                 classes={classes}
                 apiContent={apiContent}
                 customFilterAction={customFilterAction}
-                // tileToggleValue={tileToggleValue}
-                // handleTileToggle={handleTileToggle}
-                // visColorToggleValue={visColorToggleValue}
-                // handleVisColorToggle={handleVisColorToggle}
-                lightThemeToggleValue={lightThemeToggleValue}
-                fontThemeSelectValue={fontThemeSelectValue}
-                handleThemeChange={handleThemeChange}
                 horizontalLayout={horizontalLayout}
                 setHorizontalLayout={setHorizontalLayout}
                 lookerContent={lookerContent}
                 type={type}
                 helperFunctionMapper={helperFunctionMapper}
+                lightThemeToggleValue={lightThemeToggleValue}
+                fontThemeSelectValue={fontThemeSelectValue}
               />
             </AccordionDetails>
           </Box>
@@ -97,5 +83,3 @@ export default function FilterBar(props) {
     </Grid>
   )
 }
-
-

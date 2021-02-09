@@ -11,11 +11,11 @@ import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 import queryString from 'query-string';
 import { appContextMap, validIdHelper } from '../../utils/tools';
-import { handleTileToggle, handleVisColorToggle } from './helpers';
+import { handleTileToggle, handleVisColorToggle, handleThemeChange } from './helpers';
 
 
 export default function Dashboard(props) {
-  console.log('Dashboard');
+  // console.log('Dashboard');
   const { clientSession, clientSession: { lookerUser }, sdk, corsApiCall, theme, isReady, selectedMenuItem } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
   const { staticContent: { lookerContent }, staticContent: { type } } = props;
@@ -40,7 +40,7 @@ export default function Dashboard(props) {
   const location = useLocation();
   let history = useHistory();
 
-  //condtional theming for dark mode :D
+  //conditional theming for dark mode :D
   let paletteToUse = !lightThemeToggleValue && isThemeableDashboard ?
     {
       palette: {
@@ -63,23 +63,23 @@ export default function Dashboard(props) {
     // console.log("helperFunctionMapper")
     // console.log({ newValue })
     // console.log({ filterItem })
-    let helperResponse = filterItem.method(newValue, filterItem, dashboardOptions,
-      isThemeableDashboard, lightThemeToggleValue)
+    let helperResponse = filterItem.method({
+      newValue, filterItem, dashboardOptions,
+      isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue
+    })
     // console.log({ helperResponse })
-    dashboardObj.setOptions(helperResponse)
-  }
-
-  const handleThemeChange = (event, newValue) => {
-    let themeName = '';
-    if (typeof newValue === "boolean") {//handleModeToggle
-      setLightThemeToggleValue(newValue)
-      themeName = newValue ? `light_${fontThemeSelectValue}` : `dark_${fontThemeSelectValue}`
-    } else { //handleFontToggle
-      themeName = lightThemeToggleValue ? `light_${newValue}` : `dark_${newValue}`
-      setFontThemeSelectValue(newValue)
+    // console.log(typeof helperResponse)
+    if (typeof helperResponse === "object") {
+      // let dashboardOptionsCopy = { ...dashboardOptions, ...helperResponse }
+      // console.log({ dashboardOptionsCopy })
+      // setDashboardOptions(...dashboardOptionsCopy)
+      dashboardObj.setOptions(helperResponse);
+    } else if (typeof helperResponse === "string") {
+      if (typeof newValue === "boolean") {
+        setLightThemeToggleValue(newValue)
+      } else setFontThemeSelectValue(newValue)
+      corsApiCall(performLookerApiCalls, [lookerContent, helperResponse])
     }
-
-    corsApiCall(performLookerApiCalls, [lookerContent, themeName])
   }
 
   useEffect(() => {
@@ -105,21 +105,26 @@ export default function Dashboard(props) {
 
       let tileResponse, visColorResponse
       if (tileToggleFilterItem) {
-        tileResponse = handleTileToggle(tileToggleFilterItem.options[0],
-          tileToggleFilterItem,
-          dashboardOptions);
+        tileResponse = handleTileToggle({
+          newValue: tileToggleFilterItem.options[0],
+          filterItem: tileToggleFilterItem,
+          dashboardOptions: dashboardOptions
+        });
       }
 
       if (visColorFilterItem) {
-        visColorResponse = handleVisColorToggle(visColorFilterItem.options[0],
-          visColorFilterItem,
-          dashboardOptions,
-          isThemeableDashboard,
-          lightThemeToggleValue);
+        visColorResponse = handleVisColorToggle({
+          newValue: visColorFilterItem.options[0],
+          filterItem: visColorFilterItem,
+          dashboardOptions: dashboardOptions,
+          isThemeableDashboard: isThemeableDashboard,
+          lightThemeToggleValue: lightThemeToggleValue
+        });
       }
+
       dashboardObj.setOptions({
-        tileResponse,
-        visColorResponse
+        ...tileResponse,
+        ...visColorResponse
       })
     }
   }, [dashboardOptions]);
@@ -143,6 +148,9 @@ export default function Dashboard(props) {
 
 
   const performLookerApiCalls = function (lookerContent, dynamicTheme) {
+    // console.log("performLookerApiCalls");
+    // console.log({ lookerContent })
+    // console.log({ dynamicTheme })
 
     setIFrame(0)
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
@@ -162,6 +170,8 @@ export default function Dashboard(props) {
         .withTheme(themeToUse)
         .withParams({ 'schedule_modal': 'true' })
         .on('dashboard:loaded', (event) => {
+          // if (Object.keys(dashboardOptions).length) setDashboardOptions(...dashboardOptions)
+          // else 
           setDashboardOptions(event.dashboard.options)
         })
         .on('drillmenu:click', drillMenuClick)
@@ -267,9 +277,9 @@ export default function Dashboard(props) {
                   // handleTileToggle={handleTileToggle}
                   // visColorToggleValue={visColorToggleValue}
                   // handleVisColorToggle={handleVisColorToggle}
+                  // handleThemeChange={handleThemeChange}
                   lightThemeToggleValue={lightThemeToggleValue}
                   fontThemeSelectValue={fontThemeSelectValue}
-                  handleThemeChange={handleThemeChange}
                   horizontalLayout={horizontalLayout}
                   setHorizontalLayout={setHorizontalLayout}
                   drawerOpen={drawerOpen}

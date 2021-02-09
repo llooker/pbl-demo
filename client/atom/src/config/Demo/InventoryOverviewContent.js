@@ -1,7 +1,6 @@
 import TableChartOutlinedIcon from '@material-ui/icons/TableChartOutlined';
 import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
-import { handleTileToggle, handleVisColorToggle } from '@pbl-demo/components/Dashboard/helpers'
-// import { ToggleTile } from '@pbl-demo/components/Filters'
+import { handleTileToggle, handleVisColorToggle, handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
 
 const productNameFilter = {
   "label": "Select Product Name",
@@ -95,7 +94,7 @@ const visConfigFilter = {
     },
     "#414c67": {
       "palette_id": "7e059aa1-0d23-dab1-dbf9-a751ab7f54fb",
-      // "collection_id": "b43731d5-dc87-4a8e-b807-635bef3948e7",
+      "collection_id": "b43731d5-dc87-4a8e-b807-635bef3948e7",
       "custom_colors": [
         "#b48ee4",
         "#414c67"
@@ -107,13 +106,15 @@ const visConfigFilter = {
 
 const themeColorFilter = {
   "label": "Light or dark theme",
-  "component": "switch"
+  "component": "switch",
+  "method": handleThemeChange
 }
 
 const themeFontFilter = {
   "label": "Change font",
   "component": "select",
-  "options": ["Arial", "Roboto", "Vollkorn"]
+  "options": ["Arial", "Roboto", "Vollkorn"],
+  "method": handleThemeChange
 }
 
 export const InventoryOverivewContent = {
