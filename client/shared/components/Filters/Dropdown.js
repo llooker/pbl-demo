@@ -4,12 +4,14 @@ import { EmbedHighlight } from '../Accessories/Highlight';
 const { validIdHelper } = require('../../utils/tools');
 
 
-export const SelectFont = ({ classes, filterItem, helperFunctionMapper }) => {
-  // console.log("SelectFont");
-  // console.log({ filterItem })
-  // console.log({ helperFunctionMapper })
+export const Dropdown = ({ classes, filterItem, helperFunctionMapper }) => {
+  console.log("Dropdown");
+  console.log({ filterItem })
+  console.log({ helperFunctionMapper })
 
-  const [fontThemeSelectValue, setFontThemeSelectValue] = useState(filterItem ? filterItem.options[0].toLowerCase() : "");
+  const [selectValue, setSelectValue] = useState(filterItem ? filterItem.options[0].value : "");
+
+  console.log({ selectValue })
 
   return (
     <EmbedHighlight classes={classes} >
@@ -19,16 +21,16 @@ export const SelectFont = ({ classes, filterItem, helperFunctionMapper }) => {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={fontThemeSelectValue}
+          value={selectValue}
           onChange={(event) => {
-            setFontThemeSelectValue(event.target.value)
+            setSelectValue(event.target.value)
             helperFunctionMapper(event, event.target.value, filterItem)
           }}
         >
           {filterItem.options.map(item => {
             return < MenuItem
-              key={validIdHelper(`filter-select${item}`)}
-              value={item.toLowerCase()} > {item}</MenuItem>
+              key={validIdHelper(`filter-select${item.value}`)}
+              value={item.value} > {item.label}</MenuItem>
           })}
         </Select>
       </FormControl>

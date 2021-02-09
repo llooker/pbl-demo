@@ -112,8 +112,10 @@ const themeColorFilter = {
 
 const themeFontFilter = {
   "label": "Change font",
-  "component": "select",
-  "options": ["Arial", "Roboto", "Vollkorn"],
+  "component": "dropdown",
+  "options": [{ label: "Arial", value: "arial" },
+  { label: "Roboto", value: "roboto" },
+  { label: "Vollkorn", value: "vollkorn" }],
   "method": handleThemeChange
 }
 

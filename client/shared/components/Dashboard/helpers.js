@@ -82,3 +82,7 @@ export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue,
   }
   return themeName
 }
+
+export const createCase = ({ }) => {
+  console.log("createCase")
+}

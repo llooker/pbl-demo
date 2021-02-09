@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid } from '@material-ui/core'
-import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, SelectFont, MapFilter, RangeSlider, ToggleApi, ActionButton } from "@pbl-demo/components/Filters";
+import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, SelectFont, MapFilter, RangeSlider, ToggleApi, ActionButton, Dropdown } from "@pbl-demo/components/Filters";
 import { validIdHelper } from '../../utils/tools';
 
 
@@ -55,13 +55,11 @@ export const FilterBarChildren = ({ classes, apiContent, customFilterAction, hor
                   />
                 </Grid>
                 :
-                filterItem.component === "select" ? <Grid item sm={horizontalLayout ? 2 : 12}
-                  key={validIdHelper(`${type}-dynamicThemeFont`)}>
-                  {/* test for now */}
-                  <SelectFont
+                filterItem.component === "dropdown" ? <Grid item sm={horizontalLayout ? 2 : 12}
+                  key={validIdHelper(`${type}-dynamicThemeFont`)} //needs work
+                >
+                  <Dropdown
                     classes={classes}
-                    // fontThemeSelectValue={fontThemeSelectValue}
-                    // handleThemeChange={handleThemeChange}
                     filterItem={filterItem}
                     helperFunctionMapper={helperFunctionMapper}
                   />
@@ -96,12 +94,13 @@ export const FilterBarChildren = ({ classes, apiContent, customFilterAction, hor
                             filterItem={filterItem}
                           />
                         </Grid>
-                        : filterItem.component === 'actionbutton' ?
-                          <Grid item sm={horizontalLayout ? 3 : 12}
-                            key={validIdHelper(`${type}-${filterItem.component}-${index}`)}>
-                            <ActionButton classes={classes} filterItem={filterItem} />
-                          </Grid> :
-                          '')
+                        :
+                        // filterItem.component === 'actionbutton' ?
+                        //   <Grid item sm={horizontalLayout ? 3 : 12}
+                        //     key={validIdHelper(`${type}-${filterItem.component}-${index}`)}>
+                        //     <ActionButton classes={classes} filterItem={filterItem} />
+                        //   </Grid> :
+                        '')
       })}
     </Grid>
   )

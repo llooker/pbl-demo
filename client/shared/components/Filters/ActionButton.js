@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const ActionButton = ({ classes, filterItem }) => {
-  // console.log("ActionButton")
+  console.log("ActionButton")
 
   const modalClasses = useStyles();
   const [open, setOpen] = useState(false);

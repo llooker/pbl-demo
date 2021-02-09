@@ -1,10 +1,19 @@
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
+import { createCase } from '@pbl-demo/components/Dashboard/helpers'
 
-const createCaseButton = {
-  label: "Create Case",
-  component: "actionbutton",
-  // options
+const createCaseSelect = {
+  "label": "Create case",
+  "component": "dropdown",
+  "options": [
+    { label: "Suspicious Email", value: "human_suspicious_email" },
+    { label: "Document Mismatch", value: "human_document_mismatch" },
+    { label: "Login Behavior", value: "human_login_behavior" },
+    { label: "Duplicate Enrollments", value: "duplicate_enrollments" },
+    { label: "Multiple Head of Household one Address", value: "human_multiple_head_of_household" },
+    { label: "Facts Changing in Multiple Applications", value: "human_eligibility_fact_change" }
+  ],
+  "method": createCase
 }
 
 
@@ -23,7 +32,7 @@ export const ApplicationContent = {
       "label": "Application",
       "isNext": false,
       "theme": "vision_theme",
-      // "filters": []//[createCaseButton]
+      "filters": [createCaseSelect]
     }],
   "requiredPermissionLevel": 0
 }
