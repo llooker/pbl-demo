@@ -1,18 +1,16 @@
 import _ from 'lodash'
 import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
-import AppContext from '../../contexts/AppContext';
+// import AppContext from '../../contexts/AppContext';
 import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
 import { ChevronLeft } from '@material-ui/icons';
-import { useStyles } from './styles.js';
 
-const { validIdHelper } = require('../../tools');
+const { validIdHelper, appContextMap } = require('../utils/tools');
 
-export default function LeftDrawer({ DemoComponentsContentArr }) {
+export const LeftDrawer = ({ DemoComponentsContentArr, classes }) => {
   // console.log('LeftDrawer');
 
-  const classes = useStyles();
-  const { drawerOpen, setDrawerOpen, } = useContext(AppContext);
+  const { drawerOpen, setDrawerOpen, } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
   return (
     <Drawer
@@ -43,7 +41,7 @@ export default function LeftDrawer({ DemoComponentsContentArr }) {
 
 function MenuList({ classes, DemoComponentsContentArr }) {
   // console.log("MenuList")
-  const { clientSession, selectedMenuItem } = useContext(AppContext);
+  const { clientSession, selectedMenuItem } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { packageName } = clientSession;
 
   let orderedDemoComponentsForMenu = packageName ? _.orderBy(DemoComponentsContentArr, ['menuCategory'], ['asc']) : [];

@@ -10,3 +10,5 @@ export { SparkLine } from "./SparkLine";
 export { SingleValue } from "./SingleValue";
 export { SplashPage } from "./SplashPage";
 export { SignIn } from "./SignIn";
+export { TopDrawer } from "./TopDrawer";
+export { LeftDrawer } from "./LeftDrawer";

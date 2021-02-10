@@ -8,20 +8,20 @@ import { useStyles } from './styles.js';
 
 const { validIdHelper } = require('../../tools');
 
-export default function LeftDrawer({ DemoComponentsContentArr }) {
-  // console.log('LeftDrawer');
+export const TopDrawer = ({ DemoComponentsContentArr }) => {
+  console.log('TopDrawer');
 
   const classes = useStyles();
   const { drawerOpen, setDrawerOpen, } = useContext(AppContext);
 
   return (
     <Drawer
-      className={classes.leftDrawer}
+      className={classes.topDrawer}
       variant="persistent"
-      anchor="left"
+      anchor="top"
       open={drawerOpen}
       classes={{
-        paper: classes.leftDrawerPaper,
+        paper: classes.topDrawerPaper,
       }}
     >
       <div className={classes.drawerHeader}>
@@ -69,19 +69,17 @@ function MenuList({ classes, DemoComponentsContentArr }) {
       return (
         < React.Fragment
           key={`${validIdHelper(outerItem + '-menuList-' + outerIndex)}`}>
-          <ListItem
-            key={`${validIdHelper(outerItem + '-outerListItem-' + outerIndex)}`}
-          >
-            <ListItemText primary={outerItem === 'home' ? '' : _.capitalize(outerItem)} />
-          </ListItem>
-          < List component="div" disablePadding
+          < List
+            className={classes.inlineList}
+            component="div"
+            disablePadding
             key={`${validIdHelper(outerItem + '-innerList-' + outerIndex)}`}>
             {orderedDemoComponentsForMenuObj[outerItem].map((item, innerIndex) => {
               const MatchingIconComponent = item.icon
               return (
                 <ListItem
                   button
-                  className={`${classes.nested} ${classes.rightRoundedTab}`}
+                  className={`${classes.nested} ${classes.roundedTab} ${classes.ml12}`}
                   key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
                   selected={validIdHelper(_.lowerCase(item.label)) === selectedMenuItem}
                   component={Link}

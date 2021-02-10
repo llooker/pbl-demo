@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import clsx from 'clsx';
 import { AppBar, Toolbar, Badge, Avatar, IconButton, Grid, Typography } from '@material-ui/core';
-import { AddAlert, ChevronLeft, Menu } from '@material-ui/icons';
+import { AddAlert, ChevronLeft, KeyboardArrowDown, Menu } from '@material-ui/icons';
 import { UserMenu } from './UserMenu';
 import { AutoComplete } from './Filters';
 import { appContextMap } from '../utils/tools';
@@ -20,6 +20,7 @@ export const TopBar = ({ content, theme, classes }) => {
     drawerOpen, setDrawerOpen,
     sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const { userProfile, lookerUser } = clientSession;
+
 
   const { packageName } = clientSession
   const [apiContent, setApiContent] = useState(undefined);
@@ -79,10 +80,18 @@ export const TopBar = ({ content, theme, classes }) => {
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={() => setDrawerOpen(!drawerOpen)}
+            onClick={(event) => {
+              console.log("are we here???");
+              console.log('content.drawerPosition', content.drawerPosition)
+              setDrawerOpen(!drawerOpen)
+            }}
             edge="start"
           >
-            {drawerOpen ? <ChevronLeft /> : <Menu />}
+            {drawerOpen ?
+              content.drawerPosition === "top" ?
+                <KeyboardArrowDown /> :
+                <ChevronLeft /> :
+              <Menu />}
           </IconButton>
 
           {content.avatar ?

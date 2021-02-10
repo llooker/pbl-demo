@@ -45,7 +45,7 @@ export const initialUser = {
     4
   ],
   "permissions":
-    permissionLevels[Object.keys(permissionLevels)[0]],
+    permissionLevels[Object.keys(permissionLevels)[1]],
   "models": [
     "vision"
   ],
@@ -53,7 +53,7 @@ export const initialUser = {
     "locale": "en_US",
     "country": "USA",
     "time_horizon": "last 182 days",
-    "permission_level": Object.keys(permissionLevels)[0]
+    "permission_level": Object.keys(permissionLevels)[1]
   }
 }
 
