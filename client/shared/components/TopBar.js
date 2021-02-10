@@ -16,13 +16,9 @@ export const TopBar = ({ content, theme, classes }) => {
 
   let history = useHistory();
 
-  const { clientSession, setClientSession,
-    drawerOpen, setDrawerOpen,
+  const { clientSession, clientSession: { packageName }, setClientSession, drawerOpen, setDrawerOpen,
     sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const { userProfile, lookerUser } = clientSession;
-
-
-  const { packageName } = clientSession
   const [apiContent, setApiContent] = useState(undefined);
   const [dynamicSearch, setDynamicSearch] = useState(undefined);
 
@@ -81,14 +77,12 @@ export const TopBar = ({ content, theme, classes }) => {
             color="inherit"
             aria-label="open drawer"
             onClick={(event) => {
-              console.log("are we here???");
-              console.log('content.drawerPosition', content.drawerPosition)
               setDrawerOpen(!drawerOpen)
             }}
             edge="start"
           >
             {drawerOpen ?
-              content.drawerPosition === "top" ?
+              packageName === "vision" ?
                 <KeyboardArrowDown /> :
                 <ChevronLeft /> :
               <Menu />}

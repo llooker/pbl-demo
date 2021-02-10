@@ -66,10 +66,10 @@ async function tokenHelper(session) {
 }
 
 module.exports.createCase = async (req, res, next) => {
-  // console.log("createCase")
+  console.log("createCase")
   let { session, body } = req;
-  // console.log({ session })
-  // console.log({ body })
+  console.log({ session })
+  console.log({ body })
 
   let options = {
     method: 'POST',
@@ -93,6 +93,7 @@ module.exports.createCase = async (req, res, next) => {
   };
 
   let postRsp = await rp(options)
+  console.log({ postRsp })
   res.status(200).send({
     status: "success",
     message: "Case created! Reload dashboard to see it"

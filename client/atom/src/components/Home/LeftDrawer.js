@@ -16,12 +16,12 @@ export default function LeftDrawer({ DemoComponentsContentArr }) {
 
   return (
     <Drawer
-      className={classes.drawer}
+      className={classes.leftDrawer}
       variant="persistent"
       anchor="left"
       open={drawerOpen}
       classes={{
-        paper: classes.drawerPaper,
+        paper: classes.leftDrawerPaper,
       }}
     >
       <div className={classes.drawerHeader}>
@@ -81,7 +81,7 @@ function MenuList({ classes, DemoComponentsContentArr }) {
               return (
                 <ListItem
                   button
-                  className={`${classes.nested} ${classes.roundedTab}`}
+                  className={`${classes.nested} ${classes.rightRoundedTab}`}
                   key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
                   selected={validIdHelper(_.lowerCase(item.label)) === selectedMenuItem}
                   component={Link}

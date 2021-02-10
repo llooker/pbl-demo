@@ -6,26 +6,27 @@ import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
-import LeftDrawer from './LeftDrawer';
 import '../Home.css';
 import { useStyles } from './styles.js';
 import { packageNameTheme } from '../../config/theme.js';
 import * as DemoComponentsContentArr from '../../config/Demo';
-import { TopBar, BottomBar } from "@pbl-demo/components";
 import { TopBarContent } from '../../config/TopBarContent';
 import { checkToken, endSession } from '@pbl-demo/utils/auth';
 import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
+import { TopBar, BottomBar, LeftDrawer, TopDrawer } from "@pbl-demo/components";
 const { validIdHelper } = require('../../tools');
 
 export default function Home(props) {
   // console.log("Home")
-  let { setClientSession, clientSession, sdk, setSdk, isReady, setIsReady } = useContext(AppContext)
+  let { setClientSession, clientSession, clientSession: { packageName }, sdk, setSdk, isReady, setIsReady } = useContext(AppContext)
   let { democomponent } = useParams();
   let history = useHistory();
   const classes = useStyles();
   const didMountRef = useRef(false)
+
   const [drawerOpen, setDrawerOpen] = useState(window.innerWidth > 768 ? true : false);
+
   const [highlightShow, setHighlightShow] = useState(false);
   const [codeShow, setCodeShow] = useState(false);
   const [payWallModal, setPaywallModal] = useState({});
@@ -130,6 +131,8 @@ export default function Home(props) {
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
   else ActiveDemoComponent = ActiveDemoComponentContent.component;
 
+  console.log({ clientSession })
+
   return (
     <div className={classes.root} >
 
@@ -144,7 +147,7 @@ export default function Home(props) {
         sdk,
         corsApiCall,
         theme: packageNameTheme,
-        isReady, setIsReady
+        isReady, setIsReady,
       }}>
         <ThemeProvider theme={packageNameTheme}>
           <CssBaseline />
@@ -154,10 +157,16 @@ export default function Home(props) {
             classes={classes}
           />
           <UserPermissionsModal content={{ permissionLevels, modalPermissionsMap }} classes={classes} />
-          <LeftDrawer DemoComponentsContentArr={demoComponentsContentArr} />
+
+          {/* conditional rendering for now */}
+          {packageName === "vision" ?
+            <TopDrawer DemoComponentsContentArr={demoComponentsContentArr} classes={classes} /> :
+            <LeftDrawer DemoComponentsContentArr={demoComponentsContentArr} classes={classes} />}
           <main
-            className={clsx(classes.content, {
-              [classes.contentShift]: drawerOpen,
+            className={packageName === "vision" ? clsx(classes.topContent, {
+              [classes.topContentShift]: drawerOpen,
+            }) : clsx(classes.leftContent, {
+              [classes.leftContentShift]: drawerOpen,
             })}
           >
 

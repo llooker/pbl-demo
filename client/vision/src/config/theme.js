@@ -10,7 +10,7 @@ export const packageNameTheme = createMuiTheme({
       main: grey[400],
     },
     fill: {
-      main: "#BC403A"
+      main: "#240D67"
     },
   },
 })

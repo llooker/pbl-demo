@@ -44,6 +44,7 @@ const tilesFilter = {
     ]
   },
   "method": handleTileToggle,
+  "methodName": "handleTileToggle"
 }
 
 const visConfigFilter = {
@@ -102,12 +103,14 @@ const visConfigFilter = {
     }
   },
   "method": handleVisColorToggle,
+  "methodName": "handleVisColorToggle"
 }
 
 const themeColorFilter = {
   "label": "Light or dark theme",
   "component": "switch",
-  "method": handleThemeChange
+  "method": handleThemeChange,
+  "methodName": "handleThemeChange"
 }
 
 const themeFontFilter = {
@@ -116,7 +119,8 @@ const themeFontFilter = {
   "options": [{ label: "Arial", value: "arial" },
   { label: "Roboto", value: "roboto" },
   { label: "Vollkorn", value: "vollkorn" }],
-  "method": handleThemeChange
+  "method": handleThemeChange,
+  "methodName": "handleThemeChange"
 }
 
 export const InventoryOverivewContent = {

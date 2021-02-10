@@ -14,6 +14,7 @@ const createCaseSelect = {
     { label: "Facts Changing in Multiple Applications", value: "human_eligibility_fact_change" }
   ],
   "method": createCase,
+  "methodName": "createCase",
   "secondaryComponent": {
     "component": "button",
     "label": "Create case"

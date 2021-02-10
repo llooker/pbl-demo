@@ -2,6 +2,7 @@ import { packageNameTheme } from '../../config/theme.js'
 import { makeStyles } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
+const topDrawerHeight = 50;
 export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -15,30 +16,11 @@ export const useStyles = makeStyles(theme => ({
     zIndex: 1201,
     backgroundColor: packageNameTheme.palette.fill.main
   },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   hide: {
     display: 'none',
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    borderRight: 'none',
-    backgroundColor: 'transparent'
-  },
-  drawerPaper: {
-    width: drawerWidth,
-    borderRight: 'none',
-    backgroundColor: 'transparent'
   },
   drawerHeader: {
     display: 'flex',
@@ -47,10 +29,17 @@ export const useStyles = makeStyles(theme => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
-    // backgroundColor: '#343D4E',
-    // color: '#ffff'
   },
-  content: {
+  leftDrawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  leftDrawerPaper: {
+    width: drawerWidth,
+    borderRight: 'none',
+    backgroundColor: 'transparent'
+  },
+  leftContent: {
     flexGrow: 1,
     padding: theme.spacing(3),
     transition: theme.transitions.create('margin', {
@@ -59,12 +48,38 @@ export const useStyles = makeStyles(theme => ({
     }),
     marginLeft: -drawerWidth,
   },
-  contentShift: {
+  leftContentShift: {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginLeft: 0,
+  },
+  //top drawer
+  topDrawer: {
+    // width: '100%',
+    height: topDrawerHeight,
+    flexShrink: 0,
+  },
+  topDrawerPaper: {
+    width: '100%',
+    backgroundColor: 'transparent'
+  },
+  topContent: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginTop: 0,
+  },
+  topContentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginTop: topDrawerHeight,
   },
   title: {
     flexGrow: 1,
@@ -161,13 +176,16 @@ export const useStyles = makeStyles(theme => ({
   appBarBottom: {
     top: 'auto',
     bottom: 0,
-    // backgroundColor: 'transparent'
+    backgroundColor: 'rgb(229, 229, 229)'
   },
   hidden: {
     visibility: 'hidden'
   },
-  roundedTab: {
+  rightRoundedTab: {
     borderRadius: '0 100px 100px 0'
+  },
+  roundedTab: {
+    borderRadius: '100px'
   },
   paddingBottom30: {
     paddingBottom: 30
@@ -197,6 +215,10 @@ export const useStyles = makeStyles(theme => ({
       transition: 'transform .2s'
     }
   },
+  inlineList: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 0,
+  }
 }), { index: 1 });
-
 

@@ -35,6 +35,5 @@ export const TopBarContent = {
   "avatarStyle": {
     "height": "40px",
     "fill": "white"
-  },
-  "drawerPosition": "top"
+  }
 }

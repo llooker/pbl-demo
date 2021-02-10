@@ -67,19 +67,19 @@ export default function Dashboard(props) {
       newValue, filterItem, dashboardOptions,
       isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue
     })
-    let methodName = filterItem.method.name;
-    // console.log({ helperResponse })
-    // console.log(typeof helperResponse)
+    let { methodName, response } = helperResponse; //dynamic
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
-      dashboardObj.setOptions(helperResponse);
-    } else if (methodName === "handleThemeChange") {
+      dashboardObj.setOptions(response);
+    }
+    else if (methodName === "handleThemeChange") {
       if (typeof newValue === "boolean") {
         setLightThemeToggleValue(newValue)
       } else setFontThemeSelectValue(newValue)
-      corsApiCall(performLookerApiCalls, [lookerContent, helperResponse])
-    } else if (methodName === "createCase") {
+      corsApiCall(performLookerApiCalls, [lookerContent, response])
+    }
+    else if (methodName === "createCase") {
       // corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh dashboard
-      return helperResponse
+      return response
     }
   }
 

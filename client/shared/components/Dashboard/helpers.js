@@ -11,7 +11,12 @@ export const handleTileToggle = ({ newValue, filterItem, dashboardOptions }) => 
       ...dashboardOptions.layouts[0],
       dashboard_layout_components: filteredLayout
     }
-    return { "layouts": [newDashboardLayout] };
+    return {
+      "methodName": filterItem.methodName,
+      "response": {
+        "layouts": [newDashboardLayout]
+      }
+    }
   }
 };
 
@@ -62,7 +67,10 @@ export const handleVisColorToggle = ({ newValue, filterItem, dashboardOptions,
       }
     })
     return {
-      "elements": { ...newDashboardElements }
+      "methodName": filterItem.methodName,
+      "response": {
+        "elements": { ...newDashboardElements }
+      }
     }
   }
 }
@@ -80,13 +88,16 @@ export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue,
   } else {
     themeName = lightThemeToggleValue ? `light_${newValue}` : `dark_${newValue}`
   }
-  return themeName
+  return {
+    "methodName": filterItem.methodName,
+    "response": { themeName }
+  }
 }
 
 export const createCase = async ({ newValue, filterItem }) => {
-  // console.log("createCase")
-  // console.log({ newValue })
-  // console.log({ filterItem })
+  console.log("createCase")
+  console.log({ newValue })
+  console.log({ filterItem })
 
   let newCaseResponse = await fetch('/createcase', {
     method: 'POST',
@@ -97,6 +108,9 @@ export const createCase = async ({ newValue, filterItem }) => {
     body: JSON.stringify({ caseType: newValue })
   })
   const newCaseResponseData = await newCaseResponse.json();
-  // console.log({ newCaseResponseData })
-  return newCaseResponseData;
+  console.log({ newCaseResponseData })
+  return {
+    "methodName": filterItem.methodName,
+    "response": newCaseResponseData
+  };
 }
