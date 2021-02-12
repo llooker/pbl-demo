@@ -225,6 +225,9 @@ export default function Dashboard(props) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const customFilterAction = useCallback((filterName, newFilterValue) => {
+    // console.log("customFilterAction")
+    // console.log({ filterName })
+    // console.log({ newFilterValue })
     if (Object.keys(dashboardObj).length) {
       dashboardObj.updateFilters({ [filterName]: newFilterValue })
       dashboardObj.run()
@@ -232,20 +235,47 @@ export default function Dashboard(props) {
   })
 
   const drillMenuClick = (event) => {
-    if (_.includes(_.lowerCase(event.label), "view")) {
+    // console.log("drillMenuClick")
+    // console.log({ event })
+    if (_.includes(_.lowerCase(event.label), "w2")) {
       history.push({
-        pathname: 'pdfviewer',
+        pathname: 'eligibilitydocs',
         search: (`pdf_url=${event.url}`)
+      })
+      return { cancel: true }
+    } else if (_.includes(_.lowerCase(event.label), "1099")) {
+      history.push({
+        pathname: 'eligibilitydocs',
+        search: (`pdf_url=${event.url}`)
+      })
+      return { cancel: true }
+    } else if (_.includes(_.lowerCase(event.label), "application")) {
+      history.push({
+        pathname: 'application',
+        search: (`Application ID=${event.url}`)
+      })
+      return { cancel: true }
+    } else if (_.includes(_.lowerCase(event.label), "beneficiary")) {
+      history.push({
+        pathname: 'beneficiary',
+        search: (`Person ID=${event.url}`)
       })
       return { cancel: true }
     }
   }
 
   useEffect(() => {
+    // console.log("useEffect")
     let params = queryString.parse(location.search);
-    let paramMatchesFilterName = params[lookerContent[0].filterName] > 0 ? true : false;
-    if (paramMatchesFilterName)
-      customFilterAction(lookerContent[0].filterName, params[lookerContent[0].filterName])
+    if (lookerContent[0].filterName) {
+      // console.log({ params })
+      // console.log('lookerContent[0].filterName', lookerContent[0].filterName)
+      let paramMatchesFilterName = params[lookerContent[0].filterName] > 0 ? true : false;
+      // console.log({ paramMatchesFilterName })
+      if (paramMatchesFilterName)
+        customFilterAction(lookerContent[0].filterName, params[lookerContent[0].filterName])
+
+    }
 
   }, [customFilterAction, location.search, lookerContent])
 
@@ -274,11 +304,6 @@ export default function Dashboard(props) {
                   classes={classes}
                   apiContent={apiContent}
                   customFilterAction={customFilterAction}
-                  // tileToggleValue={tileToggleValue}
-                  // handleTileToggle={handleTileToggle}
-                  // visColorToggleValue={visColorToggleValue}
-                  // handleVisColorToggle={handleVisColorToggle}
-                  // handleThemeChange={handleThemeChange}
                   lightThemeToggleValue={lightThemeToggleValue}
                   fontThemeSelectValue={fontThemeSelectValue}
                   horizontalLayout={horizontalLayout}

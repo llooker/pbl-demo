@@ -12,7 +12,7 @@ const schema = {
 
 export const PDFViewerContent = {
   "type": "customfilter",
-  "label": "Viewer",
+  "label": "EligibilityDocs",
   "menuCategory": "Home",
   "description": "Overview of all your web traffic",
   "icon": PictureAsPdfIcon,
@@ -21,7 +21,7 @@ export const PDFViewerContent = {
     {
       "type": "pdfviewer",
       "id": "20",
-      "label": "Viewer",
+      "label": "EligibilityDocs",
       "isNext": false,
       "filters": [],
       "pdf": "https://storage.googleapis.com/looker-dat-vision/1099.pdf"

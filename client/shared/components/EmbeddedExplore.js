@@ -43,13 +43,14 @@ export const EmbeddedExplore = (props) => {
       if (lookerContentItem.type === "explore") {
         let exploreId = lookerContentItem.id;
         let qid = lookerContentItem.qid;
+        console.log({ qid })
         if (qid) {
           LookerEmbedSDK.createExploreWithId(exploreId)
             .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContentItem.id}`))
             .withClassName('exploreIframe')
             .withParams({
               qid: lookerContentItem.qid,
-              toggle: "&toggle=vis "
+              toggle: "&toggle=dat,vis"
             })
             .on('explore:state:changed', (event) => {
             })

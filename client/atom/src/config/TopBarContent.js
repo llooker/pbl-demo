@@ -6,7 +6,7 @@ export const TopBarContent = {
   "usermenu": { permissionLevels, rowLevelAttribute },
   "avatar": logo,
   "avatarStyle": {
-    "height": "40px",
+    "maxHeight": "40px",
     "fill": "white"
   }
 }

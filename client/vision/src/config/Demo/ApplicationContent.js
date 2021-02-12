@@ -37,7 +37,8 @@ export const ApplicationContent = {
       "label": "Application",
       "isNext": false,
       "theme": "vision_theme",
-      "filters": [createCaseSelect]
+      "filters": [createCaseSelect],
+      "filterName": "Application ID",
     }],
   "requiredPermissionLevel": 0
 }

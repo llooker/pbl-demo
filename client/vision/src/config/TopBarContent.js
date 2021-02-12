@@ -1,6 +1,6 @@
 
 import { permissionLevels, rowLevelAttribute } from "./UserPermissionsContent";
-import { HouseholdsContent } from './Demo/HouseholdsContent'
+import { BeneficiaryContent } from './Demo/BeneficiaryContent'
 const logo = require('../images/logo.svg').default
 
 export const TopBarContent = {
@@ -25,12 +25,18 @@ export const TopBarContent = {
       "person._search"],
     "value": [
       "person.person_id"],
-    "correspondingComponentContent": HouseholdsContent,
+    "correspondingComponentContent": BeneficiaryContent,
     "alternateName": "Search",
-    "apiDrivenSearch": true
+    "apiDrivenSearch": true,
+    "size": "small",
+    "style": {
+      "backgroundColor": "white",
+      "borderRadius": "4px"
+    },
+    "disableShrink": true
   },
   "usermenu": { permissionLevels, rowLevelAttribute },
-  "label": "Benefits Investigator", //<br/>
+  "label": "Benefits Investigator",
   "avatar": logo,
   "avatarStyle": {
     "height": "40px",

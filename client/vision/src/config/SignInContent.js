@@ -7,7 +7,7 @@ export const SignInContent = {
   "cardBody": "Please sign in to access your fraud portal",
   "logo": logo,
   "logoStyle": {
-    "height": '100px',
+    "height": '150px',
     "width": "auto"
   },
   "backgroundImage": backgroundImage,

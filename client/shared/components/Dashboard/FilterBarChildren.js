@@ -95,11 +95,6 @@ export const FilterBarChildren = ({ classes, apiContent, customFilterAction, hor
                           />
                         </Grid>
                         :
-                        // filterItem.component === 'actionbutton' ?
-                        //   <Grid item sm={horizontalLayout ? 3 : 12}
-                        //     key={validIdHelper(`${type}-${filterItem.component}-${index}`)}>
-                        //     <ActionButton classes={classes} filterItem={filterItem} />
-                        //   </Grid> :
                         '')
       })}
     </Grid>

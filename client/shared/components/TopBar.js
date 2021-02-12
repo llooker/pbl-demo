@@ -63,7 +63,7 @@ export const TopBar = ({ content, theme, classes }) => {
   }
 
   const filterNamesUrlsMap = {
-    "Person ID": "households"
+    "Person ID": "beneficiary"
   }
 
   return (
@@ -98,7 +98,7 @@ export const TopBar = ({ content, theme, classes }) => {
           {content.label ? <Typography className={classes.ml12} variant="h6">{content.label}</Typography> : ""}
 
           {apiContent && apiContent.autocomplete ?
-            <Grid item sm={6} className={`${classes.mlAuto} ${classes.mr12}`}>
+            <Grid item sm={6} className={`${classes.mlAuto} ${classes.mr12} ${classes.p30}`}>
               <AutoComplete
                 filterItem={content.autocomplete}
                 apiContent={apiContent.autocomplete}
