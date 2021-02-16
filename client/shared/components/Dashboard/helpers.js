@@ -94,10 +94,10 @@ export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue,
   }
 }
 
-export const createCase = async ({ newValue, filterItem }) => {
-  console.log("createCase")
-  console.log({ newValue })
-  console.log({ filterItem })
+export const createCase = async ({ newValue, filterItem, hiddenFilterValue }) => {
+  // console.log("createCase")
+  // console.log({ newValue })
+  // console.log({ filterItem })
 
   let newCaseResponse = await fetch('/createcase', {
     method: 'POST',
@@ -105,10 +105,10 @@ export const createCase = async ({ newValue, filterItem }) => {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ caseType: newValue })
+    body: JSON.stringify({ caseType: newValue, applicationId: hiddenFilterValue })
   })
   const newCaseResponseData = await newCaseResponse.json();
-  console.log({ newCaseResponseData })
+  // console.log({ newCaseResponseData })
   return {
     "methodName": filterItem.methodName,
     "response": newCaseResponseData

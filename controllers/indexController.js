@@ -66,10 +66,10 @@ async function tokenHelper(session) {
 }
 
 module.exports.createCase = async (req, res, next) => {
-  console.log("createCase")
+  // console.log("createCase")
   let { session, body } = req;
-  console.log({ session })
-  console.log({ body })
+  // console.log({ session })
+  // console.log({ body })
 
   let options = {
     method: 'POST',
@@ -79,9 +79,9 @@ module.exports.createCase = async (req, res, next) => {
       "scheduled_plan": null,
       "attachment": null,
       "data": {
-        "value": 84014,
-        "rendered": "84014",
-        "application_id": "84014",
+        "value": body.applicationId,
+        "rendered": body.applicationId,
+        "application_id": body.applicationId,
         "security_key": session.cloudFunctionSecret,
         "email": session.userProfile.email
       },

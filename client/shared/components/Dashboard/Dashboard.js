@@ -31,6 +31,7 @@ export default function Dashboard(props) {
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
   const [horizontalLayout, setHorizontalLayout] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(true);
+  const [hiddenFilterValue, setHiddenFilterValue] = useState(null);
 
   let dynamicVisConfigFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Vis Config" });
   const isThemeableDashboard = dynamicVisConfigFilterItem && Object.keys(dynamicVisConfigFilterItem).length ? true : false;
@@ -63,9 +64,11 @@ export default function Dashboard(props) {
     // console.log("helperFunctionMapper")
     // console.log({ newValue })
     // console.log({ filterItem })
+    // console.log({ hiddenFilterValue })
     let helperResponse = await filterItem.method({
       newValue, filterItem, dashboardOptions,
-      isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue
+      isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue,
+      hiddenFilterValue
     })
     let { methodName, response } = helperResponse; //dynamic
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
@@ -78,7 +81,7 @@ export default function Dashboard(props) {
       corsApiCall(performLookerApiCalls, [lookerContent, response])
     }
     else if (methodName === "createCase") {
-      // corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh dashboard
+      corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
       return response
     }
   }
@@ -171,11 +174,17 @@ export default function Dashboard(props) {
         .withTheme(themeToUse)
         .withParams({ 'schedule_modal': 'true' })
         .on('dashboard:loaded', (event) => {
-          // if (Object.keys(dashboardOptions).length) setDashboardOptions(...dashboardOptions)
-          // else 
           setDashboardOptions(event.dashboard.options)
+          let keyName = Object.keys(event.dashboard.dashboard_filters)[0];
+          let keyValue = event.dashboard.dashboard_filters[keyName];
+          setHiddenFilterValue(keyValue)
         })
         .on('drillmenu:click', drillMenuClick)
+        .on('dashboard:filters:changed', (event) => {
+          let keyName = Object.keys(event.dashboard.dashboard_filters)[0];
+          let keyValue = event.dashboard.dashboard_filters[keyName];
+          setHiddenFilterValue(keyValue)
+        })
         .build()
         .connect()
         .then((dashboard) => {
@@ -189,7 +198,6 @@ export default function Dashboard(props) {
           console.log({ error })
         });
 
-      // localStorage.debug = 'looker:chatty:*'
 
       //api calls
       if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
@@ -278,6 +286,7 @@ export default function Dashboard(props) {
     }
 
   }, [customFilterAction, location.search, lookerContent])
+  // localStorage.debug = 'looker:chatty:*'
 
 
   return (
