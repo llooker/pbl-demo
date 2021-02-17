@@ -77,7 +77,8 @@ export const UserMenu = ({ classes, content }) => {
         <Divider className={classes.divider} />
         <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
         <Divider className={classes.divider} />
-        <MenuItem onClick={() => handleClose('modal')}>Show Monetization Modal</MenuItem>
+        {content.allowModal ?
+          <MenuItem onClick={() => handleClose('modal')}>Show Monetization Modal</MenuItem> : ""}
         {Object.keys(rowLevelAttribute).length ? <div>
           <Divider className={classes.divider} />
           <MenuItem>{rowLevelAttribute.menuItemLabel}: {selectedBrand}</MenuItem>

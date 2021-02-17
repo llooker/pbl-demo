@@ -8,7 +8,7 @@ const { validIdHelper, appContextMap } = require('../utils/tools');
 
 
 export const TopDrawer = ({ DemoComponentsContentArr, classes }) => {
-  // console.log('TopDrawer');
+  console.log('TopDrawer');
 
   const { drawerOpen, setDrawerOpen, } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
@@ -86,7 +86,7 @@ function MenuList({ classes, DemoComponentsContentArr }) {
                   <ListItemIcon>
                     {MatchingIconComponent ? <MatchingIconComponent /> : <></>}
                   </ListItemIcon>
-                  <ListItemText primary={_.capitalize(item.label)} />
+                  <ListItemText className={`pppp ${classes.noWrap}`} primary={_.capitalize(item.label)} />
                 </ListItem>
               )
             })}

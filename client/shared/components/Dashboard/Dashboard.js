@@ -294,7 +294,7 @@ export default function Dashboard(props) {
       style={{ height }}
     >
       <ThemeProvider theme={themeToUse}>
-        <Card elevation={1} className={`${classes.padding15} ${classes.height100Percent}`}>
+        <Card elevation={1} className={`${classes.paddingTB15} ${classes.height100Percent}`}>
           <div
             className={`${classes.root} ${classes.height100Percent}`}
           >

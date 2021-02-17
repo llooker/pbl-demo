@@ -35,11 +35,14 @@ export const TopBarContent = {
     },
     "disableShrink": true
   },
-  "usermenu": { permissionLevels, rowLevelAttribute },
-  "label": "Benefits Investigator",
+  "usermenu": {
+    permissionLevels, rowLevelAttribute,
+    "allowModal": false
+  },
+  "label": "Vision Claims AI",
   "avatar": logo,
   "avatarStyle": {
     "height": "40px",
     "fill": "white"
-  }
+  },
 }

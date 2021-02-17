@@ -301,5 +301,8 @@ export const useStyles = makeStyles((theme) => ({
     transform: `translate(-50%, -50%)`,
     margin: '0',
     width: '80%',
-  }
+  },
+  paddingTB15: {
+    padding: "15px 0"
+  },
 }));

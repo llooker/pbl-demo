@@ -12,7 +12,7 @@ const schema = {
 
 export const PDFViewerContent = {
   "type": "customfilter",
-  "label": "EligibilityDocs",
+  "label": "Eligibility Docs",
   "menuCategory": "Home",
   "description": "Overview of all your web traffic",
   "icon": PictureAsPdfIcon,
