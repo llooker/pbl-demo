@@ -66,9 +66,6 @@ export default makeStyles((theme) => ({
   childHoverVisibility: {
     visibility: 'hidden'
   },
-  faSm: {
-    fontSize: '.75em'
-  },
   positionTopRight: {
     position: 'absolute',
     top: -30,

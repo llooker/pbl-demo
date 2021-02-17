@@ -37,23 +37,9 @@ module.exports = {
     }
     return myJson;
   },
-
-
   decodeHtml: (html) => {
     var txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
-  },
-
-
-  usecaseHelper: (usecaseContent) => {
-    let keyArr = Object.keys(usecaseContent);
-    let url = window.location.href;
-    for (let i = 0; i < keyArr.length; i++) {
-      if (url.indexOf(keyArr[i]) > -1) {
-        return keyArr[i];
-      }
-    }
-    return 'atom';
   }
 }

@@ -3,58 +3,34 @@ import _ from 'lodash';
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
-  AppBar, Tabs, Tab, Typography, Box, Grid, Icon, CircularProgress, Card, Button,
+  Typography, Box, Grid, Card, Button,
   ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, InputLabel, MenuItem, FormControl,
   Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
   TableSortLabel, FormControlLabel, Switch, Chip, Divider
 } from '@material-ui/core'
 import { ExpandMore, Search, Done } from '@material-ui/icons';
-import CodeFlyout from '../CodeFlyout';
-import rawSampleCode from '!!raw-loader!./QueryBuilder.js'; // eslint-disable-line import/no-webpack-loader-syntax
-import useStyles from './styles.js';
-import { ApiHighlight } from '../../Highlights/Highlight';
-import { TabPanel, a11yProps, descendingComparator, getComparator, stableSort } from './helpers.js';
+import { getComparator, stableSort } from './helpers.js';
 import AppContext from '../../../contexts/AppContext';
-import { lookerUserTimeHorizonMap } from '../../../LookerHelpers/defaults';
-import { Loader } from '../../Accessories/Loader';
-
+import { Loader, ApiHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
+import { userTimeHorizonMap } from '../../../config';
 
 const { validIdHelper, prettifyString } = require('../../../tools');
 
 export default function QueryBuilder(props) {
   // console.log('QueryBuilder')
 
-  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
+  const { clientSession, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
 
-
-  const topBarBottomBarHeight = 112;
-  const sideBarWidth = 240 + 152; //24 + 24 + 30 + 30 + 12 + 12 + 10 + 10
-  const [value, setValue] = useState(0);
+  const sideBarWidth = 240 + 122; //24 + 24 + 30 + 30 + 12 + 12 + 10 + 10
   const [apiContent, setApiContent] = useState({});
-  const [clientSideCode, setClientSideCode] = useState('');
-  const [serverSideCode, setServerSideCode] = useState('');
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const [width, setWidth] = useState((window.innerWidth - sideBarWidth));
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
-
   const classes = useStyles();
   const { staticContent, staticContent: { lookerContent }, staticContent: { type }, } = props;
 
-
-  // const handleChange = (event, newValue) => {
-  //   handleTabChange(0);
-  //   setValue(newValue);
-  // };
-
-  useEffect(() => {
-    // call this is filterBar instead to make field chip dynamic
-    // lookerContent.map(lookerContent => {
-    //   setTimeout(() => performLookerApiCalls(lookerContent.queryBody, lookerContent.resultFormat), 100);
-    // })
-    setClientSideCode(rawSampleCode);
-    // setApiContent([])
-  }, [lookerContent, lookerUser])
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -107,63 +83,53 @@ export default function QueryBuilder(props) {
   return (
     <div className={`${classes.root} demoComponent`}
       style={{ height }}>
-      <Card elevation={1} className={`
-      ${classes.padding30} 
-      ${classes.height100Percent}
-      ${classes.overflowYScroll}`
-      }
-      >
+      <Card elevation={1} className={`${classes.padding15} ${classes.height100Percent} ${classes.overflowYScroll}`}>
         <Grid container
           key={validIdHelper(type)} >
           <div className={`${classes.root}`}>
-            <Grid item sm={12}>
-              <FilterBar {...props}
-                classes={classes}
-                action={performLookerApiCalls}
-                corsApiCall={corsApiCall}
-              />
-            </Grid>
-            {apiContent.status === 'running' ?
 
-              <Loader classes={classes}
-                height={height}
-                expansionPanelHeight={expansionPanelHeight} />
+            <Loader
+              hide={apiContent && apiContent.status !== "running"}
+              classes={classes}
+              height={height - expansionPanelHeight}
+            />
 
-              : apiContent.data && apiContent.data.length ?
-                <Box>
-                  <Grid container
-                    spacing={3}
-                    className={`${classes.noContainerScroll}`}>
-                    {codeShow ?
-                      <Grid item sm={6}
-                        className={`${classes.positionFixedTopRight}`}
-                      >
-                        <CodeFlyout {...props}
-                          classes={classes}
-                          lookerUser={lookerUser}
-                          height={height}
-                        />
-                      </Grid> : ''}
-                    <Divider className={classes.divider} />
-                    <Grid item sm={12}>
-                      <Box className={`${classes.w100}`} mt={2}>
-                        < EnhancedTable
-                          {...props}
-                          classes={classes}
-                          rows={apiContent.data}
-                          lookerContent={lookerContent}
-                          width={width}
-                        />
-                      </Box>
-                    </Grid>
+            <FilterBar {...props}
+              classes={classes}
+              action={performLookerApiCalls}
+              corsApiCall={corsApiCall}
+            />
+            {apiContent.data && apiContent.data.length ?
+              <Box>
+                <Grid container
+                  spacing={3}
+                  className={`${classes.noContainerScroll}`}>
+
+                  <CodeFlyout {...props}
+                    classes={classes}
+                    lookerUser={lookerUser}
+                    height={height - expansionPanelHeight - additionalHeightForFlyout}
+                  />
+                  <Divider className={classes.divider} />
+                  <Grid item sm={12}>
+                    <Box className={`${classes.w100}`} mt={2}>
+                      < EnhancedTable
+                        {...props}
+                        classes={classes}
+                        rows={apiContent.data}
+                        lookerContent={lookerContent}
+                        width={width}
+                      />
+                    </Box>
                   </Grid>
-                </Box>
-                :
-                <Grid item sm={12} >
-                  <Typography variant="h6" component="h6" className={`${classes.gridTitle} ${classes.textCenter}`}>
-                    No results found, try a new query<br />
-                  </Typography>
                 </Grid>
+              </Box>
+              :
+              <Grid item sm={12} >
+                <Typography variant="h6" component="h6" className={`${classes.gridTitle} ${classes.textCenter}`}>
+                  No results found, try a new query<br />
+                </Typography>
+              </Grid>
             }
           </div >
         </Grid >
@@ -259,7 +225,7 @@ function FilterBar(props) {
     // console.log('useEffect lookerUser')
     if (isReady) {
       let updatedFiltersData = [...filtersData]
-      updatedFiltersData[3].value = lookerUserTimeHorizonMap[lookerUser.user_attributes.permission_level] || "182 days";
+      updatedFiltersData[3].value = userTimeHorizonMap[lookerUser.user_attributes.permission_level] || "182 days";
       setFilterData(updatedFiltersData);
       setFieldsChipData(initializeFieldChipDataHelper())
 
@@ -475,7 +441,9 @@ function EnhancedTable(props) {
   return (
     <div className={`${classes.root} ${classes.padding10}`}>
       <ApiHighlight classes={classes} >
-        <TableContainer style={{ maxWidth: width }}>
+        <TableContainer
+          style={{ maxWidth: width }}
+        >
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"

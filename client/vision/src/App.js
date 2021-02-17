@@ -1,11 +1,14 @@
-import React, { Component, useState, useEffect } from 'react';
+import _ from 'lodash'
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router, Switch, Route, Redirect, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import AppContext from './contexts/AppContext';
-import { checkForExistingSession, createSdkHelper } from './AuthUtils/auth';
-import SignIn from './components/SignIn/SignIn';
+import { checkForExistingSession, createSdkHelper } from '@pbl-demo/utils/auth';
 import Home from './components/Home/Home';
-
+import * as DemoComponentsContentArr from './config/Demo';
+import { validIdHelper } from './tools';
+import { SignIn } from '@pbl-demo/components';
+import { SignInContent, initialUser } from './config';
 
 function App(props) {
 
@@ -19,14 +22,17 @@ function App(props) {
     async function fetchSession() {
 
       const sessionResponse = await checkForExistingSession();
-      if (sessionResponse.session && sessionResponse.session.userProfile) {
+      if (sessionResponse.session) {
 
-        const lookerBaseUrl = sessionResponse.lookerBaseUrl ? sessionResponse.lookerBaseUrl : '';
-        const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : '';
-        const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
+        const lookerBaseUrl = sessionResponse.lookerBaseUrl ? sessionResponse.lookerBaseUrl : undefined;
+        const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : undefined;
+
+        if (lookerBaseUrl && accessToken) {
+          const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
+          setSdk(sdk)
+        }
 
         setClientSession(sessionResponse.session)
-        setSdk(sdk)
       }
     }
     fetchSession(); //make async call
@@ -40,11 +46,10 @@ function App(props) {
       const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
       setSdk(sdk)
     }
-    // else setIsReady(false)
   }, [clientSession, sdk])
 
   console.log({ clientSession })
-
+  // console.log(clientSession.lookerApiToken ? Date(clientSession.lookerApiToken.expires_in) : "")
 
   return (
     < Router >
@@ -52,7 +57,7 @@ function App(props) {
         clientSession, setClientSession,
         sdk, setSdk,
         initialHref, setInitialHref,
-        isReady
+        isReady, setIsReady
       }}>
         <Switch>
           <PrivateRoute
@@ -69,7 +74,10 @@ function App(props) {
             exact
             isSignedIn={clientSession.userProfile ? true : false}
             component={SignIn}
-            initialHref={initialHref}>
+            initialHref={initialHref}
+            content={SignInContent}
+            initialUser={initialUser}
+          >
           </PublicRoute>
           {/* catach all route */}
           <Route render={() => <Redirect to="/" />} />
@@ -112,18 +120,15 @@ const PublicRoute = ({ component: Component,
   isSignedIn,
   // restricted, 
   initialHref,
+  content,
+  initialUser,
   ...rest }) => {
 
-
-  const demoComponentMap = {
-    "home": "SplashPage",
-    "inventoryoverview": "Dashboard",
-    "webanalytics": "Dashboard",
-    "salesoverview": "Dashboard",
-    "salescalendar": "CustomVis",
-    "querybuilder": "QueryBuilder",
-    "savedreports": "ReportBuilder",
-  };
+  const demoComponentMap = {};
+  Object.keys(DemoComponentsContentArr).map(key => {
+    demoComponentMap[validIdHelper(_.lowerCase(DemoComponentsContentArr[key].label))] =
+      validIdHelper(_.startCase(DemoComponentsContentArr[key].type));
+  });
 
   let urlToUse = '/analytics/home';
   if (initialHref) {
@@ -143,7 +148,9 @@ const PublicRoute = ({ component: Component,
           <Redirect
             to={urlToUse}
           />
-          : <Component {...props} />
+          : <Component {...props}
+            content={content}
+            initialUser={initialUser} />
       )} />
   );
 };

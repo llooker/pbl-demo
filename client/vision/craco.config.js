@@ -1,9 +1,12 @@
 const path = require("path");
 const { getLoader, loaderByName } = require("@craco/craco");
-const absolutePath = path.join(__dirname, "../shared/components");
+const absolutePath = path.join(__dirname, "../shared");
+
 module.exports = {
   webpack: {
-    alias: {},
+    alias: {
+      react: path.resolve('./node_modules/react')
+    },
     plugins: [],
     configure: (webpackConfig, { env, paths }) => {
       const { isFound, match } = getLoader(
