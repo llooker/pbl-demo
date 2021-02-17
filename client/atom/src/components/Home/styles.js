@@ -219,6 +219,9 @@ export const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     padding: 0,
+  },
+  noWrap: {
+    whiteSpace: "nowrap"
   }
 }), { index: 1 });
 
