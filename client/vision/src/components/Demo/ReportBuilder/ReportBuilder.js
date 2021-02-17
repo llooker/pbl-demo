@@ -1,22 +1,18 @@
 import $ from 'jquery';
-import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
-import { AppBar, Tabs, Tab, Box, Grid, Icon, Card, Button } from '@material-ui/core'
-import { TreeView, TreeItem } from '@material-ui/lab';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { AppBar, Tabs, Tab, Box, Grid, Card } from '@material-ui/core'
+import { Lock, Add } from '@material-ui/icons';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { TabPanel, a11yProps } from './helpers.js';
 import '../../Home.css';
 import AppContext from '../../../contexts/AppContext';
 import { Loader, ApiHighlight, EmbedHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
-
+import { TreeSideBar } from './TreeSideBar'
 const { validIdHelper } = require('../../../tools');
 
 //start of ReportBuilder Component
 export default function ReportBuilder(props) {
-
 
   const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession;
@@ -60,8 +56,11 @@ export default function ReportBuilder(props) {
 
 
   const action = async (contentType, contentId, secondaryAction, qid, exploreId, newReportEmbedContainer) => {
-
-    let iFrameArray = $(".embedContainer:visible > iframe")
+    // console.log("action");
+    // console.log({ contentType })
+    // console.log({ contentId })
+    // console.log({ qid })
+    let iFrameArray = $(".embedContainer:visible > iframe");
 
     let matchingIndex = 0;
     for (let i = 0; i < iFrameArray.length; i++) {
@@ -78,26 +77,6 @@ export default function ReportBuilder(props) {
       setQid(qid);
       handleChange('edit', 1)
     } else if (secondaryAction === 'delete') {
-      //remove iframe associated with content that was deleted
-      let indexOfDeletedContent;
-      for (let i = 0; i < iFrameArray.length; i++) {
-        if (iFrameArray[i].classList.contains(contentId)) {
-          indexOfDeletedContent = i;
-        }
-      }
-      let updatedIFrameArray = iFrameArray.slice()
-      updatedIFrameArray.splice(indexOfDeletedContent, 1)
-      for (let i = 0; i < updatedIFrameArray.length; i++) {
-        if (i === 0) {
-          updatedIFrameArray[i].classList.remove('dNone')
-          matchingIndex = i;
-        } else {
-          updatedIFrameArray[i].classList.add('dNone')
-        }
-      }
-      //append updated array
-      $(`#embedContainer-reportbuilder-14`).empty();
-      $(`#embedContainer-reportbuilder-14`).html(updatedIFrameArray);
 
       let lookerResponse = await sdk.ok(sdk.delete_look(contentId));
       corsApiCall(performLookerApiCalls, [lookerContent, 1])
@@ -105,6 +84,12 @@ export default function ReportBuilder(props) {
   }
 
   const performLookerApiCalls = function (lookerContent, animateLoad) {
+    // console.log("performLookerApiCalls")
+    // console.log({ lookerContent })
+    // console.log({ animateLoad })
+
+    $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
+
     if (animateLoad) {
       handleChange('refresh', 0)
       setIFrame(0)
@@ -143,8 +128,6 @@ export default function ReportBuilder(props) {
           embeddedUserFolder
         }
 
-        // console.log('lookerResponseData', lookerResponseData)
-
         let looksToUse = [...lookerResponseData.sharedFolder.looks];
         if (lookerUser.user_attributes.permission_level === 'premium' &&
           Object.keys(lookerResponseData.embeddedUserFolder).length) {
@@ -155,13 +138,12 @@ export default function ReportBuilder(props) {
         }
         let dashboardsToUse = [...lookerResponseData.sharedFolder.dashboards]
         let objToUse = {
-          looks: looksToUse,
+          reports: looksToUse,
           dashboards: dashboardsToUse
         }
-        // console.log('objToUse', objToUse)
         let iFrameArray = $(`.embedContainer.${validIdHelper(demoComponentType)} > iframe`);
-        if (objToUse.looks.length) {
-          objToUse.looks.map((item, index) => {
+        if (objToUse.reports.length) {
+          objToUse.reports.map((item, index) => {
 
             let lookId = item.id;
             let lookIsRendered = false;
@@ -175,6 +157,7 @@ export default function ReportBuilder(props) {
               LookerEmbedSDK.createLookWithId(lookId)
                 .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
                 .withClassName('iframe')
+                .withClassName('report')
                 .withClassName('look')
                 .withClassName(lookerResponseData.sharedFolder.looks.indexOf(item) > -1 ? "shared" : "personal")
                 .withClassName(index > 0 ? 'dNone' : 'oops')
@@ -190,7 +173,7 @@ export default function ReportBuilder(props) {
                 })
             }
 
-            if (index === objToUse.looks.length - 1) {
+            if (index === objToUse.reports.length - 1) {
               setTimeout(() => setIFrame(1), 1000)
             }
           })
@@ -228,7 +211,6 @@ export default function ReportBuilder(props) {
                 })
             }
 
-
             if (index === objToUse.dashboards.length - 1) {
               setTimeout(() => setIFrame(1), 1000)
             }
@@ -238,13 +220,10 @@ export default function ReportBuilder(props) {
       } else if (lookerContent.type === 'explore' &&
         lookerUser.user_attributes.permission_level === 'premium' &&
         value === 1) {
-        // console.log('inside else ifff')
         let exploreId = lookerContent.id;
-        // console.log('exploreId', exploreId)
         $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).html('');
         //separate logic for embedding explore with qid vs. no qid
         if (qid) {
-          // console.log('qid ifff')
           LookerEmbedSDK.createExploreWithId(exploreId)
             .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
             .withClassName('exploreIframe')
@@ -256,11 +235,8 @@ export default function ReportBuilder(props) {
             .build()
             .connect()
             .then((explore) => {
-              console.log('explore', explore)
-              // setTimeout(() => {
               setIFrame(1)
               setExploreObj(explore)
-              // }, 1000)
 
               let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
               LookerEmbedSDK.init(modifiedBaseUrl)
@@ -271,7 +247,6 @@ export default function ReportBuilder(props) {
               console.error('Connection error', error)
             })
         } else {
-          // console.log('qid else')
           LookerEmbedSDK.createExploreWithId(exploreId)
             .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
             .withClassName('exploreIframe')
@@ -280,22 +255,16 @@ export default function ReportBuilder(props) {
             .build()
             .connect()
             .then((explore) => {
-              // console.log('explore', explore)
-              // setTimeout(() => {
               setIFrame(1)
               setExploreObj(explore)
-              // }, 1000)
               let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
               LookerEmbedSDK.init(modifiedBaseUrl)
-
-              // setQid(null)
             })
             .catch((error) => {
               console.error('Connection error', error)
             })
         }
       }
-      // else console.log('ellse')
     })
   }
 
@@ -318,26 +287,27 @@ export default function ReportBuilder(props) {
                   className={classes.tabs}
                   value={value}
                   onChange={handleChange}
-                  aria-label="simple tabs example">
+                  aria-label="simple tabs example"
+                // TabIndicatorProps={{ style: { border: "white" } }}
+                >
                   {tabContent.map((item, index) => (
                     <Tab
                       key={`${validIdHelper(demoComponentType + '-tab-' + index)}`}
-                      label={index == 1 ?
-                        <div>
-
-                          {lookerUser.user_attributes.permission_level != 'premium' ?
-                            <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} /> : <Icon className={`fa fa-plus ${classes.faSm} ${classes.mr12}`} />}
-                          {item.label}
-                        </div> :
-                        item.label}
-                      className={value === 1 && index === 1 ? `${classes.hidden}` : index == 1 ? `${classes.mlAuto}` : ``}
-                      style={index === 1 ? {
-                        backgroundColor: '#5896E6',
-                        borderRadius: '4px',
-                        color: '#fff',
-                        opacity: '1.0'
-                      } : {}}
-                      {...a11yProps(index)} />
+                      className={index === 1 ? classes.mlAuto : ""}
+                      label={
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          {index === 1 ?
+                            lookerUser.user_attributes.permission_level != 'premium' ?
+                              <Lock className={classes.mr12} />
+                              :
+                              <Add className={classes.mr12} /> : ""
+                          }
+                          <span >
+                            {item.label}</span>
+                        </div>
+                      }
+                    >
+                    </Tab>
                   ))}
                 </Tabs>
               </AppBar>
@@ -392,22 +362,6 @@ export default function ReportBuilder(props) {
                             </React.Fragment>
                             :
                             <Grid item sm={12} >
-                              {/* couldn't get this to work */}
-                              {/* {Object.keys(exploreObj).length ?
-                                <EmbedHighlight classes={classes}>
-                                  <div
-                                    className="embedContainer"
-                                    id={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                                    key={validIdHelper(`embedContainer-${demoComponentType}-${tabContentItem.id}`)}
-                                  >
-                                  </div>
-                                </EmbedHighlight> :
-                                <Card className={`${classes.card} ${classes.flexCentered}`}
-                                  elevation={0}
-                                  mt={2}
-                                  style={{ height: height - 30 - ($('.MuiExpansionPanel-root:visible').innerHeight() || 0) }}>
-                                  <CircularProgress className={classes.circularProgress} />
-                                </Card>} */}
                               <EmbedHighlight classes={classes}>
                                 <div
                                   className="embedContainer"
@@ -427,220 +381,5 @@ export default function ReportBuilder(props) {
         </Grid >
       </Card>
     </div >
-  )
-}
-
-
-function TreeSideBar(props) {
-
-
-  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
-  const { userProfile, lookerUser, lookerHost } = clientSession
-
-  const { staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent,
-    //lookerUser, setPaywallModal
-  } = props
-  const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
-  let treeCounter = 0;
-  const [selected, setSelected] = useState(2);
-  const expandedArr = Object.keys(apiContent).length ? ["1", "" + (2 + apiContent[Object.keys(apiContent)[0]].length)] : [];
-  const [expanded, setExpanded] = useState(expandedArr);
-
-  const handleToggle = (event, nodeIds) => {
-    setExpanded(nodeIds);
-  }
-
-  const handleSelect = (event, nodeIds) => {
-    setSelected(nodeIds);
-  };
-
-
-  useEffect(() => {
-    setExpanded(expandedArr);
-    if (selected !== 2) setSelected(2)
-    // let innerTreeItemArray = $(".innerTreeItem");
-    // console.log('innerTreeItemArray', innerTreeItemArray)
-    // for (let i = 0; i < innerTreeItemArray.length; i++) {
-    //   console.log('inside forrr', i)
-    //   if (innerTreeItemArray[i].classList.contains('Mui-selected')) {
-    //     console.log('inside iffff')
-    //     innerTreeItemArray[i].classList.remove('Mui-selected')
-    //   } else console.log('elllse')
-    // }
-  }, [apiContent]);
-
-
-  return (
-    <TreeView
-      className={classes.tree}
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      expanded={expanded}
-      onNodeToggle={handleToggle}
-      onNodeSelect={handleSelect}
-    // multiSelect={false}
-    >
-      {apiContent ? Object.keys(apiContent).map((key, outerIndex) => (
-        <React.Fragment
-          key={`${validIdHelper(demoComponentType + '-innerFragment-' + outerIndex)}`}>
-          <TreeItem
-            key={`${validIdHelper(demoComponentType + '-outerTreeItem-' + outerIndex)}`}
-            nodeId={"" + (treeCounter += 1)}
-            // treecounter={treeCounter}
-            label={_.capitalize(key)}
-            icon={<Icon className={`fa fa-folder ${classes.icon}`} />}
-            disabled={apiContent[key].length ? false : true}
-          >
-            {
-              apiContent[key].length ?
-                apiContent[key].map((item, index) => (
-                  <TreeItem
-                    key={`${validIdHelper(demoComponentType + '-innerTreeItem-' + treeCounter)}`}
-                    nodeId={"" + (treeCounter += 1)}
-                    treecounter={treeCounter}
-                    selected={selected === treeCounter}
-                    className={selected === treeCounter ? `Mui-selected innerTreeItem ${classes.whiteSpaceNoWrap}` : `innerTreeItem ${classes.whiteSpaceNoWrap}`}
-                    contentid={item.id}
-                    label={item.folder_id === sharedFolderId &&
-                      key === 'looks' ?
-                      <div
-                        id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                        key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                        className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}
-                      >
-                        {/* {item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title} */}
-                        <Grid container>
-                          <Grid item sm={8} className={`${classes.overflowHidden}`}>
-                            {item.title}</Grid>
-                          <Grid item sm={4}>
-                            <Button
-                              id={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
-                              key={`${validIdHelper(demoComponentType + '-innerTreeItem-Explore' + treeCounter)}`}
-                              size="small"
-                              className={`${classes.ml12} ${classes.childHoverVisibility}`}
-                              onClick={(event) => {
-                                if (lookerUser.user_attributes.permission_level === 'premium') {
-                                  action(
-                                    key.substring(0, key.length - 1),
-                                    item.id,
-                                    'explore',
-                                    item.client_id,
-                                    tabContent[tabContentItemIndex + 1].id,
-                                    validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                                  );
-                                  event.stopPropagation();
-                                } else {
-                                  // setPaywallModal();
-
-                                  setPaywallModal({
-                                    'show': true,
-                                    'permissionNeeded': 'explore'
-                                  });
-                                }
-                              }
-                              }
-                              color="default"
-                            >
-                              {lookerUser.user_attributes.permission_level === 'premium' ? 'Explore' : <div> <Icon className={`fa fa-lock ${classes.faSm} ${classes.mr12}`} />Explore</div>}
-                            </Button>
-                          </Grid>
-                        </Grid>
-
-
-                      </div>
-                      : key === 'looks' ?
-                        <div
-                          id={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                          key={`${validIdHelper(demoComponentType + '-innerTreeItem-LabelContainer' + treeCounter)}`}
-                          className={`${classes.labelRoot} ${classes.parentHoverVisibility}`}>
-                          <Grid container>
-                            <Grid item sm={6} className={`${classes.overflowHidden}`}>
-                              {/* {item.title.length > 15 ? item.title.substring(0, 15) + '...' : item.title} */}
-                              {item.title}
-                            </Grid>
-                            <Grid item sm={6}>
-                              <Button
-                                id={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
-                                key={`${validIdHelper(demoComponentType + '-innerTreeItem-EditButton' + treeCounter)}`}
-                                size="small"
-                                className={`${classes.ml12} ${classes.childHoverVisibility}`}
-                                onClick={(event) => {
-                                  if (lookerUser.user_attributes.permission_level === 'premium') {
-                                    // setSelected(treeCounter);
-                                    action(
-                                      key.substring(0, key.length - 1),
-                                      item.id,
-                                      'edit',
-                                      item.client_id,
-                                      tabContent[tabContentItemIndex + 1].id,
-                                      validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                                    );
-                                    event.stopPropagation();
-                                  } else {
-                                    // setPaywallModal();
-
-                                    setPaywallModal({
-                                      'show': true,
-                                      'permissionNeeded': 'explore'
-                                    });
-                                  }
-                                }
-                                }
-                                color="primary"
-                              >
-                                Edit
-                                                                                            </Button>
-                              <Button
-                                id={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
-                                key={`${validIdHelper(demoComponentType + '-innerTreeItem-DeleteButton' + treeCounter)}`}
-                                size="small"
-                                className={`${classes.ml12} ${classes.childHoverVisibility}`}
-                                onClick={(event) => {
-                                  if (lookerUser.user_attributes.permission_level === 'premium') {
-                                    // setSelected(treeCounter);
-                                    action(
-                                      key.substring(0, key.length - 1),
-                                      item.id,
-                                      'delete',
-                                      item.client_id,
-                                      tabContent[tabContentItemIndex + 1].id,
-                                      validIdHelper(`embedContainer-${demoComponentType}-${tabContent[tabContentItemIndex + 1].id}`)
-                                    );
-                                    event.stopPropagation();
-                                  } else {
-                                    // setPaywallModal();
-
-                                    setPaywallModal({
-                                      'show': true,
-                                      'permissionNeeded': 'explore'
-                                    });
-                                  }
-                                }
-                                }
-                                color="secondary"
-                              >
-                                Delete
-                                                                                            </Button>
-                            </Grid>
-                          </Grid>
-
-                        </div>
-                        : <Grid container><Grid item sm={12}>{item.title}</Grid></Grid>
-                    }
-                    onClick={() => {
-                      // setSelected(treeCounter)
-                      action(
-                        key.substring(0, key.length - 1), item.id)
-                    }} />
-
-                ))
-                :
-                ''
-            }
-          </TreeItem>
-
-        </React.Fragment>
-      )) : ''}
-    </TreeView>
   )
 }
