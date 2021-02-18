@@ -14,6 +14,7 @@ export const SignInContent = {
   "backgroundImage": backgroundImage,
   "backgroundImageStyle": {
     "backgroundImage": `url(${backgroundImage})`,
-    "backgroundSize": 'cover'
+    "backgroundSize": 'cover',
+    "borderRadius": '0'
   }
 }

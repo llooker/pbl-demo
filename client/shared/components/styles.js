@@ -138,9 +138,6 @@ export const useStyles = makeStyles((theme) => ({
     minHeight: 150,
     overflow: 'scroll'
   },
-  positionRelative: {
-    position: 'relative'
-  },
   padding15: {
     padding: 15
   },
@@ -162,13 +159,6 @@ export const useStyles = makeStyles((theme) => ({
   },
   padding20: {
     padding: 20
-  },
-  positionFixedTopRight: {
-    position: 'fixed',
-    top: 88,
-    right: 24,
-    bottom: 0,
-    zIndex: 100,
   },
   codeFlyoutContainer: {
     backgroundColor: 'rgb(40, 42, 54)',
@@ -255,13 +245,6 @@ export const useStyles = makeStyles((theme) => ({
   orangeSecondary: {
     backgroundColor: 'rgba(243, 167, 89, .5)'
   },
-  positionTopRight: {
-    position: 'absolute',
-    top: -30,
-    right: -50,
-    bottom: 0,
-    zIndex: 100
-  },
   bottomBarSpacer: {
     display: 'flex',
     alignItems: 'center',
@@ -305,4 +288,14 @@ export const useStyles = makeStyles((theme) => ({
   paddingTB15: {
     padding: "15px 0"
   },
+  positionTopRight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 100
+  },
+  positionRelative: {
+    position: 'relative'
+  }
 }));

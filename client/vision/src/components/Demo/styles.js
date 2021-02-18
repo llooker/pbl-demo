@@ -152,9 +152,6 @@ export const useStyles = makeStyles((theme) => ({
   carouselLegendBody: {
     fontSize: '16px !important',
   },
-  positionRelative: {
-    position: 'relative'
-  },
   padding15: {
     padding: 15
   },
@@ -176,13 +173,6 @@ export const useStyles = makeStyles((theme) => ({
   },
   padding20: {
     padding: 20
-  },
-  positionFixedTopRight: {
-    position: 'fixed',
-    top: 88,
-    right: 24,
-    bottom: 0,
-    zIndex: 100,
   },
   codeFlyoutContainer: {
     backgroundColor: 'rgb(40, 42, 54)',
@@ -269,13 +259,6 @@ export const useStyles = makeStyles((theme) => ({
   orangeSecondary: {
     backgroundColor: 'rgba(243, 167, 89, .5)'
   },
-  positionTopRight: {
-    position: 'absolute',
-    top: -30,
-    right: -50,
-    bottom: 0,
-    zIndex: 100
-  },
   bottomBarSpacer: {
     display: 'flex',
     alignItems: 'center',
@@ -294,12 +277,14 @@ export const useStyles = makeStyles((theme) => ({
   m6: {
     margin: 6
   },
-  // modalPopover: {
-  //   position: 'absolute',
-  //   width: 400,
-  //   height: 400,
-  //   overflow: 'scroll',
-  //   backgroundColor: theme.palette.background.paper,
-  //   padding: theme.spacing(2, 4, 3),
-  // },
+  positionTopRight: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 100
+  },
+  positionRelative: {
+    position: 'relative'
+  }
 }));

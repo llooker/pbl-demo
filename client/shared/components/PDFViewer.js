@@ -35,8 +35,9 @@ export const PDFViewer = (props) => {
   }, [location.search])
 
   return (
-    <div className={`${classes.root} demoComponent`}
-      style={{ height }}>
+    <div className={`${classes.root} ${classes.positionRelative}`}
+      style={{ height }}
+    >
       <Card elevation={1} className={`${classes.padding15} ${classes.height100Percent} ${classes.overflowScroll}`}
       >
         <Grid container

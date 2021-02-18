@@ -14,7 +14,7 @@ export const CodeFlyout = (props) => {
 
     codeShow ?
       <Grid item sm={6}
-        className={`${classes.positionFixedTopRight}`}>
+        className={`${classes.positionTopRight} test`}>
         <ClickAwayListener onClickAway={() => setCodeShow()}>
           <Fade in={true}>
             {

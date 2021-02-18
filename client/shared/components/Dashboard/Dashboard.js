@@ -290,7 +290,7 @@ export const Dashboard = (props) => {
 
 
   return (
-    <div className={`${classes.root} demoComponent`}
+    <div className={`${classes.root} ${classes.positionRelative}`}
       style={{ height }}
     >
       <ThemeProvider theme={themeToUse}>
