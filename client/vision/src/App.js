@@ -9,6 +9,8 @@ import * as DemoComponentsContentArr from './config/Demo';
 import { validIdHelper } from './tools';
 import { SignIn } from '@pbl-demo/components';
 import { SignInContent, initialUser } from './config';
+import { packageNameTheme } from './config/theme.js';
+import { ThemeProvider } from '@material-ui/core/styles';
 
 function App(props) {
 
@@ -48,8 +50,7 @@ function App(props) {
     }
   }, [clientSession, sdk])
 
-  console.log({ clientSession })
-  // console.log(clientSession.lookerApiToken ? Date(clientSession.lookerApiToken.expires_in) : "")
+  // console.log({ clientSession })
 
   return (
     < Router >
@@ -57,31 +58,34 @@ function App(props) {
         clientSession, setClientSession,
         sdk, setSdk,
         initialHref, setInitialHref,
-        isReady, setIsReady
+        isReady, setIsReady,
+        theme: packageNameTheme,
       }}>
-        <Switch>
-          <PrivateRoute
-            path='/analytics/:democomponent?'
-            // exact
-            isSignedIn={clientSession.userProfile ? true : false}
-            component={Home}
-            setInitialHref={setInitialHref}
-            initialHref={initialHref}
-          >
-          </PrivateRoute>
-          <PublicRoute
-            path='/'
-            exact
-            isSignedIn={clientSession.userProfile ? true : false}
-            component={SignIn}
-            initialHref={initialHref}
-            content={SignInContent}
-            initialUser={initialUser}
-          >
-          </PublicRoute>
-          {/* catach all route */}
-          <Route render={() => <Redirect to="/" />} />
-        </Switch>
+        <ThemeProvider theme={packageNameTheme}>
+          <Switch>
+            <PrivateRoute
+              path='/analytics/:democomponent?'
+              // exact
+              isSignedIn={clientSession.userProfile ? true : false}
+              component={Home}
+              setInitialHref={setInitialHref}
+              initialHref={initialHref}
+            >
+            </PrivateRoute>
+            <PublicRoute
+              path='/'
+              exact
+              isSignedIn={clientSession.userProfile ? true : false}
+              component={SignIn}
+              initialHref={initialHref}
+              content={SignInContent}
+              initialUser={initialUser}
+            >
+            </PublicRoute>
+            {/* catach all route */}
+            <Route render={() => <Redirect to="/" />} />
+          </Switch>
+        </ThemeProvider>
       </AppContext.Provider>
     </Router >
   )

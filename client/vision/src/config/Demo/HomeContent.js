@@ -1,5 +1,6 @@
 import HomeIcon from '@material-ui/icons/Home';
-import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
+import { Dashboard } from '@pbl-demo/components';
+
 
 export const HomeContent = {
   "type": "dashboard",

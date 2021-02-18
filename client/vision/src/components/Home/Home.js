@@ -3,12 +3,10 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
 import '../Home.css';
 import { useStyles } from './styles.js';
-import { packageNameTheme } from '../../config/theme.js';
 import * as DemoComponentsContentArr from '../../config/Demo';
 import { TopBarContent } from '../../config/TopBarContent';
 import { checkToken, endSession } from '@pbl-demo/utils/auth';
@@ -19,7 +17,7 @@ const { validIdHelper } = require('../../tools');
 
 export default function Home(props) {
   // console.log("Home")
-  let { setClientSession, clientSession, clientSession: { packageName }, sdk, setSdk, isReady, setIsReady } = useContext(AppContext)
+  let { setClientSession, clientSession, clientSession: { packageName }, sdk, setSdk, isReady, setIsReady, theme } = useContext(AppContext)
   let { democomponent } = useParams();
   let history = useHistory();
   const classes = useStyles();
@@ -131,7 +129,6 @@ export default function Home(props) {
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
   else ActiveDemoComponent = ActiveDemoComponentContent.component;
 
-
   return (
     <div className={classes.root} >
 
@@ -145,36 +142,34 @@ export default function Home(props) {
         codeShow, setCodeShow,
         sdk,
         corsApiCall,
-        theme: packageNameTheme,
+        theme,
         isReady, setIsReady,
       }}>
-        <ThemeProvider theme={packageNameTheme}>
-          <CssBaseline />
-          <TopBar
-            content={topBarContent}
-            theme={packageNameTheme}
-            classes={classes}
-          />
-          <UserPermissionsModal content={{ permissionLevels, modalPermissionsMap }} classes={classes} />
+        <CssBaseline />
+        <TopBar
+          content={topBarContent}
+          theme={theme}
+          classes={classes}
+        />
+        <UserPermissionsModal content={{ permissionLevels, modalPermissionsMap }} classes={classes} />
 
-          {/* conditional rendering for now */}
-          {packageName === "vision" ?
-            <TopDrawer DemoComponentsContentArr={demoComponentsContentArr} classes={classes} /> :
-            <LeftDrawer DemoComponentsContentArr={demoComponentsContentArr} classes={classes} />}
-          <main
-            className={packageName === "vision" ? clsx(classes.topContent, {
-              [classes.topContentShift]: drawerOpen,
-            }) : clsx(classes.leftContent, {
-              [classes.leftContentShift]: drawerOpen,
-            })}
-          >
+        {/* conditional rendering for now */}
+        {packageName === "vision" ?
+          <TopDrawer DemoComponentsContentArr={demoComponentsContentArr} classes={classes} /> :
+          <LeftDrawer DemoComponentsContentArr={demoComponentsContentArr} classes={classes} />}
+        <main
+          className={packageName === "vision" ? clsx(classes.topContent, {
+            [classes.topContentShift]: drawerOpen,
+          }) : clsx(classes.leftContent, {
+            [classes.leftContentShift]: drawerOpen,
+          })}
+        >
 
-            <div className={classes.drawerHeader} />
-            {ActiveDemoComponent ? <ActiveDemoComponent staticContent={ActiveDemoComponentContent} /> : ''}
-          </main>
+          <div className={classes.drawerHeader} />
+          {ActiveDemoComponent ? <ActiveDemoComponent staticContent={ActiveDemoComponentContent} /> : ''}
+        </main>
 
-          <BottomBar classes={classes} />
-        </ThemeProvider>
+        <BottomBar classes={classes} />
       </AppContext.Provider>
     </div>
   )

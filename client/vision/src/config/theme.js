@@ -13,4 +13,10 @@ export const packageNameTheme = createMuiTheme({
       main: "#240D67"
     },
   },
+  typography: {
+    fontFamily: [
+      'Inter',
+      'sans-serif'
+    ].join(','),
+  },
 })

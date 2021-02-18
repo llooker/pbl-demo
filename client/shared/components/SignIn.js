@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, { useContext, useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
-import { Grid, Card, CardActions, CardContent, Typography } from '@material-ui/core'
+import { Grid, Card, CardActions, CardContent, CardFooter, Typography } from '@material-ui/core'
 import { writeNewSession, createSdkHelper } from '../utils'
 const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from './styles.js';
@@ -43,22 +43,28 @@ export const SignIn = ({ content, initialUser }) => {
                 style={logoStyle ? logoStyle : ''}
               />
               <CardContent >
-                <Typography variant="h5" component="h2">
-                  {content.cardHeader}
-                </Typography>
-                <Typography variant="body2" component="p">
-                  {content.cardBody}
-                </Typography>
-              </CardContent>
-              <CardActions className={`${classes.flexCentered}`} >
+                {content.copyHeader ?
+                  <Typography variant="h4" gutterBottom>
+                    {content.copyHeader}
+                  </Typography> : ""}
+                {content.copyBody ?
+                  <Typography variant="subtitle1" gutterBottom>
+                    {content.copyBody}
+                  </Typography> : ""}
+
                 <GoogleLogin
                   clientId={googleClientId}
                   buttonText="Login"
                   onSuccess={responseGoogle}
                   onFailure={responseGoogle}
                   cookiePolicy={'single_host_origin'}
+                  className={classes.mb12}
                 />
-              </CardActions>
+                {content.copyFooter ?
+                  <Typography variant="body2" color="textSecondary">
+                    {content.copyFooter}
+                  </Typography> : ""}
+              </CardContent>
             </div>
           </Card>
         </Grid>

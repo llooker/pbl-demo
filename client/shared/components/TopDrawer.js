@@ -8,7 +8,7 @@ const { validIdHelper, appContextMap } = require('../utils/tools');
 
 
 export const TopDrawer = ({ DemoComponentsContentArr, classes }) => {
-  console.log('TopDrawer');
+  // console.log('TopDrawer');
 
   const { drawerOpen, setDrawerOpen, } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 

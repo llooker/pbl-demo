@@ -1,5 +1,5 @@
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import Dashboard from '@pbl-demo/components/Dashboard/Dashboard'
+import { Dashboard } from '@pbl-demo/components'
 import { createCase } from '@pbl-demo/components/Dashboard/helpers'
 
 const createCaseSelect = {
