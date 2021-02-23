@@ -2,7 +2,7 @@
 
 import StackdriverErrorReporter from 'stackdriver-errors-js';
 
-let errorHandler;
+export let errorHandler;
 
 console.log('window.location', window.location)
 // if (process.env.NODE_ENV === 'production') {
@@ -39,4 +39,4 @@ errorHandler.start({
 //   errorHandler = { report: console.error };
 // }
 
-export default errorHandler;
+// export default errorHandler;

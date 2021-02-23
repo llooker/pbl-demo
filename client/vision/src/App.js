@@ -11,7 +11,8 @@ import { SignIn } from '@pbl-demo/components';
 import { SignInContent, initialUser } from './config';
 import { packageNameTheme } from './config/theme.js';
 import { ThemeProvider } from '@material-ui/core/styles';
-import errorHandler from './errorHandlerUtility';
+import { errorHandler } from '@pbl-demo/utils'
+
 
 function App(props) {
 
@@ -34,8 +35,6 @@ function App(props) {
           const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
           setSdk(sdk)
         }
-
-        console.log({ sessionResponse })
 
         setClientSession(sessionResponse.session)
         if (typeof errorHandler.setUser === 'function') {

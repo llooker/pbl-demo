@@ -15,7 +15,7 @@ import { handleTileToggle, handleVisColorToggle, handleThemeChange } from './hel
 
 
 export const Dashboard = (props) => {
-  // console.log('Dashboard');
+  console.log('Dashboard');
   const { clientSession, clientSession: { lookerUser }, sdk, corsApiCall, theme, isReady, selectedMenuItem } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
   const { staticContent: { lookerContent }, staticContent: { type } } = props;
@@ -81,6 +81,7 @@ export const Dashboard = (props) => {
       corsApiCall(performLookerApiCalls, [lookerContent, response])
     }
     else if (methodName === "createCase") {
+      console.log("createCase")
       corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
       return response
     }
