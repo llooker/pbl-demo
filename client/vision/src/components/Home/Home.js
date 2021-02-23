@@ -13,7 +13,10 @@ import { checkToken, endSession } from '@pbl-demo/utils/auth';
 import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
 import { TopBar, BottomBar, LeftDrawer, TopDrawer } from "@pbl-demo/components";
+import errorHandler from '../../errorHandlerUtility';
+
 const { validIdHelper } = require('../../tools');
+
 
 export default function Home(props) {
   // console.log("Home")
@@ -128,6 +131,14 @@ export default function Home(props) {
   });
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
   else ActiveDemoComponent = ActiveDemoComponentContent.component;
+
+  // deliberately produce error by misspelling alert
+  // try {
+  //   adddlert("Welcome guest!");
+  // }
+  // catch (err) {
+  //   errorHandler.report(err);
+  // }
 
   return (
     <div className={classes.root} >

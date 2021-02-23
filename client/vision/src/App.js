@@ -11,6 +11,7 @@ import { SignIn } from '@pbl-demo/components';
 import { SignInContent, initialUser } from './config';
 import { packageNameTheme } from './config/theme.js';
 import { ThemeProvider } from '@material-ui/core/styles';
+import errorHandler from './errorHandlerUtility';
 
 function App(props) {
 
@@ -34,7 +35,13 @@ function App(props) {
           setSdk(sdk)
         }
 
+        console.log({ sessionResponse })
+
         setClientSession(sessionResponse.session)
+        //call setUser if in prod
+        if (typeof errorHandler.setUser === 'function') {
+          errorHandler.setUser(JSON.stringify(sessionResponse.session.lookerUser))
+        }
       }
     }
     fetchSession(); //make async call
@@ -47,10 +54,14 @@ function App(props) {
       const accessToken = clientSession.lookerApiToken ? clientSession.lookerApiToken.api_user_token : '';
       const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
       setSdk(sdk)
+
+      // window.onerror(null, null, null, null, new Error('Test: Something broke!'));
     }
   }, [clientSession, sdk])
 
-  // console.log({ clientSession })
+
+
+
 
   return (
     < Router >

@@ -1,4 +1,4 @@
-service: looker-dat-atom-staging
+service: looker-dat-atom
 runtime: nodejs
 env: flex
 manual_scaling:
