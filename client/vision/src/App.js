@@ -38,7 +38,6 @@ function App(props) {
         console.log({ sessionResponse })
 
         setClientSession(sessionResponse.session)
-        //call setUser if in prod
         if (typeof errorHandler.setUser === 'function') {
           errorHandler.setUser(JSON.stringify(sessionResponse.session.lookerUser))
         }
@@ -54,8 +53,6 @@ function App(props) {
       const accessToken = clientSession.lookerApiToken ? clientSession.lookerApiToken.api_user_token : '';
       const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
       setSdk(sdk)
-
-      // window.onerror(null, null, null, null, new Error('Test: Something broke!'));
     }
   }, [clientSession, sdk])
 

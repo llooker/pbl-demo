@@ -132,13 +132,35 @@ export default function Home(props) {
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
   else ActiveDemoComponent = ActiveDemoComponentContent.component;
 
-  // deliberately produce error by misspelling alert
+  /**
+   * deliberately produce error by misspelling alert
+   * TO DO: how can we implement this everytime there is an error without writing a bunch of try catchings?
+   * corsApiCall?
+   */
+  //produces reference error
+  try {
+    alerte("Welcome guest!");
+  }
+  catch (err) {
+    // console.log(errorHandler.report(err));
+    errorHandler.report(err);
+  }
+  //produces type error
   // try {
-  //   adddlert("Welcome guest!");
-  // }
-  // catch (err) {
+  //   null.f()
+  // } catch (err) {
+  //   console.log({ err })
+  //   console.log(err instanceof TypeError)  // true
+  //   console.log(err.message)               // "null has no properties"
+  //   console.log(err.name)                  // "TypeError"
+  //   console.log(err.fileName)              // "Scratchpad/1"
+  //   console.log(err.lineNumber)            // 2
+  //   console.log(err.columnNumber)          // 2
+  //   console.log(err.stack)                 // "@Scratchpad/2:2:3\n"
   //   errorHandler.report(err);
   // }
+
+  console.log({ errorHandler })
 
   return (
     <div className={classes.root} >
