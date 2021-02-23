@@ -125,13 +125,13 @@ export default function Home(props) {
    */
 
   // produces reference error
-  try {
-    addalert("Welcome guest!");
-  }
-  catch (err) {
-    console.log({ err })
-    errorHandler.report(err);
-  }
+  // try {
+  //   addalert("Welcome guest!");
+  // }
+  // catch (err) {
+  //   console.log({ err })
+  //   errorHandler.report(err);
+  // }
 
   // //produces type error
   // try {
