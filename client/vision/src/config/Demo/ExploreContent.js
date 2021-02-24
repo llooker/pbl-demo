@@ -1,7 +1,7 @@
 
 import ExploreIcon from '@material-ui/icons/Explore';
 import { EmbeddedExplore } from "@pbl-demo/components";
-import { ActionButton, ToggleButton } from '@pbl-demo/components/Filters'
+import { ToggleButton } from '@pbl-demo/components/Filters'
 import { createEmbeddedExplore } from '@pbl-demo/components/Explore/helpers'
 
 const savedDefaultQueriesToggle = {
