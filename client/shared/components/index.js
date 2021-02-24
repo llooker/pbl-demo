@@ -12,5 +12,4 @@ export { SplashPage } from "./SplashPage";
 export { SignIn } from "./SignIn";
 export { TopDrawer } from "./TopDrawer";
 export { LeftDrawer } from "./LeftDrawer";
-export { ActionButton } from "./ActionButton";
 export { Dashboard } from "./Dashboard/Dashboard";

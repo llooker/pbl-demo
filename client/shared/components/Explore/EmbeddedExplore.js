@@ -9,7 +9,7 @@ import { createEmbeddedExplore } from './helpers'
 const { validIdHelper, appContextMap, validateContent } = require('../../utils/tools');
 
 export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema } }) => {
-  // console.log("EmbeddedExplore")
+  console.log("EmbeddedExplore")
   const [iFrameExists, setIFrame] = useState(1);
   const [apiContent, setApiContent] = useState(undefined);
   const [exploreObj, setExploreObj] = useState({});
@@ -56,14 +56,15 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
     })
   }
 
-  const helperFunctionMapper = async (item) => {
+  const helperFunctionMapper = async ({ newValue, item }) => {
     // console.log("helperFunctionMapper");
+    // console.log({ newValue })
     // console.log({ item })
-    if (item.methodName === "createEmbeddedExploreNoQid") {
-      //copy and exclude qid
+    if (newValue === "Saved Queries") {
+      //   //copy and exclude qid
       const lookerContentCopy = lookerContent.map(({ qid, ...rest }) => rest)
       performLookerApiCalls(lookerContentCopy);
-    } else if (item.methodName === "createEmbeddedExploreWithQid") {
+    } else {
       performLookerApiCalls(lookerContent);
     }
   }
@@ -97,10 +98,11 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
                 {lookerContent[0].actions ?
                   <Grid container>
                     {lookerContent[0].actions.map(item => {
+                      console.log({ item })
                       let Component = item.component
                       return (
                         <Grid item sm={item.gridWith}>
-                          <Component item={item} helperFunctionMapper={helperFunctionMapper} />
+                          <Component classes={classes} item={item} helperFunctionMapper={helperFunctionMapper} />
                         </Grid>
                       )
                     })}
