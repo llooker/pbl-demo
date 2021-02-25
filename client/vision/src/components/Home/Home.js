@@ -13,7 +13,10 @@ import { checkToken, endSession } from '@pbl-demo/utils/auth';
 import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../../config';
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
 import { TopBar, BottomBar, LeftDrawer, TopDrawer } from "@pbl-demo/components";
+import { errorHandler } from '@pbl-demo/utils'
+
 const { validIdHelper } = require('../../tools');
+
 
 export default function Home(props) {
   // console.log("Home")
@@ -65,25 +68,21 @@ export default function Home(props) {
 
   const corsApiCall = async (func, args = []) => {
     // console.log("corsApiCall");
+    try {
+      let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
 
-    let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
-    //old method of renewing token and client session
-    // if (checkTokenRsp.sdk) {
-    //   setSdk(checkTokenRsp.sdk)
-    // }
-    // if (checkTokenRsp.clientSession) {
-    //   setClientSession(checkTokenRsp.clientSession)
-    // }
-
-    //new method of signing user out
-    if (checkTokenRsp.status === 'expired') {
-      setIsReady(false);
-      endSession();
-      setClientSession({})
-      history.push("/");
-    } else {
-      let res = func(...args)
-      return res
+      //new method of signing user out
+      if (checkTokenRsp.status === 'expired') {
+        setIsReady(false);
+        endSession();
+        setClientSession({})
+        history.push("/");
+      } else {
+        let res = func(...args)
+        return res
+      }
+    } catch (err) {
+      errorHandler.report({ err, context: errorHandler.context });
     }
   }
 
@@ -96,16 +95,6 @@ export default function Home(props) {
     window.addEventListener("resize", () => {
       setDrawerOpen(window.innerWidth > 768 ? true : false)
     });
-
-    //listen to refresh or closing tab event
-    //comment out for now
-    // window.addEventListener("beforeunload", (e) => {
-    //   setIsReady(false);
-    //   endSession();
-    //   setClientSession({})
-    //   history.push("/");
-    //   delete e['returnValue'];
-    // });
 
   }, []) //onload
 
@@ -128,6 +117,31 @@ export default function Home(props) {
   });
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
   else ActiveDemoComponent = ActiveDemoComponentContent.component;
+
+  /**
+   * deliberately produce error by misspelling alert
+   * TO DO: how can we implement this everytime there is an error without writing a bunch of try catches?
+   * corsApiCall?
+   */
+
+  // produces reference error
+  // try {
+  //   addalert("Welcome guest!");
+  // }
+  // catch (err) {
+  //   console.log({ err })
+  //   errorHandler.report(err);
+  // }
+
+  // //produces type error
+  // try {
+  //   null.f()
+  // } catch (err) {
+  //   // console.log({ err })
+  //   errorHandler.report(err);
+  // }
+
+  console.log({ errorHandler })
 
   return (
     <div className={classes.root} >

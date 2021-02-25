@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { Card, CardActions, CardContent, CardFooter, Typography } from '@material-ui/core'
 import { writeNewSession, createSdkHelper } from '../utils'
-const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
+const { validIdHelper, appContextMap, validateContent, errorHandler } = require('../utils');
 import { useStyles } from './styles.js';
 
 export const SignIn = ({ content, initialUser }) => {
@@ -13,20 +13,24 @@ export const SignIn = ({ content, initialUser }) => {
 
   const responseGoogle = async (response) => {
     if (response.error) {
+      errorHandler.report(response.error)
     } else {
-      let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialUser }) //initialLookerUser
+      try {
+        let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialUser }) //initialLookerUser
 
-      const lookerBaseUrl = newSession.session.lookerBaseUrl ? newSession.session.lookerBaseUrl : '';
-      const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
-      const sdk = createSdkHelper({ lookerBaseUrl, accessToken })
+        const lookerBaseUrl = newSession.session.lookerBaseUrl ? newSession.session.lookerBaseUrl : '';
+        const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
+        const sdk = createSdkHelper({ lookerBaseUrl, accessToken })
 
-      setClientSession(newSession.session);
-      setSdk(sdk)
+        setClientSession(newSession.session);
+        setSdk(sdk)
+      } catch (err) {
+        errorHandler.report(err)
+      }
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;
   const classes = useStyles();
-  console.log({ backgroundImageStyle })
 
   return (
     <div className={`${classes.root} `}

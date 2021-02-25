@@ -11,6 +11,8 @@ import { SignIn } from '@pbl-demo/components';
 import { SignInContent, initialUser } from './config';
 import { packageNameTheme } from './config/theme.js';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { errorHandler } from '@pbl-demo/utils'
+
 
 function App(props) {
 
@@ -35,6 +37,9 @@ function App(props) {
         }
 
         setClientSession(sessionResponse.session)
+        if (typeof errorHandler.setUser === 'function') {
+          errorHandler.setUser(JSON.stringify(sessionResponse.session.lookerUser))
+        }
       }
     }
     fetchSession(); //make async call
@@ -50,7 +55,9 @@ function App(props) {
     }
   }, [clientSession, sdk])
 
-  // console.log({ clientSession })
+
+
+
 
   return (
     < Router >
