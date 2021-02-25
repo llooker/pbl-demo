@@ -11,7 +11,7 @@ import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 import queryString from 'query-string';
 import { appContextMap, validIdHelper } from '../../utils/tools';
-import { handleTileToggle, handleVisColorToggle, handleThemeChange } from './helpers';
+import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery } from './helpers';
 
 
 export const Dashboard = (props) => {
@@ -196,31 +196,11 @@ export const Dashboard = (props) => {
       //api calls
       if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
       ) {
-        // setApiContent(undefined)
-        // get inline query from usecase file & set user attribute dynamically
-        // iterating over filters
-        let apiContentObj = {}
-        lookerContentItem.filters.map(async (filterItem, index) => {
-          if (filterItem.inlineQuery) {
-            let jsonQuery = filterItem.inlineQuery
-            jsonQuery.filters = {
-              ...jsonQuery.filters,
-              [filterItem.desiredFilterName]: lookerUser.user_attributes.brand
-            };
-            let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: filterItem.resultFormat || 'json', body: jsonQuery }));
-            let queryResultsForDropdown = [];
-            let desiredProperty = Object.keys(lookerResponseData[0])[0];
-
-            for (let i = 0; i < lookerResponseData.length; i++) {
-              queryResultsForDropdown.push({
-                'label': lookerResponseData[i][desiredProperty],
-                'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined
-              })
-            }
-            apiContentObj[filterItem.component] = queryResultsForDropdown
-          }
-          setApiContent(apiContentObj)
-        })
+        let apiContentObj = runInlineQuery({ sdk, lookerContentItem, "type": "filters" });
+        setApiContent(apiContentObj)
+      } else if (lookerContentItem.hasOwnProperty('trends')) {
+        let apiContentObj = runInlineQuery({ sdk, lookerContentItem, "type": "trends" });
+        setApiContent(apiContentObj)
       }
     })
   }
@@ -279,6 +259,11 @@ export const Dashboard = (props) => {
   }, [customFilterAction, location.search, lookerContent])
 
   // localStorage.debug = 'looker:chatty:*'
+
+  useEffect(() => {
+    console.log("useEffect");
+    console.log({ apiContent })
+  }, [apiContent])
 
 
   return (
