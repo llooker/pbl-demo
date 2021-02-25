@@ -5,3 +5,4 @@ looker.ini
 .env*
 *.yaml
 *.lock
+*.eslintcache
