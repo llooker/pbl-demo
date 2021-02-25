@@ -32,7 +32,8 @@
     "react-router-dom": "latest",
     "react-scripts": "4.0.1",
     "react-svg-map": "^2.1.2",
-    "react-syntax-highlighter": "^12.2.1"
+    "react-syntax-highlighter": "^12.2.1",
+    "stackdriver-errors-js": "^0.8.0"
   },
   "scripts": {
     "start": "craco start",
