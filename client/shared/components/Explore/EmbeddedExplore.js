@@ -9,7 +9,7 @@ import { createEmbeddedExplore } from './helpers'
 const { validIdHelper, appContextMap, validateContent } = require('../../utils/tools');
 
 export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema } }) => {
-  console.log("EmbeddedExplore")
+  // console.log("EmbeddedExplore")
   const [iFrameExists, setIFrame] = useState(1);
   const [apiContent, setApiContent] = useState(undefined);
   const [exploreObj, setExploreObj] = useState({});
@@ -98,7 +98,6 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
                 {lookerContent[0].actions ?
                   <Grid container>
                     {lookerContent[0].actions.map(item => {
-                      console.log({ item })
                       let Component = item.component
                       return (
                         <Grid item sm={item.gridWith}>

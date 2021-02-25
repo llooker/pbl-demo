@@ -9,7 +9,7 @@ const savedDefaultQueriesToggle = {
     "Default Query",
     "Saved Queries",
   ],
-  "value": "tileToggleValue",
+  "value": "toggleValue",
   "component": ToggleButton,
   "method": createEmbeddedExplore,
 }
