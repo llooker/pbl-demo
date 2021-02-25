@@ -11,7 +11,6 @@ if (window.location.origin !== "https://embed.demo.com:8080") {
     service: process.env.REACT_APP_PACKAGE_NAME,
   });
 } else {
-  console.log('else')
   errorHandler = { report: console.error };
 }
 

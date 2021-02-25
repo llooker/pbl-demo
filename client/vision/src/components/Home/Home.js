@@ -141,7 +141,7 @@ export default function Home(props) {
   //   errorHandler.report(err);
   // }
 
-  console.log({ errorHandler })
+  // console.log({ errorHandler })
 
   return (
     <div className={classes.root} >

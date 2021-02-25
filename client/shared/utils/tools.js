@@ -63,6 +63,6 @@ export const validateContent = (object, schema) => {
       console.log(error.message);
     });
   } else {
-    console.log("info is valid");
+    // console.log("info is valid");
   }
 }
