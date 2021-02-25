@@ -297,5 +297,10 @@ export const useStyles = makeStyles((theme) => ({
   },
   positionRelative: {
     position: 'relative'
-  }
+  },
+  w90: {
+    width: '90%'
+  },
+  // animatedGridItem: { transition: "all .5s ease-in-out" }
+  animatedGridItem: { transition: "2s" }
 }));

@@ -16,7 +16,7 @@ export const Dropdown = ({ classes, filterItem, helperFunctionMapper, }) => {
 
   return (
     <EmbedHighlight classes={classes} >
-      <FormControl className={classes.formControl}>
+      <FormControl className={`${classes.formControl} ${classes.w90}`}>
         <InputLabel id="demo-simple-select-label"
         >{filterItem.label}</InputLabel>
         <Select

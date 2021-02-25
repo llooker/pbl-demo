@@ -29,8 +29,7 @@ export const Dashboard = (props) => {
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
-  const [horizontalLayout, setHorizontalLayout] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [makeShiftDrawerOpen, setMakeShiftDrawerOpen] = useState(true);
   const [hiddenFilterValue, setHiddenFilterValue] = useState(null);
 
   let dynamicVisConfigFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Vis Config" });
@@ -96,8 +95,7 @@ export const Dashboard = (props) => {
       themeName += `_${fontThemeSelectValue}`;
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
       setApiContent(undefined);
-      setHorizontalLayout(false);
-      setDrawerOpen(true);
+      setMakeShiftDrawerOpen(true);
     }
   }, [lookerUser, isReady, selectedMenuItem])
 
@@ -135,13 +133,8 @@ export const Dashboard = (props) => {
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
-    setExpansionPanelHeight(horizontalLayout ? $('.MuiExpansionPanel-root:visible').innerHeight() || 0 : 0)
+    setExpansionPanelHeight(0)
   })
-
-  useEffect(() => {
-    setHeight((window.innerHeight - topBarBottomBarHeight));
-    setExpansionPanelHeight(horizontalLayout ? $('.MuiExpansionPanel-root:visible').innerHeight() || 0 : 0)
-  }, [horizontalLayout])
 
   // needed to copy from home to make it work
   useEffect(() => {
@@ -276,16 +269,14 @@ export const Dashboard = (props) => {
     // console.log("useEffect")
     let params = queryString.parse(location.search);
     if (lookerContent[0].filterName) {
-      // console.log({ params })
-      // console.log('lookerContent[0].filterName', lookerContent[0].filterName)
       let paramMatchesFilterName = params[lookerContent[0].filterName] > 0 ? true : false;
-      // console.log({ paramMatchesFilterName })
       if (paramMatchesFilterName)
         customFilterAction(lookerContent[0].filterName, params[lookerContent[0].filterName])
 
     }
 
   }, [customFilterAction, location.search, lookerContent])
+
   // localStorage.debug = 'looker:chatty:*'
 
 
@@ -294,7 +285,7 @@ export const Dashboard = (props) => {
       style={{ height }}
     >
       <ThemeProvider theme={themeToUse}>
-        <Card elevation={1} className={`${classes.paddingTB15} ${classes.height100Percent}`}>
+        <Card elevation={1} className={lookerContent[0].hasOwnProperty("filters") ? `${classes.padding15} ${classes.height100Percent}` : `${classes.paddingTB15} ${classes.height100Percent}`}>
           <div
             className={`${classes.root} ${classes.height100Percent}`}
           >
@@ -315,10 +306,8 @@ export const Dashboard = (props) => {
                   customFilterAction={customFilterAction}
                   lightThemeToggleValue={lightThemeToggleValue}
                   fontThemeSelectValue={fontThemeSelectValue}
-                  horizontalLayout={horizontalLayout}
-                  setHorizontalLayout={setHorizontalLayout}
-                  drawerOpen={drawerOpen}
-                  setDrawerOpen={setDrawerOpen}
+                  makeShiftDrawerOpen={makeShiftDrawerOpen}
+                  setMakeShiftDrawerOpen={setMakeShiftDrawerOpen}
                   helperFunctionMapper={helperFunctionMapper}
                 />
                 :
@@ -328,7 +317,6 @@ export const Dashboard = (props) => {
                 classes={classes}
                 lookerContent={lookerContent}
                 type={demoComponentType}
-                width={lookerContent[0].hasOwnProperty("filters") ? horizontalLayout ? 12 : drawerOpen ? 9 : 12 : 12}
               />
 
               <CodeFlyout {...props}

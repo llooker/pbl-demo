@@ -39,6 +39,7 @@ export const ApplicationContent = {
       "theme": "vision_theme",
       "filters": [createCaseSelect],
       "filterName": "Application ID",
+      "filterBarWidth": 2
     }],
   "requiredPermissionLevel": 0
 }

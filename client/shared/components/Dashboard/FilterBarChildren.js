@@ -4,7 +4,7 @@ import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, SelectFont, MapF
 import { validIdHelper } from '../../utils/tools';
 
 
-export const FilterBarChildren = ({ classes, apiContent, customFilterAction, horizontalLayout, lookerContent, type, helperFunctionMapper, lightThemeToggleValue, fontThemeSelectValue }) => {
+export const FilterBarChildren = ({ classes, apiContent, customFilterAction, lookerContent, type, helperFunctionMapper, lightThemeToggleValue, fontThemeSelectValue }) => {
   return (
     <Grid
       container spacing={3}>
@@ -12,7 +12,8 @@ export const FilterBarChildren = ({ classes, apiContent, customFilterAction, hor
         return (
           filterItem.component === 'autocomplete' ?
             <Grid
-              item sm={horizontalLayout ? 3 : 12}
+              item
+              sm={12}
               key={validIdHelper(`${type}-${filterItem.component}-${index}`)}>
               <AutoComplete
                 apiContent={apiContent[filterItem.component]} //new
@@ -25,7 +26,8 @@ export const FilterBarChildren = ({ classes, apiContent, customFilterAction, hor
 
             : filterItem.component === 'togglebutton' ?
 
-              <Grid item sm={horizontalLayout ? 3 : 12}
+              <Grid
+                item
                 key={validIdHelper(`${type}-${filterItem.label}`)}>
                 {filterItem.label === "Dynamic Tiles" ?
                   <ToggleTile
@@ -46,7 +48,8 @@ export const FilterBarChildren = ({ classes, apiContent, customFilterAction, hor
               :
               filterItem.component === 'switch' ?
 
-                <Grid item sm={horizontalLayout ? 1 : 12}
+                <Grid
+                  item
                   key={validIdHelper(`${type}-dynamicThemeMode`)}>
                   <SwitchTheme
                     classes={classes}
@@ -55,18 +58,20 @@ export const FilterBarChildren = ({ classes, apiContent, customFilterAction, hor
                   />
                 </Grid>
                 :
-                filterItem.component === "dropdown" ? <Grid item sm={horizontalLayout ? 2 : 12}
-                  key={validIdHelper(`${type}-dynamicThemeFont`)} //needs work
-                >
-                  <Dropdown
-                    classes={classes}
-                    filterItem={filterItem}
-                    helperFunctionMapper={helperFunctionMapper}
-                  />
-                </Grid> :
+                filterItem.component === "dropdown" ?
+                  <Grid item
+                    sm
+                    key={validIdHelper(`${type}-dynamicThemeFont`)} //needs work
+                  >
+                    <Dropdown
+                      classes={classes}
+                      filterItem={filterItem}
+                      helperFunctionMapper={helperFunctionMapper}
+                    />
+                  </Grid> :
                   filterItem.component === 'mapfilter' ?
 
-                    <Grid item sm={horizontalLayout ? 3 : 12}
+                    <Grid item
                       key={validIdHelper(`${type}-${filterItem.component}-${index}`)}>
                       <MapFilter
                         classes={classes}
@@ -75,7 +80,7 @@ export const FilterBarChildren = ({ classes, apiContent, customFilterAction, hor
                       />
                     </Grid>
                     : filterItem.component === 'rangeslider' ?
-                      <Grid item sm={horizontalLayout ? 3 : 12}
+                      <Grid item
                         key={validIdHelper(`${type}-${filterItem.component}-${index}`)}>
                         <RangeSlider
                           apiContent={apiContent[filterItem.component]}
@@ -85,7 +90,7 @@ export const FilterBarChildren = ({ classes, apiContent, customFilterAction, hor
                         />
                       </Grid>
                       : filterItem.component === 'togglebuttonapi' ?
-                        <Grid item sm={horizontalLayout ? 3 : 12}
+                        <Grid item
                           key={validIdHelper(`${type}-${filterItem.component}-${index}`)}>
                           <ToggleApi
                             apiContent={apiContent[filterItem.component]}
