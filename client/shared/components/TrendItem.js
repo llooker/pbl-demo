@@ -1,21 +1,22 @@
 import React from 'react';
-import { Typography, Grid } from '@material-ui/core';
-import { validIdHelper } from '../utils/tools';
+import { Typography, Grid, ListItem } from '@material-ui/core';
+import { NumberToColoredPercent } from './Accessories';
 
 export function TrendItem({ trendItem, classes, fieldsOfInterest }) {
-  // console.log('TrendItem')
-  // console.log({ trendItem })
-  // console.log({ classes })
-  // console.log({ fieldsOfInterest })
-
-  let textStr = '';
+  let formattedText = [];
   fieldsOfInterest.map(field => {
-    textStr += " " + trendItem[field]
+    if (field === "change") {
+      let numberToColoredPercent = <NumberToColoredPercent val={trendItem[field]} />
+      formattedText.push(numberToColoredPercent)
+    } else formattedText.push(<Typography variant="subtitle1" display="inline">{trendItem[field]}</Typography>)
   })
 
   return (
-    <Grid item >
-      <Typography variant="subtitle1">{textStr}</Typography>
-    </Grid>
+    <ListItem
+      chip
+    // className={`${classes.nested} ${classes.roundedTab} ${classes.ml12}`}
+    >
+      {formattedText}
+    </ListItem>
   )
 }

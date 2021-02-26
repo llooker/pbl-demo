@@ -5,6 +5,7 @@ import { ToggleButton } from '@pbl-demo/components/Filters'
 import { createEmbeddedExplore } from '@pbl-demo/components/Explore/helpers'
 
 const savedDefaultQueriesToggle = {
+  "label": "Starting Points:",
   "options": [
     "Default Query",
     "Saved Queries",

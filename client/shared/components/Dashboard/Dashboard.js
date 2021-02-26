@@ -2,7 +2,7 @@ import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useLocation, useHistory } from "react-router-dom";
-import { Grid, Card, Container } from '@material-ui/core'
+import { Grid, Card, List } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import FilterBar from './FilterBar';
@@ -267,7 +267,6 @@ export const Dashboard = (props) => {
   // localStorage.debug = 'looker:chatty:*'
 
 
-
   return (
     <div className={`${classes.root} ${classes.positionRelative}`}
       style={{ height }}
@@ -301,28 +300,31 @@ export const Dashboard = (props) => {
                 :
                 ''}
 
-              {apiContent && apiContent.hasOwnProperty("trends") ?
+              {lookerContent[0].hasOwnProperty("trends")
+                && apiContent
+                && apiContent.hasOwnProperty("trends")
+                ?
 
-                <Grid item
-                  sm={12}
-                  className={classes.padding15}>
-                  <Grid
-                    container
-                    spacing={3}
-                  >
+                <Grid item sm={12}>
+
+                  <List
+                    className={classes.inlineList}
+                    component="div">
                     {
                       apiContent.trends.map((trendItem, index) => {
                         return (
+                          // trendItem.change ?
                           <TrendItem
                             key={validIdHelper(`${demoComponentType}-TrendItem-${index}`)}
                             fieldsOfInterest={lookerContent[0].trends[0].fieldsOfInterest}
                             trendItem={trendItem}
                             classes={classes}
-                          // width={Math.floor(12 / apiContent.trends.length)} 
                           />
+                          //: ""
                         )
                       })
-                    }</Grid></Grid>
+                    }</List>
+                </Grid>
 
                 :
                 ''}

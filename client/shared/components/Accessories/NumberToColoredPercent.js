@@ -1,6 +1,10 @@
 import React from 'react';
 
 export function NumberToColoredPercent({ val, positive_good, abs_val }) {
+
+  // console.log("NumberToColoredPercent")
+  // console.log({ val })
+
   const colors = {
     up: (positive_good) ? 'green' : 'red',
     down: (positive_good) ? 'red' : 'green'

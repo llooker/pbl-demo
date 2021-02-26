@@ -301,6 +301,10 @@ export const useStyles = makeStyles((theme) => ({
   w90: {
     width: '90%'
   },
-  // animatedGridItem: { transition: "all .5s ease-in-out" }
-  animatedGridItem: { transition: "2s" }
+  animatedGridItem: { transition: "2s" },
+  inlineList: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 0,
+  },
 }));

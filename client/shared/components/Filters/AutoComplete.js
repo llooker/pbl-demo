@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { ApiHighlight } from '../Accessories/Highlight';
-import { NumberToColoredPercent } from '../Accessories/NumberToColoredPercent';
+import { NumberToColoredPercent } from '../Accessories';
 import SearchIcon from '@material-ui/icons/Search';
 
 import parse from "autosuggest-highlight/parse";

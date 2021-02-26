@@ -26,7 +26,6 @@ export const createEmbeddedExplore = async ({ LookerEmbedSDK, lookerContentItem,
       .catch((error) => {
         console.error('Connection error', error)
       })
-    console.log({ returnObj })
     return returnObj
   } else {
     let returnObj = await LookerEmbedSDK.createExploreWithId(exploreId)
