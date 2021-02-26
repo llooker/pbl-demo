@@ -115,34 +115,45 @@ export const createCase = async ({ newValue, filterItem, hiddenFilterValue }) =>
   };
 }
 
-export const runInlineQuery = ({ sdk, lookerContentItem, type }) => {
+export const runInlineQuery = async ({ sdk, item, lookerUser, type }) => {
+  // console.log("runInlineQuery")
+  // console.log({ item })
+  // console.log({ type })
+
   let apiContentObj = {}
   if (type === "filters") {
-    lookerContentItem.filters.map(async (filterItem, index) => {
-      if (filterItem.inlineQuery) {
-        let jsonQuery = filterItem.inlineQuery
-        jsonQuery.filters = {
-          ...jsonQuery.filters,
-          [filterItem.desiredFilterName]: lookerUser.user_attributes.brand
-        };
-        let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: filterItem.resultFormat || 'json', body: jsonQuery }));
-        console.log({ lookerResponseData })
-        let queryResultsForDropdown = [];
-        let desiredProperty = Object.keys(lookerResponseData[0])[0];
-        console.log({ desiredProperty })
+    if (item.inlineQuery) {
+      let jsonQuery = item.inlineQuery
+      jsonQuery.filters = {
+        ...jsonQuery.filters,
+        [item.desiredFilterName]: lookerUser.user_attributes.brand
+      };
+      let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
+      let queryResultsForDropdown = [];
+      let desiredProperty = Object.keys(lookerResponseData[0])[0];
+      console.log({ desiredProperty })
 
-        for (let i = 0; i < lookerResponseData.length; i++) {
-          queryResultsForDropdown.push({
-            'label': lookerResponseData[i][desiredProperty],
-            'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined,
-            'count': (lookerResponseData[i]['count']) ? lookerResponseData[i]['count'] : undefined
-          })
-        }
-        apiContentObj[filterItem.component] = queryResultsForDropdown;
+      for (let i = 0; i < lookerResponseData.length; i++) {
+        queryResultsForDropdown.push({
+          'label': lookerResponseData[i][desiredProperty],
+          'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined,
+          'count': (lookerResponseData[i]['count']) ? lookerResponseData[i]['count'] : undefined
+        })
       }
-    })
+      apiContentObj[item.component] = queryResultsForDropdown;
+      return apiContentObj
+    }
   } else if (type === "trends") {
-    console.log("we here!!!")
+    if (item.inlineQuery) {
+      let jsonQuery = item.inlineQuery
+      jsonQuery.filters = {
+        ...jsonQuery.filters,
+        [item.desiredFilterName]: lookerUser.user_attributes.brand
+      };
+      let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
+      apiContentObj[item.component] = lookerResponseData;
+      return apiContentObj
+
+    }
   }
-  return apiContentObj
 }

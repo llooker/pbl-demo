@@ -13,3 +13,4 @@ export { SignIn } from "./SignIn";
 export { TopDrawer } from "./TopDrawer";
 export { LeftDrawer } from "./LeftDrawer";
 export { Dashboard } from "./Dashboard/Dashboard";
+export { TrendItem } from "./TrendItem";

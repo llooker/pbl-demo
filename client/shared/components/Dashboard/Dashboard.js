@@ -2,7 +2,7 @@ import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useLocation, useHistory } from "react-router-dom";
-import { Grid, Card } from '@material-ui/core'
+import { Grid, Card, Container } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import FilterBar from './FilterBar';
@@ -12,7 +12,7 @@ import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../
 import queryString from 'query-string';
 import { appContextMap, validIdHelper } from '../../utils/tools';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery } from './helpers';
-
+import { TrendItem } from "@pbl-demo/components";
 
 export const Dashboard = (props) => {
   // console.log('Dashboard');
@@ -145,7 +145,7 @@ export const Dashboard = (props) => {
   }, []);
 
 
-  const performLookerApiCalls = function (lookerContent, dynamicTheme) {
+  const performLookerApiCalls = (lookerContent, dynamicTheme) => {
     // console.log("performLookerApiCalls");
     // console.log({ lookerContent })
     // console.log({ dynamicTheme })
@@ -196,11 +196,17 @@ export const Dashboard = (props) => {
       //api calls
       if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
       ) {
-        let apiContentObj = runInlineQuery({ sdk, lookerContentItem, "type": "filters" });
-        setApiContent(apiContentObj)
-      } else if (lookerContentItem.hasOwnProperty('trends')) {
-        let apiContentObj = runInlineQuery({ sdk, lookerContentItem, "type": "trends" });
-        setApiContent(apiContentObj)
+        let asyncApiContentObj = lookerContentItem.filters.map(async item => {
+          return await runInlineQuery({ sdk, item, lookerUser, "type": "filters" })
+        })
+        let apiContentObj = await Promise.all(asyncApiContentObj)
+        setApiContent(apiContentObj[0] ? apiContentObj[0] : {})
+      } else if (lookerContentItem.hasOwnProperty('trends')) { //slightly redundant
+        let asyncApiContentObj = lookerContentItem.trends.map(async item => {
+          return await runInlineQuery({ sdk, item, lookerUser, "type": "trends" })
+        })
+        let apiContentObj = await Promise.all(asyncApiContentObj)
+        setApiContent(apiContentObj[0] ? apiContentObj[0] : {})
       }
     })
   }
@@ -260,10 +266,6 @@ export const Dashboard = (props) => {
 
   // localStorage.debug = 'looker:chatty:*'
 
-  useEffect(() => {
-    console.log("useEffect");
-    console.log({ apiContent })
-  }, [apiContent])
 
 
   return (
@@ -298,6 +300,33 @@ export const Dashboard = (props) => {
                 />
                 :
                 ''}
+
+              {apiContent && apiContent.hasOwnProperty("trends") ?
+
+                <Grid item
+                  sm={12}
+                  className={classes.padding15}>
+                  <Grid
+                    container
+                    spacing={3}
+                  >
+                    {
+                      apiContent.trends.map((trendItem, index) => {
+                        return (
+                          <TrendItem
+                            key={validIdHelper(`${demoComponentType}-TrendItem-${index}`)}
+                            fieldsOfInterest={lookerContent[0].trends[0].fieldsOfInterest}
+                            trendItem={trendItem}
+                            classes={classes}
+                          // width={Math.floor(12 / apiContent.trends.length)} 
+                          />
+                        )
+                      })
+                    }</Grid></Grid>
+
+                :
+                ''}
+
 
               <EmbeddedDashboardContainer
                 classes={classes}

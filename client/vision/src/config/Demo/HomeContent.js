@@ -26,7 +26,11 @@ const countyTrends = {
   },
   "resultFormat": "json",
   "label": "Country trends",
-  "component": "trend"
+  "component": "trends",
+  "fieldsOfInterest": [
+    "person.home_city",
+    "case.count"
+  ]
 }
 
 

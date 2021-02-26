@@ -6,12 +6,14 @@ import { FilterBarChildren } from './FilterBarChildren'
 import { appContextMap, validIdHelper } from '../../utils/tools';
 
 export default function FilterBar(props) {
+  // console.log("FilterBar")
 
   const { theme } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
   const { staticContent: { lookerContent }, staticContent: { type }, classes, apiContent, customFilterAction,
     makeShiftDrawerOpen, setMakeShiftDrawerOpen, helperFunctionMapper, lightThemeToggleValue, fontThemeSelectValue } = props;
 
+  // console.log({ apiContent })
   return (
     <Grid item
       sm={makeShiftDrawerOpen ? lookerContent[0].filterBarWidth ? lookerContent[0].filterBarWidth : 3 : "auto"}
