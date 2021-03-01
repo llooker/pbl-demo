@@ -138,9 +138,6 @@ export const useStyles = makeStyles((theme) => ({
     minHeight: 150,
     overflow: 'scroll'
   },
-  padding15: {
-    padding: 15
-  },
   maxHeight75: {
     maxHeight: 75,
     height: 75,
@@ -306,5 +303,10 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     padding: 0,
+  },
+  inlineListPaddingTop10: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 10,
   },
 }));

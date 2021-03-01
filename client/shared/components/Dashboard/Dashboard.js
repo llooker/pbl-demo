@@ -309,22 +309,23 @@ export const Dashboard = (props) => {
                 && apiContent.hasOwnProperty("trends")
                 ?
 
-                <Grid item sm={12}>
+                <Grid item sm={12} >
 
                   <List
-                    className={classes.inlineList}
-                    component="div">
+                    disablePadding
+                    className={`${classes.inlineListPaddingTop10}`}
+                    component="div"
+                  >
                     {
                       apiContent.trends.map((trendItem, index) => {
                         return (
-                          // trendItem.change ?
                           <TrendItem
                             key={validIdHelper(`${demoComponentType}-TrendItem-${index}`)}
                             fieldsOfInterest={lookerContent[0].trends[0].fieldsOfInterest}
                             trendItem={trendItem}
                             classes={classes}
+                            index={index}
                           />
-                          //: ""
                         )
                       })
                     }</List>

@@ -1,8 +1,18 @@
 import React from 'react';
 import { Typography, Grid, ListItem } from '@material-ui/core';
 import { NumberToColoredPercent } from './Accessories';
+import { ApiHighlight } from './Accessories/Highlight';
 
-export function TrendItem({ trendItem, classes, fieldsOfInterest }) {
+console.log({ ApiHighlight })
+
+const { validIdHelper } = require('../utils/tools');
+
+
+export function TrendItem({ trendItem, classes, fieldsOfInterest, index }) {
+
+  // console.log("TrendItem")
+  // console.log({ trendItem })
+
   let formattedText = [];
   fieldsOfInterest.map(field => {
     if (field === "change") {
@@ -12,11 +22,16 @@ export function TrendItem({ trendItem, classes, fieldsOfInterest }) {
   })
 
   return (
-    <ListItem
-      chip
-    // className={`${classes.nested} ${classes.roundedTab} ${classes.ml12}`}
+
+    <ApiHighlight
+      key={validIdHelper(`trendItem-${index}`)}
+      classes={classes}
     >
-      {formattedText}
-    </ListItem>
+      <ListItem
+
+        key={validIdHelper(`trendItem-listItem-${index}`)}>
+        {formattedText}
+      </ListItem>
+    </ApiHighlight>
   )
 }
