@@ -12,11 +12,11 @@ export const ToggleVisColor = ({ classes, filterItem, helperFunctionMapper, ligh
   // console.log({ filterItem })
   // console.log({ helperFunctionMapper })
 
-  const [visColorToggleValue, setVisColorToggleValue] = useState(filterItem ? filterItem.options[0] : "");
+  const [visColorToggleValue, setVisColorToggleValue] = useState(filterItem ? filterItem.options[1] : "");
 
 
   useEffect(() => {
-    setVisColorToggleValue(filterItem ? filterItem.options[0] : "")
+    setVisColorToggleValue(filterItem ? filterItem.options[1] : "")
   }, [fontThemeSelectValue, lightThemeToggleValue])
 
   return (

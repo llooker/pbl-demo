@@ -90,7 +90,7 @@ export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue,
   }
   return {
     "methodName": filterItem.methodName,
-    "response": { themeName }
+    "response": themeName
   }
 }
 
@@ -131,7 +131,6 @@ export const runInlineQuery = async ({ sdk, item, lookerUser, type }) => {
       let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
       let queryResultsForDropdown = [];
       let desiredProperty = Object.keys(lookerResponseData[0])[0];
-      console.log({ desiredProperty })
 
       for (let i = 0; i < lookerResponseData.length; i++) {
         queryResultsForDropdown.push({

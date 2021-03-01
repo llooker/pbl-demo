@@ -68,6 +68,7 @@ export default function Home(props) {
 
   const corsApiCall = async (func, args = []) => {
     // console.log("corsApiCall");
+    //decorator approach??
     try {
       let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
 

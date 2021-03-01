@@ -64,6 +64,8 @@ export const Dashboard = (props) => {
     // console.log({ newValue })
     // console.log({ filterItem })
     // console.log({ hiddenFilterValue })
+
+
     let helperResponse = await filterItem.method({
       newValue, filterItem, dashboardOptions,
       isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue,
@@ -72,15 +74,16 @@ export const Dashboard = (props) => {
     let { methodName, response } = helperResponse; //dynamic
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
       dashboardObj.setOptions(response);
-    }
-    else if (methodName === "handleThemeChange") {
+    } else if (methodName === "handleThemeChange") {
+      console.log(typeof newValue === "boolean")
       if (typeof newValue === "boolean") {
         setLightThemeToggleValue(newValue)
-      } else setFontThemeSelectValue(newValue)
+      } else {
+        setFontThemeSelectValue(newValue)
+      }
       corsApiCall(performLookerApiCalls, [lookerContent, response])
     }
     else if (methodName === "createCase") {
-      console.log("createCase")
       corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
       return response
     }
@@ -160,6 +163,7 @@ export const Dashboard = (props) => {
         lookerContentItem.theme ?
           lookerContentItem.theme :
           'atom_fashion';
+      // console.log({ themeToUse })
 
       LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))

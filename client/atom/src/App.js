@@ -56,7 +56,7 @@ function App(props) {
   }, [clientSession, sdk])
 
 
-
+  console.log({ clientSession })
 
 
   return (

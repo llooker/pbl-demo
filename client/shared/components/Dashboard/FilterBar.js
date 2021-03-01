@@ -33,7 +33,7 @@ export default function FilterBar(props) {
             makeShiftDrawerOpen ?
               <ChevronLeft
                 onClick={() => setMakeShiftDrawerOpen(!makeShiftDrawerOpen)}
-                aria- label="close menu"
+                aria-label="close menu"
               /> :
               <Menu
                 onClick={() => setMakeShiftDrawerOpen(!makeShiftDrawerOpen)}

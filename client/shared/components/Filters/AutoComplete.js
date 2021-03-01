@@ -63,8 +63,9 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, setDynam
                   flexWrap: 'wrap',
                 }}><SearchIcon />
                   {filterItem.alternateName}</div> :
-                filterItem.filterName}
-              InputLabelProps={filterItem.disableShrink ? { shrink: false } : ""}
+                filterItem.filterName
+              }
+              InputLabelProps={filterItem.disableShrink ? { shrink: false } : {}}
               variant="outlined"
             />
           }
@@ -73,7 +74,7 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, setDynam
           onInputChange={_.debounce((event) => {
             if (filterItem.apiDrivenSearch && event.target.value) setDynamicSearch(event.target.value)
           }, 1000)}
-          size={filterItem.size ? filterItem.size : ""}
+          size={filterItem.size ? filterItem.size : "medium"}
           onOpen={() => { setOpen(true) }}
           onClose={() => { setOpen(false) }}
           value={value}
