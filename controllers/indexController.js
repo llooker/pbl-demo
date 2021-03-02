@@ -10,7 +10,7 @@ module.exports.readSession = async (req, res, next) => {
   // console.log("readSession")
   let { session } = req
   // console.log({ session })
-  session.packageName = process.env.PACKAGE_NAME
+  // session.packageName = process.env.PACKAGE_NAME
   res.status(200).send({ session })
 }
 
@@ -72,7 +72,7 @@ async function tokenHelper(session) {
   const embed_user_token = await embeddedUserSdk.login_user(userCred.id.toString())
   const u = {
     api_user_token: embed_user_token.value,
-    expires_in: (Date.now() + (embed_user_token.value.expires_in * 900)) // 5000)
+    expires_in: (Date.now() + (embed_user_token.value.expires_in * 900)) //1000) //
   }
   return { ...u }
 

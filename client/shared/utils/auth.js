@@ -11,6 +11,7 @@ export const checkForExistingSession = async () => {
     }
   })
   const sessionResponseData = await sessionResponse.json();
+  console.log({ sessionResponseData })
   return { session: sessionResponseData.session };
 }
 
@@ -25,7 +26,7 @@ export const writeNewSession = async (newSession) => {
     },
     body: JSON.stringify(newSession)
   })
-  // console.log({ newSessionResponse })
+  console.log({ newSessionResponse })
   if (newSessionResponse.status === 200) {
     const newSessionResponseData = await newSessionResponse.json();
     return { status: newSessionResponse.status, session: newSessionResponseData.session };
@@ -51,8 +52,7 @@ export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
   // console.log('createSdkHelper')
   // console.log({ accessToken })
   // console.log({ lookerBaseUrl })
-
-  if (accessToken && lookerBaseUrl) {
+  try {
     const pblsession = new PblSessionEmbed({
       ...DefaultSettings(),
       base_url: lookerBaseUrl,
@@ -60,7 +60,9 @@ export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
     });
 
     let sdk = new Looker40SDK(pblsession);
-    return sdk;
+    return { status: "success", sdk };
+  } catch (err) {
+    return { status: "error", err }
   }
 
 }

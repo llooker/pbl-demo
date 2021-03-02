@@ -8,7 +8,7 @@ import { useStyles } from './styles.js';
 
 export const SignIn = ({ content, initialUser }) => {
 
-  let { clientSession, setClientSession, sdk, setSdk, initialHref, setInitialHref } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  let { clientSession, setClientSession, sdk, setSdk, initialHref, setInitialHref, setIsReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { logo, logoStyle, backgroundImageStyle } = content
 
   const responseGoogle = async (response) => {
@@ -17,10 +17,16 @@ export const SignIn = ({ content, initialUser }) => {
       if (newSession.status === 200) {
         const lookerBaseUrl = newSession.session.lookerBaseUrl ? newSession.session.lookerBaseUrl : '';
         const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
-        const sdk = createSdkHelper({ lookerBaseUrl, accessToken })
-
-        setClientSession(newSession.session);
-        setSdk(sdk)
+        const sdkHelperResponse = createSdkHelper({ accessToken, lookerBaseUrl })
+        if (sdkHelperResponse.status === "success") {
+          setClientSession(newSession.session);
+          setSdk(sdkHelperResponse.sdk)
+        }
+        else if (sdkHelperResponse.status === "error") {
+          setIsReady(false);
+          endSession();
+          errorHandler.report(sdkHelperResponse.err)
+        }
       } else if (newSession.status === 307) { //redirect
         endSession();
         setClientSession({})

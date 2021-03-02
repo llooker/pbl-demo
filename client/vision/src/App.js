@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from "react-router-dom";
 import AppContext from './contexts/AppContext';
-import { checkForExistingSession, createSdkHelper } from '@pbl-demo/utils/auth';
+import { checkForExistingSession, createSdkHelper, endSession } from '@pbl-demo/utils/auth';
 import Home from './components/Home/Home';
 import * as DemoComponentsContentArr from './config/Demo';
 import { validIdHelper } from './tools';
@@ -21,24 +21,30 @@ function App(props) {
   const [initialHref, setInitialHref] = useState();
   const [isReady, setIsReady] = useState(false);
 
+  let history = useHistory();
+
   //onload
   useEffect(() => {
     async function fetchSession() {
-
       const sessionResponse = await checkForExistingSession();
-      if (sessionResponse.session) {
 
-        const lookerBaseUrl = sessionResponse.lookerBaseUrl ? sessionResponse.lookerBaseUrl : undefined;
-        const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : undefined;
+      const session = sessionResponse.session ? sessionResponse.session : undefined;
+      const lookerBaseUrl = sessionResponse.lookerBaseUrl ? sessionResponse.lookerBaseUrl : undefined;
+      const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : undefined;
 
-        if (lookerBaseUrl && accessToken) {
-          const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
-          setSdk(sdk)
-        }
-
-        setClientSession(sessionResponse.session)
-        if (typeof errorHandler.setUser === 'function') {
-          errorHandler.setUser(JSON.stringify(sessionResponse.session.lookerUser))
+      if (session && lookerBaseUrl && accessToken) {
+        const sdkHelperResponse = createSdkHelper({ accessToken, lookerBaseUrl })
+        if (sdkHelperResponse.status === "success") {
+          setSdk(sdkHelperResponse.sdk)
+          setClientSession(sessionResponse.session)
+          if (typeof errorHandler.setUser === 'function') {
+            errorHandler.setUser(JSON.stringify(sessionResponse.session.lookerUser))
+          }
+        } else if (sdkHelperResponse.status === "error") {
+          setIsReady(false);
+          endSession();
+          history.push("/");
+          errorHandler.report(sdkHelperResponse.err)
         }
       }
     }
@@ -50,8 +56,15 @@ function App(props) {
     else if (clientSession.userProfile) {
       const lookerBaseUrl = clientSession.lookerBaseUrl ? clientSession.lookerBaseUrl : '';
       const accessToken = clientSession.lookerApiToken ? clientSession.lookerApiToken.api_user_token : '';
-      const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
-      setSdk(sdk)
+      const sdkHelperResponse = createSdkHelper({ accessToken, lookerBaseUrl })
+      if (sdkHelperResponse.status === "success") {
+        setSdk(sdkHelperResponse.sdk)
+      } else if (sdkHelperResponse.status === "error") {
+        setIsReady(false);
+        endSession();
+        history.push("/");
+        errorHandler.report(sdkHelperResponse.err)
+      }
     }
   }, [clientSession, sdk])
 

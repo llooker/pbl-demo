@@ -83,10 +83,10 @@ export default function Home(props) {
         return res
       }
     } catch (err) {
-      errorHandler.report({ err, context: errorHandler.context });
-      endSession();
-      setClientSession({})
-      history.push("/");
+      errorHandler.report(err)
+      // endSession();
+      // setClientSession({})
+      // history.push("/");
     }
   }
 

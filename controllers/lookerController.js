@@ -11,7 +11,7 @@ module.exports.auth = async (req, res, next) => {
   const { lookerUser } = req.session
   const url = createSignedUrl(src,
     lookerUser,
-    process.env.LOOKER_HOST, //LOOKER_HOST
+    process.env.LOOKER_HOST,
     process.env.LOOKERSDK_EMBED_SECRET);
   res.status(200).json({ url });
 }
