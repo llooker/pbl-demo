@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useContext, useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { Card, CardActions, CardContent, CardFooter, Typography } from '@material-ui/core'
-import { writeNewSession, createSdkHelper } from '../utils'
+import { writeNewSession, createSdkHelper, endSession } from '../utils'
 const { validIdHelper, appContextMap, validateContent, errorHandler } = require('../utils');
 import { useStyles } from './styles.js';
 
@@ -17,13 +17,16 @@ export const SignIn = ({ content, initialUser }) => {
     } else {
       try {
         let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialUser }) //initialLookerUser
+        if (newSession.status === 200) {
+          const lookerBaseUrl = newSession.session.lookerBaseUrl ? newSession.session.lookerBaseUrl : '';
+          const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
+          const sdk = createSdkHelper({ lookerBaseUrl, accessToken })
 
-        const lookerBaseUrl = newSession.session.lookerBaseUrl ? newSession.session.lookerBaseUrl : '';
-        const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
-        const sdk = createSdkHelper({ lookerBaseUrl, accessToken })
-
-        setClientSession(newSession.session);
-        setSdk(sdk)
+          setClientSession(newSession.session);
+          setSdk(sdk)
+        } else if (newSession.status === 307) { //redirect
+          endSession();
+        }
       } catch (err) {
         errorHandler.report(err)
       }

@@ -15,7 +15,7 @@ module.exports.readSession = async (req, res, next) => {
 }
 
 module.exports.writeSession = async (req, res, next) => {
-  console.log("writeSession")
+  // console.log("writeSession")
   let { session } = req;
   let { userProfile } = req.body;
   //apply environment variables to session
@@ -34,12 +34,14 @@ module.exports.writeSession = async (req, res, next) => {
     last_name: userProfile.familyName
   }
   session.lookerUser = lookerUser;
-  //this is going to call createSignedUrl via tokenHelper
-  let lookerApiToken = await tokenHelper(session);
-  console.log({ lookerApiToken })
-  session.lookerApiToken = lookerApiToken;
-
-  res.status(200).send({ session: session });
+  // this is going to call createSignedUrl via tokenHelper
+  if (session.lookerUser.external_user_id) {
+    let lookerApiToken = await tokenHelper(session);
+    session.lookerApiToken = lookerApiToken;
+    res.status(200).send({ message: "succces", session });
+  } else {
+    res.status(307).send({ message: 'could not set external_user_id, redirect to sign in' })
+  }
 }
 
 module.exports.endSession = async (req, res, next) => {

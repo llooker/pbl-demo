@@ -15,8 +15,8 @@ export const checkForExistingSession = async () => {
 }
 
 export const writeNewSession = async (newSession) => {
-  console.log('writeNewSession')
-  console.log({ newSession })
+  // console.log('writeNewSession')
+  // console.log({ newSession })
   let newSessionResponse = await fetch('/writesession', {
     method: 'POST',
     headers: {
@@ -25,8 +25,13 @@ export const writeNewSession = async (newSession) => {
     },
     body: JSON.stringify(newSession)
   })
-  const newSessionResponseData = await newSessionResponse.json();
-  return { session: newSessionResponseData.session };
+  // console.log({ newSessionResponse })
+  if (newSessionResponse.status === 200) {
+    const newSessionResponseData = await newSessionResponse.json();
+    return { status: newSessionResponse.status, session: newSessionResponseData.session };
+  } else if (newSessionResponse.status === 307) {
+    return { status: newSessionResponse.status };
+  }
 }
 
 export const endSession = async () => {
@@ -61,30 +66,13 @@ export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
 }
 
 export const checkToken = async (expires_in) => {
-  // console.log('checkToken?????');
+  // console.log('checkToken');
   // console.log({ expires_in });
-  // console.log('Date.now()', Date.now());
-  // let dateeee = new Date(expires_in);
-  // console.log({ dateeee })
 
   if ((Date.now()) > expires_in) {
-    // console.log('inside iff')
-    // let sessionResponse = await fetch('/refreshlookertoken', {
-    //   method: 'GET',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json'
-    //   }
-    // })
-    // const sessionResponseData = await sessionResponse.json();
-    // const lookerBaseUrl = sessionResponseData.session.lookerBaseUrl ? sessionResponseData.session.lookerBaseUrl : '';
-    // const accessToken = sessionResponseData.session.lookerApiToken ? sessionResponseData.session.lookerApiToken.api_user_token : '';
-    // const sdk = createSdkHelper({ accessToken, lookerBaseUrl })
-    // return { status: "updated", sdk, clientSession: sessionResponseData.session }
     return { status: "expired" }
 
   } else {
-    // console.log("inside ellse")
     return { status: "ok" }
   }
 }
