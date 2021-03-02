@@ -12,24 +12,22 @@ export const SignIn = ({ content, initialUser }) => {
   const { logo, logoStyle, backgroundImageStyle } = content
 
   const responseGoogle = async (response) => {
-    if (response.error) {
-      errorHandler.report(response.error)
-    } else {
-      try {
-        let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialUser }) //initialLookerUser
-        if (newSession.status === 200) {
-          const lookerBaseUrl = newSession.session.lookerBaseUrl ? newSession.session.lookerBaseUrl : '';
-          const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
-          const sdk = createSdkHelper({ lookerBaseUrl, accessToken })
+    try {
+      let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialUser }) //initialLookerUser
+      if (newSession.status === 200) {
+        const lookerBaseUrl = newSession.session.lookerBaseUrl ? newSession.session.lookerBaseUrl : '';
+        const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
+        const sdk = createSdkHelper({ lookerBaseUrl, accessToken })
 
-          setClientSession(newSession.session);
-          setSdk(sdk)
-        } else if (newSession.status === 307) { //redirect
-          endSession();
-        }
-      } catch (err) {
-        errorHandler.report(err)
+        setClientSession(newSession.session);
+        setSdk(sdk)
+      } else if (newSession.status === 307) { //redirect
+        endSession();
+        setClientSession({})
       }
+    } catch (err) {
+      errorHandler.report(err)
+
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;

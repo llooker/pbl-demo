@@ -70,7 +70,7 @@ export default function Home(props) {
     // console.log("corsApiCall");
     //decorator approach??
     try {
-      let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in);
+      let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in || Date.now() - 1000);
 
       //new method of signing user out
       if (checkTokenRsp.status === 'expired') {
@@ -84,6 +84,9 @@ export default function Home(props) {
       }
     } catch (err) {
       errorHandler.report({ err, context: errorHandler.context });
+      endSession();
+      setClientSession({})
+      history.push("/");
     }
   }
 

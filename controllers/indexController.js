@@ -57,9 +57,9 @@ module.exports.refreshLookerToken = async (req, res, next) => {
 }
 
 async function tokenHelper(session) {
-  console.log("tokenHelper")
+  // console.log("tokenHelper")
   // Calling the iframe url to ensure the embed user exists
-  console.log('session.lookerUser', session.lookerUser)
+  // console.log('session.lookerUser', session.lookerUser)
   const url = await createSignedUrl('/alive', session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
   await rp(url)
   // Initialize the API session, sudo and retrieve the bearer token
