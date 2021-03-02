@@ -3,7 +3,6 @@ import { Typography, Grid, ListItem } from '@material-ui/core';
 import { NumberToColoredPercent } from './Accessories';
 import { ApiHighlight } from './Accessories/Highlight';
 
-console.log({ ApiHighlight })
 
 const { validIdHelper } = require('../utils/tools');
 

@@ -8,23 +8,23 @@ const rp = require('request-promise');
 module.exports.auth = async (req, res, next) => {
   // console.log('lookerController auth');
   const src = req.query.src;
-  // console.log({src})
+  const { lookerUser } = req.session
   const url = createSignedUrl(src,
-    req.session.lookerUser,
+    lookerUser,
     process.env.LOOKER_HOST, //LOOKER_HOST
     process.env.LOOKERSDK_EMBED_SECRET);
-  // console.log({ url })
   res.status(200).json({ url });
 }
 
 module.exports.updateLookerUser = async (req, res, next) => {
+  // console.log('lookerController updateLookerUser');
   const lookerUser = req.body;
+  session.lookerUser = lookerUser;
   let { session } = req;
   const url = createSignedUrl('/alive',
-    lookerUser, process.env.LOOKER_HOST,
+    session.lookerUser,
+    process.env.LOOKER_HOST,
     process.env.LOOKERSDK_EMBED_SECRET);
   await rp(url)
-  session.lookerUser = lookerUser;
-  // console.log({ url })
   res.status(200).send({ session });
 }

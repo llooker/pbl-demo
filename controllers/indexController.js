@@ -15,19 +15,29 @@ module.exports.readSession = async (req, res, next) => {
 }
 
 module.exports.writeSession = async (req, res, next) => {
-  // console.log("writeSession")
+  console.log("writeSession")
   let { session } = req;
-  session.userProfile = req.body.userProfile;
-  session.lookerUser = req.body.lookerUser;
+  let { userProfile } = req.body;
+  //apply environment variables to session
   session.lookerHost = process.env.LOOKER_HOST;
   session.lookerBaseUrl = process.env.LOOKERSDK_BASE_URL;
-  session.lookerUser.external_user_id = session.userProfile.email;
-  session.lookerUser.first_name = session.userProfile.givenName;
-  session.lookerUser.last_name = session.userProfile.familyName;
-  session.lookerUser.user_attributes.email = session.userProfile.email;
-  session.lookerApiToken = await tokenHelper(session);
   session.packageName = process.env.PACKAGE_NAME;
   session.cloudFunctionSecret = process.env.CLOUD_FUNCTION_SECRET;
+
+  //userProfile from google auth
+  session.userProfile = userProfile;
+  //initial lookerUser obj + properties from google auth
+  let lookerUser = {
+    ...req.body.lookerUser,
+    external_user_id: userProfile.email,
+    first_name: userProfile.givenName,
+    last_name: userProfile.familyName
+  }
+  session.lookerUser = lookerUser;
+  //this is going to call createSignedUrl via tokenHelper
+  let lookerApiToken = await tokenHelper(session);
+  console.log({ lookerApiToken })
+  session.lookerApiToken = lookerApiToken;
 
   res.status(200).send({ session: session });
 }
@@ -45,8 +55,9 @@ module.exports.refreshLookerToken = async (req, res, next) => {
 }
 
 async function tokenHelper(session) {
-  // console.log("tokenHelper")
+  console.log("tokenHelper")
   // Calling the iframe url to ensure the embed user exists
+  console.log('session.lookerUser', session.lookerUser)
   const url = await createSignedUrl('/alive', session.lookerUser, process.env.LOOKER_HOST, process.env.LOOKERSDK_EMBED_SECRET);
   await rp(url)
   // Initialize the API session, sudo and retrieve the bearer token
@@ -59,7 +70,7 @@ async function tokenHelper(session) {
   const embed_user_token = await embeddedUserSdk.login_user(userCred.id.toString())
   const u = {
     api_user_token: embed_user_token.value,
-    expires_in: (Date.now() + (embed_user_token.value.expires_in * 900)) //+ 5000)s
+    expires_in: (Date.now() + (embed_user_token.value.expires_in * 900)) // 5000)
   }
   return { ...u }
 
