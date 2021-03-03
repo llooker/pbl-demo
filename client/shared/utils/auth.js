@@ -11,7 +11,6 @@ export const checkForExistingSession = async () => {
     }
   })
   const sessionResponseData = await sessionResponse.json();
-  console.log({ sessionResponseData })
   return { session: sessionResponseData.session };
 }
 
@@ -26,7 +25,6 @@ export const writeNewSession = async (newSession) => {
     },
     body: JSON.stringify(newSession)
   })
-  console.log({ newSessionResponse })
   if (newSessionResponse.status === 200) {
     const newSessionResponseData = await newSessionResponse.json();
     return { status: newSessionResponse.status, session: newSessionResponseData.session };

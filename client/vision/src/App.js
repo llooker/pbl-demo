@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import AppContext from './contexts/AppContext';
 import { checkForExistingSession, createSdkHelper, endSession } from '@pbl-demo/utils/auth';
 import Home from './components/Home/Home';
@@ -13,7 +13,6 @@ import { packageNameTheme } from './config/theme.js';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { errorHandler } from '@pbl-demo/utils'
 
-
 function App(props) {
 
   const [clientSession, setClientSession] = useState({});
@@ -21,30 +20,33 @@ function App(props) {
   const [initialHref, setInitialHref] = useState();
   const [isReady, setIsReady] = useState(false);
 
-  let history = useHistory();
 
   //onload
   useEffect(() => {
     async function fetchSession() {
+
       const sessionResponse = await checkForExistingSession();
+      if (sessionResponse.session) {
 
-      const session = sessionResponse.session ? sessionResponse.session : undefined;
-      const lookerBaseUrl = sessionResponse.lookerBaseUrl ? sessionResponse.lookerBaseUrl : undefined;
-      const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : undefined;
+        const lookerBaseUrl = sessionResponse.lookerBaseUrl ? sessionResponse.lookerBaseUrl : undefined;
+        const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : undefined;
 
-      if (session && lookerBaseUrl && accessToken) {
-        const sdkHelperResponse = createSdkHelper({ accessToken, lookerBaseUrl })
-        if (sdkHelperResponse.status === "success") {
-          setSdk(sdkHelperResponse.sdk)
-          setClientSession(sessionResponse.session)
-          if (typeof errorHandler.setUser === 'function') {
-            errorHandler.setUser(JSON.stringify(sessionResponse.session.lookerUser))
+        //only if these are defined, setSdk
+        if (lookerBaseUrl && accessToken) {
+          const sdkHelperResponse = createSdkHelper({ accessToken, lookerBaseUrl })
+          if (sdkHelperResponse.status === "success") {
+            setSdk(sdkHelperResponse.sdk)
+          } else if (sdkHelperResponse.status === "error") {
+            setIsReady(false);
+            endSession();
+            setClientSession({})
+            errorHandler.report(sdkHelperResponse.err)
           }
-        } else if (sdkHelperResponse.status === "error") {
-          setIsReady(false);
-          endSession();
-          history.push("/");
-          errorHandler.report(sdkHelperResponse.err)
+        }
+        //set these regardless, assuming session is good
+        setClientSession(sessionResponse.session)
+        if (typeof errorHandler.setUser === 'function') {
+          errorHandler.setUser(JSON.stringify(sessionResponse.session.lookerUser))
         }
       }
     }
@@ -62,7 +64,7 @@ function App(props) {
       } else if (sdkHelperResponse.status === "error") {
         setIsReady(false);
         endSession();
-        history.push("/");
+        setClientSession({})
         errorHandler.report(sdkHelperResponse.err)
       }
     }

@@ -24,16 +24,13 @@ export const SignIn = ({ content, initialUser }) => {
         }
         else if (sdkHelperResponse.status === "error") {
           setIsReady(false);
-          endSession();
           errorHandler.report(sdkHelperResponse.err)
         }
       } else if (newSession.status === 307) { //redirect
-        endSession();
-        setClientSession({})
+        setIsReady(false);
       }
     } catch (err) {
       errorHandler.report(err)
-
     }
   }
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;

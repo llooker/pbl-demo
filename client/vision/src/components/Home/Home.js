@@ -122,30 +122,6 @@ export default function Home(props) {
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
   else ActiveDemoComponent = ActiveDemoComponentContent.component;
 
-  /**
-   * deliberately produce error by misspelling alert
-   * TO DO: how can we implement this everytime there is an error without writing a bunch of try catches?
-   * corsApiCall?
-   */
-
-  // produces reference error
-  // try {
-  //   addalert("Welcome guest!");
-  // }
-  // catch (err) {
-  //   console.log({ err })
-  //   errorHandler.report(err);
-  // }
-
-  // //produces type error
-  // try {
-  //   null.f()
-  // } catch (err) {
-  //   // console.log({ err })
-  //   errorHandler.report(err);
-  // }
-
-  // console.log({ errorHandler })
 
   return (
     <div className={classes.root} >
