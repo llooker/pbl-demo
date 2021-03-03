@@ -79,6 +79,8 @@ function App(props) {
 
 
   console.log({ clientSession })
+  console.log({ sdk })
+  console.log(clientSession.lookerApiToken && sdk ? clientSession.lookerApiToken.api_user_token.access_token === sdk.authSession.accessToken.access_token : "doesn't exist");
 
 
   return (
