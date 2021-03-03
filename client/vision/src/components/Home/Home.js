@@ -76,7 +76,8 @@ export default function Home(props) {
       if (checkTokenRsp.status === 'expired') {
         setIsReady(false);
         endSession();
-        setClientSession({})
+        setClientSession({});
+        setSdk();
         history.push("/");
       } else {
         let res = func(...args)
