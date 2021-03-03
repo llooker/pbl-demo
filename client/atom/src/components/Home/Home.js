@@ -135,7 +135,7 @@ export default function Home(props) {
         selectedMenuItem,
         highlightShow, setHighlightShow,
         codeShow, setCodeShow,
-        sdk,
+        setSdk, sdk,
         corsApiCall,
         theme,
         isReady, setIsReady,
