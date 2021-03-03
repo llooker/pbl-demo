@@ -16,7 +16,6 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, setDynam
   // console.log({ filterItem })
   // console.log({ apiContent })
 
-  const { style } = filterItem;
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState(null);
 
@@ -70,7 +69,7 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, setDynam
             />
           }
           loadingText="Loading..."
-          style={style ? { ...style } : {}}
+          style={filterItem.style ? { ...filterItem.style } : {}}
           onInputChange={_.debounce((event) => {
             if (filterItem.apiDrivenSearch && event.target.value) setDynamicSearch(event.target.value)
           }, 1000)}

@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types'
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import AppContext from './contexts/AppContext';
 import { checkForExistingSession, createSdkHelper, endSession } from '@pbl-demo/utils/auth';
@@ -20,54 +19,62 @@ function App(props) {
   const [initialHref, setInitialHref] = useState();
   const [isReady, setIsReady] = useState(false);
 
-
   //onload
   useEffect(() => {
     async function fetchSession() {
-
-      const sessionResponse = await checkForExistingSession();
-      if (sessionResponse.session) {
-
-        const lookerBaseUrl = sessionResponse.lookerBaseUrl ? sessionResponse.lookerBaseUrl : undefined;
-        const accessToken = sessionResponse.lookerApiToken ? sessionResponse.lookerApiToken.api_user_token : undefined;
-
-        //only if these are defined, setSdk
-        if (lookerBaseUrl && accessToken) {
-          const sdkHelperResponse = createSdkHelper({ accessToken, lookerBaseUrl })
-          if (sdkHelperResponse.status === "success") {
-            setSdk(sdkHelperResponse.sdk)
-          } else if (sdkHelperResponse.status === "error") {
-            setIsReady(false);
-            endSession();
-            setClientSession({})
-            errorHandler.report(sdkHelperResponse.err)
+      console.log("fetchSession")
+      const { session, session: { userProfile, lookerBaseUrl, lookerApiToken } } = await checkForExistingSession();
+      console.log({ session })
+      console.log({ userProfile })
+      console.log({ lookerBaseUrl })
+      console.log({ lookerApiToken })
+      //existing session only, i.e. < 60 minutes
+      if (userProfile && lookerBaseUrl && lookerApiToken) {
+        console.log("inside this ifff")
+        const { status, sdk, err } = createSdkHelper({ accessToken: lookerApiToken.api_user_token, lookerBaseUrl })
+        console.log({ status })
+        console.log({ sdk })
+        console.log({ err })
+        if (status === "success") {
+          setClientSession(session)
+          //revalidate sdk
+          setSdk(sdk)
+          //add error handling for prod
+          if (typeof errorHandler.setUser === 'function') {
+            errorHandler.setUser(JSON.stringify(session.lookerUser))
           }
+        } else if (status === "error") {
+          setIsReady(false);
+          endSession();
+          setClientSession({})
+          errorHandler.report(err)
         }
-        //set these regardless, assuming session is good
-        setClientSession(sessionResponse.session)
-        if (typeof errorHandler.setUser === 'function') {
-          errorHandler.setUser(JSON.stringify(sessionResponse.session.lookerUser))
-        }
-      }
+      } else console.log('else')
     }
     fetchSession(); //make async call
   }, [])
 
   useEffect(() => {
-    if (clientSession && sdk) setIsReady(true)
-    else if (clientSession.userProfile) {
+    console.log("useEffect clientSession, sdk")
+    if (clientSession && sdk) { setIsReady(true) }
+    else if (clientSession.userProfile) { //from signIn / write newSession
       const lookerBaseUrl = clientSession.lookerBaseUrl ? clientSession.lookerBaseUrl : '';
       const accessToken = clientSession.lookerApiToken ? clientSession.lookerApiToken.api_user_token : '';
-      const sdkHelperResponse = createSdkHelper({ accessToken, lookerBaseUrl })
-      if (sdkHelperResponse.status === "success") {
-        setSdk(sdkHelperResponse.sdk)
-      } else if (sdkHelperResponse.status === "error") {
+      const { status, sdk, err } = createSdkHelper({ accessToken, lookerBaseUrl })
+
+      console.log({ status })
+      console.log({ sdk })
+      console.log({ err })
+
+      if (status === "success") {
+        setSdk(sdk)
+      } else if (status === "error") {
         setIsReady(false);
         endSession();
         setClientSession({})
-        errorHandler.report(sdkHelperResponse.err)
+        errorHandler.report(err)
       }
-    }
+    } else console.log("else")
   }, [clientSession, sdk])
 
 

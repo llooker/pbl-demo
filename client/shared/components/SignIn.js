@@ -1,33 +1,26 @@
 import _ from 'lodash'
 import React, { useContext, useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
-import { Card, CardActions, CardContent, CardFooter, Typography } from '@material-ui/core'
-import { writeNewSession, createSdkHelper, endSession } from '../utils'
+import { Card, CardContent, CardFooter, Typography } from '@material-ui/core'
+import { writeNewSession } from '../utils'
 const { validIdHelper, appContextMap, validateContent, errorHandler } = require('../utils');
 import { useStyles } from './styles.js';
 
 export const SignIn = ({ content, initialUser }) => {
 
-  let { clientSession, setClientSession, sdk, setSdk, initialHref, setInitialHref, setIsReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  let { clientSession, setClientSession } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { logo, logoStyle, backgroundImageStyle } = content
 
   const responseGoogle = async (response) => {
     try {
-      let newSession = await writeNewSession({ ...clientSession, userProfile: response.profileObj, lookerUser: initialUser }) //initialLookerUser
-      if (newSession.status === 200) {
-        const lookerBaseUrl = newSession.session.lookerBaseUrl ? newSession.session.lookerBaseUrl : '';
-        const accessToken = newSession.session.lookerApiToken ? newSession.session.lookerApiToken.api_user_token : '';
-        const sdkHelperResponse = createSdkHelper({ accessToken, lookerBaseUrl })
-        if (sdkHelperResponse.status === "success") {
-          setClientSession(newSession.session);
-          setSdk(sdkHelperResponse.sdk)
-        }
-        else if (sdkHelperResponse.status === "error") {
-          setIsReady(false);
-          errorHandler.report(sdkHelperResponse.err)
-        }
-      } else if (newSession.status === 307) { //redirect
-        setIsReady(false);
+      let { session, status } = await writeNewSession({
+        ...clientSession,
+        userProfile: response.profileObj,
+        lookerUser: initialUser
+      })
+
+      if (status === 200) {
+        setClientSession(session)
       }
     } catch (err) {
       errorHandler.report(err)

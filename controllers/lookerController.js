@@ -19,8 +19,8 @@ module.exports.auth = async (req, res, next) => {
 module.exports.updateLookerUser = async (req, res, next) => {
   // console.log('lookerController updateLookerUser');
   const lookerUser = req.body;
-  session.lookerUser = lookerUser;
   let { session } = req;
+  session.lookerUser = lookerUser;
   const url = createSignedUrl('/alive',
     session.lookerUser,
     process.env.LOOKER_HOST,
