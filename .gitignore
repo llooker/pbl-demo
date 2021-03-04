@@ -3,6 +3,6 @@ config.*
 looker.ini
 .DS_Store
 .env*
-*.yaml
+*.yaml*
 *.lock
 *.eslintcache
