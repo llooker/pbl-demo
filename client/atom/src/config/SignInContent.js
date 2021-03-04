@@ -4,7 +4,7 @@ const backgroundImage = require(`../images/background${backgroundImageInt}.jpg`)
 
 export const SignInContent = {
   "copyHeader": "Welcome",
-  "copyBody": "Please sign in to access your atom merchant portal",
+  "copyBody": "Please sign in to access your  merchant portal",
   "logo": logo,
   "logoStyle": {
     "height": '100px',
