@@ -49,7 +49,6 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
           .then((explore) => {
             setIFrame(1)
             let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
-            console.log({ modifiedBaseUrl })
             LookerEmbedSDK.init(modifiedBaseUrl)
           })
           .catch((error) => {

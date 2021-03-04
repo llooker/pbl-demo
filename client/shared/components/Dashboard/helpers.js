@@ -129,6 +129,7 @@ export const runInlineQuery = async ({ sdk, item, lookerUser, type }) => {
         [item.desiredFilterName]: lookerUser.user_attributes.brand
       };
       let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
+      console.log({ lookerResponseData })
       let queryResultsForDropdown = [];
       let desiredProperty = Object.keys(lookerResponseData[0])[0];
 
@@ -139,8 +140,7 @@ export const runInlineQuery = async ({ sdk, item, lookerUser, type }) => {
           'count': (lookerResponseData[i]['count']) ? lookerResponseData[i]['count'] : undefined
         })
       }
-      apiContentObj[item.component] = queryResultsForDropdown;
-      return apiContentObj
+      return queryResultsForDropdown;
     }
   } else if (type === "trends") {
     if (item.inlineQuery) {
@@ -150,9 +150,7 @@ export const runInlineQuery = async ({ sdk, item, lookerUser, type }) => {
         [item.desiredFilterName]: lookerUser.user_attributes.brand
       };
       let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
-      apiContentObj[item.component] = lookerResponseData;
-      return apiContentObj
-
+      return lookerResponseData;
     }
   }
 }

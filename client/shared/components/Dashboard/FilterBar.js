@@ -14,6 +14,7 @@ export default function FilterBar(props) {
     makeShiftDrawerOpen, setMakeShiftDrawerOpen, helperFunctionMapper, lightThemeToggleValue, fontThemeSelectValue } = props;
 
   // console.log({ apiContent })
+
   return (
     <Grid item
       sm={makeShiftDrawerOpen ? lookerContent[0].filterBarWidth ? lookerContent[0].filterBarWidth : 3 : "auto"}

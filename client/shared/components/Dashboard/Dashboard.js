@@ -200,17 +200,17 @@ export const Dashboard = (props) => {
       //api calls
       if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
       ) {
-        let asyncApiContentObj = lookerContentItem.filters.map(async item => {
-          return await runInlineQuery({ sdk, item, lookerUser, "type": "filters" })
+        let asyncApiEntries = lookerContentItem.filters.map(async item => {
+          return [item.component, await runInlineQuery({ sdk, item, lookerUser, "type": "filters" })]
         })
-        let apiContentObj = await Promise.all(asyncApiContentObj)
-        setApiContent(apiContentObj[0] ? apiContentObj[0] : {})
+        let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries))
+        setApiContent(apiContentObj || {})
       } else if (lookerContentItem.hasOwnProperty('trends')) { //slightly redundant
-        let asyncApiContentObj = lookerContentItem.trends.map(async item => {
-          return await runInlineQuery({ sdk, item, lookerUser, "type": "trends" })
+        let asyncApiEntries = lookerContentItem.trends.map(async item => {
+          return [item.component, await runInlineQuery({ sdk, item, lookerUser, "type": "trends" })]
         })
-        let apiContentObj = await Promise.all(asyncApiContentObj)
-        setApiContent(apiContentObj[0] ? apiContentObj[0] : {})
+        let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries))
+        setApiContent(apiContentObj || {})
       }
     })
   }

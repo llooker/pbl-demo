@@ -5,6 +5,9 @@ const { validIdHelper } = require('../../utils/tools');
 
 
 export const RangeSlider = ({ apiContent, classes, action, filterItem }) => {
+  // console.log("RangeSlider");
+  // console.log({ filterItem })
+  // console.log({ apiContent })
 
   const [sliderValue, setSliderValue] = useState([]);
 
