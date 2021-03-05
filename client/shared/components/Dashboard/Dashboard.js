@@ -157,7 +157,7 @@ export const Dashboard = (props) => {
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     lookerContent.map(async lookerContentItem => {
       //dashboard creation
-      let dashboardId = lookerContentItem.id;
+      let dashboardId = lookerContentItem.slug || lookerContentItem.id;
       let themeToUse = dynamicTheme && isThemeableDashboard ?
         dynamicTheme :
         lookerContentItem.theme ?

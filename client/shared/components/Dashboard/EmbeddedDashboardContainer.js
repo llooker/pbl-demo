@@ -25,8 +25,8 @@ export default function EmbeddedDashboardContainer({ classes, lookerContent, typ
         <EmbedHighlight classes={classes}>
           <div
             className={`embedContainer ${validIdHelper(type)}`}
-            id={validIdHelper(`embedContainer-${type}-${lookerContent[0].id}`)}
-            key={validIdHelper(`embedContainer-${type}-${lookerContent[0].id}`)}
+            id={validIdHelper(`embedContainer-${type}-${lookerContent[0].slug || lookerContent[0].id}`)}
+            key={validIdHelper(`embedContainer-${type}-${lookerContent[0].slug || lookerContent[0].id}`)}
           >
           </div>
         </EmbedHighlight>

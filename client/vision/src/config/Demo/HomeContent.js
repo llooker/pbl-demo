@@ -47,6 +47,7 @@ export const HomeContent = {
       "type": "dashboard",
       "lookerMethod": "embedDashboard",
       "id": "18",
+      "slug": "L9H7zcEn0tgq3z35tA0jUb",
       "label": "Trends",
       "isNext": false,
       "theme": "vision_theme",
