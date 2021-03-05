@@ -13,6 +13,7 @@ export const BeneficiaryContent = {
       "type": "dashboard",
       "lookerMethod": "embedDashboard",
       "id": "21",
+      "slug": "9AWvUrPlXWy6djYAdOOKge",
       "label": "Beneficiary",
       "isNext": false,
       "filterName": "Person ID",

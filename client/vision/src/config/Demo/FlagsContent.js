@@ -13,6 +13,7 @@ export const FlagsConent = {
       "type": "dashboard",
       "lookerMethod": "embedDashboard",
       "id": "20",
+      "slug": "219Tk9NQ4sGSjGNsRSFKjG",
       "label": "Flags",
       "isNext": false,
       "theme": "vision_theme"

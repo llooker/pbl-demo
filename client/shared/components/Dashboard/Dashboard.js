@@ -158,6 +158,7 @@ export const Dashboard = (props) => {
     lookerContent.map(async lookerContentItem => {
       //dashboard creation
       let dashboardId = lookerContentItem.slug || lookerContentItem.id;
+      console.log({ dashboardId })
       let themeToUse = dynamicTheme && isThemeableDashboard ?
         dynamicTheme :
         lookerContentItem.theme ?

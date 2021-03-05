@@ -34,6 +34,7 @@ export const ApplicationContent = {
       "type": "dashboard",
       "lookerMethod": "embedDashboard",
       "id": "22",
+      "slug": "xuRJEILMoKTPwjhqNvnBbD",
       "label": "Application",
       "isNext": false,
       "theme": "vision_theme",

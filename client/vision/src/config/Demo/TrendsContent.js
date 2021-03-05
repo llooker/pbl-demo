@@ -14,6 +14,7 @@ export const TrendsContent = {
       "type": "dashboard",
       "lookerMethod": "embedDashboard",
       "id": "19",
+      "slug": "JGZrjlmRxhLKNXJB17Vbo1",
       "label": "Trends",
       "isNext": false,
       "theme": "vision_theme"
