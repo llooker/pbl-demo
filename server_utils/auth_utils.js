@@ -76,14 +76,14 @@ function createSignedUrl(src, user, host, secret, nonce) {
     permissions: JSON.stringify(user.permissions),
     models: JSON.stringify(user.models),
     group_ids: JSON.stringify(user.group_ids),
-    user_attributes: JSON.stringify(user.user_attributes),
+    user_attributes: JSON.stringify({ user_attributes: user.user_attributes, email: user.external_user_id }),
     external_group_id: JSON.stringify(user.external_group_id),
     access_filters: JSON.stringify(user.access_filters || {}),
     user_timezone: JSON.stringify(user.user_timezone),
     force_logout_login: JSON.stringify(user.force_logout_login),
     session_length: JSON.stringify(user.session_length),
     nonce: jsonNonce,
-    time: jsonTime
+    time: jsonTime,
   };
   var embedPath = '/login/embed/' + encodeURIComponent(src);
   var signingParams = {

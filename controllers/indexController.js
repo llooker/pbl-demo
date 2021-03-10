@@ -81,12 +81,13 @@ async function tokenHelper(session) {
 module.exports.createCase = async (req, res, next) => {
   // console.log("createCase")
   let { session, body } = req;
-  // console.log({ session })
-  // console.log({ body })
+  console.log({ session })
+  console.log({ body })
 
   let options = {
     method: 'POST',
-    uri: 'https://us-central1-vision-302704.cloudfunctions.net/create_case',
+    // uri: 'https://us-central1-vision-302704.cloudfunctions.net/create_case',
+    uri: 'https://us-central1-pbl-demo-2020-281322.cloudfunctions.net/create_case',
     body: {
       "type": "cell",
       "scheduled_plan": null,
@@ -105,9 +106,18 @@ module.exports.createCase = async (req, res, next) => {
     json: true // Automatically stringifies the body to JSON
   };
 
-  let postRsp = await rp(options)
-  res.status(200).send({
-    status: "success",
-    message: "Case created! Reload dashboard to see it"
-  })
+
+  try {
+    let postRsp = await rp(options)
+    res.status(200).send({
+      status: "success",
+      message: "Case created! Reload dashboard to see it"
+    })
+  } catch (err) {
+    console.log({ err })
+    res.status(400).send({
+      status: "error",
+      message: err
+    })
+  }
 }

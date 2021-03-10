@@ -75,7 +75,6 @@ export const Dashboard = (props) => {
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
       dashboardObj.setOptions(response);
     } else if (methodName === "handleThemeChange") {
-      console.log(typeof newValue === "boolean")
       if (typeof newValue === "boolean") {
         setLightThemeToggleValue(newValue)
       } else {
@@ -158,7 +157,6 @@ export const Dashboard = (props) => {
     lookerContent.map(async lookerContentItem => {
       //dashboard creation
       let dashboardId = lookerContentItem.slug || lookerContentItem.id;
-      console.log({ dashboardId })
       let themeToUse = dynamicTheme && isThemeableDashboard ?
         dynamicTheme :
         lookerContentItem.theme ?
