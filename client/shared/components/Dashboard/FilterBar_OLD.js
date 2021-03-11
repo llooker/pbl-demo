@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useState, useContext } from 'react';
 import { Grid, Box } from '@material-ui/core'
 import { ChevronLeft, Menu } from '@material-ui/icons';
-import { FilterBarChildren } from './FilterBarChildren'
+import { FilterBarChildren } from './FilterBarChildren_OLD'
 import { appContextMap, validIdHelper } from '../../utils/tools';
 
 export default function FilterBar(props) {
