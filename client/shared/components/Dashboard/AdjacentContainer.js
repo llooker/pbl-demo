@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React from 'react';
-import { Grid, List } from '@material-ui/core'
+import { Grid, List, Box } from '@material-ui/core'
 import { appContextMap, validIdHelper } from '../../utils/tools';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery } from './helpers';
 import { TrendItem } from "@pbl-demo/components";
@@ -15,9 +15,13 @@ export const AdjacentContainer = ({ container, makeShiftDrawerOpen, setMakeShift
   // console.log({ helperFunctionMapper })
   // console.log({ classes })
 
+
+  let ContainerComponent = container.component || null;
+  // console.log({ ContainerComponent })
   return (
     <Grid item
       sm={makeShiftDrawerOpen ? container.gridWidth ? container.gridWidth : 3 : "auto"}
+
     >
       {
         container.collapsable ? makeShiftDrawerOpen ?
@@ -33,39 +37,43 @@ export const AdjacentContainer = ({ container, makeShiftDrawerOpen, setMakeShift
       }
 
 
-      < Grid container spacing={3}
-        style={makeShiftDrawerOpen ? { display: "block" } : { display: "none" }}>
-        {container.items.map(item => {
-          let ItemComponent = item.component
+      <Box style={makeShiftDrawerOpen ? { display: "block" } : { display: "none" }}>
+        {container.items.map((item, index) => {
+          let ItemComponent = item.component;
+          console.log({ ItemComponent })
+          console.log({ apiContent })
+          //api driven content
           if (apiContent && apiContent[item.apiKey]) {
+            console.log({ apiContent })
             return (
-              < List
-                disablePadding
-                className={`${classes.inlineListPaddingTop10}`
-                }
-                component="div"
+              <ContainerComponent
+                key={validIdHelper(`ContainerComponent-${item.apiKey}-${index}`)}
+                id={validIdHelper(`ContainerComponent-${item.apiKey}-${index}`)}
               >
                 {
-                  apiContent[item.apiKey].map((trendItem, index) => {
+                  apiContent[item.apiKey].map((apiItem, index) => {
 
                     return (
-                      <TrendItem
-                        key={validIdHelper(`${trendItem.label}-trendItem-${index}`)}
-                        fieldsOfInterest={item.fieldsOfInterest}
-                        trendItem={trendItem}
+                      <ItemComponent
+                        key={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
+                        id={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
+                        apiItem={apiItem}
+                        item={item}
                         classes={classes}
                         index={index}
                       />
                     )
                   })
                 }
-              </List>
+              </ContainerComponent>
             )
           }
-          else {
+          //static content
+          else if (!item.hasOwnProperty("apiKey")) {
             return (
               <Grid item sm={item.gridWidth ? item.gridWidth : null}>
                 <ItemComponent
+                  key={validIdHelper(`${item.label}-ItemComponent-${index}`)}
                   classes={classes}
                   filterItem={item}
                   helperFunctionMapper={helperFunctionMapper}
@@ -74,7 +82,7 @@ export const AdjacentContainer = ({ container, makeShiftDrawerOpen, setMakeShift
             )
           }
         })}
-      </Grid>
+      </Box>
     </Grid>
   )
 }

@@ -198,13 +198,14 @@ export const Dashboard = (props) => {
       if (lookerContentItem.hasOwnProperty("adjacentContainer")) {
         let asyncApiEntries = lookerContentItem.adjacentContainer.items.map(async item => {
           if (item.hasOwnProperty("inlineQuery")) {
-            return [item.component, await runInlineQuery({ sdk, item, lookerUser })] //
+            return [item.apiKey, await runInlineQuery({ sdk, item, lookerUser })] //
           }
           return {}
         })
-        console.log({ asyncApiEntries })
+        // console.log({ asyncApiEntries })
         let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries));
-        if (apiContent) setApiContent(apiContentObj || {})
+        // console.log({ apiContentObj })
+        if (apiContentObj) setApiContent(apiContentObj || {})
       }
     })
   }
@@ -270,7 +271,7 @@ export const Dashboard = (props) => {
       style={{ height }}
     >
       <ThemeProvider theme={themeToUse}>
-        <Card elevation={1} className={lookerContent[0].hasOwnProperty("filters") ? `${classes.padding15} ${classes.height100Percent}` : `${classes.paddingTB15} ${classes.height100Percent}`}>
+        <Card elevation={1} className={lookerContent[0].hasOwnProperty("adjacentContainer") ? `${classes.padding15} ${classes.height100Percent}` : `${classes.paddingTB15} ${classes.height100Percent}`}>
           <div
             className={`${classes.root} ${classes.height100Percent}`}
           >
@@ -285,7 +286,8 @@ export const Dashboard = (props) => {
 
               {lookerContent[0].hasOwnProperty("adjacentContainer") ?
 
-                <AdjacentContainer container={lookerContent[0].adjacentContainer}
+                <AdjacentContainer
+                  container={lookerContent[0].adjacentContainer}
                   makeShiftDrawerOpen={makeShiftDrawerOpen}
                   setMakeShiftDrawerOpen={setMakeShiftDrawerOpen}
                   apiContent={apiContent}

@@ -1,5 +1,6 @@
 import HomeIcon from '@material-ui/icons/Home';
-import { Dashboard } from '@pbl-demo/components';
+import { List } from '@material-ui/core/';
+import { Dashboard, TrendItem } from '@pbl-demo/components';
 
 
 const countyTrends = {
@@ -28,7 +29,7 @@ const countyTrends = {
   },
   "resultFormat": "json",
   "label": "Country trends",
-  "component": "trends",
+  "component": TrendItem,
   "fieldsOfInterest": [
     "person.home_city",
     "change"
@@ -54,7 +55,8 @@ export const HomeContent = {
       "theme": "vision_theme",
       "adjacentContainer": {
         "gridWidth": 12,
-        "items": [countyTrends]
+        "items": [countyTrends],
+        "component": List
       }
     }],
   "requiredPermissionLevel": 0
