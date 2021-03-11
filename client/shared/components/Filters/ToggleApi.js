@@ -7,6 +7,9 @@ import { EmbedMethodHighlight } from '../Accessories/Highlight';
 const { validIdHelper } = require('../../utils/tools');
 
 export const ToggleApi = ({ apiContent, classes, action, filterItem }) => {
+  // console.log("ToggleApi");
+  // console.log({ filterItem })
+  // console.log({ apiContent })
 
   const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
   return (
@@ -28,16 +31,16 @@ export const ToggleApi = ({ apiContent, classes, action, filterItem }) => {
         aria-label="ageTier"
         className={classes.w100}>
         {Array.isArray(apiContent) ? apiContent.map((ageTier, index) => {
-          if (ageTier.label !== "Undefined") {
-            const Icon = lifetimeRevenueTierIconMap[ageTier.label];
+          if (ageTier[Object.keys(ageTier)[0]] !== "Undefined") {
+            const Icon = lifetimeRevenueTierIconMap[ageTier[Object.keys(ageTier)[0]]];
             return (
               <ToggleButton
                 key={validIdHelper(`$FilterBar-ToggleButton-${filterItem.label}-${index}`)}
-                value={ageTier.label}
-                aria-label={ageTier.label}
+                value={ageTier[Object.keys(ageTier)[0]]}
+                aria-label={ageTier[Object.keys(ageTier)[0]]}
                 className={classes.w33}>
                 <Icon className={classes.mr12} />
-                {_.capitalize(lifetimeRevenueTierMap[ageTier.label]) || ageTier.label}
+                {_.capitalize(lifetimeRevenueTierMap[ageTier[Object.keys(ageTier)[0]]]) || ageTier[Object.keys(ageTier)[0]]}
               </ToggleButton>
             )
           }

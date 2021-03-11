@@ -2,11 +2,19 @@ import _ from 'lodash'
 import React from 'react';
 import { Grid, List, Box } from '@material-ui/core'
 import { appContextMap, validIdHelper } from '../../utils/tools';
-import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery } from './helpers';
-import { TrendItem } from "@pbl-demo/components";
 import { ChevronLeft, Menu } from '@material-ui/icons';
 
-export const AdjacentContainer = ({ container, makeShiftDrawerOpen, setMakeShiftDrawerOpen, apiContent, helperFunctionMapper, classes }) => {
+export const AdjacentContainer = ({
+  classes,
+  container,
+  makeShiftDrawerOpen,
+  setMakeShiftDrawerOpen,
+  apiContent,
+  helperFunctionMapper,
+  customFilterAction,
+  lightThemeToggleValue,
+  fontThemeSelectValue
+}) => {
   // console.log("AdjacentContainer")
   // console.log({ container })
   // console.log({ makeShiftDrawerOpen })
@@ -16,7 +24,7 @@ export const AdjacentContainer = ({ container, makeShiftDrawerOpen, setMakeShift
   // console.log({ classes })
 
 
-  let ContainerComponent = container.component || null;
+  let ContainerComponent = container.component || Box;
   // console.log({ ContainerComponent })
   return (
     <Grid item
@@ -51,19 +59,30 @@ export const AdjacentContainer = ({ container, makeShiftDrawerOpen, setMakeShift
                 id={validIdHelper(`ContainerComponent-${item.apiKey}-${index}`)}
               >
                 {
-                  apiContent[item.apiKey].map((apiItem, index) => {
+                  item.apiKey === "trends" ?
+                    apiContent[item.apiKey].map((apiItem, index) => {
 
-                    return (
-                      <ItemComponent
-                        key={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
-                        id={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
-                        apiItem={apiItem}
-                        item={item}
-                        classes={classes}
-                        index={index}
-                      />
-                    )
-                  })
+                      return (
+                        <ItemComponent
+                          key={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
+                          id={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
+                          apiItem={apiItem}
+                          item={item}
+                          classes={classes}
+                          index={index}
+                        />
+                      )
+                    })
+                    :
+                    <ItemComponent
+                      classes={classes}
+                      apiContent={apiContent[item.apiKey]}
+                      action={customFilterAction}
+                      filterItem={item}
+                      index={index}
+                      lightThemeToggleValue={lightThemeToggleValue}
+                      fontThemeSelectValue={fontThemeSelectValue}
+                    />
                 }
               </ContainerComponent>
             )
@@ -77,6 +96,10 @@ export const AdjacentContainer = ({ container, makeShiftDrawerOpen, setMakeShift
                   classes={classes}
                   filterItem={item}
                   helperFunctionMapper={helperFunctionMapper}
+                  action={customFilterAction}
+                  filterItem={item}
+                  lightThemeToggleValue={lightThemeToggleValue}
+                  fontThemeSelectValue={fontThemeSelectValue}
                 > {item.label}</ItemComponent>
               </Grid>
             )

@@ -116,8 +116,8 @@ export const createCase = async ({ newValue, filterItem, hiddenFilterValue }) =>
 }
 
 export const runInlineQuery = async ({ sdk, item, lookerUser }) => { //type
-  console.log("runInlineQuery")
-  console.log({ item })
+  // console.log("runInlineQuery")
+  // console.log({ item })
 
   let jsonQuery = item.inlineQuery
   jsonQuery.filters = {

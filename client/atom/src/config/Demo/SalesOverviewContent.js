@@ -1,5 +1,7 @@
 import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
 import { Dashboard } from '@pbl-demo/components';
+import { AutoComplete, MapFilter, RangeSlider, ToggleApi } from '@pbl-demo/components/Filters';
+
 
 const productCategoryFilter = {
   "label": "Select Product Category",
@@ -25,8 +27,9 @@ const productCategoryFilter = {
     "theme": "atom_fashion"
   },
   "desiredFilterNames": "products.brand",
-  "component": "autocomplete",
-  "resultFormat": "json"
+  "resultFormat": "json",
+  "component": AutoComplete,
+  "apiKey": "autocomplete"
 }
 
 const regionFilter = {
@@ -43,8 +46,9 @@ const regionFilter = {
     "limit": "500"
   },
   "desiredFilterNames": "users.state_region",
-  "component": "mapfilter",
-  "resultFormat": "json"
+  "resultFormat": "json",
+  "component": MapFilter,
+  "apiKey": "mapfilter"
 }
 
 const ageFilter = {
@@ -60,8 +64,9 @@ const ageFilter = {
     "limit": "500"
   },
   "desiredFilterNames": "users.age",
-  "component": "rangeslider",
-  "resultFormat": "json"
+  "resultFormat": "json",
+  "component": RangeSlider,
+  "apiKey": "rangeslider"
 }
 
 const revenueTierFilter = {
@@ -78,7 +83,9 @@ const revenueTierFilter = {
   },
   "desiredFilterNames": "users.lifetime_revenue_tier",
   "component": "togglebuttonapi",
-  "resultFormat": "json"
+  "resultFormat": "json",
+  "component": ToggleApi,
+  "apiKey": "togglebuttonapi",
 }
 
 export const SalesOverviewContent = {
@@ -95,7 +102,13 @@ export const SalesOverviewContent = {
       "id": "5",
       "label": "Sales Overview",
       "isNext": true,
-      "filters": [productCategoryFilter, regionFilter, ageFilter, revenueTierFilter]
+      "adjacentContainer": {
+        "gridWidth": 3,
+        "items": [productCategoryFilter, regionFilter, ageFilter,
+          revenueTierFilter
+        ],
+        "collapsable": true
+      }
     }],
   "requiredPermissionLevel": 0
 }

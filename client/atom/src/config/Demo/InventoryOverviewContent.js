@@ -1,6 +1,8 @@
 import TableChartOutlinedIcon from '@material-ui/icons/TableChartOutlined';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
 import { Dashboard } from '@pbl-demo/components';
+import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, Dropdown } from '@pbl-demo/components/Filters';
+
 
 const productNameFilter = {
   "label": "Select Product Name",
@@ -15,8 +17,9 @@ const productNameFilter = {
     "query_timezone": "America/Los_Angeles"
   },
   "desiredFilterNames": "products.brand",
-  "component": "autocomplete",
-  "resultFormat": "json"
+  "resultFormat": "json",
+  "component": AutoComplete,
+  "apiKey": "autocomplete"
 }
 
 const tilesFilter = {
@@ -44,7 +47,9 @@ const tilesFilter = {
     ]
   },
   "method": handleTileToggle,
-  "methodName": "handleTileToggle"
+  "methodName": "handleTileToggle",
+  "component": ToggleTile,
+  // "apiKey": "togglebutton"
 }
 
 const visConfigFilter = {
@@ -103,24 +108,25 @@ const visConfigFilter = {
     }
   },
   "method": handleVisColorToggle,
-  "methodName": "handleVisColorToggle"
+  "methodName": "handleVisColorToggle",
+  "component": ToggleVisColor,
 }
 
 const themeColorFilter = {
   "label": "Light or dark theme",
-  "component": "switch",
   "method": handleThemeChange,
-  "methodName": "handleThemeChange"
+  "methodName": "handleThemeChange",
+  "component": SwitchTheme
 }
 
 const themeFontFilter = {
   "label": "Change font",
-  "component": "dropdown",
   "options": [{ label: "Arial", value: "arial" },
   { label: "Roboto", value: "roboto" },
   { label: "Vollkorn", value: "vollkorn" }],
   "method": handleThemeChange,
-  "methodName": "handleThemeChange"
+  "methodName": "handleThemeChange",
+  "component": Dropdown,
 }
 
 export const InventoryOverivewContent = {
@@ -137,7 +143,11 @@ export const InventoryOverivewContent = {
       "id": "1",
       "isNext": false,
       "label": "Inventory Overview",
-      "filters": [productNameFilter, tilesFilter, visConfigFilter, themeColorFilter, themeFontFilter]
+      "adjacentContainer": {
+        "gridWidth": 3,
+        "items": [productNameFilter, tilesFilter, visConfigFilter, themeColorFilter, themeFontFilter],
+        "collapsable": true
+      }
     }],
   "requiredPermissionLevel": 0
 }

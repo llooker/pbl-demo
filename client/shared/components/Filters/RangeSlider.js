@@ -11,6 +11,7 @@ export const RangeSlider = ({ apiContent, classes, action, filterItem }) => {
 
   const [sliderValue, setSliderValue] = useState([]);
 
+
   return (
     <EmbedMethodHighlight classes={classes}
       key={validIdHelper(`dashEmbed-${filterItem.label}`)} >
@@ -18,7 +19,7 @@ export const RangeSlider = ({ apiContent, classes, action, filterItem }) => {
         {filterItem.label}:
         </Typography>
       <Slider
-        value={sliderValue.length ? sliderValue : Array.isArray(apiContent) ? [apiContent[0].label, apiContent[apiContent.length - 1].label] : []}
+        value={sliderValue.length ? sliderValue : Array.isArray(apiContent) ? [apiContent[0][Object.keys(apiContent[0])[0]], apiContent[apiContent.length - 1][Object.keys(apiContent[0])[0]]] : []}
         onChange={(event, newValue) => {
           setSliderValue(newValue);
         }}
@@ -29,8 +30,8 @@ export const RangeSlider = ({ apiContent, classes, action, filterItem }) => {
             filterItem.filterName,
             (newValue) ? `[${newValue}]` : '[]')
         }}
-        min={Array.isArray(apiContent) && apiContent.length ? apiContent[0].label : 0}
-        max={Array.isArray(apiContent) && apiContent.length ? apiContent[apiContent.length - 1].label : 0}
+        min={Array.isArray(apiContent) && apiContent.length ? apiContent[0][Object.keys(apiContent[0])[0]] : 0}
+        max={Array.isArray(apiContent) && apiContent.length ? apiContent[apiContent.length - 1][Object.keys(apiContent.lenth - 1)[0]] : 0}
         disabled={Array.isArray(apiContent) && apiContent.length ? false : true}
       />
     </EmbedMethodHighlight>

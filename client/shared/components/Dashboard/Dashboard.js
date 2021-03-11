@@ -32,10 +32,9 @@ export const Dashboard = (props) => {
   const [makeShiftDrawerOpen, setMakeShiftDrawerOpen] = useState(true);
   const [hiddenFilterValue, setHiddenFilterValue] = useState(null);
 
-  let dynamicVisConfigFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Vis Config" });
+  let dynamicVisConfigFilterItem = _.find(lookerContent[0].adjacentContainer.items, { label: "Dynamic Vis Config" });
   const isThemeableDashboard = dynamicVisConfigFilterItem && Object.keys(dynamicVisConfigFilterItem).length ? true : false;
   const darkThemeBackgroundColor = theme.palette.fill.main;
-
   const classes = useStyles();
   const location = useLocation();
   let history = useHistory();
@@ -60,10 +59,10 @@ export const Dashboard = (props) => {
   );
 
   const helperFunctionMapper = async (event, newValue, filterItem) => {
-    console.log("helperFunctionMapper")
-    console.log({ newValue })
-    console.log({ filterItem })
-    console.log({ hiddenFilterValue })
+    // console.log("helperFunctionMapper")
+    // console.log({ newValue })
+    // console.log({ filterItem })
+    // console.log({ hiddenFilterValue })
 
 
     let helperResponse = await filterItem.method({
@@ -205,6 +204,23 @@ export const Dashboard = (props) => {
         // console.log({ asyncApiEntries })
         let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries));
         // console.log({ apiContentObj })
+        if (apiContentObj.hasOwnProperty("autocomplete")) {
+          //api results for autocomplete component need to be specially formatted
+          let autocompleteResults = apiContentObj.autocomplete
+          let dropdownResults = [];
+          let desiredProperty = Object.keys(apiContentObj.autocomplete[0])[0];
+
+          for (let i = 0; i < autocompleteResults.length; i++) {
+            dropdownResults.push({
+              'label': autocompleteResults[i][desiredProperty],
+              'trend': (autocompleteResults[i]['trend']) ? autocompleteResults[i]['trend'] : undefined,
+              'count': (autocompleteResults[i]['count']) ? autocompleteResults[i]['count'] : undefined
+            })
+          }
+
+          apiContentObj.autocomplete = dropdownResults
+
+        }
         if (apiContentObj) setApiContent(apiContentObj || {})
       }
     })
@@ -292,7 +308,11 @@ export const Dashboard = (props) => {
                   setMakeShiftDrawerOpen={setMakeShiftDrawerOpen}
                   apiContent={apiContent}
                   helperFunctionMapper={helperFunctionMapper}
-                  classes={classes} />
+                  classes={classes}
+                  customFilterAction={customFilterAction}
+                  lightThemeToggleValue={lightThemeToggleValue}
+                  fontThemeSelectValue={fontThemeSelectValue}
+                />
                 : ""}
 
               <EmbeddedDashboardContainer
