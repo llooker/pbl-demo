@@ -41,7 +41,8 @@ export const ApplicationContent = {
       "theme": "vision_theme",
       "adjacentContainer": {
         "gridWidth": 2,
-        "items": [createCaseSelect]
+        "items": [createCaseSelect],
+        "collapsable": true
       }
     }],
   "requiredPermissionLevel": 0

@@ -81,8 +81,6 @@ async function tokenHelper(session) {
 module.exports.createCase = async (req, res, next) => {
   // console.log("createCase")
   let { session, body } = req;
-  console.log({ session })
-  console.log({ body })
 
   let options = {
     method: 'POST',
@@ -114,7 +112,7 @@ module.exports.createCase = async (req, res, next) => {
       message: "Case created! Reload dashboard to see it"
     })
   } catch (err) {
-    console.log({ err })
+    // console.log({ err })
     res.status(400).send({
       status: "error",
       message: err

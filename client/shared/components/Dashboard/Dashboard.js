@@ -2,17 +2,17 @@ import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useLocation, useHistory } from "react-router-dom";
-import { Grid, Card, List, Typography } from '@material-ui/core'
+import { Grid, Card } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import FilterBar from './FilterBar';
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 import queryString from 'query-string';
 import { appContextMap, validIdHelper } from '../../utils/tools';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery } from './helpers';
-import { TrendItem } from "@pbl-demo/components";
+import { AdjacentContainer } from "./AdjacentContainer"
+
 
 export const Dashboard = (props) => {
   // console.log('Dashboard');
@@ -60,10 +60,10 @@ export const Dashboard = (props) => {
   );
 
   const helperFunctionMapper = async (event, newValue, filterItem) => {
-    // console.log("helperFunctionMapper")
-    // console.log({ newValue })
-    // console.log({ filterItem })
-    // console.log({ hiddenFilterValue })
+    console.log("helperFunctionMapper")
+    console.log({ newValue })
+    console.log({ filterItem })
+    console.log({ hiddenFilterValue })
 
 
     let helperResponse = await filterItem.method({
@@ -195,31 +195,16 @@ export const Dashboard = (props) => {
           console.log({ error })
         });
 
-
-      //api calls
-      // if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
-      // ) {
-      // let asyncApiEntries = lookerContentItem.filters.map(async item => {
-      //   return [item.component, await runInlineQuery({ sdk, item, lookerUser, "type": "filters" })]
-      // })
-      //   let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries))
-      //   setApiContent(apiContentObj || {})
-      // } else if (lookerContentItem.hasOwnProperty('trends')) { //slightly redundant
-      //   let asyncApiEntries = lookerContentItem.trends.map(async item => {
-      //     return [item.component, await runInlineQuery({ sdk, item, lookerUser, "type": "trends" })]
-      //   })
-      //   let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries))
-      //   setApiContent(apiContentObj || {})
-      // }
-
       if (lookerContentItem.hasOwnProperty("adjacentContainer")) {
         let asyncApiEntries = lookerContentItem.adjacentContainer.items.map(async item => {
           if (item.hasOwnProperty("inlineQuery")) {
             return [item.component, await runInlineQuery({ sdk, item, lookerUser })] //
           }
+          return {}
         })
+        console.log({ asyncApiEntries })
         let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries));
-        setApiContent(apiContentObj || {})
+        if (apiContent) setApiContent(apiContentObj || {})
       }
     })
   }
@@ -298,104 +283,15 @@ export const Dashboard = (props) => {
                 classes={classes}
                 height={height - expansionPanelHeight} />
 
-              {/*
-               new 
-              eventually will replace filters / trends 
-              */}
               {lookerContent[0].hasOwnProperty("adjacentContainer") ?
-                <Grid item sm={lookerContent[0].adjacentContainer.gridWidth || 12} >
 
-                  <Grid container spacing={3}>
-                    {lookerContent[0].adjacentContainer.items.map(item => {
-                      let ItemComponent = item.component
-                      if (apiContent && apiContent[item.apiKey]) {
-                        return (
-                          < List
-                            disablePadding
-                            className={`${classes.inlineListPaddingTop10}`
-                            }
-                            component="div"
-                          >
-                            {
-                              apiContent[item.apiKey].map((trendItem, index) => {
-
-                                return (
-                                  <TrendItem
-                                    key={validIdHelper(`${demoComponentType}-TrendItem-${index}`)}
-                                    fieldsOfInterest={item.fieldsOfInterest}
-                                    trendItem={trendItem}
-                                    classes={classes}
-                                    index={index}
-                                  />
-                                )
-                              })
-                            }
-                          </List>
-                        )
-                      }
-                      else {
-                        console.log(ItemComponent)
-                        return (
-                          <Grid item sm={item.gridWidth ? item.gridWidth : null}>
-                            <ItemComponent
-                              classes={classes}
-                              filterItem={item}
-                              helperFunctionMapper={helperFunctionMapper}
-                            > {item.label}</ItemComponent>
-                          </Grid>
-                        )
-                      }
-                    })}
-                  </Grid>
-                </Grid>
-                : ""}
-
-              {/* {lookerContent[0].hasOwnProperty("filters") ?
-
-                < FilterBar {...props}
-                  classes={classes}
-                  apiContent={apiContent}
-                  customFilterAction={customFilterAction}
-                  lightThemeToggleValue={lightThemeToggleValue}
-                  fontThemeSelectValue={fontThemeSelectValue}
+                <AdjacentContainer container={lookerContent[0].adjacentContainer}
                   makeShiftDrawerOpen={makeShiftDrawerOpen}
                   setMakeShiftDrawerOpen={setMakeShiftDrawerOpen}
+                  apiContent={apiContent}
                   helperFunctionMapper={helperFunctionMapper}
-                />
-                :
-                ''} */}
-
-              {/* {lookerContent[0].hasOwnProperty("trends")
-                && apiContent
-                && apiContent.hasOwnProperty("trends")
-                ?
-
-                <Grid item sm={12} >
-
-                  <List
-                    disablePadding
-                    className={`${classes.inlineListPaddingTop10}`}
-                    component="div"
-                  >
-                    {
-                      apiContent.trends.map((trendItem, index) => {
-                        return (
-                          <TrendItem
-                            key={validIdHelper(`${demoComponentType}-TrendItem-${index}`)}
-                            fieldsOfInterest={lookerContent[0].trends[0].fieldsOfInterest}
-                            trendItem={trendItem}
-                            classes={classes}
-                            index={index}
-                          />
-                        )
-                      })
-                    }</List>
-                </Grid>
-
-                :
-                ''} */}
-
-
+                  classes={classes} />
+                : ""}
 
               <EmbeddedDashboardContainer
                 classes={classes}

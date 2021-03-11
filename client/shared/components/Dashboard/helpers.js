@@ -119,49 +119,12 @@ export const runInlineQuery = async ({ sdk, item, lookerUser }) => { //type
   console.log("runInlineQuery")
   console.log({ item })
 
-  // let apiContentObj = {}
-  // if (type === "filters") {
-  //   if (item.inlineQuery) {
-  //     let jsonQuery = item.inlineQuery
-  //     jsonQuery.filters = {
-  //       ...jsonQuery.filters,
-  //       [item.desiredFilterName]: lookerUser.user_attributes.brand
-  //     };
-  //     let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
-  //     console.log({ lookerResponseData })
-  //     let queryResultsForDropdown = [];
-  //     let desiredProperty = Object.keys(lookerResponseData[0])[0];
-
-  //     for (let i = 0; i < lookerResponseData.length; i++) {
-  //       queryResultsForDropdown.push({
-  //         'label': lookerResponseData[i][desiredProperty],
-  //         'trend': (lookerResponseData[i]['trend']) ? lookerResponseData[i]['trend'] : undefined,
-  //         'count': (lookerResponseData[i]['count']) ? lookerResponseData[i]['count'] : undefined
-  //       })
-  //     }
-  //     return queryResultsForDropdown;
-  //   }
-  // } else if (type === "trends") {
-  //   if (item.inlineQuery) {
-  //     let jsonQuery = item.inlineQuery
-  //     jsonQuery.filters = {
-  //       ...jsonQuery.filters,
-  //       [item.desiredFilterName]: lookerUser.user_attributes.brand
-  //     };
-  //     let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
-  //     return lookerResponseData;
-  //   }
-  // }
-
-
   let jsonQuery = item.inlineQuery
   jsonQuery.filters = {
     ...jsonQuery.filters,
     [item.desiredFilterName]: lookerUser.user_attributes.brand
   };
   let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
-  console.log({ lookerResponseData })
-  // let queryResultsForDropdown = [];
-  // let desiredProperty = Object.keys(lookerResponseData[0])[0];
+  // console.log({ lookerResponseData })
   return lookerResponseData;
 }

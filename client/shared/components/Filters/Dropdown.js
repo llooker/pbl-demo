@@ -5,9 +5,9 @@ const { validIdHelper } = require('../../utils/tools');
 
 
 export const Dropdown = ({ classes, filterItem, helperFunctionMapper, }) => {
-  console.log("Dropdown");
-  console.log({ filterItem })
-  console.log({ helperFunctionMapper })
+  // console.log("Dropdown");
+  // console.log({ filterItem })
+  // console.log({ helperFunctionMapper })
 
   const [selectValue, setSelectValue] = useState(filterItem ? filterItem.options[0].value : "");
   const [processing, setProcessing] = useState(false);
