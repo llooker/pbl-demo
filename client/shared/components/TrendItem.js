@@ -9,8 +9,8 @@ const { validIdHelper } = require('../utils/tools');
 
 export function TrendItem({ trendItem, classes, fieldsOfInterest, index }) {
 
-  // console.log("TrendItem")
-  // console.log({ trendItem })
+  console.log("TrendItem")
+  console.log({ trendItem })
 
   let formattedText = [];
   fieldsOfInterest.map(field => {

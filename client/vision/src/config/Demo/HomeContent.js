@@ -32,7 +32,8 @@ const countyTrends = {
   "fieldsOfInterest": [
     "person.home_city",
     "change"
-  ]
+  ],
+  "apiKey": "trends"
 }
 
 export const HomeContent = {
@@ -51,7 +52,10 @@ export const HomeContent = {
       "label": "Trends",
       "isNext": false,
       "theme": "vision_theme",
-      "trends": [countyTrends]
+      "adjacentContainer": {
+        "gridWidth": 12,
+        "items": [countyTrends]
+      }
     }],
   "requiredPermissionLevel": 0
 }

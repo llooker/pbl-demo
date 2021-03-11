@@ -1,10 +1,11 @@
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import { Dashboard } from '@pbl-demo/components'
+import { Dropdown } from '@pbl-demo/components/Filters'
 import { createCase } from '@pbl-demo/components/Dashboard/helpers'
 
 const createCaseSelect = {
   "label": "Case type",
-  "component": "dropdown",
+  "component": Dropdown,
   "options": [
     { label: "Suspicious Email", value: "human_suspicious_email" },
     { label: "Document Mismatch", value: "human_document_mismatch" },
@@ -38,9 +39,10 @@ export const ApplicationContent = {
       "label": "Application",
       "isNext": false,
       "theme": "vision_theme",
-      "filters": [createCaseSelect],
-      "filterName": "Application ID",
-      "filterBarWidth": 2
+      "adjacentContainer": {
+        "gridWidth": 2,
+        "items": [createCaseSelect]
+      }
     }],
   "requiredPermissionLevel": 0
 }

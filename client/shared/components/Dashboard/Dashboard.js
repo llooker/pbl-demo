@@ -2,7 +2,7 @@ import $ from 'jquery';
 import _ from 'lodash'
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useLocation, useHistory } from "react-router-dom";
-import { Grid, Card, List } from '@material-ui/core'
+import { Grid, Card, List, Typography } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import FilterBar from './FilterBar';
@@ -197,18 +197,28 @@ export const Dashboard = (props) => {
 
 
       //api calls
-      if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
-      ) {
-        let asyncApiEntries = lookerContentItem.filters.map(async item => {
-          return [item.component, await runInlineQuery({ sdk, item, lookerUser, "type": "filters" })]
+      // if (lookerContentItem.hasOwnProperty('filters') //&& !apiContent
+      // ) {
+      // let asyncApiEntries = lookerContentItem.filters.map(async item => {
+      //   return [item.component, await runInlineQuery({ sdk, item, lookerUser, "type": "filters" })]
+      // })
+      //   let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries))
+      //   setApiContent(apiContentObj || {})
+      // } else if (lookerContentItem.hasOwnProperty('trends')) { //slightly redundant
+      //   let asyncApiEntries = lookerContentItem.trends.map(async item => {
+      //     return [item.component, await runInlineQuery({ sdk, item, lookerUser, "type": "trends" })]
+      //   })
+      //   let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries))
+      //   setApiContent(apiContentObj || {})
+      // }
+
+      if (lookerContentItem.hasOwnProperty("adjacentContainer")) {
+        let asyncApiEntries = lookerContentItem.adjacentContainer.items.map(async item => {
+          if (item.hasOwnProperty("inlineQuery")) {
+            return [item.component, await runInlineQuery({ sdk, item, lookerUser })] //
+          }
         })
-        let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries))
-        setApiContent(apiContentObj || {})
-      } else if (lookerContentItem.hasOwnProperty('trends')) { //slightly redundant
-        let asyncApiEntries = lookerContentItem.trends.map(async item => {
-          return [item.component, await runInlineQuery({ sdk, item, lookerUser, "type": "trends" })]
-        })
-        let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries))
+        let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries));
         setApiContent(apiContentObj || {})
       }
     })
@@ -288,7 +298,59 @@ export const Dashboard = (props) => {
                 classes={classes}
                 height={height - expansionPanelHeight} />
 
-              {lookerContent[0].hasOwnProperty("filters") ?
+              {/*
+               new 
+              eventually will replace filters / trends 
+              */}
+              {lookerContent[0].hasOwnProperty("adjacentContainer") ?
+                <Grid item sm={lookerContent[0].adjacentContainer.gridWidth || 12} >
+
+                  <Grid container spacing={3}>
+                    {lookerContent[0].adjacentContainer.items.map(item => {
+                      let ItemComponent = item.component
+                      if (apiContent && apiContent[item.apiKey]) {
+                        return (
+                          < List
+                            disablePadding
+                            className={`${classes.inlineListPaddingTop10}`
+                            }
+                            component="div"
+                          >
+                            {
+                              apiContent[item.apiKey].map((trendItem, index) => {
+
+                                return (
+                                  <TrendItem
+                                    key={validIdHelper(`${demoComponentType}-TrendItem-${index}`)}
+                                    fieldsOfInterest={item.fieldsOfInterest}
+                                    trendItem={trendItem}
+                                    classes={classes}
+                                    index={index}
+                                  />
+                                )
+                              })
+                            }
+                          </List>
+                        )
+                      }
+                      else {
+                        console.log(ItemComponent)
+                        return (
+                          <Grid item sm={item.gridWidth ? item.gridWidth : null}>
+                            <ItemComponent
+                              classes={classes}
+                              filterItem={item}
+                              helperFunctionMapper={helperFunctionMapper}
+                            > {item.label}</ItemComponent>
+                          </Grid>
+                        )
+                      }
+                    })}
+                  </Grid>
+                </Grid>
+                : ""}
+
+              {/* {lookerContent[0].hasOwnProperty("filters") ?
 
                 < FilterBar {...props}
                   classes={classes}
@@ -301,9 +363,9 @@ export const Dashboard = (props) => {
                   helperFunctionMapper={helperFunctionMapper}
                 />
                 :
-                ''}
+                ''} */}
 
-              {lookerContent[0].hasOwnProperty("trends")
+              {/* {lookerContent[0].hasOwnProperty("trends")
                 && apiContent
                 && apiContent.hasOwnProperty("trends")
                 ?
@@ -331,7 +393,8 @@ export const Dashboard = (props) => {
                 </Grid>
 
                 :
-                ''}
+                ''} */}
+
 
 
               <EmbeddedDashboardContainer

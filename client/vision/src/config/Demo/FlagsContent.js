@@ -1,5 +1,14 @@
 import FlagIcon from '@material-ui/icons/Flag';
 import { Dashboard } from '@pbl-demo/components';
+import { Button } from '@material-ui/core/';
+
+
+const addCaseNotes = {
+  "label": "Add Case Notes",
+  "component": Button,
+  // "gridWidth": 3
+}
+
 
 export const FlagsConent = {
   "type": "dashboard",
@@ -16,7 +25,11 @@ export const FlagsConent = {
       "slug": "219Tk9NQ4sGSjGNsRSFKjG",
       "label": "Flags",
       "isNext": false,
-      "theme": "vision_theme"
+      "theme": "vision_theme",
+      "adjacentContainer": {
+        "gridWidth": 12,
+        "items": [addCaseNotes]
+      }
     }],
   "requiredPermissionLevel": 1
 }
