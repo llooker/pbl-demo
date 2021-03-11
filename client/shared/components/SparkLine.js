@@ -5,7 +5,8 @@ import { ResponsiveLine } from '@nivo/line';
 import { validIdHelper, decodeHtml, appContextMap } from '../utils/tools';
 
 export function SparkLine({ lookerContentItem, classes }) {
-  // console.log('SparkLine')
+  console.log('SparkLine')
+  console.log({ lookerContentItem })
   const [apiContent, setApiContent] = useState(undefined);
   const { clientSession, sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { userProfile, lookerUser } = clientSession;
@@ -28,7 +29,9 @@ export function SparkLine({ lookerContentItem, classes }) {
 
     // setApiContent(undefined)
     let { inlineQuery } = lookerContentItem;
+    console.log({ inlineQuery })
     let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContentItem.resultFormat || 'json', body: inlineQuery }));
+    console.log({ lookerResponseData })
     dataObjForSparkline.id = validIdHelper(`singleVisValue-${lookerContentItem.id}`);
     dataObjForSparkline.data = [];
 
@@ -40,16 +43,17 @@ export function SparkLine({ lookerContentItem, classes }) {
         let thisDataItem = {
           "x": item[lookerContentItem.inlineQuery.fields[0]].toString(),
           "y": item[lookerContentItem.inlineQuery.fields[1]] || 0,
-          "change": item.change
+          "change": item.change || 0
         }
         if (thisDataItem && thisDataItem.y !== "null") dataArrForDataObj.push(thisDataItem)
       }
     })
     dataObjForSparkline.data = [...dataArrForDataObj]
+
     //setApiContent([dataObjForSparkline])
     return [dataObjForSparkline]
   }
-
+  // console.log({ apiContent })
   const upOrDownArrow = apiContent && apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
   /**
    * TO DO
