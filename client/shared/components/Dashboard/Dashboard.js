@@ -35,7 +35,7 @@ export const Dashboard = (props) => {
   const [renderModal, setRenderModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
 
-  let dynamicVisConfigFilterItem = _.find(lookerContent[0].adjacentContainer.items, { label: "Dynamic Vis Config" });
+  let dynamicVisConfigFilterItem = lookerContent[0].adjacentContainer ? _.find(lookerContent[0].adjacentContainer.items, { label: "Dynamic Vis Config" }) : null;
   const isThemeableDashboard = dynamicVisConfigFilterItem && Object.keys(dynamicVisConfigFilterItem).length ? true : false;
   const darkThemeBackgroundColor = theme.palette.fill.main;
   const classes = useStyles();
