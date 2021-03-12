@@ -19,7 +19,8 @@ const createCaseSelect = {
   "secondaryComponent": {
     "component": "button",
     "label": "Create case"
-  }
+  },
+  "tooltip": "Create a case",
 }
 
 

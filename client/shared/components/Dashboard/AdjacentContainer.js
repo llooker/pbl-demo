@@ -25,8 +25,6 @@ export const AdjacentContainer = ({
   // console.log({ helperFunctionMapper })
   // console.log({ classes })
 
-
-  let ContainerComponent = container.component || Box;
   return (
     <Grid item
       sm={makeShiftDrawerOpen ? container.gridWidth ? container.gridWidth : 3 : "auto"}
@@ -45,44 +43,37 @@ export const AdjacentContainer = ({
           : ""
       }
 
+      <Grid container style={container.collapsable ? makeShiftDrawerOpen ? { display: "block" } : { display: "none" } : {}}>
 
-      <Box style={makeShiftDrawerOpen ? { display: "block" } : { display: "none" }}>
         {container.items.map((item, index) => {
           let ItemComponent = item.component;
           //api driven content
           if (apiContent && apiContent[item.apiKey]) {
             return (
-              <ContainerComponent
-                key={validIdHelper(`ContainerComponent-${item.apiKey}-${index}`)}
-                id={validIdHelper(`ContainerComponent-${item.apiKey}-${index}`)}
-              >
-                {
-                  item.apiKey === "trends" ?
-                    apiContent[item.apiKey].map((apiItem, index) => {
+              item.apiKey === "trends" ?
+                apiContent[item.apiKey].map((apiItem, index) => {
 
-                      return (
-                        <ItemComponent
-                          key={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
-                          id={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
-                          apiItem={apiItem}
-                          item={item}
-                          classes={classes}
-                          index={index}
-                        />
-                      )
-                    })
-                    :
+                  return (
                     <ItemComponent
+                      key={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
+                      id={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
+                      apiItem={apiItem}
+                      item={item}
                       classes={classes}
-                      apiContent={apiContent[item.apiKey]}
-                      action={customFilterAction}
-                      filterItem={item}
                       index={index}
-                      lightThemeToggleValue={lightThemeToggleValue}
-                      fontThemeSelectValue={fontThemeSelectValue}
                     />
-                }
-              </ContainerComponent>
+                  )
+                })
+                :
+                <ItemComponent
+                  classes={classes}
+                  apiContent={apiContent[item.apiKey]}
+                  action={customFilterAction}
+                  filterItem={item}
+                  index={index}
+                  lightThemeToggleValue={lightThemeToggleValue}
+                  fontThemeSelectValue={fontThemeSelectValue}
+                />
             )
           }
           //static content
@@ -105,7 +96,7 @@ export const AdjacentContainer = ({
             )
           }
         })}
-      </Box>
+      </Grid>
     </Grid>
   )
 }

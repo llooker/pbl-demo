@@ -150,3 +150,25 @@ export const addCaseNotes = async ({ newValue, filterItem, hiddenFilterValue }) 
     "response": newCaseResponseData
   };
 }
+
+export const changeCaseStatus = async ({ newValue, filterItem, hiddenFilterValue }) => {
+  // console.log("changeCaseStatus")
+  // console.log({ newValue })
+  // console.log({ filterItem })
+  // console.log({ hiddenFilterValue })
+
+  let changeCaseStatusResponse = await fetch('/changecasestatus', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ caseStatus: newValue, caseId: hiddenFilterValue })
+  })
+  const changeCaseStatusResponseData = await changeCaseStatusResponse.json();
+  // console.log({ changeCaseStatusResponseData })
+  return {
+    "methodName": filterItem.methodName,
+    "response": changeCaseStatusResponseData
+  };
+}

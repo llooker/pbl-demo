@@ -1,7 +1,7 @@
 import FlagIcon from '@material-ui/icons/Flag';
 import { Dashboard } from '@pbl-demo/components';
-import { ModalButton } from '@pbl-demo/components/Filters';
-import { addCaseNotes } from '@pbl-demo/components/Dashboard/helpers'
+import { ModalButton, Dropdown } from '@pbl-demo/components/Filters';
+import { addCaseNotes, changeCaseStatus } from '@pbl-demo/components/Dashboard/helpers'
 
 const addCaseNotesModal = {
   "copy": {
@@ -18,7 +18,25 @@ const addCaseNotesButton = {
   "label": "Add Case Notes",
   "component": ModalButton,
   "secondaryComponent": addCaseNotesModal,
-  "tooltip": "Select a case"
+  "tooltip": "Select a case",
+  "gridWidth": 2
+}
+
+const changeCaseStatusSelect = {
+  "label": "Case status",
+  "component": Dropdown,
+  "options": [
+    { label: "Closed", value: "closed" },
+    { label: "Open", value: "pending" },
+  ],
+  "method": changeCaseStatus,
+  "methodName": "changeCaseStatus",
+  "secondaryComponent": {
+    "component": "button",
+    "label": "Submit"
+  },
+  "tooltip": "Select a case",
+  "gridWidth": 2
 }
 
 
@@ -41,7 +59,7 @@ export const FlagsConent = {
       "theme": "vision_theme",
       "adjacentContainer": {
         "gridWidth": 12,
-        "items": [addCaseNotesButton]
+        "items": [addCaseNotesButton, changeCaseStatusSelect]
       }
     }],
   "requiredPermissionLevel": 1

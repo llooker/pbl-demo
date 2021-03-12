@@ -88,6 +88,9 @@ export const Dashboard = (props) => {
     } else if (methodName === "addCaseNotes") {
       corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
       setRenderModal(false)
+    } else if (methodName === "changeCaseStatus") {
+      corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
+      return response
     }
   }
 
@@ -213,7 +216,7 @@ export const Dashboard = (props) => {
           // let modifiedBaseUrl = clientSession.lookerBaseUrl.replace(/:443$/, "")
           LookerEmbedSDK.init(modifiedBaseUrl)
         }).catch(error => {
-          console.log({ error })
+          // console.log({ error })
         });
 
       if (lookerContentItem.hasOwnProperty("adjacentContainer")) {
