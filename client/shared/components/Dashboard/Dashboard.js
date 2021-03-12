@@ -9,9 +9,10 @@ import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 import queryString from 'query-string';
-import { appContextMap, validIdHelper } from '../../utils/tools';
+import { appContextMap, decodeHtml, validIdHelper } from '../../utils/tools';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery } from './helpers';
 import { AdjacentContainer } from "./AdjacentContainer"
+import { SimpleModal } from "@pbl-demo/components";
 
 
 export const Dashboard = (props) => {
@@ -31,6 +32,8 @@ export const Dashboard = (props) => {
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
   const [makeShiftDrawerOpen, setMakeShiftDrawerOpen] = useState(true);
   const [hiddenFilterValue, setHiddenFilterValue] = useState(null);
+  const [renderModal, setRenderModal] = useState(false);
+  const [modalInfo, setModalInfo] = useState({});
 
   let dynamicVisConfigFilterItem = _.find(lookerContent[0].adjacentContainer.items, { label: "Dynamic Vis Config" });
   const isThemeableDashboard = dynamicVisConfigFilterItem && Object.keys(dynamicVisConfigFilterItem).length ? true : false;
@@ -62,7 +65,6 @@ export const Dashboard = (props) => {
     // console.log("helperFunctionMapper")
     // console.log({ newValue })
     // console.log({ filterItem })
-    // console.log({ hiddenFilterValue })
 
 
     let helperResponse = await filterItem.method({
@@ -80,10 +82,12 @@ export const Dashboard = (props) => {
         setFontThemeSelectValue(newValue)
       }
       corsApiCall(performLookerApiCalls, [lookerContent, response])
-    }
-    else if (methodName === "createCase") {
+    } else if (methodName === "createCase") {
       corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
       return response
+    } else if (methodName === "addCaseNotes") {
+      corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
+      setRenderModal(false)
     }
   }
 
@@ -161,14 +165,16 @@ export const Dashboard = (props) => {
         lookerContentItem.theme ?
           lookerContentItem.theme :
           'atom_fashion';
-      // console.log({ themeToUse })
 
       LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
         .withClassName('iframe')
         .withNext()
         .withTheme(themeToUse)
-        .withParams({ 'schedule_modal': 'true' })
+        .withParams({
+          'schedule_modal': 'true',
+          'always_filter': 'true'
+        })
         .on('dashboard:loaded', (event) => {
           setDashboardOptions(event.dashboard.options)
           let keyName = Object.keys(event.dashboard.dashboard_filters)[0];
@@ -180,6 +186,22 @@ export const Dashboard = (props) => {
           let keyName = Object.keys(event.dashboard.dashboard_filters)[0];
           let keyValue = event.dashboard.dashboard_filters[keyName];
           setHiddenFilterValue(keyValue)
+        })
+        .on('page:changed', (event) => {
+          if (lookerContent[0].slug === "219Tk9NQ4sGSjGNsRSFKjG") {
+            const absoluteUrl = new URL(event.page.absoluteUrl)
+            let params = queryString.parse(absoluteUrl.search);
+
+            let matchingKey = _.find(Object.keys(params), (o) => {
+              return o.indexOf("case.case_id") > -1
+            })
+
+            if (matchingKey) {
+              setHiddenFilterValue(params[matchingKey])
+            } else {
+              setHiddenFilterValue(null)
+            }
+          }
         })
         .build()
         .connect()
@@ -201,9 +223,7 @@ export const Dashboard = (props) => {
           }
           return {}
         })
-        // console.log({ asyncApiEntries })
         let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries));
-        // console.log({ apiContentObj })
         if (apiContentObj.hasOwnProperty("autocomplete")) {
           //api results for autocomplete component need to be specially formatted
           let autocompleteResults = apiContentObj.autocomplete
@@ -267,6 +287,14 @@ export const Dashboard = (props) => {
     }
   }
 
+  const handleRenderModal = ({ filterItem, status }) => {
+    // console.log("handleRenderModal")
+    // console.log({ filterItem })
+
+    setModalInfo(filterItem.secondaryComponent)
+    setRenderModal(status)
+  }
+
   useEffect(() => {
     // console.log("useEffect")
     let params = queryString.parse(location.search);
@@ -312,8 +340,12 @@ export const Dashboard = (props) => {
                   customFilterAction={customFilterAction}
                   lightThemeToggleValue={lightThemeToggleValue}
                   fontThemeSelectValue={fontThemeSelectValue}
+                  handleRenderModal={handleRenderModal}
+                  hiddenFilterValue={hiddenFilterValue}
                 />
                 : ""}
+
+              {renderModal ? <SimpleModal setRenderModal={setRenderModal} modalInfo={modalInfo} helperFunctionMapper={helperFunctionMapper} /> : ""}
 
               <EmbeddedDashboardContainer
                 classes={classes}

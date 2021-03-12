@@ -16,5 +16,6 @@ router.get('/refreshlookertoken', indexCtrl.refreshLookerToken);
 router.get('/auth', lookerCtrl.auth);
 router.post('/updatelookeruser', lookerCtrl.updateLookerUser);
 router.post('/createcase', indexCtrl.createCase);
+router.post('/addcasenotes', indexCtrl.addCaseNotes);
 
 module.exports = router;

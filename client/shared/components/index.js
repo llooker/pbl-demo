@@ -14,3 +14,4 @@ export { TopDrawer } from "./TopDrawer";
 export { LeftDrawer } from "./LeftDrawer";
 export { Dashboard } from "./Dashboard/Dashboard";
 export { TrendItem } from "./TrendItem";
+export { SimpleModal } from "./SimpleModal";

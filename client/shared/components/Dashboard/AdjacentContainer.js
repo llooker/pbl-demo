@@ -13,7 +13,9 @@ export const AdjacentContainer = ({
   helperFunctionMapper,
   customFilterAction,
   lightThemeToggleValue,
-  fontThemeSelectValue
+  fontThemeSelectValue,
+  handleRenderModal,
+  hiddenFilterValue
 }) => {
   // console.log("AdjacentContainer")
   // console.log({ container })
@@ -25,7 +27,6 @@ export const AdjacentContainer = ({
 
 
   let ContainerComponent = container.component || Box;
-  // console.log({ ContainerComponent })
   return (
     <Grid item
       sm={makeShiftDrawerOpen ? container.gridWidth ? container.gridWidth : 3 : "auto"}
@@ -48,11 +49,8 @@ export const AdjacentContainer = ({
       <Box style={makeShiftDrawerOpen ? { display: "block" } : { display: "none" }}>
         {container.items.map((item, index) => {
           let ItemComponent = item.component;
-          console.log({ ItemComponent })
-          console.log({ apiContent })
           //api driven content
           if (apiContent && apiContent[item.apiKey]) {
-            console.log({ apiContent })
             return (
               <ContainerComponent
                 key={validIdHelper(`ContainerComponent-${item.apiKey}-${index}`)}
@@ -100,6 +98,8 @@ export const AdjacentContainer = ({
                   filterItem={item}
                   lightThemeToggleValue={lightThemeToggleValue}
                   fontThemeSelectValue={fontThemeSelectValue}
+                  handleRenderModal={handleRenderModal}
+                  hiddenFilterValue={hiddenFilterValue}
                 > {item.label}</ItemComponent>
               </Grid>
             )

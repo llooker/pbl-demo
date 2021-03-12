@@ -1,13 +1,26 @@
 import FlagIcon from '@material-ui/icons/Flag';
 import { Dashboard } from '@pbl-demo/components';
-import { Button } from '@material-ui/core/';
+import { ModalButton } from '@pbl-demo/components/Filters';
+import { addCaseNotes } from '@pbl-demo/components/Dashboard/helpers'
 
-
-const addCaseNotes = {
-  "label": "Add Case Notes",
-  "component": Button,
-  // "gridWidth": 3
+const addCaseNotesModal = {
+  "copy": {
+    "title": "Add Note",
+    "defaultValue": "Default value",
+    "suggestion": "Record a flag",
+    "button": "Submit"
+  },
+  "method": addCaseNotes,
+  "methodName": "addCaseNotes",
 }
+
+const addCaseNotesButton = {
+  "label": "Add Case Notes",
+  "component": ModalButton,
+  "secondaryComponent": addCaseNotesModal,
+  "tooltip": "Select a case"
+}
+
 
 
 export const FlagsConent = {
@@ -28,7 +41,7 @@ export const FlagsConent = {
       "theme": "vision_theme",
       "adjacentContainer": {
         "gridWidth": 12,
-        "items": [addCaseNotes]
+        "items": [addCaseNotesButton]
       }
     }],
   "requiredPermissionLevel": 1

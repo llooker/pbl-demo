@@ -94,6 +94,21 @@ export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue,
   }
 }
 
+
+export const runInlineQuery = async ({ sdk, item, lookerUser }) => { //type
+  // console.log("runInlineQuery")
+  // console.log({ item })
+
+  let jsonQuery = item.inlineQuery
+  jsonQuery.filters = {
+    ...jsonQuery.filters,
+    [item.desiredFilterName]: lookerUser.user_attributes.brand
+  };
+  let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
+  // console.log({ lookerResponseData })
+  return lookerResponseData;
+}
+
 export const createCase = async ({ newValue, filterItem, hiddenFilterValue }) => {
   // console.log("createCase")
   // console.log({ newValue })
@@ -115,16 +130,23 @@ export const createCase = async ({ newValue, filterItem, hiddenFilterValue }) =>
   };
 }
 
-export const runInlineQuery = async ({ sdk, item, lookerUser }) => { //type
-  // console.log("runInlineQuery")
-  // console.log({ item })
+export const addCaseNotes = async ({ newValue, filterItem, hiddenFilterValue }) => {
+  // console.log("addCaseNotes")
+  // console.log({ newValue })
+  // console.log({ filterItem })
+  // console.log({ hiddenFilterValue })
 
-  let jsonQuery = item.inlineQuery
-  jsonQuery.filters = {
-    ...jsonQuery.filters,
-    [item.desiredFilterName]: lookerUser.user_attributes.brand
+  let newCaseResponse = await fetch('/addcasenotes', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ caseNote: newValue, caseId: hiddenFilterValue })
+  })
+  const newCaseResponseData = await newCaseResponse.json();
+  return {
+    "methodName": filterItem.methodName,
+    "response": newCaseResponseData
   };
-  let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
-  // console.log({ lookerResponseData })
-  return lookerResponseData;
 }

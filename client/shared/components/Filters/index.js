@@ -6,6 +6,6 @@ export { MapFilter } from "./MapFilter";
 export { RangeSlider } from "./RangeSlider";
 export { ToggleApi } from "./ToggleApi";
 export { Dropdown } from "./Dropdown";
-export { ActionButton } from "./ActionButton";
+export { ModalButton } from "./ModalButton";
 export { ToggleButton } from "./ToggleButton";
 

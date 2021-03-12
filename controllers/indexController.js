@@ -119,3 +119,44 @@ module.exports.createCase = async (req, res, next) => {
     })
   }
 }
+
+module.exports.addCaseNotes = async (req, res, next) => {
+  // console.log("addCaseNotes")
+  let { session, body } = req;
+
+  let options = {
+    method: 'POST',
+    uri: 'https://us-central1-pbl-demo-2020-281322.cloudfunctions.net/add_case_notes',
+    body: {
+      "type": "cell",
+      "scheduled_plan": null,
+      "attachment": null,
+      "data": {
+        "value": body.caseId,
+        "rendered": body.caseId,
+        "case_id": body.caseId,
+        "security_key": session.cloudFunctionSecret,
+        "email": session.userProfile.email
+      },
+      "form_params": {
+        "case_notes": body.caseNote
+      }
+    },
+    json: true // Automatically stringifies the body to JSON
+  };
+
+
+  try {
+    let postRsp = await rp(options)
+    res.status(200).send({
+      status: "success",
+      message: "Case note added. Reload dashboard to see it!"
+    })
+  } catch (err) {
+    // console.log({ err })
+    res.status(400).send({
+      status: "error",
+      message: err
+    })
+  }
+}
