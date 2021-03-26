@@ -17,10 +17,11 @@ export default function ReportBuilder(props) {
   const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession;
 
+  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState([]);
   const [exploreObj, setExploreObj] = useState({});
-  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
 
   const classes = useStyles();
@@ -50,7 +51,7 @@ export default function ReportBuilder(props) {
   }, [lookerUser, value, isReady, value]);
 
   useEffect(() => {
-    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+    window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
     setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
   })
 

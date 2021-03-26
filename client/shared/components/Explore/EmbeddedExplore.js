@@ -10,17 +10,19 @@ const { validIdHelper, appContextMap, validateContent } = require('../../utils/t
 
 export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema } }) => {
   // console.log("EmbeddedExplore")
+  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;
+
   const [iFrameExists, setIFrame] = useState(1);
   const [apiContent, setApiContent] = useState(undefined);
   const [exploreObj, setExploreObj] = useState({});
-  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const { clientSession, clientSession: { lookerUser, lookerHost }, isReady, sdk, corsApiCall, selectedMenuItem } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const demoComponentType = type;
   const classes = useStyles();
 
 
   useEffect(() => {
-    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+    window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
   }, [lookerContent]);
 
   useEffect(() => {

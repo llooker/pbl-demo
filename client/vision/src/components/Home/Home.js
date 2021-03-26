@@ -96,11 +96,6 @@ export default function Home(props) {
     let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
     LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
 
-    //listen to resize event
-    window.addEventListener("resize", () => {
-      setDrawerOpen(window.innerWidth > 768 ? true : false)
-    });
-
   }, []) //onload
 
   useEffect(() => {

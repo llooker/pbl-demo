@@ -15,6 +15,8 @@ const { validIdHelper } = require('../../../tools');
 
 export default function SalesCalendar(props) {
   // console.log('SalesCalendar')
+
+  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;
   const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
   const [value, setValue] = useState(0);
@@ -25,7 +27,7 @@ export default function SalesCalendar(props) {
   const [apiContent, setApiContent] = useState(undefined);
   const [open, setOpen] = React.useState(false);
   const [modalContent, setModalContent] = useState({});
-  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
 
   const classes = useStyles();
@@ -130,7 +132,7 @@ export default function SalesCalendar(props) {
   }, [lookerUser, isReady])
 
   useEffect(() => {
-    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+    window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
     setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
 
   })

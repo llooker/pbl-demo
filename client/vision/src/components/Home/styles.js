@@ -2,7 +2,7 @@ import { packageNameTheme } from '../../config/theme.js'
 import { makeStyles } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
-const topDrawerHeight = 50;
+const topDrawerHeight = 65;
 export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -67,7 +67,6 @@ export const useStyles = makeStyles(theme => ({
   },
   topContent: {
     flexGrow: 1,
-    padding: theme.spacing(3),
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,

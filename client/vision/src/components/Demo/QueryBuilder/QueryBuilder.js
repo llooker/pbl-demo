@@ -22,10 +22,11 @@ export default function QueryBuilder(props) {
 
   const { clientSession, show, codeShow, sdk, corsApiCall } = useContext(AppContext)
   const { userProfile, lookerUser, lookerHost } = clientSession
+  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;
 
   const sideBarWidth = 240 + 122; //24 + 24 + 30 + 30 + 12 + 12 + 10 + 10
   const [apiContent, setApiContent] = useState({});
-  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const [width, setWidth] = useState((window.innerWidth - sideBarWidth));
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
   const classes = useStyles();
@@ -34,7 +35,7 @@ export default function QueryBuilder(props) {
 
   useEffect(() => {
     window.addEventListener("resize", () => {
-      setHeight((window.innerHeight - topBarBottomBarHeight))
+      setHeight((window.innerHeight - dynamicTopBarBottomBarHeight))
       setWidth((window.innerWidth - sideBarWidth))
       setExpansionPanelHeight($('.MuiExpansionPanel-root:visible').innerHeight() || 0)
 

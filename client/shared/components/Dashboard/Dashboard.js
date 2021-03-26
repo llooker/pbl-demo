@@ -7,7 +7,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
-import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout, } from '../styles.js';
 import queryString from 'query-string';
 import { appContextMap, decodeHtml, validIdHelper } from '../../utils/tools';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery } from './helpers';
@@ -15,18 +15,19 @@ import { AdjacentContainer } from "./AdjacentContainer"
 import { SimpleModal } from "@pbl-demo/components";
 
 
-export const Dashboard = (props) => {
+export const Dashboard = ({ staticContent }) => {
   // console.log('Dashboard');
-  const { clientSession, clientSession: { lookerUser }, sdk, corsApiCall, theme, isReady, selectedMenuItem } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  const { clientSession, clientSession: { lookerUser }, sdk, corsApiCall, theme, isReady, selectedMenuItem, drawerOpen } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
-  const { staticContent: { lookerContent }, staticContent: { type } } = props;
+  const { lookerContent, type } = staticContent;
   const demoComponentType = type || 'code flyout';
+  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;
 
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState(undefined);
   const [dashboardObj, setDashboardObj] = useState({});
   const [dashboardOptions, setDashboardOptions] = useState({});
-  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
@@ -141,7 +142,7 @@ export const Dashboard = (props) => {
   }, [dashboardOptions]);
 
   useEffect(() => {
-    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+    window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
     setExpansionPanelHeight(0)
   })
 
@@ -310,15 +311,15 @@ export const Dashboard = (props) => {
 
   }, [customFilterAction, location.search, lookerContent])
 
-  // localStorage.debug = 'looker:chatty:*'
-
 
   return (
     <div className={`${classes.root} ${classes.positionRelative}`}
       style={{ height }}
     >
       <ThemeProvider theme={themeToUse}>
-        <Card elevation={1} className={lookerContent[0].hasOwnProperty("adjacentContainer") ? `${classes.padding15} ${classes.height100Percent}` : `${classes.paddingTB15} ${classes.height100Percent}`}>
+        <Card elevation={1} className={lookerContent[0].hasOwnProperty("adjacentContainer") ?
+          `${classes.padding15} ${classes.height100Percent} ` :
+          `${classes.paddingTB15} ${classes.height100Percent} `}>
           <div
             className={`${classes.root} ${classes.height100Percent}`}
           >
@@ -329,7 +330,7 @@ export const Dashboard = (props) => {
               <Loader
                 hide={iFrameExists}
                 classes={classes}
-                height={height - expansionPanelHeight} />
+                height={height} />
 
               {lookerContent[0].hasOwnProperty("adjacentContainer") ?
 
@@ -356,7 +357,7 @@ export const Dashboard = (props) => {
                 type={demoComponentType}
               />
 
-              <CodeFlyout {...props}
+              <CodeFlyout
                 classes={classes}
                 lookerUser={lookerUser}
                 height={height - expansionPanelHeight - additionalHeightForFlyout}

@@ -6,15 +6,16 @@ import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from './s
 
 export const SplashPage = (props) => {
 
+  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;
   const [iFrameExists] = useState(1);
-  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const { clientSession: { lookerUser, lookerHost } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const { staticContent: { lookerContent }, staticContent: { type } } = props;
   const classes = useStyles();
   const demoComponentType = type || 'code flyout';
 
   useEffect(() => {
-    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+    window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
   }, [lookerContent]);
 
 

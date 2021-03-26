@@ -8,12 +8,12 @@ const lightGrey = grey[200];
 
 export const topBarBottomBarHeight = 140;
 export const additionalHeightForFlyout = 15; //hack for now
+export const topBarHeight = 70;
 
 export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     overflow: 'scroll',
-    borderRadius: 8
   },
   flexCentered: {
     display: 'flex',
