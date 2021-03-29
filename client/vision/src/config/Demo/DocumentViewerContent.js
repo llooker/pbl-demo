@@ -1,5 +1,5 @@
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import { PDFViewer } from "@pbl-demo/components";
+import { DocumentViewer } from "@pbl-demo/components";
 
 const schema = {
   type: (value) => {
@@ -10,21 +10,22 @@ const schema = {
   }
 }
 
-export const PDFViewerContent = {
+export const DocumentViewerContent = {
   "type": "customfilter",
   "label": "Eligibility Docs",
   "menuCategory": "Home",
   "description": "Overview of all your web traffic",
   "icon": PictureAsPdfIcon,
-  "component": PDFViewer,
+  "component": DocumentViewer,
   "lookerContent": [
     {
-      "type": "pdfviewer",
+      "type": "documentviewer",
       "id": "20",
       "label": "EligibilityDocs",
       "isNext": false,
       "filters": [],
-      "pdf": "https://storage.googleapis.com/looker-dat-vision/1099.pdf"
+      "url": "https://storage.googleapis.com/looker-dat-vision/1099.pdf"
+
     }],
   "schema": schema,
   "requiredPermissionLevel": 1

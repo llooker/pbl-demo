@@ -205,3 +205,7 @@ html {
 html, body, #root, #root>div {
   height: 100%
 }
+
+.object img {
+  max-width: 100%;
+}

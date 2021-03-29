@@ -5,4 +5,4 @@ export * from "./FlagsContent";
 export * from "./BeneficiaryContent";
 export * from "./ApplicationContent";
 export * from "./ExploreContent";
-export * from "./PDFViewerContent";
+export * from "./DocumentViewerContent";

@@ -1,7 +1,6 @@
 export { Welcome } from "./Welcome";
 export { PopularAnalysis } from "./PopularAnalysis";
 export { EmbeddedQuery } from "./EmbeddedQuery";
-export { PDFViewer } from "./PDFViewer";
 export { EmbeddedExplore } from "./Explore/EmbeddedExplore";
 export { TopBar } from "./TopBar";
 export { UserMenu } from "./UserMenu";
@@ -15,3 +14,5 @@ export { LeftDrawer } from "./LeftDrawer";
 export { Dashboard } from "./Dashboard/Dashboard";
 export { TrendItem } from "./TrendItem";
 export { SimpleModal } from "./SimpleModal";
+export { DocumentViewer } from "./DocumentViewer";
+

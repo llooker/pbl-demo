@@ -8,7 +8,7 @@ import queryString from 'query-string';
 
 const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
 
-export const PDFViewer = (props) => {
+export const DocumentViewer = (props) => {
   const [iFrameExists, setIFrame] = useState(1);
   const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
   const { clientSession: { lookerUser, lookerHost } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
@@ -16,7 +16,7 @@ export const PDFViewer = (props) => {
   const demoComponentType = type;
   const classes = useStyles();
   let location = useLocation();
-  const [pdfToUse, setPdfToUse] = useState(lookerContent[0].pdf);
+  const [docToUse, setDocToUse] = useState(lookerContent[0].url);
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
@@ -29,7 +29,7 @@ export const PDFViewer = (props) => {
     let paramMatchesPDFUrl = params.pdf_url ? true : false;
 
     if (paramMatchesPDFUrl) {
-      setPdfToUse(params["pdf_url"]);
+      setDocToUse(params["pdf_url"]);
     }
 
   }, [location.search])
@@ -61,11 +61,10 @@ export const PDFViewer = (props) => {
                   lookerUser={lookerUser}
                   height={height - additionalHeightForFlyout}
                 />
-                {pdfToUse ?
-                  <object data={pdfToUse} type="application/pdf" className={`${classes.minHeight680} ${classes.w100}`}>
-                    <iframe src={`https://docs.google.com/viewer?url=${pdfToUse}&embedded=true`} style={{ height: "100%", width: "100%" }}></iframe>
-                  </object> : ""}
-
+                {docToUse ?
+                  <object data={docToUse}
+                    type="application/pdf"
+                    className={`${classes.minHeight680} ${classes.w100} object`} /> : ""}
               </Grid>
             </Box >
           </div >
