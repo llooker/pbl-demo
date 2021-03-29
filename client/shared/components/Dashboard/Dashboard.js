@@ -317,54 +317,50 @@ export const Dashboard = ({ staticContent }) => {
       style={{ height }}
     >
       <ThemeProvider theme={themeToUse}>
-        <Card elevation={1} className={lookerContent[0].hasOwnProperty("adjacentContainer") ?
-          `${classes.padding15} ${classes.height100Percent} ` :
-          `${classes.paddingTB15} ${classes.height100Percent} `}>
-          <div
-            className={`${classes.root} ${classes.height100Percent}`}
+        <Card elevation={1}
+          className={` ${classes.height100Percent} ${classes.padding5}`}
+        >
+          <Grid
+            container
+            spacing={3}
           >
-            <Grid
-              container
-              spacing={3}
-            >
-              <Loader
-                hide={iFrameExists}
+            <Loader
+              hide={iFrameExists}
+              classes={classes}
+              height={height} />
+
+            {lookerContent[0].hasOwnProperty("adjacentContainer") ?
+
+              <AdjacentContainer
+                container={lookerContent[0].adjacentContainer}
+                makeShiftDrawerOpen={makeShiftDrawerOpen}
+                setMakeShiftDrawerOpen={setMakeShiftDrawerOpen}
+                apiContent={apiContent}
+                helperFunctionMapper={helperFunctionMapper}
                 classes={classes}
-                height={height} />
-
-              {lookerContent[0].hasOwnProperty("adjacentContainer") ?
-
-                <AdjacentContainer
-                  container={lookerContent[0].adjacentContainer}
-                  makeShiftDrawerOpen={makeShiftDrawerOpen}
-                  setMakeShiftDrawerOpen={setMakeShiftDrawerOpen}
-                  apiContent={apiContent}
-                  helperFunctionMapper={helperFunctionMapper}
-                  classes={classes}
-                  customFilterAction={customFilterAction}
-                  lightThemeToggleValue={lightThemeToggleValue}
-                  fontThemeSelectValue={fontThemeSelectValue}
-                  handleRenderModal={handleRenderModal}
-                  hiddenFilterValue={hiddenFilterValue}
-                />
-                : ""}
-
-              {renderModal ? <SimpleModal setRenderModal={setRenderModal} modalInfo={modalInfo} helperFunctionMapper={helperFunctionMapper} /> : ""}
-
-              <EmbeddedDashboardContainer
-                classes={classes}
-                lookerContent={lookerContent}
-                type={demoComponentType}
+                customFilterAction={customFilterAction}
+                lightThemeToggleValue={lightThemeToggleValue}
+                fontThemeSelectValue={fontThemeSelectValue}
+                handleRenderModal={handleRenderModal}
+                hiddenFilterValue={hiddenFilterValue}
               />
+              : ""}
 
-              <CodeFlyout
-                classes={classes}
-                lookerUser={lookerUser}
-                height={height - expansionPanelHeight - additionalHeightForFlyout}
-              />
+            {renderModal ? <SimpleModal setRenderModal={setRenderModal} modalInfo={modalInfo} helperFunctionMapper={helperFunctionMapper} /> : ""}
 
-            </Grid>
-          </div>
+            <EmbeddedDashboardContainer
+              classes={classes}
+              lookerContent={lookerContent}
+              type={demoComponentType}
+            />
+
+            <CodeFlyout
+              classes={classes}
+              lookerUser={lookerUser}
+              height={height - expansionPanelHeight - additionalHeightForFlyout}
+            />
+
+          </Grid>
         </Card>
       </ThemeProvider >
     </ div >

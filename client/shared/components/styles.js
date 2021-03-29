@@ -309,5 +309,7 @@ export const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     padding: 10,
   },
-  padding15: { padding: 15 }
+  padding15: { padding: 15 },
+  padding10: { padding: 10 },
+  padding5: { padding: 5 },
 }));

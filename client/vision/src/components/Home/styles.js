@@ -63,7 +63,7 @@ export const useStyles = makeStyles(theme => ({
   },
   topDrawerPaper: {
     width: '100%',
-    backgroundColor: 'transparent'
+    backgroundColor: 'rgb(229, 229, 229)'
   },
   topContent: {
     flexGrow: 1,
@@ -175,7 +175,7 @@ export const useStyles = makeStyles(theme => ({
   appBarBottom: {
     top: 'auto',
     bottom: 0,
-    backgroundColor: 'rgb(229, 229, 229)'
+    backgroundColor: '#fff'
   },
   hidden: {
     visibility: 'hidden'

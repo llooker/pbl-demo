@@ -76,59 +76,58 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
       style={{ height }}
     >
       <Card elevation={1}
-        className={`${classes.padding15} ${classes.height100Percent} ${classes.overflowScroll}`}
+        className={` ${classes.height100Percent} ${classes.padding5}`}
       >
-        <Grid container
-          key={validIdHelper(type)}>
-          <div className={classes.root}>
-            <Loader
-              hide={iFrameExists}
-              classes={classes}
-              height={height} />
-            <Box className={iFrameExists ? `` : `${classes.hidden}`}>
-              <Grid container
-                spacing={3}
-                key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
-                className={`${classes.noContainerScroll}`}
-              >
-                <CodeFlyout
-                  classes={classes}
-                  lookerUser={lookerUser}
-                  height={height - additionalHeightForFlyout}
-                />
+        <Grid
+          container
+          spacing={3}
+        >
+          <Loader
+            hide={iFrameExists}
+            classes={classes}
+            height={height} />
 
-                {lookerContent[0].actions ?
-                  <Grid container>
-                    {lookerContent[0].actions.map(item => {
-                      let Component = item.component
-                      return (
-                        <Grid item sm={item.gridWith}>
-                          <Component classes={classes} item={item} helperFunctionMapper={helperFunctionMapper} />
-                        </Grid>
-                      )
-                    })}
-                  </Grid>
-                  : ""}
-
-
-                <Grid item
-                  sm={12}
-                >
-                  <Box className={`${classes.w100} ${classes.padding10}`} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
-                    <EmbedHighlight classes={classes}>
-                      <div
-                        className={`embedContainer ${validIdHelper(type)}`}
-                        id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                        key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                      >
-                      </div>
-                    </EmbedHighlight>
-                  </Box>
-                </Grid>
+          {/* AdjacentContainer */}
+          {lookerContent[0].actions ?
+            <Grid item
+              sm={12}
+            >
+              <Grid container>
+                {lookerContent[0].actions.map(item => {
+                  let Component = item.component
+                  return (
+                    <Grid item sm={item.gridWith}>
+                      <Component classes={classes} item={item} helperFunctionMapper={helperFunctionMapper} />
+                    </Grid>
+                  )
+                })}
               </Grid>
-            </Box >
-          </div >
-        </Grid >
+            </Grid>
+            : ""}
+
+          {/* EmbeddedDashboardContainer*/}
+          <Grid item
+            sm={12}
+          >
+            <Box className={`${classes.w100} `}>
+              <EmbedHighlight classes={classes}>
+                <div
+                  className={`embedContainer ${validIdHelper(type)}`}
+                  id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                  key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                >
+                </div>
+              </EmbedHighlight>
+            </Box>
+          </Grid>
+
+
+          <CodeFlyout
+            classes={classes}
+            lookerUser={lookerUser}
+            height={height - additionalHeightForFlyout}
+          />
+        </Grid>
       </Card >
     </div >
   )

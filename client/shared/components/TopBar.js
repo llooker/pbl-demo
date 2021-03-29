@@ -70,7 +70,7 @@ export const TopBar = ({ content, theme, classes }) => {
     <ThemeProvider theme={theme}>
       <AppBar
         position="fixed"
-        className={clsx(classes.appBar)}
+        className={`${clsx(classes.appBar)}`}
       >
         <Toolbar>
           <IconButton
@@ -92,6 +92,7 @@ export const TopBar = ({ content, theme, classes }) => {
           <IconButton
             component={Link}
             to='/home'
+            color="inherit"
           >
             {content.avatar ?
               <Avatar alt="Icon"
@@ -100,7 +101,7 @@ export const TopBar = ({ content, theme, classes }) => {
                 variant="square"
               /> : ""}
 
-            {content.label ? <Typography variant="h6">{content.label}</Typography> : ""}
+            {content.label ? <Typography className={classes.ml12} variant="h6">{content.label}</Typography> : ""}
           </IconButton>
 
           {apiContent && apiContent.autocomplete ?

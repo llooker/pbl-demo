@@ -13,15 +13,9 @@ export default function EmbeddedDashboardContainer({ classes, lookerContent, typ
   return (
     <Grid item
       sm
-      className={classes.animatedGridItem}
-      style={{
-        transition: theme.transitions.create("all", {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        })
-      }}
+      className={classes.animatedGridItem} //not working
     >
-      <Box className={`${classes.w100} ${classes.padding10}`} mt={lookerContent[0].filter || lookerContent[0].dynamicFieldLookUp ? 2 : 0}>
+      <Box className={`${classes.w100} `}>
         <EmbedHighlight classes={classes}>
           <div
             className={`embedContainer ${validIdHelper(type)}`}
@@ -31,6 +25,6 @@ export default function EmbeddedDashboardContainer({ classes, lookerContent, typ
           </div>
         </EmbedHighlight>
       </Box>
-    </Grid>
+    </Grid >
   )
 }
