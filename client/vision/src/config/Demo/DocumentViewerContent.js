@@ -24,8 +24,7 @@ export const DocumentViewerContent = {
       "label": "EligibilityDocs",
       "isNext": false,
       "filters": [],
-      "url": "https://storage.googleapis.com/looker-dat-vision/1099.pdf"
-
+      "url": "https://storage.cloud.google.com/gov_portal/TEST.pdf"
     }],
   "schema": schema,
   "requiredPermissionLevel": 1

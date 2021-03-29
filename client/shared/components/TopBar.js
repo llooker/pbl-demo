@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import clsx from 'clsx';
-import { AppBar, Toolbar, Badge, Avatar, IconButton, Grid, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Badge, Avatar, IconButton, Grid, Typography, Container, Box } from '@material-ui/core';
 import { AddAlert, ChevronLeft, KeyboardArrowDown, Menu } from '@material-ui/icons';
 import { UserMenu } from './UserMenu';
 import { AutoComplete } from './Filters';
@@ -88,14 +88,20 @@ export const TopBar = ({ content, theme, classes }) => {
               <Menu />}
           </IconButton>
 
-          {content.avatar ?
-            <Avatar alt="Icon"
-              src={content.avatar}
-              style={content.avatarStyle ? content.avatarStyle : ""}
-              variant="square"
-            /> : ""}
 
-          {content.label ? <Typography className={classes.ml12} variant="h6">{content.label}</Typography> : ""}
+          <IconButton
+            component={Link}
+            to='/home'
+          >
+            {content.avatar ?
+              <Avatar alt="Icon"
+                src={content.avatar}
+                style={content.avatarStyle ? content.avatarStyle : ""}
+                variant="square"
+              /> : ""}
+
+            {content.label ? <Typography variant="h6">{content.label}</Typography> : ""}
+          </IconButton>
 
           {apiContent && apiContent.autocomplete ?
             <Grid item sm={6} className={`${classes.mlAuto} ${classes.mr12} ${classes.p30}`}>
@@ -121,7 +127,7 @@ export const TopBar = ({ content, theme, classes }) => {
           <UserMenu classes={classes} content={content.usermenu} />
         </Toolbar>
       </AppBar>
-    </ThemeProvider>
+    </ThemeProvider >
   )
 }
 
