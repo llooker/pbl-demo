@@ -312,6 +312,7 @@ export const Dashboard = ({ staticContent }) => {
   }, [customFilterAction, location.search, lookerContent])
 
 
+
   return (
     <div className={`${classes.root} ${classes.positionRelative}`}
       style={{ height }}

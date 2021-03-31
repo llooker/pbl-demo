@@ -1,7 +1,8 @@
 import FlagIcon from '@material-ui/icons/Flag';
 import { Dashboard } from '@pbl-demo/components';
-import { ModalButton, Dropdown } from '@pbl-demo/components/Filters';
+import { ModalButton, Dropdown, HiddenFilterValueText } from '@pbl-demo/components/Filters';
 import { addCaseNotes, changeCaseStatus } from '@pbl-demo/components/Dashboard/helpers'
+import { CloudFunctionHighlight, ApiHighlight } from '@pbl-demo/components/Accessories';
 
 const addCaseNotesModal = {
   "copy": {
@@ -19,8 +20,10 @@ const addCaseNotesButton = {
   "component": ModalButton,
   "secondaryComponent": addCaseNotesModal,
   "tooltip": "Select a case",
-  "gridWidth": 2
+  "gridWidth": 12,
+  "highlightComponent": CloudFunctionHighlight
 }
+
 
 const changeCaseStatusSelect = {
   "label": "Case status",
@@ -36,10 +39,18 @@ const changeCaseStatusSelect = {
     "label": "Submit"
   },
   "tooltip": "Select a case",
-  "gridWidth": 2
+  "gridWidth": 12,
+  "highlightComponent": CloudFunctionHighlight
 }
 
-
+const caseId = {
+  "label": "ID",
+  "gridWidth": 12,
+  "component": HiddenFilterValueText,
+  "appendHiddenFilterToLabel": true,
+  "highlightComponent": ApiHighlight,
+  "requiresSelectionLabel": "Click a case ID to see more details and notes for this case",
+}
 
 export const FlagsConent = {
   "type": "dashboard",
@@ -58,8 +69,13 @@ export const FlagsConent = {
       "isNext": false,
       "theme": "vision_theme",
       "adjacentContainer": {
-        "gridWidth": 12,
-        "items": [addCaseNotesButton, changeCaseStatusSelect]
+        "gridWidth": 3,
+        "collapsable": true,
+        "items": [caseId, addCaseNotesButton, changeCaseStatusSelect],
+        "label": "Case Details",
+        "requiresSelection": true,
+        "requiresSelectionMessage": "Click a case ID to see more details and notes for this case",
+        "displayHiddenFilterValue": true
       }
     }],
   "requiredPermissionLevel": 1

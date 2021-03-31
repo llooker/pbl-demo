@@ -2,6 +2,7 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import { Dashboard } from '@pbl-demo/components'
 import { Dropdown } from '@pbl-demo/components/Filters'
 import { createCase } from '@pbl-demo/components/Dashboard/helpers'
+import { CloudFunctionHighlight } from '@pbl-demo/components/Accessories';
 
 const createCaseSelect = {
   "label": "Case type",
@@ -21,6 +22,7 @@ const createCaseSelect = {
     "label": "Create case"
   },
   "tooltip": "Create a case",
+  "highlightComponent": CloudFunctionHighlight,
 }
 
 

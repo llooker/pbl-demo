@@ -9,6 +9,8 @@ export const EMBED_COLOR = '#12B5CB'
 export const EMBED_BACKGROUND_COLOR = 'rgba(18, 181, 203, 0.1)'
 export const EMBED_METHOD_COLOR = '#297AF4'
 export const EMBED_METHOD_BACKGROUND_COLOR = 'rgba(41, 122, 244, 0.1)'
+export const CLOUD_FUNCTION_COLOR = '#f4a328'
+export const CLOUD_FUNCTION_BACKGROUND_COLOR = 'rgba(244,163,40, 0.1)'
 
 function Highlight({ children, color, height, width, margin, id, backgroundColor, ...props }) {
   const { highlightShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
@@ -101,6 +103,31 @@ export function EmbedMethodHighlight({ ...props }) {
       align="right"
       style={{
         backgroundColor: "#297AF4",
+        color: '#fff',
+        top: '-10px',
+        right: '10px',
+        position: 'absolute'
+      }}
+    />
+    {children}
+
+  </Highlight>
+}
+
+export function CloudFunctionHighlight({ ...props }) {
+  const { highlightShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]); //useContext(AppContext)
+  const { classes } = props
+  const { children } = props
+
+  return <Highlight {...props} color={CLOUD_FUNCTION_COLOR} backgroundColor={CLOUD_FUNCTION_BACKGROUND_COLOR}>
+
+    <Chip size="small"
+      label={"Cloud Function"}
+      className={highlightShow ? 'test' : `${classes.hidden}`}
+      display="inline"
+      align="right"
+      style={{
+        backgroundColor: "#f4a328",
         color: '#fff',
         top: '-10px',
         right: '10px',

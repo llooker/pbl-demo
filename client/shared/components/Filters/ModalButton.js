@@ -1,19 +1,22 @@
 import React from 'react';
 import { Button, Tooltip } from '@material-ui/core';
 
-export function ModalButton({ filterItem, handleRenderModal, hiddenFilterValue }) {
+export function ModalButton({ filterItem, handleRenderModal, hiddenFilterValue, classes }) {
   // console.log('ModalButton')
   // console.log({ hiddenFilterValue })
+  let HighlightComponent = filterItem.highlightComponent || EmbedMethodHighlight;
   return (
-    <Tooltip title={filterItem.tooltip}>
-      <span>
-        <Button
-          disabled={hiddenFilterValue == null ? true : false}
-          onClick={(event) => {
-            handleRenderModal({ filterItem, status: true })
-          }}>
-          {filterItem.label}
-        </Button></span>
-    </Tooltip>
+    <HighlightComponent classes={classes} >
+      <Tooltip title={filterItem.tooltip}>
+        <span>
+          <Button
+            disabled={hiddenFilterValue == null ? true : false}
+            onClick={(event) => {
+              handleRenderModal({ filterItem, status: true })
+            }}>
+            {filterItem.label}
+          </Button></span>
+      </Tooltip>
+    </HighlightComponent>
   );
 }

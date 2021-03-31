@@ -12,9 +12,11 @@ export const ToggleButton = ({ classes, item, helperFunctionMapper }) => {
   // console.log({ helperFunctionMapper })
 
   const [toggleValue, setToggleValue] = useState(item ? item.options[0] : "");
+  let HighlightComponent = item.highlightComponent || EmbedMethodHighlight;
+  console.log({ HighlightComponent })
 
   return (
-    <EmbedMethodHighlight classes={classes} >
+    <HighlightComponent classes={classes} >
       <Typography
       >
         {item.label}
@@ -39,6 +41,6 @@ export const ToggleButton = ({ classes, item, helperFunctionMapper }) => {
           )
         })}
       </MaterialToggleButtonGroup>
-    </EmbedMethodHighlight>
+    </HighlightComponent>
   )
 }

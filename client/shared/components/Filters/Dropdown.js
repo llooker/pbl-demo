@@ -11,10 +11,11 @@ export const Dropdown = ({ classes, filterItem, helperFunctionMapper, hiddenFilt
   const [selectValue, setSelectValue] = useState(filterItem ? filterItem.options[0].value : "");
   const [processing, setProcessing] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
+  let HighlightComponent = filterItem.highlightComponent || EmbedHighlight;
 
 
   return (
-    <EmbedHighlight classes={classes} >
+    <HighlightComponent classes={classes} >
       <Tooltip title={filterItem.tooltip}>
         <FormControl className={`${classes.formControl} ${classes.w90}`}>
           <InputLabel id="demo-simple-select-label"
@@ -66,6 +67,6 @@ export const Dropdown = ({ classes, filterItem, helperFunctionMapper, hiddenFilt
             : ""}
         </FormControl>
       </Tooltip>
-    </EmbedHighlight >
+    </HighlightComponent >
   )
 }

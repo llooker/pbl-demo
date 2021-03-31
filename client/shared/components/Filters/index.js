@@ -8,4 +8,5 @@ export { ToggleApi } from "./ToggleApi";
 export { Dropdown } from "./Dropdown";
 export { ModalButton } from "./ModalButton";
 export { ToggleButton } from "./ToggleButton";
+export { HiddenFilterValueText } from "./HiddenFilterValueText";
 
