@@ -9,4 +9,6 @@ export { Dropdown } from "./Dropdown";
 export { ModalButton } from "./ModalButton";
 export { ToggleButton } from "./ToggleButton";
 export { HiddenFilterValueText } from "./HiddenFilterValueText";
+export { NotesList } from "./NotesList";
+export { LinkText } from "./LinkText";
 

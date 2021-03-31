@@ -1,13 +1,12 @@
 import FlagIcon from '@material-ui/icons/Flag';
 import { Dashboard } from '@pbl-demo/components';
-import { ModalButton, Dropdown, HiddenFilterValueText } from '@pbl-demo/components/Filters';
+import { ModalButton, Dropdown, HiddenFilterValueText, NotesList, LinkText } from '@pbl-demo/components/Filters';
 import { addCaseNotes, changeCaseStatus } from '@pbl-demo/components/Dashboard/helpers'
 import { CloudFunctionHighlight, ApiHighlight } from '@pbl-demo/components/Accessories';
 
 const addCaseNotesModal = {
   "copy": {
     "title": "Add Note",
-    "defaultValue": "Default value",
     "suggestion": "Record a flag",
     "button": "Submit"
   },
@@ -16,7 +15,7 @@ const addCaseNotesModal = {
 }
 
 const addCaseNotesButton = {
-  "label": "Add Case Notes",
+  "label": "New Note",
   "component": ModalButton,
   "secondaryComponent": addCaseNotesModal,
   "tooltip": "Select a case",
@@ -45,11 +44,44 @@ const changeCaseStatusSelect = {
 
 const caseId = {
   "label": "ID",
-  "gridWidth": 12,
+  "gridWidth": 3,
   "component": HiddenFilterValueText,
   "appendHiddenFilterToLabel": true,
   "highlightComponent": ApiHighlight,
   "requiresSelectionLabel": "Click a case ID to see more details and notes for this case",
+}
+
+const viewApplicationLink = {
+  "label": "View Application",
+  "gridWidth": 9,
+  "component": LinkText,
+  "appendHiddenFilterToLabel": true,
+  "highlightComponent": ApiHighlight,
+  "requiresSelectionLabel": "Click a case ID to see more details and notes for this case",
+}
+
+const caseNotesById = {
+  "label": "Case Notes",
+  "inlineQuery": {
+    "model": "vision",
+    "view": "application",
+    "fields": [
+      "case_events.datetime_date",
+      "case_events.notes"
+    ],
+    "filters": {
+      "case.case_id": "71"
+    },
+    "sorts": [
+      "case_events.datetime_date"
+    ],
+    "limit": "500"
+  },
+  "resultFormat": "json",
+  "highlightComponent": ApiHighlight,
+  "apiKey": "noteslist",
+  "component": NotesList,
+  "gridWidth": 12,
 }
 
 export const FlagsConent = {
@@ -71,7 +103,7 @@ export const FlagsConent = {
       "adjacentContainer": {
         "gridWidth": 3,
         "collapsable": true,
-        "items": [caseId, addCaseNotesButton, changeCaseStatusSelect],
+        "items": [caseId, viewApplicationLink, changeCaseStatusSelect, caseNotesById, addCaseNotesButton],
         "label": "Case Details",
         "requiresSelection": true,
         "requiresSelectionMessage": "Click a case ID to see more details and notes for this case",

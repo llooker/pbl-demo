@@ -105,7 +105,6 @@ export const runInlineQuery = async ({ sdk, item, lookerUser }) => { //type
     [item.desiredFilterName]: lookerUser.user_attributes.brand
   };
   let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: item.resultFormat || 'json', body: jsonQuery }));
-  // console.log({ lookerResponseData })
   return lookerResponseData;
 }
 

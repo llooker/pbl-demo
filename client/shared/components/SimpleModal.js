@@ -22,7 +22,10 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-  w100: { width: "100%" }
+  w100: { width: "100%" },
+  mt12: {
+    marginTop: 12
+  }
 }));
 
 export function SimpleModal({ setRenderModal, modalInfo, helperFunctionMapper }) {
@@ -34,7 +37,7 @@ export function SimpleModal({ setRenderModal, modalInfo, helperFunctionMapper })
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = useState(getModalStyle);
-  const [textareaValue, setTextareaValue] = useState("Default value");
+  const [textareaValue, setTextareaValue] = useState();
   const { title, defaultValue, suggestion, button } = modalInfo.copy
   const body = (
     <div style={modalStyle} className={classes.paper} >
@@ -56,9 +59,13 @@ export function SimpleModal({ setRenderModal, modalInfo, helperFunctionMapper })
             className={classes.w100}
           />
           <Button
+            variant="contained"
             onClick={(event) => {
               helperFunctionMapper(event, textareaValue, modalInfo)
-            }}>{button}</Button></div>
+            }}
+            disabled={textareaValue && textareaValue.length ? false : true}
+            className={`${classes.mt12}`}
+          >{button}</Button></div>
       </FormControl>
 
     </div>

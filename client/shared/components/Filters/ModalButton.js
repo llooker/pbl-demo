@@ -10,10 +10,12 @@ export function ModalButton({ filterItem, handleRenderModal, hiddenFilterValue, 
       <Tooltip title={filterItem.tooltip}>
         <span>
           <Button
+            variant={"contained"}
             disabled={hiddenFilterValue == null ? true : false}
             onClick={(event) => {
               handleRenderModal({ filterItem, status: true })
-            }}>
+            }}
+            className={`${classes.mt12}`}>
             {filterItem.label}
           </Button></span>
       </Tooltip>

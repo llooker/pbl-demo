@@ -21,6 +21,7 @@ export const AdjacentContainer = ({
   return (
     <Grid item
       sm={makeShiftDrawerOpen ? container.gridWidth ? container.gridWidth : 3 : "auto"}
+      className={classes.padding10}
     >
       {
         container.collapsable ? makeShiftDrawerOpen ?
@@ -43,7 +44,7 @@ export const AdjacentContainer = ({
 
             {/* logic for adjacentContainer label */}
             {container.label ?
-              <Typography variant="h6" className={classes.padding10}>
+              <Typography variant="h6" display="block" className={classes.w100}>
                 {container.label}
               </Typography>
               : ""}
@@ -56,7 +57,7 @@ export const AdjacentContainer = ({
           */}
             {container.requiresSelection && !hiddenFilterValue ?
 
-              <Typography variant="subtitle" color="secondary" className={classes.padding10}>
+              <Typography variant="subtitle" color="secondary" >
                 {container.requiresSelectionMessage}
               </Typography>
               : container.items.map((item, index) => {
@@ -68,26 +69,30 @@ export const AdjacentContainer = ({
                       apiContent[item.apiKey].map((apiItem, index) => {
 
                         return (
-                          <ItemComponent
-                            key={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
-                            id={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
-                            apiItem={apiItem}
-                            item={item}
-                            classes={classes}
-                            index={index}
-                          />
+                          <Grid item sm={item.gridWidth ? item.gridWidth : null}>
+                            <ItemComponent
+                              key={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
+                              id={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
+                              apiItem={apiItem}
+                              item={item}
+                              classes={classes}
+                              index={index}
+                            />
+                          </Grid>
                         )
                       })
                       :
-                      <ItemComponent
-                        classes={classes}
-                        apiContent={apiContent[item.apiKey]}
-                        action={customFilterAction}
-                        filterItem={item}
-                        index={index}
-                        lightThemeToggleValue={lightThemeToggleValue}
-                        fontThemeSelectValue={fontThemeSelectValue}
-                      />
+                      <Grid item sm={item.gridWidth ? item.gridWidth : null}>
+                        <ItemComponent
+                          classes={classes}
+                          apiContent={apiContent[item.apiKey]}
+                          action={customFilterAction}
+                          filterItem={item}
+                          index={index}
+                          lightThemeToggleValue={lightThemeToggleValue}
+                          fontThemeSelectValue={fontThemeSelectValue}
+                        />
+                      </Grid>
                   )
                 }
                 //static content

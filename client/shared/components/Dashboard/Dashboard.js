@@ -226,7 +226,7 @@ export const Dashboard = ({ staticContent }) => {
             return [item.apiKey, await runInlineQuery({ sdk, item, lookerUser })] //
           }
           return {}
-        })
+        });
         let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries));
         if (apiContentObj.hasOwnProperty("autocomplete")) {
           //api results for autocomplete component need to be specially formatted
@@ -311,6 +311,27 @@ export const Dashboard = ({ staticContent }) => {
 
   }, [customFilterAction, location.search, lookerContent])
 
+  useEffect(() => {
+    const fetchData = async ({ item }) => {
+      // console.log("fetchData")
+      // console.log({ item })
+      let asyncNewApiEntry = { [item.apiKey]: await runInlineQuery({ sdk, item, lookerUser }) }
+
+      let apiContentCopy = { ...apiContent }
+      apiContentCopy[Object.keys(asyncNewApiEntry)[0]] = asyncNewApiEntry;
+      setApiContent(apiContentCopy)
+    }
+
+    if (apiContent && apiContent.hasOwnProperty('noteslist')) {
+      let notesListFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "noteslist" })
+      let { inlineQuery } = notesListFilterItem
+      let modifiedQuery = { ...inlineQuery, filters: { [Object.keys(inlineQuery.filters)[0]]: hiddenFilterValue } }
+      notesListFilterItem.inlineQuery = modifiedQuery
+
+      fetchData({ item: notesListFilterItem })
+    }
+
+  }, [hiddenFilterValue])
 
 
   return (

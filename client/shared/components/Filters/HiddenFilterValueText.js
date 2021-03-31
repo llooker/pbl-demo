@@ -6,7 +6,7 @@ export function HiddenFilterValueText({ filterItem, handleRenderModal, hiddenFil
   let HighlightComponent = filterItem.highlightComponent || EmbedMethodHighlight;
   return (
     <HighlightComponent classes={classes} >
-      <Typography variant="h6" className={classes.marginLR10}>
+      <Typography variant="subtitle" >
         {filterItem.label}: {hiddenFilterValue}
       </Typography>
     </HighlightComponent>
