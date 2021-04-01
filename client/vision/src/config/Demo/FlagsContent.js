@@ -37,7 +37,7 @@ const changeCaseStatusSelect = {
     "component": "button",
     "label": "Submit"
   },
-  "tooltip": "Select a case",
+  "tooltip": "Select a status",
   "gridWidth": 12,
   "highlightComponent": CloudFunctionHighlight
 }

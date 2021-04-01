@@ -37,7 +37,9 @@ export function SimpleModal({ setRenderModal, modalInfo, helperFunctionMapper })
 
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = useState(getModalStyle);
-  const [textareaValue, setTextareaValue] = useState();
+  const [textareaValue, setTextareaValue] = useState("");
+  const [processing, setProcessing] = useState(false)
+
   const { title, defaultValue, suggestion, button } = modalInfo.copy
   const body = (
     <div style={modalStyle} className={classes.paper} >
@@ -61,9 +63,10 @@ export function SimpleModal({ setRenderModal, modalInfo, helperFunctionMapper })
           <Button
             variant="contained"
             onClick={(event) => {
+              setProcessing(true)
               helperFunctionMapper(event, textareaValue, modalInfo)
             }}
-            disabled={textareaValue && textareaValue.length ? false : true}
+            disabled={processing || !textareaValue.length ? true : false}
             className={`${classes.mt12}`}
           >{button}</Button></div>
       </FormControl>

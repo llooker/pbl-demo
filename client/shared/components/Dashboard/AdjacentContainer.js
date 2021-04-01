@@ -15,9 +15,8 @@ export const AdjacentContainer = ({
   lightThemeToggleValue,
   fontThemeSelectValue,
   handleRenderModal,
-  hiddenFilterValue
+  hiddenFilterValue,
 }) => {
-
   return (
     <Grid item
       sm={makeShiftDrawerOpen ? container.gridWidth ? container.gridWidth : 3 : "auto"}
@@ -57,10 +56,17 @@ export const AdjacentContainer = ({
           */}
             {container.requiresSelection && !hiddenFilterValue ?
 
-              <Typography variant="subtitle" color="secondary" >
+              <Typography variant="subtitle1" color="secondary" >
                 {container.requiresSelectionMessage}
               </Typography>
               : container.items.map((item, index) => {
+
+                // if (helperSuccessMessage) {
+                //   return (
+                //     <Typography variant="subtitle">{helperSuccessMessage}</Typography>
+                //   )
+                // }
+
                 let ItemComponent = item.component;
                 //api driven content
                 if (apiContent && apiContent[item.apiKey]) {

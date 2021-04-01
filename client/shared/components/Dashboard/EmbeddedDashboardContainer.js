@@ -13,7 +13,6 @@ export default function EmbeddedDashboardContainer({ classes, lookerContent, typ
   return (
     <Grid item
       sm
-      className={classes.animatedGridItem} //not working
     >
       <Box className={`${classes.w100} `}>
         <EmbedHighlight classes={classes}>

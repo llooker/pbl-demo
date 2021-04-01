@@ -4,3 +4,4 @@ export { ApiHighlight, EmbedHighlight, EmbedMethodHighlight, CloudFunctionHighli
 export { CodeFlyout } from "./CodeFlyout";
 export { UserPermissionsModal } from "./UserPermissionsModal";
 export { NumberToColoredPercent } from './NumberToColoredPercent'
+export { SnackbarAlert } from './SnackbarAlert'

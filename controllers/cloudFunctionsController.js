@@ -37,7 +37,7 @@ module.exports.createCase = async (req, res, next) => {
     let postRsp = await rp(options)
     res.status(200).send({
       status: "success",
-      message: "Case created! Reload dashboard to see it"
+      message: "Case created!"
     })
   } catch (err) {
     // console.log({ err })
@@ -78,7 +78,7 @@ module.exports.addCaseNotes = async (req, res, next) => {
     let postRsp = await rp(options)
     res.status(200).send({
       status: "success",
-      message: "Case note added. Reload dashboard to see it!"
+      message: "Case note added!"
     })
   } catch (err) {
     // console.log({ err })
@@ -113,13 +113,12 @@ module.exports.changeCaseStatus = async (req, res, next) => {
     json: true // Automatically stringifies the body to JSON
   };
 
-  console.log({ options })
 
   try {
     let postRsp = await rp(options)
     res.status(200).send({
       status: "success",
-      message: "Case status changed. Reload dashboard to see it!"
+      message: "Case status changed!"
     })
   } catch (err) {
     // console.log({ err })

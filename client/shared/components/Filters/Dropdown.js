@@ -9,9 +9,9 @@ export const Dropdown = ({ classes, filterItem, helperFunctionMapper, hiddenFilt
   // console.log({ helperFunctionMapper })
 
   const [selectValue, setSelectValue] = useState(filterItem ? filterItem.options[0].value : "");
-  const [processing, setProcessing] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [processing, setProcessing] = useState(false)
   let HighlightComponent = filterItem.highlightComponent || EmbedHighlight;
+  const { secondaryComponent } = filterItem
 
 
   return (
@@ -26,7 +26,7 @@ export const Dropdown = ({ classes, filterItem, helperFunctionMapper, hiddenFilt
             value={selectValue}
             onChange={(event) => {
               setSelectValue(event.target.value)
-              if (filterItem.method && !filterItem.secondaryComponent) helperFunctionMapper(event, event.target.value, filterItem)
+              if (filterItem.method && !secondaryComponent) helperFunctionMapper(event, event.target.value, filterItem)
             }}
             disabled={hiddenFilterValue == null ? true : false}
           >
@@ -37,34 +37,19 @@ export const Dropdown = ({ classes, filterItem, helperFunctionMapper, hiddenFilt
             })}
           </Select>
           {
-            filterItem.secondaryComponent ?
+            secondaryComponent ?
               <Button
                 variant={"contained"}
                 onClick={async () => {
-                  setProcessing(true);
-                  let caseResponse = await helperFunctionMapper(null, selectValue, filterItem);
-                  if (caseResponse.status === "success") {
-                    setProcessing(false);
-                    setSuccessMessage(caseResponse.message)
-                    setTimeout(() => setSuccessMessage(null), 10000)
-                  }
-
-                  setTimeout(() => {
-                    if (processing) setProcessing(false);
-                  }, 10000)
+                  setProcessing(true)
+                  helperFunctionMapper(null, selectValue, filterItem);
                 }}
                 className={`${classes.mt12}`}
                 disabled={(hiddenFilterValue == null || processing) ? true : false}
 
-              >{filterItem.secondaryComponent.label}</Button>
+              >{secondaryComponent.label}</Button>
               : ""
           }
-          {/* needs work */}
-          {successMessage ?
-            <Typography variant="subtitle1" gutterBottom>
-              {successMessage}
-            </Typography>
-            : ""}
         </FormControl>
       </Tooltip>
     </HighlightComponent >

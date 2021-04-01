@@ -6,8 +6,8 @@ import { Grid, Card } from '@material-ui/core'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
-import { Loader, CodeFlyout } from "@pbl-demo/components/Accessories";
-import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout, } from '../styles.js';
+import { Loader, CodeFlyout, SnackbarAlert } from "@pbl-demo/components/Accessories";
+import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 import queryString from 'query-string';
 import { appContextMap, decodeHtml, validIdHelper } from '../../utils/tools';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery } from './helpers';
@@ -35,6 +35,8 @@ export const Dashboard = ({ staticContent }) => {
   const [hiddenFilterValue, setHiddenFilterValue] = useState(null);
   const [renderModal, setRenderModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
+
+  const [helperResponse, setHelperResponse] = useState(undefined);
 
   let dynamicVisConfigFilterItem = lookerContent[0].adjacentContainer ? _.find(lookerContent[0].adjacentContainer.items, { label: "Dynamic Vis Config" }) : null;
   const isThemeableDashboard = dynamicVisConfigFilterItem && Object.keys(dynamicVisConfigFilterItem).length ? true : false;
@@ -68,12 +70,17 @@ export const Dashboard = ({ staticContent }) => {
     // console.log({ filterItem })
 
 
-    let helperResponse = await filterItem.method({
+
+    let helperResponseData = await filterItem.method({
       newValue, filterItem, dashboardOptions,
       isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue,
       hiddenFilterValue
     })
-    let { methodName, response } = helperResponse; //dynamic
+
+    let { methodName, response, response: { message } } = helperResponseData; //dynamic
+    setHelperResponse(response)
+    setTimeout(() => { setHelperResponse(undefined) }, 10000)
+
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
       dashboardObj.setOptions(response);
     } else if (methodName === "handleThemeChange") {
@@ -85,13 +92,11 @@ export const Dashboard = ({ staticContent }) => {
       corsApiCall(performLookerApiCalls, [lookerContent, response])
     } else if (methodName === "createCase") {
       corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
-      return response
     } else if (methodName === "addCaseNotes") {
       corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
       setRenderModal(false)
     } else if (methodName === "changeCaseStatus") {
       corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
-      return response
     }
   }
 
@@ -334,6 +339,7 @@ export const Dashboard = ({ staticContent }) => {
   }, [hiddenFilterValue])
 
 
+
   return (
     <div className={`${classes.root} ${classes.positionRelative}`}
       style={{ height }}
@@ -381,6 +387,10 @@ export const Dashboard = ({ staticContent }) => {
               lookerUser={lookerUser}
               height={height - expansionPanelHeight - additionalHeightForFlyout}
             />
+
+            {helperResponse ?
+              <SnackbarAlert helperResponse={helperResponse} />
+              : ""}
 
           </Grid>
         </Card>

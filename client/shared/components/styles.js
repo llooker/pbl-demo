@@ -298,7 +298,6 @@ export const useStyles = makeStyles((theme) => ({
   w90: {
     width: '90%'
   },
-  animatedGridItem: { transition: "2s" },
   inlineList: {
     display: 'flex',
     flexDirection: 'row',
@@ -313,4 +312,8 @@ export const useStyles = makeStyles((theme) => ({
   padding10: { padding: 10 },
   padding5: { padding: 5 },
   marginLR10: { margin: "0px 10px" },
+  maxHeight250: {
+    maxHeight: 250,
+    overflow: "scroll"
+  }
 }));

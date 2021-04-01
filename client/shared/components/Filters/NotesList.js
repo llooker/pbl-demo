@@ -12,18 +12,19 @@ export const NotesList = ({ filterItem, apiContent, classes }) => {
 
   return (
     apiContent.hasOwnProperty(filterItem.apiKey) ?
-      <HighlightComponent classes={classes} >
-        <Typography variant="subtitle">{filterItem.label}</Typography>
-        {apiContent[apiKey][0][fields[0]] ? apiContent[apiKey].map(apiItem => {
-          return (
-            <>
-              <Typography color="secondary">{apiItem[fields[0]]}</Typography>
-              <Typography >{apiItem[fields[1]]}</Typography>
-              <Divider />
-            </>
-          )
-        }) :
-          <Typography>None</Typography>}
-      </HighlightComponent> : ""
+      <div className={classes.maxHeight250}>
+        <HighlightComponent classes={classes} >
+          <Typography variant="subtitle1">{filterItem.label}</Typography>
+          {apiContent[apiKey][0][fields[0]] ? apiContent[apiKey].map(apiItem => {
+            return (
+              <>
+                <Typography color="secondary">{apiItem[fields[0]]}</Typography>
+                <Typography >{apiItem[fields[1]]}</Typography>
+                <Divider />
+              </>
+            )
+          }) :
+            <Typography>None</Typography>}
+        </HighlightComponent> </div> : ""
   );
 }
