@@ -91,12 +91,12 @@ export const Dashboard = ({ staticContent }) => {
       }
       corsApiCall(performLookerApiCalls, [lookerContent, response])
     } else if (methodName === "createCase") {
-      corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
+      dashboardObj.run()
     } else if (methodName === "addCaseNotes") {
-      corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
+      dashboardObj.run()
       setRenderModal(false)
     } else if (methodName === "changeCaseStatus") {
-      corsApiCall(performLookerApiCalls, [lookerContent]) //doesn't refresh data, only dashboard
+      dashboardObj.run()
     }
   }
 
@@ -188,15 +188,16 @@ export const Dashboard = ({ staticContent }) => {
           setDashboardOptions(event.dashboard.options)
           let keyName = Object.keys(event.dashboard.dashboard_filters)[0];
           let keyValue = event.dashboard.dashboard_filters[keyName];
-          setHiddenFilterValue(keyValue)
+          if (keyValue) setHiddenFilterValue(keyValue)
         })
         .on('drillmenu:click', drillMenuClick)
         .on('dashboard:filters:changed', (event) => {
           let keyName = Object.keys(event.dashboard.dashboard_filters)[0];
           let keyValue = event.dashboard.dashboard_filters[keyName];
-          setHiddenFilterValue(keyValue)
+          if (keyValue) setHiddenFilterValue(keyValue)
         })
         .on('page:changed', (event) => {
+          //for case selection on Vision flags dashboard
           if (lookerContent[0].slug === "219Tk9NQ4sGSjGNsRSFKjG") {
             const absoluteUrl = new URL(event.page.absoluteUrl)
             let params = queryString.parse(absoluteUrl.search);
@@ -257,9 +258,6 @@ export const Dashboard = ({ staticContent }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const customFilterAction = useCallback((filterName, newFilterValue) => {
-    // console.log("customFilterAction")
-    // console.log({ filterName })
-    // console.log({ newFilterValue })
     if (Object.keys(dashboardObj).length) {
       dashboardObj.updateFilters({ [filterName]: newFilterValue })
       dashboardObj.run()
@@ -269,6 +267,7 @@ export const Dashboard = ({ staticContent }) => {
   const drillMenuClick = (event) => {
     // console.log("drillMenuClick")
     // console.log({ event })
+
     if (_.includes(_.lowerCase(event.label), "w2")) {
       history.push({
         pathname: 'eligibilitydocs',
@@ -284,13 +283,13 @@ export const Dashboard = ({ staticContent }) => {
     } else if (_.includes(_.lowerCase(event.label), "application")) {
       history.push({
         pathname: 'application',
-        search: (`Application ID=${event.url}`)
+        search: (`${encodeURIComponent("Application ID")}=${event.url}`)
       })
       return { cancel: true }
     } else if (_.includes(_.lowerCase(event.label), "beneficiary")) {
       history.push({
         pathname: 'beneficiary',
-        search: (`Person ID=${event.url}`)
+        search: (`${encodeURIComponent("Person ID")}=${event.url}`)
       })
       return { cancel: true }
     }
@@ -309,35 +308,55 @@ export const Dashboard = ({ staticContent }) => {
     let params = queryString.parse(location.search);
     if (lookerContent[0].filterName) {
       let paramMatchesFilterName = params[lookerContent[0].filterName] > 0 ? true : false;
-      if (paramMatchesFilterName)
+      if (paramMatchesFilterName) {
         customFilterAction(lookerContent[0].filterName, params[lookerContent[0].filterName])
-
+      }
     }
-
   }, [customFilterAction, location.search, lookerContent])
 
   useEffect(() => {
-    const fetchData = async ({ item }) => {
-      // console.log("fetchData")
-      // console.log({ item })
-      let asyncNewApiEntry = { [item.apiKey]: await runInlineQuery({ sdk, item, lookerUser }) }
-
+    const fetchData = async ({ item, item: { apiKey } }) => {
+      let asyncNewApiEntry = { [apiKey]: await runInlineQuery({ sdk, item, lookerUser }) }
       let apiContentCopy = { ...apiContent }
-      apiContentCopy[Object.keys(asyncNewApiEntry)[0]] = asyncNewApiEntry;
+      apiContentCopy[apiKey] = asyncNewApiEntry[apiKey];
       setApiContent(apiContentCopy)
     }
 
-    if (apiContent && apiContent.hasOwnProperty('noteslist')) {
-      let notesListFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "noteslist" })
-      let { inlineQuery } = notesListFilterItem
-      let modifiedQuery = { ...inlineQuery, filters: { [Object.keys(inlineQuery.filters)[0]]: hiddenFilterValue } }
-      notesListFilterItem.inlineQuery = modifiedQuery
+    if (hiddenFilterValue) {
 
-      fetchData({ item: notesListFilterItem })
+      if (apiContent && apiContent.hasOwnProperty('noteslist')) {
+        let notesListFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "noteslist" })
+        if (notesListFilterItem) {
+          let { inlineQuery } = notesListFilterItem
+          let modifiedQuery = {
+            ...inlineQuery,
+            filters: { [Object.keys(inlineQuery.filters)[0]]: hiddenFilterValue }
+          }
+          notesListFilterItem.inlineQuery = modifiedQuery
+
+          fetchData({ item: notesListFilterItem })
+
+        }
+      }
+
+      if (apiContent && apiContent.hasOwnProperty('viewapplication')) {
+
+        let viewApplicationFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "viewapplication" })
+        if (viewApplicationFilterItem) {
+          let { inlineQuery } = viewApplicationFilterItem
+          let modifiedQuery = {
+            ...inlineQuery,
+            filters: { [Object.keys(inlineQuery.filters)[0]]: hiddenFilterValue }
+          }
+          viewApplicationFilterItem.inlineQuery = modifiedQuery
+          fetchData({ item: viewApplicationFilterItem })
+
+        }
+      }
+
     }
 
   }, [hiddenFilterValue])
-
 
 
   return (

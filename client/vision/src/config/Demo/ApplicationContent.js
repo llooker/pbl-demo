@@ -1,8 +1,9 @@
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import { Dashboard } from '@pbl-demo/components'
-import { Dropdown } from '@pbl-demo/components/Filters'
+import { Dropdown, HiddenFilterValueText } from '@pbl-demo/components/Filters';
+
 import { createCase } from '@pbl-demo/components/Dashboard/helpers'
-import { CloudFunctionHighlight } from '@pbl-demo/components/Accessories';
+import { CloudFunctionHighlight, ApiHighlight } from '@pbl-demo/components/Accessories';
 
 const createCaseSelect = {
   "label": "Case type",
@@ -26,6 +27,16 @@ const createCaseSelect = {
 }
 
 
+const caseId = {
+  "label": "ID",
+  "gridWidth": 6,
+  "component": HiddenFilterValueText,
+  "appendHiddenFilterToLabel": true,
+  "highlightComponent": ApiHighlight,
+  "requiresSelectionLabel": "Click a case ID to see more details and notes for this case",
+}
+
+
 export const ApplicationContent = {
   "type": "dashboard",
   "label": "Application",
@@ -44,9 +55,12 @@ export const ApplicationContent = {
       "theme": "vision_theme",
       "adjacentContainer": {
         "gridWidth": 2,
-        "items": [createCaseSelect],
-        "collapsable": true
-      }
+        "items": [caseId, createCaseSelect],
+        "collapsable": true,
+        "label": "Application",
+        "displayHiddenFilterValue": true
+      },
+      "filterName": "Application ID",
     }],
   "requiredPermissionLevel": 0
 }

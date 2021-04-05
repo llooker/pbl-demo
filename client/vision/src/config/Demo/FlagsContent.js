@@ -58,6 +58,20 @@ const viewApplicationLink = {
   "appendHiddenFilterToLabel": true,
   "highlightComponent": ApiHighlight,
   "requiresSelectionLabel": "Click a case ID to see more details and notes for this case",
+  "inlineQuery": {
+    "model": "vision",
+    "view": "application",
+    "fields": [
+      "case.case_id",
+      "application.application_id"
+    ],
+    "filters": {
+      "case.case_id": "7"
+    },
+    "limit": "500",
+  },
+  "apiKey": "viewapplication",
+  "staticHref": "/analytics/application?Application%20ID="
 }
 
 const caseNotesById = {

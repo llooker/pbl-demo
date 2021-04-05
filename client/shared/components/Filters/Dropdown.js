@@ -41,8 +41,11 @@ export const Dropdown = ({ classes, filterItem, helperFunctionMapper, hiddenFilt
               <Button
                 variant={"contained"}
                 onClick={async () => {
-                  setProcessing(true)
                   helperFunctionMapper(null, selectValue, filterItem);
+                  setProcessing(true)
+                  setTimeout(() => {
+                    setProcessing(false)
+                  }, [6000])
                 }}
                 className={`${classes.mt12}`}
                 disabled={(hiddenFilterValue == null || processing) ? true : false}

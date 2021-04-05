@@ -63,8 +63,11 @@ export function SimpleModal({ setRenderModal, modalInfo, helperFunctionMapper })
           <Button
             variant="contained"
             onClick={(event) => {
-              setProcessing(true)
               helperFunctionMapper(event, textareaValue, modalInfo)
+              setProcessing(true)
+              setTimeout(() => {
+                setProcessing(false)
+              }, [6000])
             }}
             disabled={processing || !textareaValue.length ? true : false}
             className={`${classes.mt12}`}

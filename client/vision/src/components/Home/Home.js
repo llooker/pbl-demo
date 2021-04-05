@@ -106,6 +106,7 @@ export default function Home(props) {
 
 
   useEffect(() => {
+    console.log({ democomponent })
     if (highlightShow) setHighlightShow(!highlightShow);
     if (codeShow) setCodeShow(!codeShow);
     setSelectedMenuItem(democomponent)
