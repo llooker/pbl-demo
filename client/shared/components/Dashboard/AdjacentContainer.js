@@ -67,7 +67,7 @@ export const AdjacentContainer = ({
                 if (apiContent && apiContent[item.apiKey]) {
                   return (
                     item.apiKey === "trends" ?
-                      <HighlightComponent classes={classes}>
+                      <HighlightComponent classes={classes} key={`HighlightComponent-${index}`}>
                         < List
                           className={classes.inlineList}
                           component="div"
@@ -90,7 +90,7 @@ export const AdjacentContainer = ({
                       </HighlightComponent>
 
                       :
-                      <Grid item sm={item.gridWidth ? item.gridWidth : null}>
+                      <Grid key={`GridItem-apiKey-${index}`} item sm={item.gridWidth ? item.gridWidth : null}>
                         <ItemComponent
                           classes={classes}
                           apiContent={apiContent[item.apiKey]}
@@ -106,7 +106,7 @@ export const AdjacentContainer = ({
                 //static content
                 else if (!item.hasOwnProperty("apiKey")) {
                   return (
-                    <Grid item sm={item.gridWidth ? item.gridWidth : null}>
+                    <Grid key={`GridItem-nonApiKey-${index}`} item sm={item.gridWidth ? item.gridWidth : null}>
                       <ItemComponent
                         key={validIdHelper(`${item.label}-ItemComponent-${index}`)}
                         classes={classes}

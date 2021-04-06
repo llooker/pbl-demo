@@ -98,65 +98,6 @@ export const Dashboard = ({ staticContent }) => {
     }
   }
 
-  useEffect(() => {
-    // console.log("useEffect outer");
-    // console.log({ lookerUser });
-    // console.log({ isReady });
-    if (isReady) {
-      // console.log("useEffect inner")
-      let themeName = lightThemeToggleValue ? 'light' : 'dark';
-      themeName += `_${fontThemeSelectValue}`;
-      corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
-      setApiContent(undefined);
-      setMakeShiftDrawerOpen(true);
-    }
-  }, [lookerUser, isReady, selectedMenuItem])
-
-  useEffect(() => {
-    if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length
-    ) {
-      let tileToggleFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Tiles" })
-      let visColorFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Vis Config" })
-
-      let tileResponse, visColorResponse
-      if (tileToggleFilterItem) {
-        tileResponse = handleTileToggle({
-          newValue: tileToggleFilterItem.options[0],
-          filterItem: tileToggleFilterItem,
-          dashboardOptions: dashboardOptions
-        });
-      }
-
-      if (visColorFilterItem) {
-        visColorResponse = handleVisColorToggle({
-          newValue: visColorFilterItem.options[0],
-          filterItem: visColorFilterItem,
-          dashboardOptions: dashboardOptions,
-          isThemeableDashboard: isThemeableDashboard,
-          lightThemeToggleValue: lightThemeToggleValue
-        });
-      }
-
-      dashboardObj.setOptions({
-        ...tileResponse,
-        ...visColorResponse
-      })
-    }
-  }, [dashboardOptions]);
-
-  useEffect(() => {
-    window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
-    setExpansionPanelHeight(0)
-  })
-
-  // needed to copy from home to make it work
-  useEffect(() => {
-    setApiContent(undefined);
-    let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
-    LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
-  }, []);
-
-
   const performLookerApiCalls = (lookerContent, dynamicTheme) => {
     // console.log("performLookerApiCalls");
     // console.log({ lookerContent })
@@ -305,6 +246,64 @@ export const Dashboard = ({ staticContent }) => {
       }
     }
   }, [customFilterAction, location.search, lookerContent])
+
+  useEffect(() => {
+    // console.log("useEffect outer");
+    // console.log({ lookerUser });
+    // console.log({ isReady });
+    if (isReady) {
+      // console.log("useEffect inner")
+      let themeName = lightThemeToggleValue ? 'light' : 'dark';
+      themeName += `_${fontThemeSelectValue}`;
+      corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
+      setApiContent(undefined);
+      setMakeShiftDrawerOpen(true);
+    }
+  }, [lookerUser, isReady, selectedMenuItem])
+
+  useEffect(() => {
+    if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length
+    ) {
+      let tileToggleFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Tiles" })
+      let visColorFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Vis Config" })
+
+      let tileResponse, visColorResponse
+      if (tileToggleFilterItem) {
+        tileResponse = handleTileToggle({
+          newValue: tileToggleFilterItem.options[0],
+          filterItem: tileToggleFilterItem,
+          dashboardOptions: dashboardOptions
+        });
+      }
+
+      if (visColorFilterItem) {
+        visColorResponse = handleVisColorToggle({
+          newValue: visColorFilterItem.options[0],
+          filterItem: visColorFilterItem,
+          dashboardOptions: dashboardOptions,
+          isThemeableDashboard: isThemeableDashboard,
+          lightThemeToggleValue: lightThemeToggleValue
+        });
+      }
+
+      dashboardObj.setOptions({
+        ...tileResponse,
+        ...visColorResponse
+      })
+    }
+  }, [dashboardOptions]);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
+    setExpansionPanelHeight(0)
+  })
+
+  // needed to copy from home to make it work
+  useEffect(() => {
+    setApiContent(undefined);
+    let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+    LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
+  }, []);
 
   useEffect(() => {
     const fetchData = async ({ item, item: { apiKey } }) => {

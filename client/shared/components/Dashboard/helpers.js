@@ -199,6 +199,4 @@ export const formatApiResultsForTrends = ({ rawApiResults, filterItem, filterIte
     }
   })
   return firstApiResultOfInterestAsArr
-
-
 }

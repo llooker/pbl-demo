@@ -15,10 +15,23 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, setDynam
   // console.log("AutoComplete");
   // console.log({ filterItem })
   // console.log({ apiContent })
+  // console.log({ action })
 
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState(null);
 
+  //https://medium.com/@anuhosad/debouncing-events-with-react-b8c405c33273
+  const onInputChange = (event) => {
+    /* signal to React not to nullify the event object */
+    event.persist();
+
+    const debouncedFn = _.debounce(() => {
+      if (event.target.value) setDynamicSearch(event.target.value)
+
+    }, 300);
+
+    debouncedFn();
+  }
 
   return (
     filterItem ?
@@ -35,6 +48,7 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, setDynam
             []}
           renderOption={handleRenderOption} // highlighter
           getOptionLabel={option => typeof option === 'string' ? option : option.label}
+          //for normal customFilterAction
           onChange={(event, newValue) => {
             let newValueToUse = '';
             if (newValue && newValue.value) newValueToUse = newValue.value
@@ -42,14 +56,6 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, setDynam
             action(
               filterItem.filterName,
               newValueToUse)
-            // console.log({ newValueToUse })
-            // if (filterItem.apiDrivenSearch) {
-            //   //match email
-            //   let email = newValue && newValue.label && newValue.label.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
-            //   newValueToUse = email.length ? email[0] : newValueToUse
-            //   console.log({ newValueToUse })
-            //   setValue(newValueToUse)
-            // } else 
             setValue(newValue && newValue.label ? newValue.label : null)
           }}
           renderInput={(params) =>
@@ -70,13 +76,12 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, setDynam
           }
           loadingText="Loading..."
           style={filterItem.style ? { ...filterItem.style } : {}}
-          onInputChange={_.debounce((event) => {
-            if (filterItem.apiDrivenSearch && event.target.value) setDynamicSearch(event.target.value)
-          }, 1000)}
           size={filterItem.size ? filterItem.size : "medium"}
           onOpen={() => { setOpen(true) }}
           onClose={() => { setOpen(false) }}
           value={value}
+          //for dynamicSearch
+          onInputChange={filterItem.apiDrivenSearch ? onInputChange : null}
         />
       </ApiHighlight> : ""
   )
