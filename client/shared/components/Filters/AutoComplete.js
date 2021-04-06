@@ -28,7 +28,7 @@ export const AutoComplete = ({ filterItem, apiContent, classes, action, setDynam
     const debouncedFn = _.debounce(() => {
       if (event.target.value) setDynamicSearch(event.target.value)
 
-    }, 300);
+    }, 1000);
 
     debouncedFn();
   }

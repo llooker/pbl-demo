@@ -23,8 +23,6 @@ export const TopBar = ({ content, theme, classes }) => {
   const [dynamicSearch, setDynamicSearch] = useState(undefined);
 
   useEffect(() => {
-    // console.log("this use effect???")
-    // console.log({ dynamicSearch })
     if (isReady && content && content.hasOwnProperty("autocomplete")) {
       let isSubscribed = true
       corsApiCall(retrieveAutocompleteOptions, [dynamicSearch]).then(response => {
@@ -37,8 +35,6 @@ export const TopBar = ({ content, theme, classes }) => {
   }, [lookerUser, isReady, dynamicSearch]);
 
   const retrieveAutocompleteOptions = async (inputValue) => {
-    // console.log("retrieveAutocompleteOptions")
-    // console.log({ inputValue })
 
 
     let autoComplteInfo = content.autocomplete;
