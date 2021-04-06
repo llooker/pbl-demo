@@ -1,40 +1,45 @@
 import HomeIcon from '@material-ui/icons/Home';
 import { List } from '@material-ui/core/';
-import { Dashboard, TrendItem } from '@pbl-demo/components';
+import { ApiHighlight } from '@pbl-demo/components/Accessories';
+import { Dashboard, TrendItem, InlineList } from '@pbl-demo/components';
 
 
 const countyTrends = {
   "inlineQuery": {
     "model": "vision",
-    "view": "application",
+    "view": "account_events",
     "fields": [
+      "account_events.count",
       "person.home_city",
-      "case.opened_week",
-      "case.count"
+      "account_events.datetime_quarter"
     ],
     "pivots": [
-      "case.opened_week"
+      "person.home_city"
     ],
     "fill_fields": [
-      "case.opened_week"
+      "account_events.datetime_quarter"
     ],
     "filters": {
-      "case.opened_week": "2 weeks ago for 2 weeks"
+      "account_events.type": "\"submit_application\"",
+      "person.home_city": "San Francisco,San Jose,Los Angeles,Sacramento,Bakersfield,Riverside"
     },
     "sorts": [
-      "case.opened_week"
+      "person.home_city 0",
+      "account_events.datetime_quarter"
     ],
-    "limit": "500",
-    "dynamic_fields": "[{\"table_calculation\":\"change\",\"label\":\"% Change\",\"expression\":\"(pivot_index(${case.count}, 2) - pivot_index(${case.count}, 1)) / pivot_index(${case.count}, 1)\",\"value_format\":null,\"value_format_name\":\"percent_2\",\"_kind_hint\":\"supermeasure\",\"_type_hint\":\"number\"}]",
+    "dynamic_fields": "[{\"table_calculation\":\"pop\",\"label\":\"pop\",\"expression\":\"(${account_events.count} - offset(${account_events.count},1))/offset(${account_events.count},1)\",\"value_format\":null,\"value_format_name\":\"percent_1\",\"_kind_hint\":\"measure\",\"_type_hint\":\"number\"}]",
+    "limit": "500"
   },
   "resultFormat": "json",
   "label": "Country trends",
   "component": TrendItem,
   "fieldsOfInterest": [
-    "person.home_city",
-    "change"
+    "pop",
+    "person.home_city"
   ],
-  "apiKey": "trends"
+  "apiKey": "trends",
+  "highlightComponent": ApiHighlight,
+  "gridWidth": 1
 }
 
 export const HomeContent = {
@@ -56,7 +61,7 @@ export const HomeContent = {
       "adjacentContainer": {
         "gridWidth": 12,
         "items": [countyTrends],
-        "component": List
+        "component": InlineList
       }
     }],
   "requiredPermissionLevel": 0

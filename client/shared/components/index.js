@@ -15,4 +15,5 @@ export { Dashboard } from "./Dashboard/Dashboard";
 export { TrendItem } from "./TrendItem";
 export { SimpleModal } from "./SimpleModal";
 export { DocumentViewer } from "./DocumentViewer";
+export { InlineList } from "./InlineList";
 

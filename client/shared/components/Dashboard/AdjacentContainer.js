@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography, List } from '@material-ui/core'
 import { validIdHelper } from '../../utils/tools';
 import { ChevronLeft, AddCircleOutline } from '@material-ui/icons';
 
@@ -61,32 +61,34 @@ export const AdjacentContainer = ({
               </Typography>
               : container.items.map((item, index) => {
 
-                // if (helperSuccessMessage) {
-                //   return (
-                //     <Typography variant="subtitle">{helperSuccessMessage}</Typography>
-                //   )
-                // }
-
                 let ItemComponent = item.component;
+                let HighlightComponent = item.highlightComponent || undefined;
                 //api driven content
                 if (apiContent && apiContent[item.apiKey]) {
                   return (
                     item.apiKey === "trends" ?
-                      apiContent[item.apiKey].map((apiItem, index) => {
+                      <HighlightComponent classes={classes}>
+                        < List
+                          className={classes.inlineList}
+                          component="div"
+                          disablePadding
+                        >
+                          {apiContent[item.apiKey].map((apiItem, index) => {
 
-                        return (
-                          <Grid item sm={item.gridWidth ? item.gridWidth : null}>
-                            <ItemComponent
-                              key={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
-                              id={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
-                              apiItem={apiItem}
-                              item={item}
-                              classes={classes}
-                              index={index}
-                            />
-                          </Grid>
-                        )
-                      })
+                            return (
+                              <ItemComponent
+                                key={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
+                                id={validIdHelper(`${apiItem.label}-trendItem-${index}`)}
+                                apiItem={apiItem}
+                                item={item}
+                                classes={classes}
+                                index={index}
+                              />
+                            )
+                          })}
+                        </List>
+                      </HighlightComponent>
+
                       :
                       <Grid item sm={item.gridWidth ? item.gridWidth : null}>
                         <ItemComponent

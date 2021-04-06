@@ -171,3 +171,34 @@ export const changeCaseStatus = async ({ newValue, filterItem, hiddenFilterValue
     "response": changeCaseStatusResponseData
   };
 }
+
+export const formatApiResultsForAutoComplete = ({ rawApiResults }) => {
+  let dropdownResults = [];
+  let desiredProperty = Object.keys(rawApiResults[0])[0];
+
+  for (let i = 0; i < rawApiResults.length; i++) {
+    dropdownResults.push({
+      'label': rawApiResults[i][desiredProperty],
+      'trend': (rawApiResults[i]['trend']) ? rawApiResults[i]['trend'] : undefined,
+      'count': (rawApiResults[i]['count']) ? rawApiResults[i]['count'] : undefined
+    })
+  }
+
+  return dropdownResults;
+}
+
+export const formatApiResultsForTrends = ({ rawApiResults, filterItem, filterItem: { fieldsOfInterest } }) => {
+  // console.log("formatApiResultsForTrends")
+  // console.log({ rawApiResults })
+  // console.log({ filterItem })
+  const firstApiResultOfInterest = rawApiResults[0][fieldsOfInterest[0]][fieldsOfInterest[1]];
+  const firstApiResultOfInterestAsArr = Object.keys(firstApiResultOfInterest).map(key => {
+    return {
+      key: key,
+      value: firstApiResultOfInterest[key]
+    }
+  })
+  return firstApiResultOfInterestAsArr
+
+
+}

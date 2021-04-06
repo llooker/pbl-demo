@@ -10,7 +10,7 @@ import { Loader, CodeFlyout, SnackbarAlert } from "@pbl-demo/components/Accessor
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 import queryString from 'query-string';
 import { appContextMap, decodeHtml, validIdHelper } from '../../utils/tools';
-import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery } from './helpers';
+import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery, formatApiResultsForAutoComplete, formatApiResultsForTrends } from './helpers';
 import { AdjacentContainer } from "./AdjacentContainer"
 import { SimpleModal } from "@pbl-demo/components";
 
@@ -69,8 +69,6 @@ export const Dashboard = ({ staticContent }) => {
     // console.log({ newValue })
     // console.log({ filterItem })
 
-
-
     let helperResponseData = await filterItem.method({
       newValue, filterItem, dashboardOptions,
       isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue,
@@ -101,11 +99,11 @@ export const Dashboard = ({ staticContent }) => {
   }
 
   useEffect(() => {
-    console.log("useEffect outer");
-    console.log({ lookerUser });
-    console.log({ isReady });
+    // console.log("useEffect outer");
+    // console.log({ lookerUser });
+    // console.log({ isReady });
     if (isReady) {
-      console.log("useEffect inner")
+      // console.log("useEffect inner")
       let themeName = lightThemeToggleValue ? 'light' : 'dark';
       themeName += `_${fontThemeSelectValue}`;
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
@@ -235,22 +233,16 @@ export const Dashboard = ({ staticContent }) => {
         });
         let apiContentObj = Object.fromEntries(await Promise.all(asyncApiEntries));
         if (apiContentObj.hasOwnProperty("autocomplete")) {
-          //api results for autocomplete component need to be specially formatted
-          let autocompleteResults = apiContentObj.autocomplete
-          let dropdownResults = [];
-          let desiredProperty = Object.keys(apiContentObj.autocomplete[0])[0];
-
-          for (let i = 0; i < autocompleteResults.length; i++) {
-            dropdownResults.push({
-              'label': autocompleteResults[i][desiredProperty],
-              'trend': (autocompleteResults[i]['trend']) ? autocompleteResults[i]['trend'] : undefined,
-              'count': (autocompleteResults[i]['count']) ? autocompleteResults[i]['count'] : undefined
-            })
-          }
-
-          apiContentObj.autocomplete = dropdownResults
-
+          const formattedApiResults = formatApiResultsForAutoComplete({ rawApiResults: apiContentObj.autocomplete })
+          apiContentObj.autocomplete = formattedApiResults
         }
+
+        if (apiContentObj.hasOwnProperty("trends")) {
+          let trendsFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "trends" })
+          const formattedApiResults = formatApiResultsForTrends({ rawApiResults: apiContentObj.trends, filterItem: trendsFilterItem })
+          apiContentObj.trends = formattedApiResults;
+        }
+
         if (apiContentObj) setApiContent(apiContentObj || {})
       }
     })
