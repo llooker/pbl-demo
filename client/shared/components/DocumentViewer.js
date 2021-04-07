@@ -28,46 +28,54 @@ export const DocumentViewer = (props) => {
     let params = queryString.parse(location.search);
     let paramMatchesPDFUrl = params.pdf_url ? true : false;
 
+    console.log({ params })
+    console.log({ paramMatchesPDFUrl })
+
     if (paramMatchesPDFUrl) {
       setDocToUse(params["pdf_url"]);
     }
 
   }, [location.search])
 
+
+  console.log({ docToUse })
+  console.log({ height })
+
   return (
     <div className={`${classes.root} ${classes.positionRelative}`}
       style={{ height }}
     >
-      <Card elevation={1} className={`${classes.padding15} ${classes.height100Percent} ${classes.overflowScroll}`}
+      <Card elevation={1}
+        className={` ${classes.height100Percent} ${classes.padding5}`}
+
       >
-        <Grid container
+        <Grid
+          container
+          spacing={3}
           key={validIdHelper(type)}>
-          <div className={classes.root}>
 
-            <Loader
-              hide={iFrameExists}
-              classes={classes}
-              height={height} />
+          <Loader
+            hide={iFrameExists}
+            classes={classes}
+            height={height} />
 
-            <Box className={iFrameExists ? `` : `${classes.hidden}`}>
-              <Grid container
-                spacing={3}
-                key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
-                className={`${classes.noContainerScroll}`}
-              >
+          <CodeFlyout {...props}
+            classes={classes}
+            lookerUser={lookerUser}
+            height={height - additionalHeightForFlyout}
+          />
+          {docToUse ?
 
-                <CodeFlyout {...props}
-                  classes={classes}
-                  lookerUser={lookerUser}
-                  height={height - additionalHeightForFlyout}
+            <Grid item
+              sm
+            >
+              <Box className={`${classes.w100} `}>
+                <object data={docToUse}
+                  type="application/pdf"
+                  className={`${classes.height800} ${classes.w100}  object`}
                 />
-                {docToUse ?
-                  <object data={docToUse}
-                    type="application/pdf"
-                    className={`${classes.minHeight680} ${classes.w100} object`} /> : ""}
-              </Grid>
-            </Box >
-          </div >
+              </Box>
+            </Grid > : "Not working"}
         </Grid >
       </Card >
     </div >
