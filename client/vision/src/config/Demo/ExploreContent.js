@@ -3,9 +3,10 @@ import ExploreIcon from '@material-ui/icons/Explore';
 import { EmbeddedExplore } from "@pbl-demo/components";
 import { ToggleButton } from '@pbl-demo/components/Filters'
 import { createEmbeddedExplore } from '@pbl-demo/components/Explore/helpers'
+import { EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
 
 const savedDefaultQueriesToggle = {
-  "label": "Starting Points:",
+  // "label": "Starting Points:",
   "options": [
     "Default Query",
     "Saved Queries",
@@ -13,6 +14,7 @@ const savedDefaultQueriesToggle = {
   "value": "toggleValue",
   "component": ToggleButton,
   "method": createEmbeddedExplore,
+  "highlightComponent": EmbedMethodHighlight
 }
 
 export const ExploreContent = {
@@ -28,7 +30,11 @@ export const ExploreContent = {
       "id": "vision::application",
       "label": "Explore Applications",
       "qid": "UPggDGDP7v9urxCS4C2Paj",
-      "actions": [savedDefaultQueriesToggle]
+      // "adjacentContainer": {
+      //   "gridWidth": 12,
+      //   "items": [savedDefaultQueriesToggle],
+      //   "label": "Starting Points",
+      // }
     }],
   "requiredPermissionLevel": 1,
 }

@@ -11,7 +11,7 @@ import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../
 import queryString from 'query-string';
 import { appContextMap, decodeHtml, validIdHelper } from '../../utils/tools';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery, formatApiResultsForAutoComplete, formatApiResultsForTrends } from './helpers';
-import { AdjacentContainer } from "./AdjacentContainer"
+import { AdjacentContainer } from "../AdjacentContainer"
 import { SimpleModal } from "@pbl-demo/components";
 
 
@@ -356,7 +356,7 @@ export const Dashboard = ({ staticContent }) => {
     >
       <ThemeProvider theme={themeToUse}>
         <Card elevation={1}
-          className={` ${classes.height100Percent} ${classes.padding5}`}
+          className={` ${classes.height100Percent}`}
         >
           <Grid
             container

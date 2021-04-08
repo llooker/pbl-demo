@@ -77,7 +77,7 @@ function MenuList({ classes, DemoComponentsContentArr }) {
               return (
                 <ListItem
                   button
-                  className={`${classes.nested} ${classes.roundedTab} ${classes.ml12}`}
+                  className={`${classes.nested} ${classes.roundedTab}  ${classes.paddingTB2}`}
                   key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
                   selected={validIdHelper(_.lowerCase(item.label)) === selectedMenuItem}
                   component={Link}
@@ -86,7 +86,7 @@ function MenuList({ classes, DemoComponentsContentArr }) {
                   <ListItemIcon>
                     {MatchingIconComponent ? <MatchingIconComponent /> : <></>}
                   </ListItemIcon>
-                  <ListItemText className={`pppp ${classes.noWrap}`} primary={_.capitalize(item.label)} />
+                  <ListItemText className={`${classes.noWrap}`} primary={_.capitalize(item.label)} />
                 </ListItem>
               )
             })}

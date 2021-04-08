@@ -315,5 +315,8 @@ export const useStyles = makeStyles((theme) => ({
   maxHeight250: {
     maxHeight: 250,
     overflow: "scroll"
+  },
+  paddingTB4: {
+    padding: "4px 0"
   }
 }));

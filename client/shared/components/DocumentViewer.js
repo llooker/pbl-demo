@@ -9,8 +9,10 @@ import queryString from 'query-string';
 const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
 
 export const DocumentViewer = (props) => {
+  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;
+
   const [iFrameExists, setIFrame] = useState(1);
-  const [height, setHeight] = useState((window.innerHeight - topBarBottomBarHeight));
+  const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const { clientSession: { lookerUser, lookerHost } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { staticContent: { lookerContent, type, schema } } = props;
   const demoComponentType = type;
@@ -19,7 +21,7 @@ export const DocumentViewer = (props) => {
   const [docToUse, setDocToUse] = useState(lookerContent[0].url);
 
   useEffect(() => {
-    window.addEventListener("resize", () => setHeight((window.innerHeight - topBarBottomBarHeight)));
+    window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
   }, [lookerContent]);
 
   validateContent(lookerContent[0], schema)
@@ -73,6 +75,7 @@ export const DocumentViewer = (props) => {
                 <object data={docToUse}
                   type="application/pdf"
                   className={`${classes.height800} ${classes.w100}  object`}
+                  style={{ height }}
                 />
               </Box>
             </Grid > : "Not working"}

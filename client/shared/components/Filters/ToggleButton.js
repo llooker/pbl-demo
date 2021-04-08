@@ -5,32 +5,31 @@ import { ToggleButton as MaterialToggleButton, ToggleButtonGroup as MaterialTogg
 import { EmbedMethodHighlight } from '../Accessories/Highlight';
 const { validIdHelper } = require('../../utils/tools');
 
-export const ToggleButton = ({ classes, item, helperFunctionMapper }) => {
+export const ToggleButton = ({ classes, filterItem, helperFunctionMapper }) => {
   // console.log("ToggleButton")
   // console.log({ classes })
-  // console.log({ item })
+  // console.log({ filterItem })
   // console.log({ helperFunctionMapper })
 
-  const [toggleValue, setToggleValue] = useState(item ? item.options[0] : "");
-  let HighlightComponent = item.highlightComponent || EmbedMethodHighlight;
-  console.log({ HighlightComponent })
+  const [toggleValue, setToggleValue] = useState(filterItem ? filterItem.options[0] : "");
+  let HighlightComponent = filterItem.highlightComponent || EmbedMethodHighlight;
 
   return (
     <HighlightComponent classes={classes} >
       <Typography
       >
-        {item.label}
+        {filterItem.label}
       </Typography>
       <MaterialToggleButtonGroup
         value={toggleValue}
         exclusive
         onChange={(event, newValue) => {
           setToggleValue(newValue)
-          helperFunctionMapper({ newValue, item })
+          helperFunctionMapper({ newValue, filterItem })
         }}
         aria-label="text alignment"
       >
-        {item.options.map(innerItem => {
+        {filterItem.options.map(innerItem => {
           return (
             <MaterialToggleButton
               key={validIdHelper(`dynamicToggleButton-${innerItem}`)}

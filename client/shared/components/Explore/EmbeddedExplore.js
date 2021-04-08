@@ -6,6 +6,8 @@ import { Loader, CodeFlyout, EmbedHighlight } from '@pbl-demo/components/Accesso
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '@pbl-demo/components/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { createEmbeddedExplore } from './helpers'
+import { AdjacentContainer } from "../AdjacentContainer"
+
 const { validIdHelper, appContextMap, validateContent } = require('../../utils/tools');
 
 export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema } }) => {
@@ -76,7 +78,7 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
       style={{ height }}
     >
       <Card elevation={1}
-        className={` ${classes.height100Percent} ${classes.padding5}`}
+        className={` ${classes.height100Percent} `}
       >
         <Grid
           container
@@ -87,23 +89,6 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
             classes={classes}
             height={height} />
 
-          {/* AdjacentContainer */}
-          {lookerContent[0].actions ?
-            <Grid item
-              sm={12}
-            >
-              <Grid container>
-                {lookerContent[0].actions.map(item => {
-                  let Component = item.component
-                  return (
-                    <Grid item sm={item.gridWith}>
-                      <Component classes={classes} item={item} helperFunctionMapper={helperFunctionMapper} />
-                    </Grid>
-                  )
-                })}
-              </Grid>
-            </Grid>
-            : ""}
 
           {/* EmbeddedDashboardContainer*/}
           <Grid item
@@ -120,6 +105,42 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
               </EmbedHighlight>
             </Box>
           </Grid>
+
+
+          {/* AdjacentContainer */}
+          {/* {lookerContent[0].actions ?
+            <Grid item
+              sm={12}
+            >
+              <Grid container>
+                {lookerContent[0].actions.map(item => {
+                  let Component = item.component
+                  return (
+                    <Grid item sm={item.gridWith}>
+                      <Component classes={classes} item={item} helperFunctionMapper={helperFunctionMapper} />
+                    </Grid>
+                  )
+                })}
+              </Grid>
+            </Grid>
+            : ""} */}
+
+          {lookerContent[0].hasOwnProperty("adjacentContainer") ?
+
+            <AdjacentContainer
+              container={lookerContent[0].adjacentContainer}
+              makeShiftDrawerOpen={true}
+              // setMakeShiftDrawerOpen={setMakeShiftDrawerOpen}
+              apiContent={apiContent}
+              helperFunctionMapper={helperFunctionMapper}
+              classes={classes}
+            // customFilterAction={customFilterAction}
+            // lightThemeToggleValue={lightThemeToggleValue}
+            // fontThemeSelectValue={fontThemeSelectValue}
+            // handleRenderModal={handleRenderModal}
+            // hiddenFilterValue={hiddenFilterValue}
+            />
+            : ""}
 
 
           <CodeFlyout

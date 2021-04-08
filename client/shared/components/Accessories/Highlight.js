@@ -1,3 +1,8 @@
+/**
+ * TO DO: refactor
+ * a lot of repetitive code
+ */
+
 import React, { useContext } from 'react';
 import { Chip } from '@material-ui/core';
 import { appContextMap } from '../../utils/tools';
@@ -25,7 +30,7 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
     }
   } else {
     style = {
-      border: `3px solid transparent`,
+      border: `0px solid transparent`,
       backgroundColor: `transparent`,
     }
   }
@@ -56,7 +61,14 @@ export function ApiHighlight({ ...props }) {
       className={highlightShow ? 'test' : `${classes.hidden}`}
       display="inline"
       align="right"
-      style={{ backgroundColor: "#A142F4", color: '#fff', top: '-10px', right: '10px', position: 'absolute' }}
+      style={{
+        backgroundColor: "#A142F4",
+        color: '#fff',
+        top: '0px',
+        right: '0px',
+        position: 'absolute',
+        borderRadius: '0px 0px 0px 8px'
+      }}
     />
     {children}
 
@@ -79,9 +91,10 @@ export function EmbedHighlight({ ...props }) {
       style={{
         backgroundColor: "#12B5CB",
         color: '#fff',
-        top: '-10px',
-        right: '10px',
+        top: '0px',
+        right: '0px',
         position: 'absolute',
+        borderRadius: '0px 0px 0px 8px'
       }}
     />
     {children}
@@ -104,9 +117,10 @@ export function EmbedMethodHighlight({ ...props }) {
       style={{
         backgroundColor: "#297AF4",
         color: '#fff',
-        top: '-10px',
-        right: '10px',
-        position: 'absolute'
+        top: '0px',
+        right: '0px',
+        position: 'absolute',
+        borderRadius: '0px 0px 0px 8px'
       }}
     />
     {children}
@@ -129,9 +143,10 @@ export function CloudFunctionHighlight({ ...props }) {
       style={{
         backgroundColor: "#f4a328",
         color: '#fff',
-        top: '-10px',
-        right: '10px',
-        position: 'absolute'
+        top: '0px',
+        right: '0px',
+        position: 'absolute',
+        borderRadius: '0px 0px 0px 8px'
       }}
     />
     {children}

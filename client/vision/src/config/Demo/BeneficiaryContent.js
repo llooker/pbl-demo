@@ -23,12 +23,13 @@ const createCaseSelect = {
   },
   "tooltip": "Create a case",
   "highlightComponent": CloudFunctionHighlight,
+  "gridWidth": 12,
 }
 
 
 const caseId = {
   "label": "ID",
-  "gridWidth": 6,
+  "gridWidth": 12,
   "component": HiddenFilterValueText,
   "appendHiddenFilterToLabel": true,
   "highlightComponent": ApiHighlight,
