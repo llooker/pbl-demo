@@ -17,7 +17,7 @@ const savedDefaultQueriesToggle = {
 
 export const ExploreContent = {
   "type": "explore",
-  "label": "Analyze",
+  "label": "Explore",
   "menuCategory": "Home",
   "description": "Overview of all your web traffic",
   "icon": ExploreIcon,

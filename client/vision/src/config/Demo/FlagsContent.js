@@ -7,7 +7,7 @@ import { CloudFunctionHighlight, ApiHighlight } from '@pbl-demo/components/Acces
 const addCaseNotesModal = {
   "copy": {
     "title": "Add Note",
-    "suggestion": "Record a flag",
+    "suggestion": "Log an update",
     "button": "Submit"
   },
   "method": addCaseNotes,
@@ -100,7 +100,7 @@ const caseNotesById = {
 
 export const FlagsConent = {
   "type": "dashboard",
-  "label": "Flags",
+  "label": "Open Cases",
   "menuCategory": "Home",
   "description": "Overview of all your web traffic",
   "icon": FlagIcon,
