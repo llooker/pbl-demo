@@ -76,6 +76,7 @@ export const TopBar = ({ content, theme, classes }) => {
               setDrawerOpen(!drawerOpen)
             }}
             edge="start"
+            className={classes.padding0}
           >
             {drawerOpen ?
               packageName === "vision" ?

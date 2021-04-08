@@ -9,7 +9,7 @@ export function TrendItem({ apiItem, classes }) {
   // console.log({ fieldsOfInterest })
 
   let formattedText = []
-  let cityName = <Typography key={validIdHelper(`TrendItem-${apiItem.key}-${apiItem.value}-Typography`)} variant="subtitle1" display="inline" >{apiItem.key}</Typography>
+  let cityName = <Typography key={validIdHelper(`TrendItem-${apiItem.key}-${apiItem.value}-Typography`)} variant="subtitle1" display="inline" className={classes.mr6}>{apiItem.key}</Typography>
   formattedText.push(cityName)
   let numberToColoredPercent = <NumberToColoredPercent key={validIdHelper(`TrendItem-${apiItem.key}-${apiItem.value}-NumberedToColoredPercent`)} val={apiItem.value} />
   formattedText.push(numberToColoredPercent)
@@ -18,7 +18,7 @@ export function TrendItem({ apiItem, classes }) {
     <ListItem
       key={validIdHelper(`TrendItem-${apiItem.key}-${apiItem.value}`)}
       display="inline"
-      className={`${classes.nested}`}>
+      className={`${classes.nested} ${classes.padding5}`}>
       { formattedText}
     </ListItem >
   )

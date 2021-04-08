@@ -318,5 +318,8 @@ export const useStyles = makeStyles((theme) => ({
   },
   paddingTB4: {
     padding: "4px 0"
+  },
+  mr6: {
+    marginRight: 6
   }
 }));

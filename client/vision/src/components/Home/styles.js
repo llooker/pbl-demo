@@ -225,6 +225,8 @@ export const useStyles = makeStyles(theme => ({
   paddingTB2: {
     paddingTop: 2,
     paddingBottom: 2
+  },
+  padding0: {
+    padding: 0
   }
 }), { index: 1 });
-
