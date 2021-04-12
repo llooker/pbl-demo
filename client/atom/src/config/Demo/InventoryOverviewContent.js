@@ -147,7 +147,8 @@ export const InventoryOverivewContent = {
         "gridWidth": 3,
         "items": [productNameFilter, tilesFilter, visConfigFilter, themeColorFilter, themeFontFilter],
         "collapsable": true
-      }
+      },
+      "themeable": true
     }],
   "requiredPermissionLevel": 0
 }

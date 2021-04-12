@@ -31,6 +31,25 @@ const countyTrends = {
     "dynamic_fields": "[{\"table_calculation\":\"pop\",\"label\":\"pop\",\"expression\":\"(${account_events.count} - offset(${account_events.count},1))/offset(${account_events.count},1)\",\"value_format\":null,\"value_format_name\":\"percent_1\",\"_kind_hint\":\"measure\",\"_type_hint\":\"number\"}]",
     "limit": "500"
   },
+  "drillInlineQuery": {
+    "model": "vision",
+    "view": "account_events",
+    "fields": [
+      "account_events.count",
+      "person.home_city",
+      "person.name",
+      "person.mailing_address",
+    ],
+    "sorts": [
+      "person.home_city 0",
+      "account_events.datetime_quarter"
+    ],
+    "filters": {
+      "account_events.type": "\"submit_application\"",
+      "person.home_city": "San Francisco,San Jose,Los Angeles,Sacramento,Bakersfield,Riverside"
+    },
+    "limit": "500"
+  },
   "resultFormat": "json",
   "label": "Country trends",
   "component": TrendItem,

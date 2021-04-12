@@ -16,6 +16,7 @@ export const AdjacentContainer = ({
   fontThemeSelectValue,
   handleRenderModal,
   hiddenFilterValue,
+  setLightThemeToggleValue
 }) => {
   // console.log("AdjacentContainer")
   // console.log({ container })
@@ -101,6 +102,7 @@ export const AdjacentContainer = ({
                             action={customFilterAction}
                             filterItem={item}
                             index={index}
+                            setLightThemeToggleValue={setLightThemeToggleValue || null}
                             lightThemeToggleValue={lightThemeToggleValue}
                             fontThemeSelectValue={fontThemeSelectValue}
                           />
@@ -117,6 +119,7 @@ export const AdjacentContainer = ({
                           filterItem={item}
                           helperFunctionMapper={helperFunctionMapper}
                           action={customFilterAction || null}
+                          setLightThemeToggleValue={setLightThemeToggleValue || null}
                           lightThemeToggleValue={lightThemeToggleValue || null}
                           fontThemeSelectValue={fontThemeSelectValue || null}
                           handleRenderModal={handleRenderModal || null}

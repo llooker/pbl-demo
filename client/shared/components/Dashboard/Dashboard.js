@@ -37,9 +37,7 @@ export const Dashboard = ({ staticContent }) => {
   const [modalInfo, setModalInfo] = useState({});
 
   const [helperResponse, setHelperResponse] = useState(undefined);
-
-  let dynamicVisConfigFilterItem = lookerContent[0].adjacentContainer ? _.find(lookerContent[0].adjacentContainer.items, { label: "Dynamic Vis Config" }) : null;
-  const isThemeableDashboard = dynamicVisConfigFilterItem && Object.keys(dynamicVisConfigFilterItem).length ? true : false;
+  const isThemeableDashboard = lookerContent[0].themeable;
   const darkThemeBackgroundColor = theme.palette.fill.main;
   const classes = useStyles();
   const location = useLocation();
@@ -65,11 +63,10 @@ export const Dashboard = ({ staticContent }) => {
   );
 
   const helperFunctionMapper = async (event, newValue, filterItem) => {
-    console.log("helperFunctionMapper")
-    console.log({ newValue })
-    console.log({ filterItem })
+    // console.log("helperFunctionMapper")
+    // console.log({ newValue })
+    // console.log({ filterItem })
 
-    console.log(JSON.stringify(filterItem.inlineQuery))
 
     let helperResponseData = await filterItem.method({
       newValue, filterItem, dashboardOptions,
@@ -101,7 +98,7 @@ export const Dashboard = ({ staticContent }) => {
     } else if (methodName === "changeCaseStatus") {
       dashboardObj.run()
     } else if (methodName === "runInlineQuery") {
-      console.log("inside this else if")
+      // console.log("inside this else if")
     }
   }
 
@@ -254,10 +251,21 @@ export const Dashboard = ({ staticContent }) => {
     }
   }, [customFilterAction, location.search, lookerContent])
 
+
+  // useEffect(() => {
+  //   setLightThemeToggleValue(true)
+  // }, [selectedMenuItem])
+
   useEffect(() => {
     // console.log("useEffect outer");
     // console.log({ lookerUser });
     // console.log({ isReady });
+
+    if (!isThemeableDashboard) {
+      setLightThemeToggleValue(true);
+      setFontThemeSelectValue("arial")
+    }
+
     if (isReady) {
       // console.log("useEffect inner")
       let themeName = lightThemeToggleValue ? 'light' : 'dark';
@@ -321,7 +329,6 @@ export const Dashboard = ({ staticContent }) => {
     }
 
     if (hiddenFilterValue) {
-
       if (apiContent && apiContent.hasOwnProperty('noteslist')) {
         let notesListFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "noteslist" })
         if (notesListFilterItem) {
@@ -338,7 +345,6 @@ export const Dashboard = ({ staticContent }) => {
       }
 
       if (apiContent && apiContent.hasOwnProperty('viewapplication')) {
-
         let viewApplicationFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "viewapplication" })
         if (viewApplicationFilterItem) {
           let { inlineQuery } = viewApplicationFilterItem
@@ -348,14 +354,10 @@ export const Dashboard = ({ staticContent }) => {
           }
           viewApplicationFilterItem.inlineQuery = modifiedQuery
           fetchData({ item: viewApplicationFilterItem })
-
         }
       }
-
     }
-
   }, [hiddenFilterValue])
-
 
   return (
     <div className={`${classes.root} ${classes.positionRelative}`}
@@ -384,6 +386,7 @@ export const Dashboard = ({ staticContent }) => {
                 helperFunctionMapper={helperFunctionMapper}
                 classes={classes}
                 customFilterAction={customFilterAction}
+                setLightThemeToggleValue={setLightThemeToggleValue}
                 lightThemeToggleValue={lightThemeToggleValue}
                 fontThemeSelectValue={fontThemeSelectValue}
                 handleRenderModal={handleRenderModal}

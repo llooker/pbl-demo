@@ -19,14 +19,14 @@ export function TrendItem({ apiItem, classes, item, helperFunctionMapper }) {
   formattedText.push(numberToColoredPercent)
 
   const onClickHandler = (event) => {
-    console.log("onClickHandler")
     // console.log('apiItem.key', apiItem.key)
     let copiedItem = { ...item }
-    let { inlineQuery, fieldsOfInterest } = copiedItem;
-    inlineQuery.filters[fieldsOfInterest[1]] = apiItem.key;
-    delete inlineQuery.dynamic_fields;
-    copiedItem.inlineQuery = inlineQuery
-    copiedItem.resultFormat = "json_detail"
+    let { drillInlineQuery, fieldsOfInterest } = copiedItem;
+    drillInlineQuery.filters[fieldsOfInterest[1]] = apiItem.key;
+    copiedItem.inlineQuery = drillInlineQuery
+    copiedItem.resultFormat = "json_detail";
+    // console.log({ copiedItem })
+    // comment out for now
     // helperFunctionMapper(null, null, copiedItem)
   }
 
@@ -34,8 +34,8 @@ export function TrendItem({ apiItem, classes, item, helperFunctionMapper }) {
     <ListItem
       key={validIdHelper(`TrendItem-${apiItem.key}-${apiItem.value}`)}
       display="inline"
-      className={`${classes.nested} ${classes.padding5}`}
-    // onClick={onClickHandler} 
+      className={` ${classes.padding5} ${classes.noWrap}`}
+      onClick={onClickHandler}
     >
       { formattedText}
     </ListItem >

@@ -321,5 +321,8 @@ export const useStyles = makeStyles((theme) => ({
   },
   mr6: {
     marginRight: 6
+  },
+  noWrap: {
+    whiteSpace: "nowrap"
   }
 }));

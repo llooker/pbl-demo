@@ -11,7 +11,7 @@ export function NumberToColoredPercent({ val, positive_good, abs_val }) {
   }
   const color = (val < 0) ? colors.down : (val > 0) ? colors.up : 'grey'
   const val_formatted = Math.abs(val).toLocaleString("en", { style: "percent", minimumFractionDigits: 2 })
-  const icon = (val < 0) ? '▼' : (val > 0) ? '▲' : '┄'
+  const icon = (val < 0) ? '▼' : (val > 0) ? '▲' : '-'
 
   return (<>
     <font
