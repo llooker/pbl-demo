@@ -86,6 +86,7 @@ export const AdjacentContainer = ({
                                   item={item}
                                   classes={classes}
                                   index={index}
+                                  helperFunctionMapper={helperFunctionMapper}
                                 />
                               )
                             })}

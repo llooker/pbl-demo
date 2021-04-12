@@ -65,15 +65,20 @@ export const Dashboard = ({ staticContent }) => {
   );
 
   const helperFunctionMapper = async (event, newValue, filterItem) => {
-    // console.log("helperFunctionMapper")
-    // console.log({ newValue })
-    // console.log({ filterItem })
+    console.log("helperFunctionMapper")
+    console.log({ newValue })
+    console.log({ filterItem })
+
+    console.log(JSON.stringify(filterItem.inlineQuery))
 
     let helperResponseData = await filterItem.method({
       newValue, filterItem, dashboardOptions,
       isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue,
-      hiddenFilterValue
+      hiddenFilterValue,
+      item: filterItem, lookerUser, sdk //hack for trends drill for now
     })
+
+    console.log({ helperResponseData })
 
     let { methodName, response, response: { message } } = helperResponseData; //dynamic
     setHelperResponse(response)
@@ -95,6 +100,8 @@ export const Dashboard = ({ staticContent }) => {
       setRenderModal(false)
     } else if (methodName === "changeCaseStatus") {
       dashboardObj.run()
+    } else if (methodName === "runInlineQuery") {
+      console.log("inside this else if")
     }
   }
 

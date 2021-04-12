@@ -96,8 +96,8 @@ export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue,
 
 
 export const runInlineQuery = async ({ sdk, item, lookerUser }) => { //type
-  // console.log("runInlineQuery")
-  // console.log({ item })
+  console.log("runInlineQuery")
+  console.log({ item })
 
   let jsonQuery = item.inlineQuery
   jsonQuery.filters = {
