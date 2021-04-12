@@ -41,7 +41,8 @@ function Highlight({ children, color, height, width, margin, id, backgroundColor
 
 
   return (
-    <div id={id} style={style}
+    <div id={id}
+      style={style}
     // {...props}
     >
       {children}
@@ -81,7 +82,10 @@ export function EmbedHighlight({ ...props }) {
   const { classes } = props
   const { children } = props
 
-  return <Highlight {...props} color={EMBED_COLOR} backgroundColor={EMBED_BACKGROUND_COLOR}>
+  return <Highlight {...props}
+    color={EMBED_COLOR}
+    backgroundColor={EMBED_BACKGROUND_COLOR}
+  >
 
     <Chip size="small"
       label={"Embed"}
@@ -99,7 +103,7 @@ export function EmbedHighlight({ ...props }) {
     />
     {children}
 
-  </Highlight>
+  </ Highlight>
 }
 
 export function EmbedMethodHighlight({ ...props }) {

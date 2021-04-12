@@ -3,29 +3,32 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
 import { Loader, CodeFlyout, EmbedHighlight } from '@pbl-demo/components/Accessories'
-import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '@pbl-demo/components/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { createEmbeddedExplore } from './helpers'
 import { AdjacentContainer } from "../AdjacentContainer"
-
+import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from '../styles.js';
 const { validIdHelper, appContextMap, validateContent } = require('../../utils/tools');
 
 export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema } }) => {
   // console.log("EmbeddedExplore")
-  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;
+  const { clientSession, clientSession: { lookerUser, lookerHost }, isReady, sdk, corsApiCall, selectedMenuItem, drawerOpen } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? drawerOpen ? (topAndBottomHeaderPlusDrawerOpen) : (topAndBottomHeaderSpacing) : (topAndBottomHeaderSpacing);
 
   const [iFrameExists, setIFrame] = useState(1);
   const [apiContent, setApiContent] = useState(undefined);
   const [exploreObj, setExploreObj] = useState({});
   const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
-  const { clientSession, clientSession: { lookerUser, lookerHost }, isReady, sdk, corsApiCall, selectedMenuItem } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const demoComponentType = type;
   const classes = useStyles();
 
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
-  }, [lookerContent]);
+  })
+
+  useEffect(() => {
+    setHeight((window.innerHeight - dynamicTopBarBottomBarHeight));
+  }, [drawerOpen])
 
   useEffect(() => {
     if (isReady) {
@@ -74,15 +77,15 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
   }
 
   return (
-    <div className={`${classes.root} ${classes.positionRelative}`}
+    <div
+      className={`${classes.root} ${classes.positionRelative}`}
       style={{ height }}
     >
-      <Card elevation={1}
-        className={` ${classes.height100Percent} `}
-      >
+      <Card elevation={1}>
         <Grid
           container
           spacing={3}
+          key={validIdHelper(type)}
         >
           <Loader
             hide={iFrameExists}
@@ -90,7 +93,6 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
             height={height} />
 
 
-          {/* EmbeddedDashboardContainer*/}
           <Grid item
             sm={12}
           >
@@ -100,6 +102,8 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
                   className={`embedContainer ${validIdHelper(type)}`}
                   id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
                   key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
+                  style={{ height }}
+
                 >
                 </div>
               </EmbedHighlight>
@@ -130,15 +134,9 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
             <AdjacentContainer
               container={lookerContent[0].adjacentContainer}
               makeShiftDrawerOpen={true}
-              // setMakeShiftDrawerOpen={setMakeShiftDrawerOpen}
               apiContent={apiContent}
               helperFunctionMapper={helperFunctionMapper}
               classes={classes}
-            // customFilterAction={customFilterAction}
-            // lightThemeToggleValue={lightThemeToggleValue}
-            // fontThemeSelectValue={fontThemeSelectValue}
-            // handleRenderModal={handleRenderModal}
-            // hiddenFilterValue={hiddenFilterValue}
             />
             : ""}
 
@@ -146,7 +144,7 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
           <CodeFlyout
             classes={classes}
             lookerUser={lookerUser}
-            height={height - additionalHeightForFlyout}
+            height={height}
           />
         </Grid>
       </Card >

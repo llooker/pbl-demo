@@ -7,7 +7,9 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 import { Loader, CodeFlyout, SnackbarAlert } from "@pbl-demo/components/Accessories";
-import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
+import {
+  useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing
+} from '../styles.js';
 import queryString from 'query-string';
 import { appContextMap, decodeHtml, validIdHelper } from '../../utils/tools';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery, formatApiResultsForAutoComplete, formatApiResultsForTrends } from './helpers';
@@ -21,7 +23,9 @@ export const Dashboard = ({ staticContent }) => {
 
   const { lookerContent, type } = staticContent;
   const demoComponentType = type || 'code flyout';
-  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;
+
+  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? drawerOpen ? (topAndBottomHeaderPlusDrawerOpen) : (topAndBottomHeaderSpacing) : (topAndBottomHeaderSpacing);
+  console.log({ dynamicTopBarBottomBarHeight })
 
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState(undefined);
@@ -30,7 +34,6 @@ export const Dashboard = ({ staticContent }) => {
   const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
-  const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
   const [makeShiftDrawerOpen, setMakeShiftDrawerOpen] = useState(true);
   const [hiddenFilterValue, setHiddenFilterValue] = useState(null);
   const [renderModal, setRenderModal] = useState(false);
@@ -42,6 +45,10 @@ export const Dashboard = ({ staticContent }) => {
   const classes = useStyles();
   const location = useLocation();
   let history = useHistory();
+
+  console.log('window.innerHeight', window.innerHeight)
+  console.log({ dynamicTopBarBottomBarHeight })
+  console.log({ height })
 
   //conditional theming for dark mode :D
   let paletteToUse = !lightThemeToggleValue && isThemeableDashboard ?
@@ -159,6 +166,8 @@ export const Dashboard = ({ staticContent }) => {
         .build()
         .connect()
         .then((dashboard) => {
+          //iframe dynamic height
+          // dashboard.style.setProperty('--element-height', height + 'px')
           setIFrame(1)
           setDashboardObj(dashboard)
           let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
@@ -310,8 +319,11 @@ export const Dashboard = ({ staticContent }) => {
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
-    setExpansionPanelHeight(0)
   })
+
+  useEffect(() => {
+    setHeight((window.innerHeight - dynamicTopBarBottomBarHeight));
+  }, [drawerOpen])
 
   // needed to copy from home to make it work
   useEffect(() => {
@@ -359,14 +371,20 @@ export const Dashboard = ({ staticContent }) => {
     }
   }, [hiddenFilterValue])
 
+  useEffect(() => {
+
+    console.log({ dynamicTopBarBottomBarHeight })
+    console.log({ height })
+
+  }, [height])
+
   return (
-    <div className={`${classes.root} ${classes.positionRelative}`}
+    <div
+      className={`${classes.root} ${classes.positionRelative}`}
       style={{ height }}
     >
       <ThemeProvider theme={themeToUse}>
-        <Card elevation={1}
-          className={` ${classes.height100Percent}`}
-        >
+        <Card elevation={1}>
           <Grid
             container
             spacing={3}
@@ -400,12 +418,13 @@ export const Dashboard = ({ staticContent }) => {
               classes={classes}
               lookerContent={lookerContent}
               type={demoComponentType}
+              height={height}
             />
 
             <CodeFlyout
               classes={classes}
               lookerUser={lookerUser}
-              height={height - expansionPanelHeight - additionalHeightForFlyout}
+              height={height}
             />
 
             {helperResponse ?

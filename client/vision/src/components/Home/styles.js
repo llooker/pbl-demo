@@ -2,7 +2,8 @@ import { packageNameTheme } from '../../config/theme.js'
 import { makeStyles } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
-const topDrawerHeight = 53;
+const topHeaderHeight = 64;
+const topDrawerHeight = 52;
 export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -163,9 +164,6 @@ export const useStyles = makeStyles(theme => ({
     backgroundColor: 'transparent'
     // theme.palette.background.paper,
   },
-  // nested: {
-  //   paddingLeft: theme.spacing(4),
-  // },
   mlAuto: {
     marginLeft: 'auto'
   },
@@ -214,11 +212,6 @@ export const useStyles = makeStyles(theme => ({
       transition: 'transform .2s'
     }
   },
-  inlineList: {
-    display: 'flex',
-    flexDirection: 'row',
-    padding: 0,
-  },
   noWrap: {
     whiteSpace: "nowrap"
   },
@@ -228,5 +221,15 @@ export const useStyles = makeStyles(theme => ({
   },
   padding0: {
     padding: 0
-  }
+  },
+  content: {
+    flex: 1,
+    display: "flex",
+    overflow: "auto"
+  },
+  flexRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 0,
+  },
 }), { index: 1 });

@@ -2,18 +2,19 @@ import _ from 'lodash'
 import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
 import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
-import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from './styles.js';
 import { useLocation } from "react-router-dom";
 import queryString from 'query-string';
+import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from './styles.js';
 
 const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
 
 export const DocumentViewer = (props) => {
-  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;
+  const { clientSession: { lookerUser, lookerHost }, drawerOpen } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? drawerOpen ? (topAndBottomHeaderPlusDrawerOpen) : (topAndBottomHeaderSpacing) : (topAndBottomHeaderSpacing);
+
 
   const [iFrameExists, setIFrame] = useState(1);
   const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
-  const { clientSession: { lookerUser, lookerHost } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { staticContent: { lookerContent, type, schema } } = props;
   const demoComponentType = type;
   const classes = useStyles();
@@ -22,7 +23,11 @@ export const DocumentViewer = (props) => {
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
-  }, [lookerContent]);
+  })
+
+  useEffect(() => {
+    setHeight((window.innerHeight - dynamicTopBarBottomBarHeight));
+  }, [drawerOpen])
 
   validateContent(lookerContent[0], schema)
 
@@ -30,8 +35,6 @@ export const DocumentViewer = (props) => {
     let params = queryString.parse(location.search);
     let paramMatchesPDFUrl = params.pdf_url ? true : false;
 
-    console.log({ params })
-    console.log({ paramMatchesPDFUrl })
 
     if (paramMatchesPDFUrl) {
       setDocToUse(params["pdf_url"]);
@@ -40,17 +43,11 @@ export const DocumentViewer = (props) => {
   }, [location.search])
 
 
-  console.log({ docToUse })
-  console.log({ height })
 
   return (
     <div className={`${classes.root} ${classes.positionRelative}`}
-      style={{ height }}
     >
-      <Card elevation={1}
-        className={` ${classes.height100Percent} ${classes.padding5}`}
-
-      >
+      <Card elevation={1}>
         <Grid
           container
           spacing={3}
@@ -64,7 +61,7 @@ export const DocumentViewer = (props) => {
           <CodeFlyout {...props}
             classes={classes}
             lookerUser={lookerUser}
-            height={height - additionalHeightForFlyout}
+            height={height}
           />
           {docToUse ?
 

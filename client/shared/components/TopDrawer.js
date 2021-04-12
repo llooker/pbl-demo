@@ -1,14 +1,14 @@
 import _ from 'lodash'
 import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
-import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
+import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, AppBar } from '@material-ui/core/';
 import { ChevronLeft } from '@material-ui/icons';
 import { useStyles } from './styles.js';
 const { validIdHelper, appContextMap } = require('../utils/tools');
 
 
 export const TopDrawer = ({ DemoComponentsContentArr, classes }) => {
-  // console.log('TopDrawer');
+  console.log('TopDrawer');
 
   const { drawerOpen, setDrawerOpen, } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
@@ -22,14 +22,9 @@ export const TopDrawer = ({ DemoComponentsContentArr, classes }) => {
         paper: classes.topDrawerPaper,
       }}
     >
-      <div className={classes.drawerHeader}>
-        <IconButton
-          onClick={() => setDrawerOpen(false)}>
-          <ChevronLeft
-            aria-label="close drawer"
-          />
-        </IconButton>
-      </div>
+
+
+      <div className={classes.drawerHeader} />
 
       <MenuList
         classes={classes}
@@ -61,24 +56,22 @@ function MenuList({ classes, DemoComponentsContentArr }) {
   return (<List
     component="nav"
     aria-labelledby="nested-list-subheader"
-    className={classes.list}
   >
     {packageName ? Object.keys(orderedDemoComponentsForMenuObj).map((outerItem, outerIndex) => {
       return (
-        < React.Fragment
-          key={`${validIdHelper(outerItem + '-menuList-' + outerIndex)}`}>
-          < List
-            className={classes.inlineList}
-            component="div"
-            disablePadding
-            key={`${validIdHelper(outerItem + '-innerList-' + outerIndex)}`}>
-            {orderedDemoComponentsForMenuObj[outerItem].map((item, innerIndex) => {
+        < List
+          className={`${classes.flexRow} `}
+          component="div"
+          disablePadding
+          key={`${validIdHelper(outerItem + '-innerList-' + outerIndex)}`}>
+          {
+            orderedDemoComponentsForMenuObj[outerItem].map((item, innerIndex) => {
               const MatchingIconComponent = item.icon
               return (
                 <ListItem
                   button
-                  className={`${classes.nested} ${classes.roundedTab}  ${classes.paddingTB2}`}
-                  key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
+                  className={`${classes.roundedTab} ${classes.paddingTB2}`}
+                  key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)} `}
                   selected={validIdHelper(_.lowerCase(item.label)) === selectedMenuItem}
                   component={Link}
                   to={validIdHelper(_.lowerCase(item.label))}
@@ -86,12 +79,12 @@ function MenuList({ classes, DemoComponentsContentArr }) {
                   <ListItemIcon>
                     {MatchingIconComponent ? <MatchingIconComponent /> : <></>}
                   </ListItemIcon>
-                  <ListItemText className={`${classes.noWrap}`} primary={_.capitalize(item.label)} />
+                  <ListItemText className={`${classes.noWrap} `} primary={_.capitalize(item.label)} />
                 </ListItem>
               )
-            })}
-          </List>
-        </React.Fragment>
+            })
+          }
+        </List>
       )
     }) : ''
     }
