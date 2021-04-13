@@ -106,7 +106,6 @@ export default function Home(props) {
 
 
   useEffect(() => {
-    console.log({ democomponent })
     if (highlightShow) setHighlightShow(!highlightShow);
     if (codeShow) setCodeShow(!codeShow);
     setSelectedMenuItem(democomponent)
@@ -118,7 +117,6 @@ export default function Home(props) {
   });
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
   else ActiveDemoComponent = ActiveDemoComponentContent.component;
-
 
   return (
     <div className={classes.root} >

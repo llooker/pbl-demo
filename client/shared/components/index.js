@@ -16,4 +16,5 @@ export { TrendItem } from "./TrendItem";
 export { SimpleModal } from "./SimpleModal";
 export { DocumentViewer } from "./DocumentViewer";
 export { InlineList } from "./InlineList";
+export { EmbeddedQueryFullWidth } from "./EmbeddedQueryFullWidth/EmbeddedQueryFullWidth";
 

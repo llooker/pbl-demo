@@ -6,3 +6,4 @@ export * from "./BeneficiaryContent";
 // export * from "./ApplicationContent";
 export * from "./ExploreContent";
 export * from "./DocumentViewerContent";
+export * from "./AIMatchGroupsContent";
