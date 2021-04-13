@@ -25,7 +25,6 @@ export const Dashboard = ({ staticContent }) => {
   const demoComponentType = type || 'code flyout';
 
   const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? drawerOpen ? (topAndBottomHeaderPlusDrawerOpen) : (topAndBottomHeaderSpacing) : (topAndBottomHeaderSpacing);
-  console.log({ dynamicTopBarBottomBarHeight })
 
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState(undefined);
@@ -46,9 +45,6 @@ export const Dashboard = ({ staticContent }) => {
   const location = useLocation();
   let history = useHistory();
 
-  console.log('window.innerHeight', window.innerHeight)
-  console.log({ dynamicTopBarBottomBarHeight })
-  console.log({ height })
 
   //conditional theming for dark mode :D
   let paletteToUse = !lightThemeToggleValue && isThemeableDashboard ?
@@ -82,7 +78,7 @@ export const Dashboard = ({ staticContent }) => {
       item: filterItem, lookerUser, sdk //hack for trends drill for now
     })
 
-    console.log({ helperResponseData })
+    // console.log({ helperResponseData })
 
     let { methodName, response, response: { message } } = helperResponseData; //dynamic
     setHelperResponse(response)
@@ -371,12 +367,6 @@ export const Dashboard = ({ staticContent }) => {
     }
   }, [hiddenFilterValue])
 
-  useEffect(() => {
-
-    console.log({ dynamicTopBarBottomBarHeight })
-    console.log({ height })
-
-  }, [height])
 
   return (
     <div

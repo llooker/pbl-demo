@@ -96,8 +96,8 @@ export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue,
 
 
 export const runInlineQuery = async ({ sdk, item, lookerUser }) => { //type
-  console.log("runInlineQuery")
-  console.log({ item })
+  // console.log("runInlineQuery")
+  // console.log({ item })
 
   let jsonQuery = item.inlineQuery
   jsonQuery.filters = {
@@ -144,6 +144,8 @@ export const addCaseNotes = async ({ newValue, filterItem, hiddenFilterValue }) 
     body: JSON.stringify({ caseNote: newValue, caseId: hiddenFilterValue })
   })
   const newCaseResponseData = await newCaseResponse.json();
+  // console.log({ newCaseResponseData })
+
   return {
     "methodName": filterItem.methodName,
     "response": newCaseResponseData
@@ -166,6 +168,7 @@ export const changeCaseStatus = async ({ newValue, filterItem, hiddenFilterValue
   })
   const changeCaseStatusResponseData = await changeCaseStatusResponse.json();
   // console.log({ changeCaseStatusResponseData })
+
   return {
     "methodName": filterItem.methodName,
     "response": changeCaseStatusResponseData

@@ -12,7 +12,6 @@ module.exports.createCase = async (req, res, next) => {
 
   let options = {
     method: 'POST',
-    // uri: 'https://us-central1-vision-302704.cloudfunctions.net/create_case',
     uri: 'https://us-central1-pbl-demo-2020-281322.cloudfunctions.net/create_case',
     body: {
       "type": "cell",
@@ -90,7 +89,10 @@ module.exports.addCaseNotes = async (req, res, next) => {
 }
 
 module.exports.changeCaseStatus = async (req, res, next) => {
+  // console.log("changeCaseStatus")
+
   let { session, body } = req;
+
 
   let options = {
     method: 'POST',
@@ -114,6 +116,7 @@ module.exports.changeCaseStatus = async (req, res, next) => {
   };
 
 
+
   try {
     let postRsp = await rp(options)
     res.status(200).send({
@@ -121,7 +124,6 @@ module.exports.changeCaseStatus = async (req, res, next) => {
       message: "Case status changed!"
     })
   } catch (err) {
-    // console.log({ err })
     res.status(400).send({
       status: "error",
       message: err
