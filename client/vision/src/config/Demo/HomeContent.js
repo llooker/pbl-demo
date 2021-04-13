@@ -22,7 +22,8 @@ const countyTrends = {
     ],
     "filters": {
       "account_events.type": "\"submit_application\"",
-      "person.home_city": "San Francisco,San Jose,Los Angeles,Sacramento,Bakersfield,Riverside"
+      "person.home_city": "San Francisco,San Jose,Los Angeles,Sacramento,Bakersfield,Riverside,Santa Cruz,Fresno,Oakland,Fremont"
+
     },
     "sorts": [
       "person.home_city 0",
