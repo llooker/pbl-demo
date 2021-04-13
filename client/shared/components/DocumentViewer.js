@@ -45,9 +45,13 @@ export const DocumentViewer = (props) => {
 
 
   return (
-    <div className={`${classes.root} ${classes.positionRelative}`}
+    <div
+      className={`${classes.root} ${classes.positionRelative}`}
+      style={{ height }}
     >
-      <Card elevation={1}>
+      <Card elevation={1}
+        className={classes.height100Percent}
+      >
         <Grid
           container
           spacing={3}
@@ -72,7 +76,7 @@ export const DocumentViewer = (props) => {
                 <object data={docToUse}
                   type="application/pdf"
                   className={`${classes.height800} ${classes.w100}  object`}
-                  style={{ height }}
+                // style={{ height }}
                 />
               </Box>
             </Grid > : "Not working"}

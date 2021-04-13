@@ -232,4 +232,7 @@ export const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     padding: 0,
   },
+  themeFillColor: {
+    backgroundColor: packageNameTheme.palette.fill.main
+  }
 }), { index: 1 });

@@ -23,9 +23,13 @@ export const SplashPage = (props) => {
   }, [drawerOpen])
 
   return (
-    <div className={`${classes.root} ${classes.positionRelative}`}
+    <div
+      className={`${classes.root} ${classes.positionRelative}`}
+      style={{ height }}
     >
-      <Card elevation={1} >
+      <Card elevation={1}
+        className={classes.height100Percent}
+      >
         <Grid
           container
           spacing={3}

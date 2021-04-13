@@ -1,10 +1,8 @@
 import _ from 'lodash'
 import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
-// import AppContext from '../../contexts/AppContext';
 import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
 import { ChevronLeft } from '@material-ui/icons';
-
 const { validIdHelper, appContextMap } = require('../utils/tools');
 
 export const LeftDrawer = ({ DemoComponentsContentArr, classes }) => {

@@ -81,7 +81,9 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
       className={`${classes.root} ${classes.positionRelative}`}
       style={{ height }}
     >
-      <Card elevation={1}>
+      <Card elevation={1}
+        className={classes.height100Percent}
+      >
         <Grid
           container
           spacing={3}
@@ -102,7 +104,7 @@ export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema }
                   className={`embedContainer ${validIdHelper(type)}`}
                   id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
                   key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
-                  style={{ height }}
+                // style={{ height }}
 
                 >
                 </div>

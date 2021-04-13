@@ -384,7 +384,9 @@ export const Dashboard = ({ staticContent }) => {
       style={{ height }}
     >
       <ThemeProvider theme={themeToUse}>
-        <Card elevation={1}>
+        <Card elevation={1}
+          className={classes.height100Percent}
+        >
           <Grid
             container
             spacing={3}
