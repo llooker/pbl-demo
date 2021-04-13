@@ -29,7 +29,7 @@ export const ExploreContent = {
       "type": "explore",
       "id": "vision::application",
       "label": "Explore Applications",
-      "qid": "UPggDGDP7v9urxCS4C2Paj",
+      // "qid": "UPggDGDP7v9urxCS4C2Paj",
       // "adjacentContainer": {
       //   "gridWidth": 12,
       //   "items": [savedDefaultQueriesToggle],
