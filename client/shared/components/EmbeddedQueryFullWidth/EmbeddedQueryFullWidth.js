@@ -54,7 +54,6 @@ export const EmbeddedQueryFullWidth = ({ staticContent }) => {
           containerId: validIdHelper(`#embedContainer-${demoComponentType}-${lookerContentItem.id}`),
           clientSession
         });
-        console.log({ embeddedExplore })
         if (embeddedExplore && embeddedExplore.iframe) setIFrame(embeddedExplore.iframe);
         if (embeddedExplore && embeddedExplore.exploreObj) setExploreObj(embeddedExplore.exploreObj)
       }
