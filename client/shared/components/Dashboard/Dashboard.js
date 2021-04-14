@@ -75,7 +75,8 @@ export const Dashboard = ({ staticContent }) => {
       newValue, filterItem, dashboardOptions,
       isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue,
       hiddenFilterValue,
-      item: filterItem, lookerUser, sdk //hack for trends drill for now
+      item: filterItem, lookerUser, sdk, //hack for trends drill for now
+      packageName: process.env.REACT_APP_PACKAGE_NAME
     })
 
     // console.log({ helperResponseData })
@@ -273,8 +274,10 @@ export const Dashboard = ({ staticContent }) => {
 
     if (isReady) {
       // console.log("useEffect inner")
-      let themeName = lightThemeToggleValue ? 'light' : 'dark';
+      let themeName = process.env.REACT_APP_PACKAGE_NAME;
+      themeName += lightThemeToggleValue ? '_light' : '_dark';
       themeName += `_${fontThemeSelectValue}`;
+      console.log({ themeName })
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
       setApiContent(undefined);
       setMakeShiftDrawerOpen(true);

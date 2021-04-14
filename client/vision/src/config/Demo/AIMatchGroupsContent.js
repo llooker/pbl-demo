@@ -13,7 +13,8 @@ export const AIMatchGroupsContent = {
     {
       "type": "embeddedquery",
       "label": "AI Match Groups",
-      "queryUrl": "embed/query/vision/match_groups?qid=GYjISnJ4m9UUA80DgzooPa&sdk=2&embed_domain=",
+      "queryUrlDev": "embed/query/vision/match_groups?qid=GYjISnJ4m9UUA80DgzooPa&sdk=2&embed_domain=",
+      "queryUrlProd": "embed/query/vision/match_groups?qid=Gn7SDm3pltMhMECxwPXnIs&sdk=2&embed_domain=",
     }
   ],
   "requiredPermissionLevel": 0

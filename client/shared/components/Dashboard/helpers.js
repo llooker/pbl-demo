@@ -75,7 +75,7 @@ export const handleVisColorToggle = ({ newValue, filterItem, dashboardOptions,
   }
 }
 
-export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue, fontThemeSelectValue }) => {
+export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue, fontThemeSelectValue, packageName }) => {
   // console.log("handleThemeChange")
   // console.log({ newValue })
   // console.log({ filterItem })
@@ -84,9 +84,9 @@ export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue,
 
   let themeName = '';
   if (typeof newValue === "boolean") {
-    themeName = newValue ? `light_${fontThemeSelectValue}` : `dark_${fontThemeSelectValue}`
+    themeName = newValue ? `${packageName}_light_${fontThemeSelectValue}` : `${packageName}_dark_${fontThemeSelectValue}`
   } else {
-    themeName = lightThemeToggleValue ? `light_${newValue}` : `dark_${newValue}`
+    themeName = lightThemeToggleValue ? `${packageName}_light_${newValue}` : `${packageName}_dark_${newValue}`
   }
   return {
     "methodName": filterItem.methodName,

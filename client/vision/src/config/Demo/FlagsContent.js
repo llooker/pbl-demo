@@ -113,7 +113,7 @@ export const FlagsConent = {
       "slug": "219Tk9NQ4sGSjGNsRSFKjG",
       "label": "Flags",
       "isNext": false,
-      "theme": "vision_theme",
+      "theme": "vision_light_arial",
       "adjacentContainer": {
         "gridWidth": 3,
         "collapsable": true,

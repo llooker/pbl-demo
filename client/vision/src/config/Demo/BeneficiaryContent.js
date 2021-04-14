@@ -73,7 +73,7 @@ export const BeneficiaryContent = {
       "label": "Beneficiary",
       "isNext": false,
       "filterName": "Person ID",
-      "theme": "vision_theme",
+      "theme": "vision_light_arial",
       "adjacentContainer": {
         "gridWidth": 2,
         "items": [caseId, createCaseSelect, themeColorFilter, themeFontFilter],

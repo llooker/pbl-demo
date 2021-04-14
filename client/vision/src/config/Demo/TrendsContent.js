@@ -17,7 +17,7 @@ export const TrendsContent = {
       "slug": "JGZrjlmRxhLKNXJB17Vbo1",
       "label": "Trends",
       "isNext": false,
-      "theme": "vision_theme"
+      "theme": "vision_light_arial"
     }],
   "requiredPermissionLevel": 0
 }
