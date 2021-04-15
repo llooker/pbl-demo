@@ -40,7 +40,7 @@ export const Dashboard = ({ staticContent }) => {
 
   const [helperResponse, setHelperResponse] = useState(undefined);
   const isThemeableDashboard = lookerContent[0].themeable;
-  const darkThemeBackgroundColor = theme.palette.fill.main;
+  const darkThemeBackgroundColor = theme.palette.fill.secondary ? theme.palette.fill.secondary : theme.palette.fill.main;
   const classes = useStyles();
   const location = useLocation();
   let history = useHistory();
@@ -422,7 +422,7 @@ export const Dashboard = ({ staticContent }) => {
               height={height}
             />
 
-            {helperResponse ?
+            {helperResponse && helperResponse.showSnackbar ?
               <SnackbarAlert helperResponse={helperResponse} />
               : ""}
 

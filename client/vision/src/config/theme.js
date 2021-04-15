@@ -10,7 +10,8 @@ export const packageNameTheme = createMuiTheme({
       main: grey[400],
     },
     fill: {
-      main: "#240D67"
+      main: "#240D67",
+      secondary: "#4f3d85"
     },
   },
   typography: {
@@ -18,5 +19,8 @@ export const packageNameTheme = createMuiTheme({
       'Inter',
       'sans-serif'
     ].join(','),
+    button: {
+      textTransform: 'none'
+    }
   },
 })

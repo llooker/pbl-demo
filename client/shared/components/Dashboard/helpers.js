@@ -14,7 +14,7 @@ export const handleTileToggle = ({ newValue, filterItem, dashboardOptions }) => 
     return {
       "methodName": filterItem.methodName,
       "response": {
-        "layouts": [newDashboardLayout]
+        "layouts": [newDashboardLayout],
       }
     }
   }
@@ -122,10 +122,11 @@ export const createCase = async ({ newValue, filterItem, hiddenFilterValue }) =>
     body: JSON.stringify({ caseType: newValue, applicationId: hiddenFilterValue })
   })
   const newCaseResponseData = await newCaseResponse.json();
-  // console.log({ newCaseResponseData })
+  newCaseResponseData.showSnackbar = true
+
   return {
     "methodName": filterItem.methodName,
-    "response": newCaseResponseData
+    "response": newCaseResponseData,
   };
 }
 
@@ -144,11 +145,13 @@ export const addCaseNotes = async ({ newValue, filterItem, hiddenFilterValue }) 
     body: JSON.stringify({ caseNote: newValue, caseId: hiddenFilterValue })
   })
   const newCaseResponseData = await newCaseResponse.json();
+  newCaseResponseData.showSnackbar = true
+
   // console.log({ newCaseResponseData })
 
   return {
     "methodName": filterItem.methodName,
-    "response": newCaseResponseData
+    "response": newCaseResponseData,
   };
 }
 
@@ -168,10 +171,11 @@ export const changeCaseStatus = async ({ newValue, filterItem, hiddenFilterValue
   })
   const changeCaseStatusResponseData = await changeCaseStatusResponse.json();
   // console.log({ changeCaseStatusResponseData })
+  changeCaseStatusResponseData.showSnackbar = true
 
   return {
     "methodName": filterItem.methodName,
-    "response": changeCaseStatusResponseData
+    "response": changeCaseStatusResponseData,
   };
 }
 

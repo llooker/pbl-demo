@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
 const topHeaderHeight = 64;
-const topDrawerHeight = 52;
+const topDrawerHeight = 54;
 export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',

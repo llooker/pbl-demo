@@ -92,7 +92,7 @@ function MenuList({ classes, DemoComponentsContentArr }) {
                   to={validIdHelper(_.lowerCase(item.label))}
 
                 >
-                  {_.capitalize(item.label)}
+                  {_.startCase(item.label)}
                 </Button>
               )
             })
