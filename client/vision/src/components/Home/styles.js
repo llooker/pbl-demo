@@ -234,5 +234,11 @@ export const useStyles = makeStyles(theme => ({
   },
   themeFillColor: {
     backgroundColor: packageNameTheme.palette.fill.main
+  },
+  borderRadius100: {
+    borderRadius: 100
+  },
+  noBorder: {
+    border: "1px solid transparent"
   }
 }), { index: 1 });

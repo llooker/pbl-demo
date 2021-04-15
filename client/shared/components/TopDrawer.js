@@ -85,7 +85,7 @@ function MenuList({ classes, DemoComponentsContentArr }) {
 
 
                 <Button
-                  className={`${classes.ml12} `}
+                  className={`${classes.ml12} ${classes.borderRadius100} ${classes.noBorder}`}
                   component={Link}
                   variant={validIdHelper(_.lowerCase(item.label)) === selectedMenuItem ? "contained" : "outlined"}
                   startIcon={MatchingIconComponent ? <MatchingIconComponent /> : <></>}

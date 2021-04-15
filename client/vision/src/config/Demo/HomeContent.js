@@ -81,11 +81,11 @@ export const HomeContent = {
       "label": "Trends",
       "isNext": false,
       "theme": "vision_light_arial",
-      "adjacentContainer": {
-        "gridWidth": 12,
-        "items": [countyTrends],
-        "component": InlineList
-      }
+      // "adjacentContainer": {
+      //   "gridWidth": 12,
+      //   "items": [countyTrends],
+      //   "component": InlineList
+      // }
     }],
   "requiredPermissionLevel": 0
 }
