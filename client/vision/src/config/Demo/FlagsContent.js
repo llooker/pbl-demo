@@ -78,7 +78,7 @@ const caseNotesById = {
   "label": "Case Notes",
   "inlineQuery": {
     "model": "vision",
-    "view": "application",
+    "view": "application_no_cache", //application
     "fields": [
       "case_events.datetime_date",
       "case_events.notes"

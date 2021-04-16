@@ -84,6 +84,9 @@ export const Dashboard = ({ staticContent }) => {
     let { methodName, response, response: { message } } = helperResponseData; //dynamic
     setHelperResponse(response)
     setTimeout(() => { setHelperResponse(undefined) }, 10000)
+    // console.log({ methodName })
+    // console.log({ response })
+
 
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
       dashboardObj.setOptions(response);
