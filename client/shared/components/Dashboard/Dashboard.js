@@ -280,7 +280,7 @@ export const Dashboard = ({ staticContent }) => {
       let themeName = process.env.REACT_APP_PACKAGE_NAME;
       themeName += lightThemeToggleValue ? '_light' : '_dark';
       themeName += `_${fontThemeSelectValue}`;
-      console.log({ themeName })
+      // console.log({ themeName })
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
       setApiContent(undefined);
       setMakeShiftDrawerOpen(true);
@@ -358,20 +358,22 @@ export const Dashboard = ({ staticContent }) => {
         }
       }
 
-      if (apiContent && apiContent.hasOwnProperty('viewapplication')) {
-        let viewApplicationFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "viewapplication" })
-        if (viewApplicationFilterItem) {
-          let { inlineQuery } = viewApplicationFilterItem
+      if (apiContent && apiContent.hasOwnProperty('viewbeneficiary')) {
+        let viewBeneficiaryFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "viewbeneficiary" })
+        if (viewBeneficiaryFilterItem) {
+          let { inlineQuery } = viewBeneficiaryFilterItem
           let modifiedQuery = {
             ...inlineQuery,
             filters: { [Object.keys(inlineQuery.filters)[0]]: hiddenFilterValue }
           }
-          viewApplicationFilterItem.inlineQuery = modifiedQuery
-          fetchData({ item: viewApplicationFilterItem })
+          viewBeneficiaryFilterItem.inlineQuery = modifiedQuery
+          fetchData({ item: viewBeneficiaryFilterItem })
         }
       }
     }
   }, [hiddenFilterValue])
+
+  // console.log({ hiddenFilterValue })
 
 
   return (

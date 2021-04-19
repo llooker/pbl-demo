@@ -51,27 +51,48 @@ const caseId = {
   "requiresSelectionLabel": "Click a case ID to see more details and notes for this case",
 }
 
-const viewApplicationLink = {
-  "label": "View Application",
+// const viewApplicationLink = {
+//   "label": "View Application",
+//   "gridWidth": 9,
+//   "component": LinkText,
+//   "appendHiddenFilterToLabel": true,
+//   "highlightComponent": ApiHighlight,
+//   "requiresSelectionLabel": "Click a case ID to see more details and notes for this case",
+//   "inlineQuery": {
+//     "model": "vision",
+//     "view": "application",
+//     "fields": [
+//       "case.case_id",
+//       "application.application_id"
+//     ],
+//     "filters": {
+//       "case.case_id": "7"
+//     },
+//     "limit": "500",
+//   },
+//   "apiKey": "viewapplication",
+//   "staticHref": "/analytics/application?Application%20ID="
+// }
+
+const viewBeneficiaryLink = {
+  "label": "View Beneficiary",
   "gridWidth": 9,
   "component": LinkText,
-  "appendHiddenFilterToLabel": true,
   "highlightComponent": ApiHighlight,
-  "requiresSelectionLabel": "Click a case ID to see more details and notes for this case",
   "inlineQuery": {
     "model": "vision",
     "view": "application",
     "fields": [
       "case.case_id",
-      "application.application_id"
+      "person.person_id"
     ],
     "filters": {
       "case.case_id": "7"
     },
     "limit": "500",
   },
-  "apiKey": "viewapplication",
-  "staticHref": "/analytics/application?Application%20ID="
+  "apiKey": "viewbeneficiary",
+  "staticHref": "/analytics/beneficiary?Person%20ID="
 }
 
 const caseNotesById = {
@@ -117,7 +138,7 @@ export const FlagsConent = {
       "adjacentContainer": {
         "gridWidth": 3,
         "collapsable": true,
-        "items": [caseId, viewApplicationLink, changeCaseStatusSelect, caseNotesById, addCaseNotesButton],
+        "items": [caseId, viewBeneficiaryLink, changeCaseStatusSelect, caseNotesById, addCaseNotesButton],
         "label": "Case Details",
         "requiresSelection": true,
         "requiresSelectionMessage": "Click a case ID to see more details and notes for this case",
