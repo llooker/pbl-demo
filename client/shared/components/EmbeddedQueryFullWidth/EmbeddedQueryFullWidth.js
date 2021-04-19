@@ -5,8 +5,9 @@ import { Box, Grid, Card } from '@material-ui/core'
 import { Loader, CodeFlyout, EmbedHighlight } from '@pbl-demo/components/Accessories'
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { createEmbeddedExplore } from './helpers'
-// import { AdjacentContainer } from "../AdjacentContainer"
 import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from '../styles.js';
+import { useLocation, useHistory } from "react-router-dom";
+
 const { validIdHelper, appContextMap, validateContent } = require('../../utils/tools');
 
 export const EmbeddedQueryFullWidth = ({ staticContent }) => {
@@ -24,6 +25,8 @@ export const EmbeddedQueryFullWidth = ({ staticContent }) => {
   const [exploreObj, setExploreObj] = useState({});
   const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const classes = useStyles();
+  let history = useHistory();
+
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
@@ -40,6 +43,13 @@ export const EmbeddedQueryFullWidth = ({ staticContent }) => {
     }
   }, [lookerUser, isReady, selectedMenuItem])
 
+  // needed to copy from home to make it work
+  useEffect(() => {
+    setApiContent(undefined);
+    let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+    LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
+  }, []);
+
 
   const performLookerApiCalls = (lookerContent) => {
     // console.log("performLookerApiCalls")
@@ -52,7 +62,8 @@ export const EmbeddedQueryFullWidth = ({ staticContent }) => {
           "LookerEmbedSDK": LookerEmbedSDK,
           lookerContentItem,
           containerId: validIdHelper(`#embedContainer-${demoComponentType}-${lookerContentItem.id}`),
-          clientSession
+          clientSession,
+          history
         });
         if (embeddedExplore && embeddedExplore.iframe) setIFrame(embeddedExplore.iframe);
         if (embeddedExplore && embeddedExplore.exploreObj) setExploreObj(embeddedExplore.exploreObj)

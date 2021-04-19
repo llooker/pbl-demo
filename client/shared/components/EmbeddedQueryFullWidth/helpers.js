@@ -1,10 +1,11 @@
 const { validIdHelper, appContextMap, validateContent } = require('../../utils/tools');
 
-export const createEmbeddedExplore = async ({ LookerEmbedSDK, lookerContentItem, containerId, clientSession }) => {
-  // console.log("createEmbeddedExplore")
+export const createEmbeddedExplore = async ({ LookerEmbedSDK, lookerContentItem, containerId, clientSession, history }) => {
+  console.log("createEmbeddedExplore")
   // console.log({ LookerEmbedSDK })
   // console.log({ lookerContentItem })
   // console.log({ containerId })
+  console.log({ history })
 
   const idToUse = validIdHelper(`embedContainer-${lookerContentItem.type}-${lookerContentItem.id}`);
 
@@ -20,7 +21,7 @@ export const createEmbeddedExplore = async ({ LookerEmbedSDK, lookerContentItem,
         .withClassName('exploreIframe')
         .withClassName('explore')
         .withClassName(lookerContentItem.id)
-        .on('drillmenu:click', drillMenuClick)
+        .on('drillmenu:click', (event) => drillMenuClick({ event, history }))
         .withTheme(lookerContentItem.theme || "")
         .build()
         .connect()
@@ -40,34 +41,26 @@ export const createEmbeddedExplore = async ({ LookerEmbedSDK, lookerContentItem,
 /**
  * TO DO
  * feature request for eng
+ * Update 4/19/21: seems to be working
+ * but only on initial onload from home?? why is that?
  */
-const drillMenuClick = (event) => {
-  console.log("drillMenuClick")
-  console.log({ event })
+const drillMenuClick = ({ event, history }) => {
 
-  // if (_.includes(_.lowerCase(event.label), "w2")) {
-  //   history.push({
-  //     pathname: 'eligibilitydocs',
-  //     search: (`pdf_url=${event.url}`)
-  //   })
-  //   return { cancel: true }
-  // } else if (_.includes(_.lowerCase(event.label), "1099")) {
-  //   history.push({
-  //     pathname: 'eligibilitydocs',
-  //     search: (`pdf_url=${event.url}`)
-  //   })
-  //   return { cancel: true }
-  // } else if (_.includes(_.lowerCase(event.label), "application")) {
-  //   history.push({
-  //     pathname: 'application',
-  //     search: (`${encodeURIComponent("Application ID")}=${event.url}`)
-  //   })
-  //   return { cancel: true }
-  // } else if (_.includes(_.lowerCase(event.label), "beneficiary")) {
-  //   history.push({
-  //     pathname: 'beneficiary',
-  //     search: (`${encodeURIComponent("Person ID")}=${event.url}`)
-  //   })
-  //   return { cancel: true }
-  // }
+  // console.log("drillMenuClick")
+  // console.log({ event })
+  // console.log({ history })
+
+  if (_.includes(_.lowerCase(event.label), "beneficiary")) {
+    history.push({
+      pathname: 'beneficiary',
+      search: (`${encodeURIComponent("Person ID")}=${event.url}`)
+    })
+    return { cancel: true }
+  } else if (_.includes(_.lowerCase(event.label), "license")) {
+    history.push({
+      pathname: 'eligibilitydocs',
+      search: (`pdf_url=${event.url}`)
+    })
+    return { cancel: true }
+  }
 }
