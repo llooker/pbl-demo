@@ -2,23 +2,29 @@ import React, { useState } from 'react';
 import { Typography, Grid, Switch } from '@material-ui/core'
 import { EmbedHighlight } from '../Accessories/Highlight';
 
-export const SwitchTheme = ({ classes, filterItem, helperFunctionMapper, lightThemeToggleValue, setLightThemeToggleValue }) => {
-  // const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
+export const SwitchTheme = ({ classes, filterItem, helperFunctionMapper, lightThemeToggleValue, nativeFiltersThemeToggleValue }) => {
+
+  // console.log("SwitchTheme")
+  // console.log({ filterItem })
+  // console.log({ lightThemeToggleValue })
+  // console.log({ nativeFiltersThemeToggleValue })
+
   let HighlightComponent = filterItem.highlightComponent || EmbedMethodHighlight;
+  let toggleValueToUse = filterItem.label === "Light or dark theme" ? lightThemeToggleValue : nativeFiltersThemeToggleValue;
+  // console.log({ toggleValueToUse })
 
   return (
     <HighlightComponent classes={classes} >
       <Typography
-      >{lightThemeToggleValue ? "Light mode" : "Dark mode"}</Typography>
+      >{filterItem.options[toggleValueToUse]}</Typography>
 
       <Switch
-        checked={!lightThemeToggleValue}
+        checked={!toggleValueToUse}
         onChange={(event, newValue) => {
-          setLightThemeToggleValue(!event.target.checked)
           helperFunctionMapper(event, !event.target.checked, filterItem)
         }}
         color="primary"
-        name="light theme toggle"
+        name="theme toggle"
         inputProps={{ 'aria-label': 'primary checkbox' }}
       />
     </HighlightComponent>

@@ -36,13 +36,14 @@ const caseId = {
   "requiresSelectionLabel": "Click a case ID to see more details and notes for this case",
 }
 
-const themeColorFilter = {
+const themeSwitch = {
   "label": "Light or dark theme",
   "method": handleThemeChange,
-  "methodName": "handleThemeChange",
+  "methodName": "handlelightDarkThemeChange",
   "component": SwitchTheme,
   "highlightComponent": EmbedHighlight,
   "gridWidth": 12,
+  "options": { true: "Light mode", false: "Dark mode" },
 }
 
 const themeFontFilter = {
@@ -51,7 +52,7 @@ const themeFontFilter = {
   { label: "Roboto", value: "roboto" },
   { label: "Vollkorn", value: "vollkorn" }],
   "method": handleThemeChange,
-  "methodName": "handleThemeChange",
+  "methodName": "handleFontThemeChange",
   "tooltip": "",
   "component": Dropdown,
   "highlightComponent": EmbedHighlight,
@@ -76,7 +77,7 @@ export const BeneficiaryContent = {
       "theme": "vision_light_arial",
       "adjacentContainer": {
         "gridWidth": 2,
-        "items": [caseId, createCaseSelect, themeColorFilter, themeFontFilter],
+        "items": [caseId, createCaseSelect, themeSwitch, themeFontFilter],
         "collapsable": true,
         "label": "Application",
         "displayHiddenFilterValue": true

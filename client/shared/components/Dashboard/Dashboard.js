@@ -7,9 +7,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 import { Loader, CodeFlyout, SnackbarAlert } from "@pbl-demo/components/Accessories";
-import {
-  useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing
-} from '../styles.js';
+import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from '../styles.js';
 import queryString from 'query-string';
 import { appContextMap, decodeHtml, validIdHelper } from '../../utils/tools';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery, formatApiResultsForAutoComplete, formatApiResultsForTrends } from './helpers';
@@ -20,10 +18,8 @@ import { SimpleModal } from "@pbl-demo/components";
 export const Dashboard = ({ staticContent }) => {
   // console.log('Dashboard');
   const { clientSession, clientSession: { lookerUser }, sdk, corsApiCall, theme, isReady, selectedMenuItem, drawerOpen } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
-
   const { lookerContent, type } = staticContent;
   const demoComponentType = type || 'code flyout';
-
   const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? drawerOpen ? (topAndBottomHeaderPlusDrawerOpen) : (topAndBottomHeaderSpacing) : (topAndBottomHeaderSpacing);
 
   const [iFrameExists, setIFrame] = useState(0);
@@ -31,14 +27,17 @@ export const Dashboard = ({ staticContent }) => {
   const [dashboardObj, setDashboardObj] = useState({});
   const [dashboardOptions, setDashboardOptions] = useState({});
   const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
-  const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true);
-  const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [makeShiftDrawerOpen, setMakeShiftDrawerOpen] = useState(true);
   const [hiddenFilterValue, setHiddenFilterValue] = useState(null);
   const [renderModal, setRenderModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
-
   const [helperResponse, setHelperResponse] = useState(undefined);
+  let hasLightDarkThemeToggle = lookerContent[0].adjacentContainer ? _.isObject(_.find(lookerContent[0].adjacentContainer.items || [], { "label": "Light or dark theme" })) : false;
+  let hasNativeFiltersThemeToggle = lookerContent[0].adjacentContainer ? _.isObject(_.find(lookerContent[0].adjacentContainer.items || [], { "label": "Show or hide native filters" })) : false;
+  const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
+  const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true); //useState(hasLightDarkThemeToggle);
+  const [nativeFiltersThemeToggleValue, setNativeFiltersThemeToggleValue] = useState(hasNativeFiltersThemeToggle);
+
   const isThemeableDashboard = lookerContent[0].themeable;
   const darkThemeBackgroundColor = theme.palette.fill.secondary ? theme.palette.fill.secondary : theme.palette.fill.main;
   const classes = useStyles();
@@ -76,7 +75,8 @@ export const Dashboard = ({ staticContent }) => {
       isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue,
       hiddenFilterValue,
       item: filterItem, lookerUser, sdk, //hack for trends drill for now
-      packageName: process.env.REACT_APP_PACKAGE_NAME
+      packageName: process.env.REACT_APP_PACKAGE_NAME,
+      nativeFiltersThemeToggleValue
     })
 
     // console.log({ helperResponseData })
@@ -90,12 +90,14 @@ export const Dashboard = ({ staticContent }) => {
 
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
       dashboardObj.setOptions(response);
-    } else if (methodName === "handleThemeChange") {
-      if (typeof newValue === "boolean") {
-        setLightThemeToggleValue(newValue)
-      } else {
-        setFontThemeSelectValue(newValue)
-      }
+    } else if (methodName === "handlelightDarkThemeChange") {
+      setLightThemeToggleValue(newValue)
+      corsApiCall(performLookerApiCalls, [lookerContent, response])
+    } else if (methodName === "handleFontThemeChange") {
+      setFontThemeSelectValue(newValue)
+      corsApiCall(performLookerApiCalls, [lookerContent, response])
+    } else if (methodName === "handleNativeFilterThemeChange") {
+      setNativeFiltersThemeToggleValue(newValue)
       corsApiCall(performLookerApiCalls, [lookerContent, response])
     } else if (methodName === "createCase") {
       dashboardObj.run()
@@ -110,9 +112,9 @@ export const Dashboard = ({ staticContent }) => {
   }
 
   const performLookerApiCalls = (lookerContent, dynamicTheme) => {
-    // console.log("performLookerApiCalls");
-    // console.log({ lookerContent })
-    // console.log({ dynamicTheme })
+    console.log("performLookerApiCalls");
+    console.log({ lookerContent })
+    console.log({ dynamicTheme })
 
     setIFrame(0)
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
@@ -124,6 +126,8 @@ export const Dashboard = ({ staticContent }) => {
         lookerContentItem.theme ?
           lookerContentItem.theme :
           'atom_fashion';
+
+      console.log({ themeToUse })
 
       LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
@@ -270,17 +274,19 @@ export const Dashboard = ({ staticContent }) => {
     // console.log({ lookerUser });
     // console.log({ isReady });
 
-    if (!isThemeableDashboard) {
-      setLightThemeToggleValue(true);
-      setFontThemeSelectValue("arial")
-    }
+    // if (!isThemeableDashboard) {
+    setLightThemeToggleValue(true);
+    setFontThemeSelectValue("arial");
+    setNativeFiltersThemeToggleValue(true);
+    // }
 
     if (isReady) {
       // console.log("useEffect inner")
       let themeName = process.env.REACT_APP_PACKAGE_NAME;
-      themeName += lightThemeToggleValue ? '_light' : '_dark';
+      themeName += '_light' //lightThemeToggleValue ? '_light' : '_dark';
       themeName += `_${fontThemeSelectValue}`;
-      // console.log({ themeName })
+      themeName += nativeFiltersThemeToggleValue ? '_filters' : '';
+      console.log({ themeName })
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
       setApiContent(undefined);
       setMakeShiftDrawerOpen(true);
@@ -373,7 +379,7 @@ export const Dashboard = ({ staticContent }) => {
     }
   }, [hiddenFilterValue])
 
-  // console.log({ hiddenFilterValue })
+  // console.log({ lightThemeToggleValue })
 
 
   return (
@@ -404,11 +410,11 @@ export const Dashboard = ({ staticContent }) => {
                 helperFunctionMapper={helperFunctionMapper}
                 classes={classes}
                 customFilterAction={customFilterAction}
-                setLightThemeToggleValue={setLightThemeToggleValue}
                 lightThemeToggleValue={lightThemeToggleValue}
                 fontThemeSelectValue={fontThemeSelectValue}
                 handleRenderModal={handleRenderModal}
                 hiddenFilterValue={hiddenFilterValue}
+                nativeFiltersThemeToggleValue={nativeFiltersThemeToggleValue}
               />
               : ""}
 

@@ -75,19 +75,25 @@ export const handleVisColorToggle = ({ newValue, filterItem, dashboardOptions,
   }
 }
 
-export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue, fontThemeSelectValue, packageName }) => {
+export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue, fontThemeSelectValue, packageName, nativeFiltersThemeToggleValue }) => {
   // console.log("handleThemeChange")
   // console.log({ newValue })
   // console.log({ filterItem })
   // console.log({ fontThemeSelectValue })
   // console.log({ lightThemeToggleValue })
+  // console.log({ nativeFiltersThemeToggleValue })
 
   let themeName = '';
-  if (typeof newValue === "boolean") {
+  if (filterItem.label === "Light or dark theme") {
     themeName = newValue ? `${packageName}_light_${fontThemeSelectValue}` : `${packageName}_dark_${fontThemeSelectValue}`
-  } else {
+  } else if (filterItem.label === "Change font") {
     themeName = lightThemeToggleValue ? `${packageName}_light_${newValue}` : `${packageName}_dark_${newValue}`
+  } else if (filterItem.label === "Show or hide native filters") {
+    themeName = newValue ? `${packageName}_light_${fontThemeSelectValue}_filters` : `${packageName}_light_${fontThemeSelectValue}`
   }
+
+  // console.log({ themeName })
+
   return {
     "methodName": filterItem.methodName,
     "response": themeName

@@ -16,10 +16,10 @@ export const AdjacentContainer = ({
   fontThemeSelectValue,
   handleRenderModal,
   hiddenFilterValue,
-  setLightThemeToggleValue
+  nativeFiltersThemeToggleValue
 }) => {
   // console.log("AdjacentContainer")
-  // console.log({ container })
+  // console.log({ lightThemeToggleValue })
   return (
     <Grid item
       sm={makeShiftDrawerOpen ? container.gridWidth ? container.gridWidth : 3 : "auto"}
@@ -102,8 +102,6 @@ export const AdjacentContainer = ({
                             action={customFilterAction}
                             filterItem={item}
                             index={index}
-                            setLightThemeToggleValue={setLightThemeToggleValue || null}
-                            lightThemeToggleValue={lightThemeToggleValue}
                             fontThemeSelectValue={fontThemeSelectValue}
                           />
                         </Grid>
@@ -119,12 +117,12 @@ export const AdjacentContainer = ({
                           filterItem={item}
                           helperFunctionMapper={helperFunctionMapper}
                           action={customFilterAction || null}
-                          setLightThemeToggleValue={setLightThemeToggleValue || null}
-                          lightThemeToggleValue={lightThemeToggleValue || null}
-                          fontThemeSelectValue={fontThemeSelectValue || null}
-                          handleRenderModal={handleRenderModal || null}
-                          hiddenFilterValue={hiddenFilterValue || null}
+                          lightThemeToggleValue={lightThemeToggleValue}
+                          fontThemeSelectValue={fontThemeSelectValue}
+                          handleRenderModal={handleRenderModal}
+                          hiddenFilterValue={hiddenFilterValue}
                           container={container}
+                          nativeFiltersThemeToggleValue={nativeFiltersThemeToggleValue}
                         > {item.label}</ItemComponent>
                       </Grid>
                     )
