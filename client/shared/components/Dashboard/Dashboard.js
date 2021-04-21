@@ -127,7 +127,7 @@ export const Dashboard = ({ staticContent }) => {
           lookerContentItem.theme :
           'atom_fashion';
 
-      console.log({ themeToUse })
+      // console.log({ themeToUse })
 
       LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
@@ -342,6 +342,8 @@ export const Dashboard = ({ staticContent }) => {
 
   useEffect(() => {
     const fetchData = async ({ item, item: { apiKey } }) => {
+      // console.log({ item })
+
       let asyncNewApiEntry = { [apiKey]: await runInlineQuery({ sdk, item, lookerUser }) }
       let apiContentCopy = { ...apiContent }
       apiContentCopy[apiKey] = asyncNewApiEntry[apiKey];

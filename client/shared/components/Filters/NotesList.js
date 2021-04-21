@@ -5,9 +5,9 @@ const { validIdHelper } = require('../../utils/tools');
 
 export const NotesList = ({ filterItem, apiContent, classes }) => {
 
-  // console.log("NotesList")
-  // console.log({ filterItem })
-  // console.log({ apiContent })
+  console.log("NotesList")
+  console.log({ filterItem })
+  console.log({ apiContent })
 
   let HighlightComponent = filterItem.highlightComponent || EmbedMethodHighlight;
   let { inlineQuery: { fields } } = filterItem;

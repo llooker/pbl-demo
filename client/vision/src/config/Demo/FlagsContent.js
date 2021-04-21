@@ -28,8 +28,8 @@ const changeCaseStatusSelect = {
   "label": "Case status",
   "component": Dropdown,
   "options": [
-    { label: "Closed", value: "closed" },
     { label: "Open", value: "pending" },
+    { label: "Closed", value: "closed" },
   ],
   "method": changeCaseStatus,
   "methodName": "changeCaseStatus",
@@ -138,7 +138,8 @@ export const FlagsConent = {
       "adjacentContainer": {
         "gridWidth": 3,
         "collapsable": true,
-        "items": [caseId, viewBeneficiaryLink, changeCaseStatusSelect, caseNotesById, addCaseNotesButton],
+        // "items": [caseId, viewBeneficiaryLink, changeCaseStatusSelect, caseNotesById, addCaseNotesButton],
+        "items": [caseId, changeCaseStatusSelect, caseNotesById, addCaseNotesButton],
         "label": "Case Details",
         "requiresSelection": true,
         "requiresSelectionMessage": "Click a case ID to see more details and notes for this case",

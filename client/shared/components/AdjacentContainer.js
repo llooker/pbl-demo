@@ -19,7 +19,7 @@ export const AdjacentContainer = ({
   nativeFiltersThemeToggleValue
 }) => {
   // console.log("AdjacentContainer")
-  // console.log({ lightThemeToggleValue })
+  // console.log({ hiddenFilterValue })
 
   let { items } = container;
   let containerItemsToUse = _.filter(items, (item) => {
@@ -29,6 +29,7 @@ export const AdjacentContainer = ({
       return item
     }
   })
+  // console.log({ containerItemsToUse })
 
   return (
     <Grid item
