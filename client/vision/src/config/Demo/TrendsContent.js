@@ -1,7 +1,7 @@
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import { Dashboard } from '@pbl-demo/components';
-import { SwitchTheme } from '@pbl-demo/components/Filters';
-import { EmbedHighlight } from '@pbl-demo/components/Accessories';
+import { SwitchTheme, RangeSlider } from '@pbl-demo/components/Filters';
+import { EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
 import { handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
 
 const themeFilter = {
@@ -12,6 +12,34 @@ const themeFilter = {
   "highlightComponent": EmbedHighlight,
   "gridWidth": 12,
   "options": { true: "Native filters", false: "Custom filters" },
+  "alwaysShow": true
+}
+
+const fipsFilter = {
+  "label": "Select Fips Score",
+  "filterName": "Fips Score",
+  "lookerMethod": "runInlineQuery",
+  "inlineQuery": {
+    "model": "vision",
+    "view": "application",
+    "fields": [
+      "case.fips_score",
+      "case.count"
+    ],
+    "filters": {
+      "case.fips_score": "NOT NULL"
+    },
+    "sorts": [
+      "case.fips_score"
+    ],
+    "limit": "500",
+  },
+  "desiredFilterNames": "users.age",
+  "resultFormat": "json",
+  "component": RangeSlider,
+  "apiKey": "rangeslider",
+  "highlightComponent": EmbedHighlight,
+  "showOnlyWhenFiltersHidden": true
 }
 
 export const TrendsContent = {
@@ -31,9 +59,12 @@ export const TrendsContent = {
       "isNext": false,
       "theme": "vision_light_arial_filters",
       "adjacentContainer": {
-        "gridWidth": 1,
-        "items": [themeFilter],
+        "gridWidth": 2,
+        "items": [themeFilter, fipsFilter],
         "label": "Customize",
+        // "requiresSelection": true,
+        // "requiresSelectionMessage": "Click a case ID to see more details and notes for this case",
+        // "displayHiddenFilterValue": true
       },
       "themeable": true
     }],

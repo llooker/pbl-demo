@@ -9,12 +9,16 @@ export const RangeSlider = ({ apiContent, classes, action, filterItem }) => {
   // console.log({ filterItem })
   // console.log({ apiContent })
 
+  let HighlightComponent = filterItem.highlightComponent || EmbedMethodHighlight;
+
+  let { inlineQuery: { fields } } = filterItem;
   const [sliderValue, setSliderValue] = useState([]);
+  const firstApiEntry = apiContent[0]
+  const lastApiEntry = apiContent[apiContent.length - 1]
 
 
   return (
-    <EmbedMethodHighlight classes={classes}
-      key={validIdHelper(`dashEmbed-${filterItem.label}`)} >
+    <HighlightComponent classes={classes} >
       <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}>
         {filterItem.label}:
         </Typography>
@@ -30,10 +34,10 @@ export const RangeSlider = ({ apiContent, classes, action, filterItem }) => {
             filterItem.filterName,
             (newValue) ? `[${newValue}]` : '[]')
         }}
-        min={Array.isArray(apiContent) && apiContent.length ? apiContent[0][Object.keys(apiContent[0])[0]] : 0}
-        max={Array.isArray(apiContent) && apiContent.length ? apiContent[apiContent.length - 1][Object.keys(apiContent.lenth - 1)[0]] : 0}
+        min={Array.isArray(apiContent) && apiContent.length ? firstApiEntry[fields[0]] : 0}
+        max={Array.isArray(apiContent) && apiContent.length ? lastApiEntry[fields[0]] : 0}
         disabled={Array.isArray(apiContent) && apiContent.length ? false : true}
       />
-    </EmbedMethodHighlight>
+    </HighlightComponent>
   )
 }

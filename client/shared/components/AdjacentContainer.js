@@ -20,11 +20,19 @@ export const AdjacentContainer = ({
 }) => {
   // console.log("AdjacentContainer")
   // console.log({ lightThemeToggleValue })
+
+  let { items } = container;
+  let containerItemsToUse = _.filter(items, (item) => {
+    if (nativeFiltersThemeToggleValue) {
+      return !item.showOnlyWhenFiltersHidden
+    } else {
+      return item
+    }
+  })
+
   return (
     <Grid item
-      sm={makeShiftDrawerOpen ? container.gridWidth ? container.gridWidth : 3 : "auto"}
-
-    >
+      sm={makeShiftDrawerOpen ? container.gridWidth ? container.gridWidth : 3 : "auto"}>
       <div className={classes.padding10}>
         {
           container.collapsable ? makeShiftDrawerOpen ?
@@ -63,7 +71,7 @@ export const AdjacentContainer = ({
                 <Typography variant="subtitle1" color="secondary" >
                   {container.requiresSelectionMessage}
                 </Typography>
-                : container.items.map((item, index) => {
+                : containerItemsToUse.map((item, index) => {
 
                   let ItemComponent = item.component;
                   let HighlightComponent = item.highlightComponent || undefined;

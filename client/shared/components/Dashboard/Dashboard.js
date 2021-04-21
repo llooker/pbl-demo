@@ -112,9 +112,9 @@ export const Dashboard = ({ staticContent }) => {
   }
 
   const performLookerApiCalls = (lookerContent, dynamicTheme) => {
-    console.log("performLookerApiCalls");
-    console.log({ lookerContent })
-    console.log({ dynamicTheme })
+    // console.log("performLookerApiCalls");
+    // console.log({ lookerContent })
+    // console.log({ dynamicTheme })
 
     setIFrame(0)
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
