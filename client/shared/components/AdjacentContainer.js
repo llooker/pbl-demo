@@ -23,11 +23,12 @@ export const AdjacentContainer = ({
 
   let { items } = container;
   let containerItemsToUse = _.filter(items, (item) => {
-    if (customFiltersThemeToggle) {
-      return item
-    } else {
-      return item.alwaysShow
-    }
+    // if (customFiltersThemeToggle) {
+    //   return item
+    // } else {
+    // return item.alwaysShow
+    // }
+    return item //for now
   })
 
   return (
@@ -48,11 +49,7 @@ export const AdjacentContainer = ({
         }
         {
           makeShiftDrawerOpen ?
-
-            <Grid
-              container
-            >
-
+            <Grid container>
               {/* logic for adjacentContainer label */}
               {container.label ?
                 <Typography variant="h6" display="block" className={classes.w100}>

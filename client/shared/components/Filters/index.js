@@ -11,4 +11,5 @@ export { ToggleButton } from "./ToggleButton";
 export { HiddenFilterValueText } from "./HiddenFilterValueText";
 export { NotesList } from "./NotesList";
 export { LinkText } from "./LinkText";
+export { CheckboxLabels } from "./CheckboxLabels";
 

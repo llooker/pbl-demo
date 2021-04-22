@@ -201,6 +201,9 @@ export const Dashboard = ({ staticContent }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const customFilterAction = useCallback((filterName, newFilterValue) => {
+    // console.log("customFilterAction")
+    // console.log({ filterName })
+    // console.log({ newFilterValue })
     if (Object.keys(dashboardObj).length) {
       dashboardObj.updateFilters({ [filterName]: newFilterValue })
       dashboardObj.run()
