@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { Typography, Grid, Switch } from '@material-ui/core'
 import { EmbedHighlight } from '../Accessories/Highlight';
 
-export const SwitchTheme = ({ classes, filterItem, helperFunctionMapper, lightThemeToggleValue, nativeFiltersThemeToggleValue }) => {
+export const SwitchTheme = ({ classes, filterItem, helperFunctionMapper, lightThemeToggleValue, customFiltersThemeToggle }) => {
 
   // console.log("SwitchTheme")
   // console.log({ filterItem })
   // console.log({ lightThemeToggleValue })
-  // console.log({ nativeFiltersThemeToggleValue })
+  // console.log({ customFiltersThemeToggle })
 
   let HighlightComponent = filterItem.highlightComponent || EmbedMethodHighlight;
-  let toggleValueToUse = filterItem.label === "Light or dark theme" ? lightThemeToggleValue : nativeFiltersThemeToggleValue;
+  let toggleValueToUse = filterItem.label === "Light or dark theme" ? lightThemeToggleValue : customFiltersThemeToggle;
   // console.log({ toggleValueToUse })
 
   return (

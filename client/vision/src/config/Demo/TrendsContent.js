@@ -5,13 +5,13 @@ import { EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Acces
 import { handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
 
 const themeFilter = {
-  "label": "Show or hide native filters",
+  "label": "Show or hide custom filters",
   "method": handleThemeChange,
-  "methodName": "handleNativeFilterThemeChange",
+  "methodName": "handleFiltersThemeChange",
   "component": SwitchTheme,
   "highlightComponent": EmbedHighlight,
   "gridWidth": 12,
-  "options": { true: "Native filters", false: "Custom filters" },
+  "options": { false: "Native filters", true: "Custom filters" },
   "alwaysShow": true
 }
 
@@ -39,7 +39,7 @@ const fipsFilter = {
   "component": RangeSlider,
   "apiKey": "rangeslider",
   "highlightComponent": EmbedHighlight,
-  "showOnlyWhenFiltersHidden": true
+  "showOnlyCustomFilters": true
 }
 
 export const TrendsContent = {
@@ -62,11 +62,9 @@ export const TrendsContent = {
         "gridWidth": 2,
         "items": [themeFilter, fipsFilter],
         "label": "Customize",
-        // "requiresSelection": true,
-        // "requiresSelectionMessage": "Click a case ID to see more details and notes for this case",
-        // "displayHiddenFilterValue": true
       },
-      "themeable": true
+      "themeable": true,
+      "allowNativeFilters": true
     }],
   "requiredPermissionLevel": 0
 }

@@ -75,24 +75,21 @@ export const handleVisColorToggle = ({ newValue, filterItem, dashboardOptions,
   }
 }
 
-export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue, fontThemeSelectValue, packageName, nativeFiltersThemeToggleValue }) => {
-  // console.log("handleThemeChange")
-  // console.log({ newValue })
-  // console.log({ filterItem })
+export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue, fontThemeSelectValue, packageName }) => {
+  console.log("handleThemeChange")
+  console.log({ newValue })
+  console.log({ filterItem })
   // console.log({ fontThemeSelectValue })
   // console.log({ lightThemeToggleValue })
-  // console.log({ nativeFiltersThemeToggleValue })
 
   let themeName = '';
   if (filterItem.label === "Light or dark theme") {
     themeName = newValue ? `${packageName}_light_${fontThemeSelectValue}` : `${packageName}_dark_${fontThemeSelectValue}`
   } else if (filterItem.label === "Change font") {
     themeName = lightThemeToggleValue ? `${packageName}_light_${newValue}` : `${packageName}_dark_${newValue}`
-  } else if (filterItem.label === "Show or hide native filters") {
-    themeName = newValue ? `${packageName}_light_${fontThemeSelectValue}_filters` : `${packageName}_light_${fontThemeSelectValue}`
+  } else if (filterItem.label === "Show or hide custom filters") {
+    themeName = newValue ? `${packageName}_light_${fontThemeSelectValue}` : `${packageName}_light_${fontThemeSelectValue}_filters`
   }
-
-  // console.log({ themeName })
 
   return {
     "methodName": filterItem.methodName,
@@ -212,4 +209,60 @@ export const formatApiResultsForTrends = ({ rawApiResults, filterItem, filterIte
     }
   })
   return firstApiResultOfInterestAsArr
+}
+
+// needs work, should follow embedded explore paradigm
+export const createEmbeddedDashboard = async ({ }) => {
+  createEmbeddedDashboard({})
+
+  LookerEmbedSDK.createDashboardWithId(dashboardId)
+    .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
+    .withClassName('iframe')
+    .withNext()
+    .withTheme(themeToUse)
+    .withParams({
+      'schedule_modal': 'true',
+      'always_filter': 'true'
+    })
+    .on('dashboard:loaded', (event) => {
+      setDashboardOptions(event.dashboard.options)
+      let keyName = Object.keys(event.dashboard.dashboard_filters)[0];
+      let keyValue = event.dashboard.dashboard_filters[keyName];
+      if (keyValue) setHiddenFilterValue(keyValue)
+    })
+    .on('drillmenu:click', drillMenuClick)
+    .on('dashboard:filters:changed', (event) => {
+      let keyName = Object.keys(event.dashboard.dashboard_filters)[0];
+      let keyValue = event.dashboard.dashboard_filters[keyName];
+      if (keyValue) setHiddenFilterValue(keyValue)
+    })
+    .on('page:changed', (event) => {
+      //for case selection on Vision flags dashboard
+      if (lookerContent[0].slug === "219Tk9NQ4sGSjGNsRSFKjG") {
+        const absoluteUrl = new URL(event.page.absoluteUrl)
+        let params = queryString.parse(absoluteUrl.search);
+        let matchingKey = _.find(Object.keys(params), (o) => {
+          return o.indexOf("case.case_id") > -1
+        })
+        if (matchingKey) {
+          setHiddenFilterValue(params[matchingKey])
+        } else {
+          setHiddenFilterValue(null)
+        }
+      }
+    })
+    .build()
+    .connect()
+    .then((dashboard) => {
+      //iframe dynamic height
+      // dashboard.style.setProperty('--element-height', height + 'px')
+      setIFrame(1)
+      setDashboardObj(dashboard)
+      let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+      // more robust regex solution
+      // let modifiedBaseUrl = clientSession.lookerBaseUrl.replace(/:443$/, "")
+      LookerEmbedSDK.init(modifiedBaseUrl)
+    }).catch(error => {
+      // console.log({ error })
+    })
 }

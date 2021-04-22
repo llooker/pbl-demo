@@ -21,7 +21,6 @@ export const Dashboard = ({ staticContent }) => {
   const { lookerContent, type } = staticContent;
   const demoComponentType = type || 'code flyout';
   const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? drawerOpen ? (topAndBottomHeaderPlusDrawerOpen) : (topAndBottomHeaderSpacing) : (topAndBottomHeaderSpacing);
-
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState(undefined);
   const [dashboardObj, setDashboardObj] = useState({});
@@ -32,13 +31,17 @@ export const Dashboard = ({ staticContent }) => {
   const [renderModal, setRenderModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
   const [helperResponse, setHelperResponse] = useState(undefined);
-  let hasLightDarkThemeToggle = lookerContent[0].adjacentContainer ? _.isObject(_.find(lookerContent[0].adjacentContainer.items || [], { "label": "Light or dark theme" })) : false;
-  let hasNativeFiltersThemeToggle = lookerContent[0].adjacentContainer ? _.isObject(_.find(lookerContent[0].adjacentContainer.items || [], { "label": "Show or hide native filters" })) : false;
+
+  // let hasLightDarkThemeToggle = lookerContent[0].adjacentContainer ? _.isObject(_.find(lookerContent[0].adjacentContainer.items || [], { "label": "Light or dark theme" })) : false;
+  // let hasCustomFiltersThemeToggle = lookerContent[0].adjacentContainer ? _.isObject(_.find(lookerContent[0].adjacentContainer.items || [], { "label": "Show or hide custom filters" })) : false;
+  //needs to be rethought
+  let { allowNativeFilters } = lookerContent[0];
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true); //useState(hasLightDarkThemeToggle);
-  const [nativeFiltersThemeToggleValue, setNativeFiltersThemeToggleValue] = useState(hasNativeFiltersThemeToggle);
+  const [customFiltersThemeToggle, setCustomFiltersThemeToggle] = useState(allowNativeFilters);
 
   const isThemeableDashboard = lookerContent[0].themeable;
+
   const darkThemeBackgroundColor = theme.palette.fill.secondary ? theme.palette.fill.secondary : theme.palette.fill.main;
   const classes = useStyles();
   const location = useLocation();
@@ -68,26 +71,18 @@ export const Dashboard = ({ staticContent }) => {
     // console.log("helperFunctionMapper")
     // console.log({ newValue })
     // console.log({ filterItem })
-
-
     let helperResponseData = await filterItem.method({
       newValue, filterItem, dashboardOptions,
       isThemeableDashboard, lightThemeToggleValue, fontThemeSelectValue,
       hiddenFilterValue,
       item: filterItem, lookerUser, sdk, //hack for trends drill for now
       packageName: process.env.REACT_APP_PACKAGE_NAME,
-      nativeFiltersThemeToggleValue
     })
-
-    // console.log({ helperResponseData })
-
     let { methodName, response, response: { message } } = helperResponseData; //dynamic
     setHelperResponse(response)
     setTimeout(() => { setHelperResponse(undefined) }, 10000)
     // console.log({ methodName })
     // console.log({ response })
-
-
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
       dashboardObj.setOptions(response);
     } else if (methodName === "handlelightDarkThemeChange") {
@@ -96,8 +91,8 @@ export const Dashboard = ({ staticContent }) => {
     } else if (methodName === "handleFontThemeChange") {
       setFontThemeSelectValue(newValue)
       corsApiCall(performLookerApiCalls, [lookerContent, response])
-    } else if (methodName === "handleNativeFilterThemeChange") {
-      setNativeFiltersThemeToggleValue(newValue)
+    } else if (methodName === "handleFiltersThemeChange") {
+      setCustomFiltersThemeToggle(newValue)
       corsApiCall(performLookerApiCalls, [lookerContent, response])
     } else if (methodName === "createCase") {
       dashboardObj.run()
@@ -126,8 +121,11 @@ export const Dashboard = ({ staticContent }) => {
         lookerContentItem.theme ?
           lookerContentItem.theme :
           'atom_fashion';
-
       // console.log({ themeToUse })
+
+      // let embeddedDashboard = await createEmbeddedDashboard({
+      //   dashboardId, themeToUse, demoComponentType
+      // })
 
       LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
@@ -155,11 +153,9 @@ export const Dashboard = ({ staticContent }) => {
           if (lookerContent[0].slug === "219Tk9NQ4sGSjGNsRSFKjG") {
             const absoluteUrl = new URL(event.page.absoluteUrl)
             let params = queryString.parse(absoluteUrl.search);
-
             let matchingKey = _.find(Object.keys(params), (o) => {
               return o.indexOf("case.case_id") > -1
             })
-
             if (matchingKey) {
               setHiddenFilterValue(params[matchingKey])
             } else {
@@ -181,7 +177,6 @@ export const Dashboard = ({ staticContent }) => {
         }).catch(error => {
           // console.log({ error })
         });
-
       if (lookerContentItem.hasOwnProperty("adjacentContainer")) {
         let asyncApiEntries = lookerContentItem.adjacentContainer.items.map(async item => {
           if (item.hasOwnProperty("inlineQuery")) {
@@ -194,13 +189,11 @@ export const Dashboard = ({ staticContent }) => {
           const formattedApiResults = formatApiResultsForAutoComplete({ rawApiResults: apiContentObj.autocomplete })
           apiContentObj.autocomplete = formattedApiResults
         }
-
         if (apiContentObj.hasOwnProperty("trends")) {
           let trendsFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "trends" })
           const formattedApiResults = formatApiResultsForTrends({ rawApiResults: apiContentObj.trends, filterItem: trendsFilterItem })
           apiContentObj.trends = formattedApiResults;
         }
-
         if (apiContentObj) setApiContent(apiContentObj || {})
       }
     })
@@ -217,7 +210,6 @@ export const Dashboard = ({ staticContent }) => {
   const drillMenuClick = (event) => {
     // console.log("drillMenuClick")
     // console.log({ event })
-
     if (_.includes(_.lowerCase(event.label), "w2")) {
       history.push({
         pathname: 'eligibilitydocs',
@@ -248,7 +240,6 @@ export const Dashboard = ({ staticContent }) => {
   const handleRenderModal = ({ filterItem, status }) => {
     // console.log("handleRenderModal")
     // console.log({ filterItem })
-
     setModalInfo(filterItem.secondaryComponent)
     setRenderModal(status)
   }
@@ -264,29 +255,23 @@ export const Dashboard = ({ staticContent }) => {
     }
   }, [customFilterAction, location.search, lookerContent])
 
-
-  // useEffect(() => {
-  //   setLightThemeToggleValue(true)
-  // }, [selectedMenuItem])
-
   useEffect(() => {
     // console.log("useEffect outer");
     // console.log({ lookerUser });
     // console.log({ isReady });
-
-    // if (!isThemeableDashboard) {
+    let { allowNativeFilters } = lookerContent[0];
+    console.log({ allowNativeFilters })
     setLightThemeToggleValue(true);
     setFontThemeSelectValue("arial");
-    setNativeFiltersThemeToggleValue(true);
-    // }
+    setCustomFiltersThemeToggle(true);
 
     if (isReady) {
       // console.log("useEffect inner")
       let themeName = process.env.REACT_APP_PACKAGE_NAME;
       themeName += '_light' //lightThemeToggleValue ? '_light' : '_dark';
       themeName += `_${fontThemeSelectValue}`;
-      themeName += nativeFiltersThemeToggleValue ? '_filters' : '';
-      console.log({ themeName })
+      // themeName += customFiltersThemeToggle ? '' : '_filters';
+      themeName += !customFiltersThemeToggle && allowNativeFilters ? '_filters' : ""
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
       setApiContent(undefined);
       setMakeShiftDrawerOpen(true);
@@ -360,12 +345,10 @@ export const Dashboard = ({ staticContent }) => {
             filters: { [Object.keys(inlineQuery.filters)[0]]: hiddenFilterValue }
           }
           notesListFilterItem.inlineQuery = modifiedQuery
-
           fetchData({ item: notesListFilterItem })
-
         }
       }
-
+      // problematic
       if (apiContent && apiContent.hasOwnProperty('viewbeneficiary')) {
         let viewBeneficiaryFilterItem = _.find(lookerContent[0].adjacentContainer.items, { "apiKey": "viewbeneficiary" })
         if (viewBeneficiaryFilterItem) {
@@ -380,9 +363,6 @@ export const Dashboard = ({ staticContent }) => {
       }
     }
   }, [hiddenFilterValue])
-
-  // console.log({ lightThemeToggleValue })
-
 
   return (
     <div
@@ -416,7 +396,7 @@ export const Dashboard = ({ staticContent }) => {
                 fontThemeSelectValue={fontThemeSelectValue}
                 handleRenderModal={handleRenderModal}
                 hiddenFilterValue={hiddenFilterValue}
-                nativeFiltersThemeToggleValue={nativeFiltersThemeToggleValue}
+                customFiltersThemeToggle={customFiltersThemeToggle}
               />
               : ""}
 
