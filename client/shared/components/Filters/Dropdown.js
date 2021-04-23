@@ -3,7 +3,7 @@ import { FormControl, Select, MenuItem, InputLabel, Button, Typography, Tooltip 
 import { EmbedHighlight } from '../Accessories/Highlight';
 const { validIdHelper } = require('../../utils/tools');
 
-export const Dropdown = ({ classes, filterItem, helperFunctionMapper, hiddenFilterValue }) => {
+export const Dropdown = ({ classes, filterItem, helperFunctionMapper, hiddenFilterValue, action }) => {
   // console.log("Dropdown");
   // console.log({ filterItem })
   // console.log({ helperFunctionMapper })
@@ -27,8 +27,9 @@ export const Dropdown = ({ classes, filterItem, helperFunctionMapper, hiddenFilt
             onChange={(event) => {
               setSelectValue(event.target.value)
               if (filterItem.method && !secondaryComponent) helperFunctionMapper(event, event.target.value, filterItem)
+              else action(filterItem.filterName, event.target.value)
             }}
-            disabled={hiddenFilterValue == null ? true : false}
+          // disabled={hiddenFilterValue == null ? true : false}
           >
             {filterItem.options.map(item => {
               return < MenuItem

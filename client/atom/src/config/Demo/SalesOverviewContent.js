@@ -69,6 +69,20 @@ const ageFilter = {
   "apiKey": "rangeslider"
 }
 
+/*
+going to need this for atom refactor
+export const lifetimeRevenueTierMap = {
+  "0 to 99": "low",
+  "100 to 499": "medium",
+  "500 or Above": "high",
+}
+export const lifetimeRevenueTierIconMap = {
+  "0 to 99": SentimentDissatisfied,
+  "100 to 499": SentimentSatisfied,
+  "500 or Above": SentimentVerySatisfied,
+}
+*/
+
 const revenueTierFilter = {
   "label": "Lifetime Revenue Tier",
   "filterName": "Lifetime Revenue Tier",

@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { Typography } from '@material-ui/core'
-import { lifetimeRevenueTierMap, lifetimeRevenueTierIconMap } from './helpers';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { EmbedMethodHighlight } from '../Accessories/Highlight';
 const { validIdHelper } = require('../../utils/tools');
@@ -11,41 +10,47 @@ export const ToggleApi = ({ apiContent, classes, action, filterItem }) => {
   // console.log({ filterItem })
   // console.log({ apiContent })
 
-  const [lifetimeRevenueTierValue, setLifetimeRevenueTierValue] = useState('0-24');
+  const [selectedTier, setSelectedTier] = useState(apiContent[0]);
+
+  const firstApiEntry = apiContent[0]
+  const lastApiEntry = apiContent[apiContent.length - 1]
+  let fields;
+  if (filterItem.inlineQuery && filterItem.inlineQuery.fields) fields = filterItem.inlineQuery.fields
+  else fields = [Object.keys(firstApiEntry)[0]]
+  let HighlightComponent = filterItem.highlightComponent || EmbedMethodHighlight;
+
   return (
-    <EmbedMethodHighlight classes={classes}
+    <HighlightComponent classes={classes}
       key={validIdHelper(`dashEmbed-${filterItem.label}`)} >
       <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}
       >
         {filterItem.label}:
         </Typography>
       <ToggleButtonGroup
-        value={lifetimeRevenueTierValue}
+        value={selectedTier}
         exclusive //for now
         onChange={(event, newValue) => {
-          setLifetimeRevenueTierValue(newValue)
+          setSelectedTier(newValue)
           action(
             filterItem.filterName,
             (newValue) ? newValue : '')
         }}
-        aria-label="ageTier"
+        aria-label="tier"
         className={classes.w100}>
-        {Array.isArray(apiContent) ? apiContent.map((ageTier, index) => {
-          if (ageTier[Object.keys(ageTier)[0]] !== "Undefined") {
-            const Icon = lifetimeRevenueTierIconMap[ageTier[Object.keys(ageTier)[0]]];
+        {Array.isArray(apiContent) ? apiContent.map((item, index) => {
+          if (item[fields[0]] !== "Undefined") {
             return (
               <ToggleButton
                 key={validIdHelper(`$FilterBar-ToggleButton-${filterItem.label}-${index}`)}
-                value={ageTier[Object.keys(ageTier)[0]]}
-                aria-label={ageTier[Object.keys(ageTier)[0]]}
+                value={item[fields[0]]}
+                aria-label={item[fields[0]]}
                 className={classes.w33}>
-                <Icon className={classes.mr12} />
-                {_.capitalize(lifetimeRevenueTierMap[ageTier[Object.keys(ageTier)[0]]]) || ageTier[Object.keys(ageTier)[0]]}
+                {_.capitalize(item[fields[0]])}
               </ToggleButton>
             )
           }
         }) : ''}
       </ToggleButtonGroup>
-    </EmbedMethodHighlight>
+    </HighlightComponent>
   )
 }

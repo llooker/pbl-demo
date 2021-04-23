@@ -47,13 +47,16 @@ export const initialUser = {
   "permissions":
     permissionLevels[Object.keys(permissionLevels)[1]],
   "models": [
-    "vision"
+    "vision",
+    "atom_fashion"
   ],
   "user_attributes": {
     "locale": "en_US",
     "country": "USA",
     "time_horizon": "last 182 days",
-    "permission_level": Object.keys(permissionLevels)[1]
+    "permission_level": Object.keys(permissionLevels)[1],
+    "brand": "Calvin Klein",
+
   }
 }
 

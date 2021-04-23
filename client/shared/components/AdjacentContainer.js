@@ -30,6 +30,8 @@ export const AdjacentContainer = ({
     // }
     return item //for now
   })
+  // console.log({ containerItemsToUse })
+
 
   return (
     <Grid item

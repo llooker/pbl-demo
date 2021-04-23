@@ -1,29 +1,25 @@
 import _ from 'lodash'
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
+// import { withStyles } from '@material-ui/core/styles';
+// import { green } from '@material-ui/core/colors';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
-const GreenCheckbox = withStyles({
-  root: {
-    color: green[400],
-    '&$checked': {
-      color: green[600],
-    },
-  },
-  checked: {},
-})((props) => <Checkbox color="default" {...props} />);
+//research styled components
+// const GreenCheckbox = withStyles({
+//   root: {
+//     color: green[400],
+//     '&$checked': {
+//       color: green[600],
+//     },
+//   },
+//   checked: {},
+// })((props) => <Checkbox color="default" {...props} />);
 
-export const CheckboxLabels = ({ filterItem, helperFunctionMapper, action }) => {
+export const CheckboxLabels = ({ filterItem, action, classes }) => {
   // console.log("CheckboxLabels");
   // console.log({ filterItem });
-  // console.log({ helperFunctionMapper });
   // console.log({ action });
 
   let stateObj = {};
@@ -43,29 +39,31 @@ export const CheckboxLabels = ({ filterItem, helperFunctionMapper, action }) => 
       filterItem.filterName,
       newValueToUse)
     setState(newState);
-
   };
+
+  let HighlightComponent = filterItem.highlightComponent || EmbedHighlight;
 
 
   return (
-    <FormGroup row>
-      {filterItem.options.map(item => {
-        let itemName = `checked${_.startCase(item)}`;
-        return (
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state[itemName]}
-                onChange={handleChange}
-                name={itemName}
-              />
-            }
-            label={_.startCase(item)}
-          />
-        )
-      })}
-    </FormGroup>
+    <HighlightComponent classes={classes}>
+      <FormGroup row>
+        {filterItem.options.map(item => {
+          let itemName = `checked${_.startCase(item)}`;
+          return (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={state[itemName]}
+                  onChange={handleChange}
+                  name={itemName}
+                />
+              }
+              label={_.startCase(item)}
+            />
+          )
+        })}
+      </FormGroup>
+    </HighlightComponent>
   );
 }
 

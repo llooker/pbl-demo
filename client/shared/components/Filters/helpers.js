@@ -76,13 +76,3 @@ export const customUsa = {
     }
   })
 }
-export const lifetimeRevenueTierMap = {
-  "0 to 99": "low",
-  "100 to 499": "medium",
-  "500 or Above": "high",
-}
-export const lifetimeRevenueTierIconMap = {
-  "0 to 99": SentimentDissatisfied,
-  "100 to 499": SentimentSatisfied,
-  "500 or Above": SentimentVerySatisfied,
-}

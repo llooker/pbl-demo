@@ -76,9 +76,9 @@ export const handleVisColorToggle = ({ newValue, filterItem, dashboardOptions,
 }
 
 export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue, fontThemeSelectValue, packageName }) => {
-  console.log("handleThemeChange")
-  console.log({ newValue })
-  console.log({ filterItem })
+  // console.log("handleThemeChange")
+  // console.log({ newValue })
+  // console.log({ filterItem })
   // console.log({ fontThemeSelectValue })
   // console.log({ lightThemeToggleValue })
 
