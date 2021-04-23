@@ -23,7 +23,7 @@ const genderCheckboxFilter = {
   "component": CheckboxLabels,
   "highlightComponent": EmbedMethodHighlight,
   "gridWidth": 12,
-  "options": ["male", "female"],
+  "options": [{ "value": "M", "label": "Male" }, { "value": "F", "label": "Female" }],
   "showOnlyCustomFilters": true
 }
 
@@ -35,8 +35,8 @@ const languageFilter = {
   "component": Dropdown,
   "highlightComponent": EmbedMethodHighlight,
   "gridWidth": 12,
+  "filterName": "Language",
   "showOnlyCustomFilters": true,
-  "filterName": "Language"
 }
 
 const incomeFilter = {
@@ -44,29 +44,31 @@ const incomeFilter = {
   "filterName": "Previous Annual Income",
   "desiredFilterNames": "application.previous_annual_income",
   "component": RangeSlider,
-  "highlightComponent": EmbedHighlight,
+  "highlightComponent": EmbedMethodHighlight,
   "showOnlyCustomFilters": true,
   "options": [{ "application.previous_annual_income": 0 }, { "application.previous_annual_income": 300000 }],
-  "showMarks": true
+  "gridWidth": 12,
+  "showMarks": true,
 }
 
 const ageTierFilter = {
   "label": "Age Tier",
   "filterName": "Age Bracket",
-  "lookerMethod": "runInlineQuery",
-  "inlineQuery": {
-    "model": "vision",
-    "view": "application",
-    "fields": [
-      "person.age_bracket"
-    ],
-  },
-  "desiredFilterNames": "person.age_bracket",
-  "resultFormat": "json",
-  "component": ToggleApi,
-  "apiKey": "toggleapi",
+  "component": CheckboxLabels,
   "highlightComponent": EmbedMethodHighlight,
-  "exclusive": false
+  "gridWidth": 12,
+  "options": [
+    { "value": "Below 10", "label": "Below 10" },
+    { "value": "10 to 17", "label": "10 to 17" },
+    { "value": "18 to 20", "label": "18 to 20" },
+    { "value": "21 to 33", "label": "21 to 33" },
+    { "value": "34 to 39", "label": "34 to 39" },
+    { "value": "40 to 49", "label": "40 to 49" },
+    { "value": "50 to 64", "label": "50 to 64" },
+    { "value": "65 to 74", "label": "65 to 74" },
+    { "value": "75 or Above", "label": "75 or Above" },
+  ],
+  "showOnlyCustomFilters": true
 }
 
 export const TrendsContent = {

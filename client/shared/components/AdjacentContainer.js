@@ -23,12 +23,12 @@ export const AdjacentContainer = ({
 
   let { items } = container;
   let containerItemsToUse = _.filter(items, (item) => {
-    // if (customFiltersThemeToggle) {
-    //   return item
-    // } else {
-    // return item.alwaysShow
-    // }
-    return item //for now
+    if (customFiltersThemeToggle) {
+      return item
+    } else {
+      return item.alwaysShow
+    }
+    // return item //for now
   })
   // console.log({ containerItemsToUse })
 

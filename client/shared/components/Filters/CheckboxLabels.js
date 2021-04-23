@@ -2,9 +2,7 @@ import _ from 'lodash'
 import React from 'react';
 // import { withStyles } from '@material-ui/core/styles';
 // import { green } from '@material-ui/core/colors';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import { FormGroup, FormControlLabel, Checkbox, Typography } from '@material-ui/core';
 
 //research styled components
 // const GreenCheckbox = withStyles({
@@ -24,17 +22,19 @@ export const CheckboxLabels = ({ filterItem, action, classes }) => {
 
   let stateObj = {};
   filterItem.options.map(item => {
-    stateObj[[`checked${_.startCase(item)}`]] = true
+    stateObj[item.value] = true
   })
 
   const [state, setState] = React.useState({ ...stateObj });
 
   const handleChange = (event) => {
     let newState = { ...state, [event.target.name]: event.target.checked };
+    console.log({ newState })
     let newValueToUse = Object.keys(newState).map(key => {
-      if (newState[key]) return key.split(/(?=[A-Z])/)[1][0]
+      if (newState[key]) return key
     })
     newValueToUse = _.compact(newValueToUse).join(",");
+    console.log({ newValueToUse })
     action(
       filterItem.filterName,
       newValueToUse)
@@ -43,22 +43,26 @@ export const CheckboxLabels = ({ filterItem, action, classes }) => {
 
   let HighlightComponent = filterItem.highlightComponent || EmbedHighlight;
 
+  console.log({ state })
 
   return (
     <HighlightComponent classes={classes}>
+      <Typography className={`${classes.heading} ${classes.ml12}  ${classes.verticalAlignTop}`}>
+        {filterItem.label}:
+      </Typography>
       <FormGroup row>
         {filterItem.options.map(item => {
-          let itemName = `checked${_.startCase(item)}`;
+          let { value, label } = item
           return (
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={state[itemName]}
+                  checked={state[value]}
                   onChange={handleChange}
-                  name={itemName}
+                  name={value}
                 />
               }
-              label={_.startCase(item)}
+              label={_.startCase(label)}
             />
           )
         })}

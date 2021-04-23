@@ -92,6 +92,8 @@ export const Dashboard = ({ staticContent }) => {
       setFontThemeSelectValue(newValue)
       corsApiCall(performLookerApiCalls, [lookerContent, response])
     } else if (methodName === "handleFiltersThemeChange") {
+      // if (newValue) setMakeShiftDrawerOpen(true)
+      // else setMakeShiftDrawerOpen(false)
       setCustomFiltersThemeToggle(newValue)
       corsApiCall(performLookerApiCalls, [lookerContent, response])
     } else if (methodName === "createCase") {
