@@ -40,13 +40,16 @@ const languageFilter = {
 }
 
 const incomeFilter = {
-  "label": "Previous Annual Income",
+  "label": "Previous Annual Income (thousands)",
   "filterName": "Previous Annual Income",
   "desiredFilterNames": "application.previous_annual_income",
   "component": RangeSlider,
   "highlightComponent": EmbedMethodHighlight,
   "showOnlyCustomFilters": true,
-  "options": [{ "application.previous_annual_income": 0 }, { "application.previous_annual_income": 300000 }],
+  "options": [
+    { "application.previous_annual_income": 0 },
+    { "application.previous_annual_income": 300 }
+  ],
   "gridWidth": 12,
   "showMarks": true,
 }
@@ -90,10 +93,11 @@ export const TrendsContent = {
       "adjacentContainer": {
         "gridWidth": 2,
         "items": [themeFilter, genderCheckboxFilter, languageFilter, incomeFilter, ageTierFilter],
-        "label": "Customize",
+        "label": "Demographics",
+        "collapsable": true
       },
       "themeable": true,
-      "allowNativeFilters": true
+      "allowNativeFilters": true,
     }],
   "requiredPermissionLevel": 0
 }

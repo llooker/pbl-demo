@@ -4,7 +4,10 @@ import React from 'react';
 // import { green } from '@material-ui/core/colors';
 import { FormGroup, FormControlLabel, Checkbox, Typography } from '@material-ui/core';
 
-//research styled components
+/**
+ * TO DO: 
+ * research styled components
+ */
 // const GreenCheckbox = withStyles({
 //   root: {
 //     color: green[400],
@@ -29,12 +32,10 @@ export const CheckboxLabels = ({ filterItem, action, classes }) => {
 
   const handleChange = (event) => {
     let newState = { ...state, [event.target.name]: event.target.checked };
-    console.log({ newState })
     let newValueToUse = Object.keys(newState).map(key => {
       if (newState[key]) return key
     })
     newValueToUse = _.compact(newValueToUse).join(",");
-    console.log({ newValueToUse })
     action(
       filterItem.filterName,
       newValueToUse)
@@ -43,7 +44,6 @@ export const CheckboxLabels = ({ filterItem, action, classes }) => {
 
   let HighlightComponent = filterItem.highlightComponent || EmbedHighlight;
 
-  console.log({ state })
 
   return (
     <HighlightComponent classes={classes}>

@@ -30,14 +30,18 @@ export const RangeSlider = ({ apiContent, classes, action, filterItem }) => {
       <Slider
         value={sliderValue.length ? sliderValue : Array.isArray(apiContent) ? [apiContent[0][Object.keys(apiContent[0])[0]], apiContent[apiContent.length - 1][Object.keys(apiContent[0])[0]]] : []}
         onChange={(event, newValue) => {
+          let valueToUse = newValue;
+          if (filterItem.filterName === "Previous Annual Income") valueToUse = [newValue[0] * 1000, newValue[1] * 1000];
           setSliderValue(newValue);
         }}
         valueLabelDisplay="auto"
         aria-labelledby="range-slider"
         onChangeCommitted={(event, newValue) => {
+          let valueToUse = newValue;
+          if (filterItem.filterName === "Previous Annual Income") valueToUse = [newValue[0] * 1000, newValue[1] * 1000];
           action(
             filterItem.filterName,
-            (newValue) ? `[${newValue}]` : '[]')
+            (valueToUse) ? `[${valueToUse}]` : '[]')
         }}
         min={Array.isArray(apiContent) && apiContent.length ? firstApiEntry[fields[0]] : 0}
         max={Array.isArray(apiContent) && apiContent.length ? lastApiEntry[fields[0]] : 0}
