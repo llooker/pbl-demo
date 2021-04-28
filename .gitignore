@@ -6,3 +6,4 @@ looker.ini
 *.yaml*
 *.lock
 *.eslintcache
+*auth.json

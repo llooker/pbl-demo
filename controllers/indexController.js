@@ -6,6 +6,11 @@ const sdkSession = new NodeSession(settings)
 const sdk = new Looker40SDK(sdkSession)
 const rp = require('request-promise');
 
+const { Storage } = require('@google-cloud/storage');
+const projectId = process.env.CLOUD_PROJECT_ID
+const keyFilename = './google-storage-auth.json';
+// console.log({ keyFilename })
+
 module.exports.readSession = async (req, res, next) => {
   // console.log("readSession")
   let { session } = req
@@ -15,7 +20,7 @@ module.exports.readSession = async (req, res, next) => {
 }
 
 module.exports.writeSession = async (req, res, next) => {
-  // console.log("writeSession")
+  console.log("writeSession")
   let { session } = req;
   let { userProfile } = req.body;
   //apply environment variables to session
@@ -23,6 +28,8 @@ module.exports.writeSession = async (req, res, next) => {
   session.lookerBaseUrl = process.env.LOOKERSDK_BASE_URL;
   session.packageName = process.env.PACKAGE_NAME;
   session.cloudFunctionSecret = process.env.CLOUD_FUNCTION_SECRET;
+
+  // listBuckets()
 
   //userProfile from google auth
   session.userProfile = userProfile;
@@ -77,3 +84,21 @@ async function tokenHelper(session) {
   return { ...u }
 
 }
+
+// async function listBuckets() {
+//   // console.log("listBuckets")
+
+
+//   const storage = new Storage({ projectId, keyFilename });
+
+//   try {
+//     const [buckets] = await storage.getBuckets();
+
+//     console.log('Buckets:');
+//     buckets.forEach(bucket => {
+//       console.log(bucket.name);
+//     });
+//   } catch (err) {
+//     console.error('ERROR:', err);
+//   }
+// }

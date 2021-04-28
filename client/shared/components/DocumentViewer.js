@@ -19,7 +19,7 @@ export const DocumentViewer = (props) => {
   const demoComponentType = type;
   const classes = useStyles();
   let location = useLocation();
-  const [docToUse, setDocToUse] = useState(lookerContent[0].url);
+  const [docToUse, setDocToUse] = useState(undefined);
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
@@ -37,11 +37,33 @@ export const DocumentViewer = (props) => {
 
 
     if (paramMatchesPDFUrl) {
-      setDocToUse(params["pdf_url"]);
-    }
+      // setDocToUse(params["pdf_url"]);
+      fetchData({ initialUrl: params["pdf_url"] })
+    } else fetchData({ initialUrl: lookerContent[0].url })
+
 
   }, [location.search])
 
+  const fetchData = async ({ initialUrl }) => {
+
+    const storageUrl = new URL(initialUrl);
+    const { pathname } = storageUrl;
+    let bucketName = pathname.split('/')[1];
+    let fileName = pathname.split('/')[2];
+
+    let cloudStorageUrlResponse = await fetch('/signedcloudstorageurl', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ bucketName, fileName })
+    })
+
+    const cloudStorageUrlResponseData = await cloudStorageUrlResponse.json();
+    const { signedUrl } = cloudStorageUrlResponseData;
+    setDocToUse(signedUrl)
+  }
 
 
   return (
