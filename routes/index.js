@@ -5,8 +5,7 @@ const router = express.Router();
 
 const indexCtrl = require('../controllers/indexController');
 const lookerCtrl = require('../controllers/lookerController');
-const cloudFunctionCtrl = require('../controllers/cloudFunctionsController');
-const cloudStorageCtrl = require('../controllers/cloudStorageController');
+const cloudServicesCtrl = require('../controllers/cloudServicesController');
 
 //session mgmt
 router.get('/readsession', indexCtrl.readSession);
@@ -18,10 +17,10 @@ router.get('/refreshlookertoken', indexCtrl.refreshLookerToken);
 router.get('/auth', lookerCtrl.auth);
 router.post('/updatelookeruser', lookerCtrl.updateLookerUser);
 
-//cloud fnction  mgmt
-router.post('/createcase', cloudFunctionCtrl.createCase);
-router.post('/addcasenotes', cloudFunctionCtrl.addCaseNotes);
-router.post('/changecasestatus', cloudFunctionCtrl.changeCaseStatus);
-router.post('/signedcloudstorageurl', cloudStorageCtrl.generateV4ReadSignedUrl);
+//cloud services  mgmt
+router.post('/createcase', cloudServicesCtrl.createCase);
+router.post('/addcasenotes', cloudServicesCtrl.addCaseNotes);
+router.post('/changecasestatus', cloudServicesCtrl.changeCaseStatus);
+router.post('/signedcloudstorageurl', cloudServicesCtrl.generateV4ReadSignedUrl);
 
 module.exports = router;
