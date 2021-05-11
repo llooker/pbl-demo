@@ -1,4 +1,10 @@
-import { AuthToken, AuthSession, BrowserTransport } from "@looker/sdk";
+import {
+  AuthSession,
+  BrowserTransport,
+  AuthToken,
+  DefaultSettings
+} from "@looker/sdk-rtl";
+import { Looker40SDK } from "@looker/sdk";
 
 export class PblSession extends AuthSession {
   fetchToken() {
