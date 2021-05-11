@@ -118,7 +118,6 @@ export default function Home(props) {
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
   else ActiveDemoComponent = ActiveDemoComponentContent.component;
 
-
   return (
     <div className={classes.root} >
 

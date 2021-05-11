@@ -39,18 +39,22 @@ export const ToggleApi = ({ apiContent, classes, action, filterItem }) => {
         className={classes.w100}>
         {Array.isArray(apiContent) ? apiContent.map((item, index) => {
           if (item[fields[0]] !== "Undefined") {
+            let valueToUse = item[fields[0]];
+            let labelToUse = filterItem.options ?
+              filterItem.options[valueToUse]
+              : valueToUse
             return (
               <ToggleButton
-                key={validIdHelper(`$FilterBar-ToggleButton-${filterItem.label}-${index}`)}
-                value={item[fields[0]]}
-                aria-label={item[fields[0]]}
+                key={validIdHelper(`$FilterBar-ToggleButton - ${filterItem.label} -${index} `)}
+                value={valueToUse}
+                aria-label={valueToUse}
                 className={classes.w33}>
-                {_.capitalize(item[fields[0]])}
+                {labelToUse}
               </ToggleButton>
             )
           }
         }) : ''}
       </ToggleButtonGroup>
-    </HighlightComponent>
+    </HighlightComponent >
   )
 }

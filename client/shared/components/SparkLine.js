@@ -5,8 +5,8 @@ import { ResponsiveLine } from '@nivo/line';
 import { validIdHelper, decodeHtml, appContextMap } from '../utils/tools';
 
 export function SparkLine({ lookerContentItem, classes }) {
-  console.log('SparkLine')
-  console.log({ lookerContentItem })
+  // console.log('SparkLine')
+  // console.log({ lookerContentItem })
   const [apiContent, setApiContent] = useState(undefined);
   const { clientSession, sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { userProfile, lookerUser } = clientSession;

@@ -35,7 +35,7 @@ export const Dashboard = ({ staticContent }) => {
   // let hasLightDarkThemeToggle = lookerContent[0].adjacentContainer ? _.isObject(_.find(lookerContent[0].adjacentContainer.items || [], { "label": "Light or dark theme" })) : false;
   // let hasCustomFiltersThemeToggle = lookerContent[0].adjacentContainer ? _.isObject(_.find(lookerContent[0].adjacentContainer.items || [], { "label": "Show or hide custom filters" })) : false;
   //needs to be rethought
-  let { allowNativeFilters } = lookerContent[0];
+  let { allowNativeFilters } = lookerContent[0]; //????
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true); //useState(hasLightDarkThemeToggle);
   const [customFiltersThemeToggle, setCustomFiltersThemeToggle] = useState(allowNativeFilters);
@@ -85,7 +85,7 @@ export const Dashboard = ({ staticContent }) => {
     // console.log({ response })
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
       dashboardObj.setOptions(response);
-    } else if (methodName === "handlelightDarkThemeChange") {
+    } else if (methodName === "handleLightDarkThemeChange") {
       setLightThemeToggleValue(newValue)
       corsApiCall(performLookerApiCalls, [lookerContent, response])
     } else if (methodName === "handleFontThemeChange") {
@@ -105,6 +105,9 @@ export const Dashboard = ({ staticContent }) => {
     } else if (methodName === "runInlineQuery") {
       // console.log("inside this else if")
     }
+    // else if (methodName === "handleLifetimeRevenueTier") {
+    //   customFilterAction(filterItem.filterName, newValue)
+    // }
   }
 
   const performLookerApiCalls = (lookerContent, dynamicTheme) => {
@@ -264,7 +267,7 @@ export const Dashboard = ({ staticContent }) => {
     // console.log({ lookerUser });
     // console.log({ isReady });
     let { allowNativeFilters } = lookerContent[0];
-    console.log({ allowNativeFilters })
+    // console.log({ allowNativeFilters })
     setLightThemeToggleValue(true);
     setFontThemeSelectValue("arial");
     setCustomFiltersThemeToggle(true);
@@ -276,6 +279,7 @@ export const Dashboard = ({ staticContent }) => {
       themeName += `_${fontThemeSelectValue}`;
       // themeName += customFiltersThemeToggle ? '' : '_filters';
       themeName += !customFiltersThemeToggle && allowNativeFilters ? '_filters' : ""
+      // console.log({ themeName })
       corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
       setApiContent(undefined);
       setMakeShiftDrawerOpen(true);

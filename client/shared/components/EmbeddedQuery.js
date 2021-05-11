@@ -43,6 +43,7 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
           .withClassName('explore')
           .withClassName('splashPage')
           .withClassName(lookerContentItem.id)
+          .withClassName(`${classes.w100}`)
           .withTheme('atom_fashion')
           .build()
           .connect()

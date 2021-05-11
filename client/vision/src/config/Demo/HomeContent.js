@@ -1,5 +1,4 @@
 import HomeIcon from '@material-ui/icons/Home';
-import { List } from '@material-ui/core/';
 import { ApiHighlight } from '@pbl-demo/components/Accessories';
 import { Dashboard, TrendItem, InlineList } from '@pbl-demo/components';
 import { runInlineQuery } from '@pbl-demo/components/Dashboard/helpers';

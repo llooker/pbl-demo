@@ -2,7 +2,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import { Dashboard } from '@pbl-demo/components'
 import { Dropdown, HiddenFilterValueText, SwitchTheme } from '@pbl-demo/components/Filters';
 import { createCase } from '@pbl-demo/components/Dashboard/helpers'
-import { CloudFunctionHighlight, ApiHighlight, EmbedHighlight } from '@pbl-demo/components/Accessories';
+import { CloudFunctionHighlight, ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
 import { handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
 
 const createCaseSelect = {
@@ -39,9 +39,9 @@ const caseId = {
 const themeSwitch = {
   "label": "Light or dark theme",
   "method": handleThemeChange,
-  "methodName": "handlelightDarkThemeChange",
+  "methodName": "handleLightDarkThemeChange",
   "component": SwitchTheme,
-  "highlightComponent": EmbedHighlight,
+  "highlightComponent": EmbedMethodHighlight,
   "gridWidth": 12,
   "options": { true: "Light mode", false: "Dark mode" },
 }

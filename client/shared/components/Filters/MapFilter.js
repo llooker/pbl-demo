@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Typography } from '@material-ui/core'
 import { CheckboxSVGMap } from "./CheckboxSvgMapRegion";
-import { customUsa } from './helpers';
 import { EmbedMethodHighlight } from '../Accessories/Highlight';
 const { validIdHelper } = require('../../utils/tools');
 
@@ -18,7 +17,7 @@ export function MapFilter({ classes, action, filterItem }) {
         {filterItem.label}: <b>{regionValue ? regionValue : "Outside US"}</b>
       </Typography>
 
-      <CheckboxSVGMap map={customUsa}
+      <CheckboxSVGMap map={filterItem.map}
         onChange={(locations) => {
 
           let allUniqueRegionsFromSelectedLocations = [];
@@ -31,7 +30,7 @@ export function MapFilter({ classes, action, filterItem }) {
           setRegionValue(allUniqueRegionsFromSelectedLocationsCommaSep)
           action(
             filterItem.filterName,
-            (regionValue) ? regionValue : '')
+            (allUniqueRegionsFromSelectedLocationsCommaSep) ? allUniqueRegionsFromSelectedLocationsCommaSep : '')
         }}
       />
     </EmbedMethodHighlight>

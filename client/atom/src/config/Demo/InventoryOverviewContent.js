@@ -2,6 +2,7 @@ import TableChartOutlinedIcon from '@material-ui/icons/TableChartOutlined';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
 import { Dashboard } from '@pbl-demo/components';
 import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, Dropdown } from '@pbl-demo/components/Filters';
+import { CloudFunctionHighlight, ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
 
 
 const productNameFilter = {
@@ -19,7 +20,9 @@ const productNameFilter = {
   "desiredFilterNames": "products.brand",
   "resultFormat": "json",
   "component": AutoComplete,
-  "apiKey": "autocomplete"
+  "apiKey": "autocomplete",
+  "highlightComponent": ApiHighlight,
+
 }
 
 const tilesFilter = {
@@ -49,7 +52,7 @@ const tilesFilter = {
   "method": handleTileToggle,
   "methodName": "handleTileToggle",
   "component": ToggleTile,
-  // "apiKey": "togglebutton"
+  "highlightComponent": EmbedMethodHighlight,
 }
 
 const visConfigFilter = {
@@ -110,13 +113,17 @@ const visConfigFilter = {
   "method": handleVisColorToggle,
   "methodName": "handleVisColorToggle",
   "component": ToggleVisColor,
+  "highlightComponent": EmbedMethodHighlight,
+
 }
 
 const themeColorFilter = {
   "label": "Light or dark theme",
   "method": handleThemeChange,
-  "methodName": "handleThemeChange",
-  "component": SwitchTheme
+  "methodName": "handleLightDarkThemeChange",
+  "component": SwitchTheme,
+  "highlightComponent": EmbedHighlight,
+  "options": { false: "Dark", true: "Light" },
 }
 
 const themeFontFilter = {
@@ -125,8 +132,11 @@ const themeFontFilter = {
   { label: "Roboto", value: "roboto" },
   { label: "Vollkorn", value: "vollkorn" }],
   "method": handleThemeChange,
-  "methodName": "handleThemeChange",
+  "methodName": "handleFontThemeChange",
+  "tooltip": "",
   "component": Dropdown,
+  "highlightComponent": EmbedHighlight,
+  "gridWidth": 12,
 }
 
 export const InventoryOverivewContent = {

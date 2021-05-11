@@ -2,7 +2,8 @@ import { packageNameTheme } from '../../config/theme.js'
 import { makeStyles } from '@material-ui/core/styles';
 
 const drawerWidth = 240;
-const topDrawerHeight = 65;
+const topHeaderHeight = 64;
+const topDrawerHeight = 54;
 export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -63,7 +64,7 @@ export const useStyles = makeStyles(theme => ({
   },
   topDrawerPaper: {
     width: '100%',
-    backgroundColor: 'transparent'
+    backgroundColor: 'rgb(229, 229, 229)'
   },
   topContent: {
     flexGrow: 1,
@@ -163,9 +164,6 @@ export const useStyles = makeStyles(theme => ({
     backgroundColor: 'transparent'
     // theme.palette.background.paper,
   },
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
   mlAuto: {
     marginLeft: 'auto'
   },
@@ -175,7 +173,7 @@ export const useStyles = makeStyles(theme => ({
   appBarBottom: {
     top: 'auto',
     bottom: 0,
-    backgroundColor: 'rgb(229, 229, 229)'
+    backgroundColor: '#fff'
   },
   hidden: {
     visibility: 'hidden'
@@ -214,13 +212,33 @@ export const useStyles = makeStyles(theme => ({
       transition: 'transform .2s'
     }
   },
-  inlineList: {
+  noWrap: {
+    whiteSpace: "nowrap"
+  },
+  paddingTB2: {
+    paddingTop: 2,
+    paddingBottom: 2
+  },
+  padding0: {
+    padding: 0
+  },
+  content: {
+    flex: 1,
+    display: "flex",
+    overflow: "auto"
+  },
+  flexRow: {
     display: 'flex',
     flexDirection: 'row',
     padding: 0,
   },
-  noWrap: {
-    whiteSpace: "nowrap"
+  themeFillColor: {
+    backgroundColor: packageNameTheme.palette.fill.main
+  },
+  borderRadius100: {
+    borderRadius: 100
+  },
+  noBorder: {
+    border: "1px solid transparent"
   }
 }), { index: 1 });
-
