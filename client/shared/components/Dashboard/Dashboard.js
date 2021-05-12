@@ -7,20 +7,22 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import EmbeddedDashboardContainer from './EmbeddedDashboardContainer';
 import { Loader, CodeFlyout, SnackbarAlert } from "@pbl-demo/components/Accessories";
-import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from '../styles.js';
 import queryString from 'query-string';
 import { appContextMap, decodeHtml, validIdHelper } from '../../utils/tools';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange, runInlineQuery, formatApiResultsForAutoComplete, formatApiResultsForTrends } from './helpers';
 import { AdjacentContainer } from "../AdjacentContainer"
 import { SimpleModal } from "@pbl-demo/components";
+import { useStyles } from '../styles.js';
 
 
-export const Dashboard = ({ staticContent }) => {
+export const Dashboard = ({ staticContent, dynamicPadding }) => {
   // console.log('Dashboard');
+  // console.log({ staticContent });
+  // console.log({ dynamicPadding });
   const { clientSession, clientSession: { lookerUser }, sdk, corsApiCall, theme, isReady, selectedMenuItem, drawerOpen } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { lookerContent, type } = staticContent;
   const demoComponentType = type || 'code flyout';
-  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? drawerOpen ? (topAndBottomHeaderPlusDrawerOpen) : (topAndBottomHeaderSpacing) : (topAndBottomHeaderSpacing);
+  const dynamicTopBarBottomBarHeight = dynamicPadding;
   const [iFrameExists, setIFrame] = useState(0);
   const [apiContent, setApiContent] = useState(undefined);
   const [dashboardObj, setDashboardObj] = useState({});
@@ -31,7 +33,6 @@ export const Dashboard = ({ staticContent }) => {
   const [renderModal, setRenderModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
   const [helperResponse, setHelperResponse] = useState(undefined);
-
   // let hasLightDarkThemeToggle = lookerContent[0].adjacentContainer ? _.isObject(_.find(lookerContent[0].adjacentContainer.items || [], { "label": "Light or dark theme" })) : false;
   // let hasCustomFiltersThemeToggle = lookerContent[0].adjacentContainer ? _.isObject(_.find(lookerContent[0].adjacentContainer.items || [], { "label": "Show or hide custom filters" })) : false;
   //needs to be rethought
@@ -125,7 +126,6 @@ export const Dashboard = ({ staticContent }) => {
         lookerContentItem.theme ?
           lookerContentItem.theme :
           'atom_fashion';
-      // console.log({ themeToUse })
 
       // let embeddedDashboard = await createEmbeddedDashboard({
       //   dashboardId, themeToUse, demoComponentType

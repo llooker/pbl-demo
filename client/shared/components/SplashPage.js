@@ -2,15 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Box, Grid, Card } from '@material-ui/core'
 import { Loader, CodeFlyout } from './Accessories'
 import { appContextMap, validIdHelper } from '../utils/tools';
-import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from './styles.js';
+import { useStyles } from './styles.js';
 
-export const SplashPage = (props) => {
+export const SplashPage = ({ staticContent, dynamicPadding }) => {
   const { clientSession: { lookerUser, lookerHost, drawerOpen } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
-  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? drawerOpen ? (topAndBottomHeaderPlusDrawerOpen) : (topAndBottomHeaderSpacing) : (topAndBottomHeaderSpacing);
-
+  const dynamicTopBarBottomBarHeight = dynamicPadding;
   const [iFrameExists] = useState(1);
   const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
-  const { staticContent: { lookerContent }, staticContent: { type } } = props;
+  const { lookerContent, type } = staticContent;
   const classes = useStyles();
   const demoComponentType = type || 'code flyout';
 
@@ -46,11 +45,13 @@ export const SplashPage = (props) => {
               key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
               className={`${classes.noContainerScroll}`}
             >
-              <CodeFlyout {...props}
+
+              <CodeFlyout
                 classes={classes}
                 lookerUser={lookerUser}
                 height={height}
               />
+
               {lookerContent.map((lookerContentItem, innerIndex) => {
                 const ComponentToRender = lookerContentItem.component
                 return (

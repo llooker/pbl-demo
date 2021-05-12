@@ -5,29 +5,24 @@ import { Box, Grid, Card } from '@material-ui/core'
 import { Loader, CodeFlyout, EmbedHighlight } from '@pbl-demo/components/Accessories'
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { createEmbeddedExplore } from './helpers'
-import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from '../styles.js';
 import { useLocation, useHistory } from "react-router-dom";
+import { useStyles } from '../styles.js';
+
 
 const { validIdHelper, appContextMap, validateContent } = require('../../utils/tools');
 
-export const EmbeddedQueryFullWidth = ({ staticContent }) => {
+export const EmbeddedQueryFullWidth = ({ staticContent, dynamicPadding }) => {
   // console.log("EmbeddedQueryFullWidth")
-
   const { clientSession, clientSession: { lookerUser, lookerHost }, isReady, sdk, corsApiCall, selectedMenuItem, drawerOpen } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
-
   const { lookerContent, type } = staticContent;
   const demoComponentType = type || 'code flyout';
-
-  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? drawerOpen ? (topAndBottomHeaderPlusDrawerOpen) : (topAndBottomHeaderSpacing) : (topAndBottomHeaderSpacing);
-
+  const dynamicTopBarBottomBarHeight = dynamicPadding;
   const [iFrameExists, setIFrame] = useState(1);
   const [apiContent, setApiContent] = useState(undefined);
   const [exploreObj, setExploreObj] = useState({});
   const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const classes = useStyles();
   let history = useHistory();
-
-
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
   })

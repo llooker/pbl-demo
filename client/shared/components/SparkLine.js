@@ -29,9 +29,7 @@ export function SparkLine({ lookerContentItem, classes }) {
 
     // setApiContent(undefined)
     let { inlineQuery } = lookerContentItem;
-    console.log({ inlineQuery })
     let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContentItem.resultFormat || 'json', body: inlineQuery }));
-    console.log({ lookerResponseData })
     dataObjForSparkline.id = validIdHelper(`singleVisValue-${lookerContentItem.id}`);
     dataObjForSparkline.data = [];
 

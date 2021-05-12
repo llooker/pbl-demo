@@ -6,7 +6,6 @@ import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { CssBaseline } from '@material-ui/core/';
 import clsx from 'clsx';
 import '../Home.css';
-import { useStyles } from './styles.js';
 import * as DemoComponentsContentArr from '../../config/Demo';
 import { TopBarContent } from '../../config/TopBarContent';
 import { checkToken, endSession } from '@pbl-demo/utils/auth';
@@ -14,6 +13,7 @@ import { permissionLevels, userTimeHorizonMap, modalPermissionsMap } from '../..
 import { UserPermissionsModal } from "@pbl-demo/components/Accessories";
 import { TopBar, BottomBar, LeftDrawer, TopDrawer } from "@pbl-demo/components";
 import { errorHandler } from '@pbl-demo/utils'
+import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from './styles.js';
 
 const { validIdHelper } = require('../../tools');
 
@@ -118,6 +118,8 @@ export default function Home(props) {
   if (!ActiveDemoComponentContent) history.push(validIdHelper(_.lowerCase(demoComponentsContentArr[0].label)))
   else ActiveDemoComponent = ActiveDemoComponentContent.component;
 
+
+
   return (
     <div className={classes.root} >
 
@@ -155,7 +157,9 @@ export default function Home(props) {
         >
 
           <div className={classes.drawerHeader} />
-          {ActiveDemoComponent ? <ActiveDemoComponent staticContent={ActiveDemoComponentContent} /> : ''}
+          {ActiveDemoComponent ? <ActiveDemoComponent
+            staticContent={ActiveDemoComponentContent}
+            dynamicPadding={drawerOpen && packageName === "vision" ? topAndBottomHeaderPlusDrawerOpen : topAndBottomHeaderSpacing} /> : ''}
         </main>
 
         <BottomBar classes={classes} />

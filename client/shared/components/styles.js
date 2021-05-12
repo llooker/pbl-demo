@@ -6,18 +6,6 @@ const redLight = red[100];
 const greenLight = green[100];
 const lightGrey = grey[200];
 
-//old
-export const topBarBottomBarHeight = 140;
-export const bottomBarHeight = 140;
-//new
-export const topHeaderHeight = 64;
-export const bottomHeaderHeight = 48;
-export const topDrawerHeight = 52;
-export const bottomPaddingBuffer = 15;
-
-export const topAndBottomHeaderSpacing = topHeaderHeight + bottomHeaderHeight - bottomPaddingBuffer
-export const topAndBottomHeaderPlusDrawerOpen = topAndBottomHeaderSpacing + topDrawerHeight;
-
 export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,

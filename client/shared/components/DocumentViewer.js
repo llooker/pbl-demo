@@ -4,18 +4,16 @@ import { Box, Grid, Card } from '@material-ui/core'
 import { Loader, CodeFlyout } from '@pbl-demo/components/Accessories'
 import { useLocation } from "react-router-dom";
 import queryString from 'query-string';
-import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from './styles.js';
-
+import { useStyles } from './styles.js';
 const { validIdHelper, appContextMap, validateContent } = require('../utils/tools');
 
-export const DocumentViewer = (props) => {
+export const DocumentViewer = ({ staticContent, dynamicPadding }) => {
+
   const { clientSession: { lookerUser, lookerHost }, drawerOpen } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
-  const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? drawerOpen ? (topAndBottomHeaderPlusDrawerOpen) : (topAndBottomHeaderSpacing) : (topAndBottomHeaderSpacing);
-
-
+  const dynamicTopBarBottomBarHeight = dynamicPadding;
   const [iFrameExists, setIFrame] = useState(1);
   const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
-  const { staticContent: { lookerContent, type, schema } } = props;
+  const { lookerContent, type, schema } = staticContent;
   const demoComponentType = type;
   const classes = useStyles();
   let location = useLocation();
@@ -84,11 +82,12 @@ export const DocumentViewer = (props) => {
             classes={classes}
             height={height} />
 
-          <CodeFlyout {...props}
+          <CodeFlyout
             classes={classes}
             lookerUser={lookerUser}
             height={height}
           />
+
           {docToUse ?
 
             <Grid item
