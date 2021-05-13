@@ -9,7 +9,9 @@ export function PopularAnalysis({ lookerContentItem, classes }) {
 
   return (
 
-    <Card className={`${classes.padding15} ${classes.overflowHidden} ${classes.lookerCardShadow}`}>
+    <Card className={`${classes.padding15} ${classes.overflowHidden} `}
+      elevation={0}
+    >
       <div
         className={`${classes.overflowYScroll}`}
         style={{ height: lookerContentItem.height }}
@@ -23,7 +25,7 @@ export function PopularAnalysis({ lookerContentItem, classes }) {
           {lookerContentItem.vectors.map((vectorItem, index) => {
             return (
               <VectorThumbnail
-                key={`${validIdHelper('vectorThumbnail-splashPage-' + index)}`}
+                key={`${validIdHelper('vectorThumbnail-splashPage-' + index)} `}
                 {...{ lookerContentItem, vectorItem, classes, index }}
               />
             )

@@ -114,7 +114,7 @@ const visConfigFilter = {
   "methodName": "handleVisColorToggle",
   "component": ToggleVisColor,
   "highlightComponent": EmbedMethodHighlight,
-
+  "gridWidth": 12,
 }
 
 const themeColorFilter = {
@@ -124,6 +124,7 @@ const themeColorFilter = {
   "component": SwitchTheme,
   "highlightComponent": EmbedHighlight,
   "options": { false: "Dark", true: "Light" },
+  "gridWidth": 12,
 }
 
 const themeFontFilter = {
@@ -154,7 +155,7 @@ export const InventoryOverivewContent = {
       "isNext": false,
       "label": "Inventory Overview",
       "adjacentContainer": {
-        "gridWidth": 3,
+        "gridWidth": 4,
         "items": [productNameFilter, tilesFilter, visConfigFilter, themeColorFilter, themeFontFilter],
         "collapsable": true
       },

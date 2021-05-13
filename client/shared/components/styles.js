@@ -165,11 +165,6 @@ export const useStyles = makeStyles((theme) => ({
     width: '100%',
     margin: 0
   },
-  lookerCardShadow: {
-    border: 'none',
-    borderRadius: '6px',
-    boxShadow: 'rgba(0, 0, 0, 0.11) 0px 2px 12px, rgba(0, 0, 0, 0.04) 0px 1px 4px'
-  },
   maxHeight60: {
     maxHeight: 60,
     height: 60,

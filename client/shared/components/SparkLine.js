@@ -64,10 +64,8 @@ export function SparkLine({ lookerContentItem, classes }) {
       }% `
       : '';
   return (
-    <Card className={`${classes.padding15} 
-    ${classes.overflowHidden} 
-    ${classes.lookerCardShadow}
-    `}
+    <Card className={`${classes.padding15} ${classes.overflowHidden} `}
+      elevation={0}
     >
       <div
         style={{

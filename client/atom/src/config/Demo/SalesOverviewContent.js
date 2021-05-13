@@ -192,7 +192,7 @@ export const SalesOverviewContent = {
       "label": "Sales Overview",
       "isNext": true,
       "adjacentContainer": {
-        "gridWidth": 3,
+        "gridWidth": 4,
         "items": [productCategoryFilter, regionFilter, ageFilter,
           revenueTierFilter
         ],
