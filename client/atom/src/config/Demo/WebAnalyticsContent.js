@@ -99,7 +99,7 @@ export const WebAnalyticsContent = {
       "adjacentContainer": {
         "gridWidth": 2,
         "items": [themeFilter, browserFilter, dateFilter, trafficSourceFilter],
-        "label": "Demographics",
+        "label": "User Info",
         "collapsable": true
       },
       "themeable": true,
