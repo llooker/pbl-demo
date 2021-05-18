@@ -12,4 +12,5 @@ export { HiddenFilterValueText } from "./HiddenFilterValueText";
 export { NotesList } from "./NotesList";
 export { LinkText } from "./LinkText";
 export { CheckboxLabels } from "./CheckboxLabels";
+export { ChipList } from "./ChipList";
 
