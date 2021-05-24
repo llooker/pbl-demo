@@ -224,17 +224,6 @@ const popularAnalysis = {
       "label": "Analytics",
       "gridWidth": "4",
       "url": "webanalytics",
-      // "component": VectorThumbnail
-    },
-    {
-      "id": "5",
-      "type": "thumbnail",
-      "resourceType": "dashboard",
-      "lookerMethod": "vector_thumbnail",
-      "label": "Sales",
-      "gridWidth": "4",
-      "url": "inventoryoverview",
-      // "component": VectorThumbnail
     },
     {
       "id": "1",
@@ -243,8 +232,16 @@ const popularAnalysis = {
       "lookerMethod": "vector_thumbnail",
       "label": "Inventory",
       "gridWidth": "4",
+      "url": "inventoryoverview",
+    },
+    {
+      "id": "5",
+      "type": "thumbnail",
+      "resourceType": "dashboard",
+      "lookerMethod": "vector_thumbnail",
+      "label": "Sales",
+      "gridWidth": "4",
       "url": "salesoverview",
-      // "component": VectorThumbnail
     }
   ],
   "label": "Popular analysis",
