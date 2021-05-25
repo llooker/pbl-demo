@@ -13,6 +13,7 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
   const classes = useStyles();
   const demoComponentType = type || 'code flyout';
 
+  console.log({ classes })
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
   })
@@ -27,7 +28,8 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
       style={{ height }}
     >
       <Card elevation={1}
-        className={classes.height100Percent}
+        className={`${classes.height100Percent} 
+        ${classes.overflowScroll}`}
       >
         <Grid
           container
@@ -43,7 +45,7 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
             <Grid container
               spacing={3}
               key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
-              className={`${classes.noContainerScroll}`}
+              className={`${classes.overflowScroll}`}
             >
 
               <CodeFlyout

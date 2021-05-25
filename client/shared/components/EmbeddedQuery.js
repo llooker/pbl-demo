@@ -12,15 +12,21 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
   console.log("EmbeddedQuery")
   console.log({ lookerContentItem })
 
-  const [iFrameExists, setIFrame] = useState(0);
+  const [iFrameExists, setIFrame] = useState(1);
   const { clientSession, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const { lookerUser } = clientSession;
 
 
+  // needed to copy from home to make it work
   useEffect(() => {
-    // console.log("useEffect outer");
-    // console.log({ lookerUser });
-    // console.log({ isReady });
+    let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
+    LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
+  }, [])
+
+  useEffect(() => {
+    console.log("useEffect outer");
+    console.log({ lookerUser });
+    console.log({ isReady });
     if (isReady) {
       // console.log("useEffect inner");
       fetchData()
@@ -28,7 +34,7 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
   }, [lookerUser, isReady])
 
   const idToUse = validIdHelper(`embedContainer-${lookerContentItem.type}-${lookerContentItem.id}`);
-
+  console.log({ idToUse })
   const fetchData = async () => {
     // console.log("fetchData")
     $(`#${idToUse}`).html('')

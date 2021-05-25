@@ -379,7 +379,8 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
     >
       <ThemeProvider theme={themeToUse}>
         <Card elevation={1}
-          className={classes.height100Percent}
+          className={`${classes.height100Percent} 
+        ${classes.overflowScroll}`}
         >
           <Grid
             container

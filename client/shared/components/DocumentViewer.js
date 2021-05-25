@@ -70,7 +70,8 @@ export const DocumentViewer = ({ staticContent, dynamicPadding }) => {
       style={{ height }}
     >
       <Card elevation={1}
-        className={classes.height100Percent}
+        className={`${classes.height100Percent} 
+      ${classes.overflowScroll}`}
       >
         <Grid
           container
