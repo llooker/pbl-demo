@@ -29,7 +29,8 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
     >
       <Card elevation={1}
         className={`${classes.height100Percent} 
-        ${classes.overflowScroll}`}
+        ${classes.overflowScroll}
+        ${classes.padding15}`}
       >
         <Grid
           container

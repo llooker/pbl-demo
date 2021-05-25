@@ -71,7 +71,6 @@ export default function Home(props) {
     //decorator approach??
     try {
       let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in || Date.now() - 1000);
-
       //new method of signing user out
       if (checkTokenRsp.status === 'expired') {
         setIsReady(false);
