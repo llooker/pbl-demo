@@ -39,6 +39,7 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
     $(`#${idToUse}`).html('')
     setIFrame(0)
 
+    let queryUrl = encodeURIComponent(`${lookerContentItem.queryUrl}${document.location.origin}`)
     await fetch(`/auth?src=${queryUrl}`)
       .then(response => response.json())
       .then(data => {

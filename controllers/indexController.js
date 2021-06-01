@@ -79,7 +79,7 @@ async function tokenHelper(session) {
   const embed_user_token = await embeddedUserSdk.login_user(userCred.id.toString())
   const u = {
     api_user_token: embed_user_token.value,
-    expires_in: (Date.now() + 10000) //(embed_user_token.value.expires_in * 900))
+    expires_in: (Date.now() + (embed_user_token.value.expires_in * 900)) //10000) 
   }
   return { ...u }
 

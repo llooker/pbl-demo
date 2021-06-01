@@ -50,7 +50,7 @@ export const initialUser = {
   "external_user_id": "",
   "first_name": "",
   "last_name": "",
-  "session_length": 5000, //86400,
+  "session_length": 86400, //5000,
   "force_logout_login": true,
   "external_group_id": "",
   "group_ids": [
