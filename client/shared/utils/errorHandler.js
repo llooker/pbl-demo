@@ -9,7 +9,7 @@ if (window.location.origin !== "https://embed.demo.com:8080") {
   errorHandler.start({
     key: process.env.REACT_APP_STACKDRIVER_KEY,
     projectId: process.env.REACT_APP_GCP_PROJECT_ID,
-    service: process.env.REACT_APP_PACKAGE_NAME,
+    service: process.env.REACT_APP_SERVICE_NAME, // //REACT_APP_PACKAGE_NAME
   });
 } else {
   // console.log("inside else")
