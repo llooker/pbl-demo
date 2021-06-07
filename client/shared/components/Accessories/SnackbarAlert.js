@@ -7,6 +7,8 @@ function Alert(props) {
 }
 
 export function SnackbarAlert({ helperResponse }) {
+  // console.log("SnackbarAlert")
+  // console.log({ helperResponse })
   const [state, setState] = React.useState({
     open: true,
     vertical: 'top',

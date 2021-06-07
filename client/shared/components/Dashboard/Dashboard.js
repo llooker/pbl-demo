@@ -79,6 +79,7 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
       item: filterItem, lookerUser, sdk, //hack for trends drill for now
       packageName: process.env.REACT_APP_PACKAGE_NAME,
     })
+    // console.log({ helperResponseData })
     let { methodName, response, response: { message } } = helperResponseData; //dynamic
     setHelperResponse(response)
     setTimeout(() => { setHelperResponse(undefined) }, 10000)

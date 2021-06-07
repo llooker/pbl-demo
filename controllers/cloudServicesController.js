@@ -16,7 +16,6 @@ const storage = new Storage({ projectId, keyFilename });
 module.exports.createCase = async (req, res, next) => {
   // console.log("createCase")
   let { session, body } = req;
-
   let options = {
     method: 'POST',
     uri: 'https://us-central1-pbl-demo-2020-281322.cloudfunctions.net/create_case',
@@ -47,9 +46,11 @@ module.exports.createCase = async (req, res, next) => {
     })
   } catch (err) {
     // console.log({ err })
+    let { message } = err
+    // console.log({ message })
     res.status(400).send({
       status: "error",
-      message: err
+      message: message
     })
   }
 }
