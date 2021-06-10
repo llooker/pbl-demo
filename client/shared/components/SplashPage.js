@@ -49,10 +49,12 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
               className={`${classes.overflowScroll}`}
             >
 
+
               <CodeFlyout
                 classes={classes}
                 lookerUser={lookerUser}
                 height={height}
+                staticContent={staticContent}
               />
 
               {lookerContent.map((lookerContentItem, innerIndex) => {

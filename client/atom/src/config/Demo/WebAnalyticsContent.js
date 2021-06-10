@@ -106,5 +106,6 @@ export const WebAnalyticsContent = {
       "allowNativeFilters": true,
     }
   ],
-  "requiredPermissionLevel": 0
+  "requiredPermissionLevel": 0,
+  "codeSandboxEmbedLink": "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=dark"
 }

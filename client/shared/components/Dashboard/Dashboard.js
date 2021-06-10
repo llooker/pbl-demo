@@ -423,6 +423,7 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
               classes={classes}
               lookerUser={lookerUser}
               height={height}
+              staticContent={staticContent}
             />
 
             {helperResponse && helperResponse.showSnackbar ?

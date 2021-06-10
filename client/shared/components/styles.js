@@ -315,5 +315,8 @@ export const useStyles = makeStyles((theme) => ({
   },
   noWrap: {
     whiteSpace: "nowrap"
+  },
+  maxHeight50: {
+    maxHeight: 50
   }
 }));
