@@ -1,75 +1,82 @@
 import React, { useContext } from 'react';
-
-import { Typography, Grid, Fade, ClickAwayListener } from '@material-ui/core'
+import PropTypes from 'prop-types';
+import { Typography, Grid, Fade, ClickAwayListener, AppBar, Tabs, Tab, Box, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { appContextMap } from '../../utils/tools';
 
-import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Box from '@material-ui/core/Box';
-
-
 export const CodeFlyout = (props) => {
-  console.log("CodeFlyout")
-  const { codeShow, setCodeShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  const { codeShow, setCodeShow, theme } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { classes, lookerUser, height, staticContent } = props;
-  console.log({ staticContent })
-  console.log({ codeShow })
-
-  const codeSandboxEmbedLink = staticContent.codeSandboxEmbedLink || {}
-  console.log({ codeSandboxEmbedLink })
-  const tabs = [lookerUser, codeSandboxEmbedLink]
-  console.log({ tabs })
-
+  const codeSandboxEmbedLink = staticContent.codeSandboxEmbedLink || undefined;
+  const tabs = [{
+    label: "Looker User Object",
+    component: CodeSnippet,
+    props: {
+      code: lookerUser
+    }
+  }]
+  if (codeSandboxEmbedLink) tabs.push({
+    label: "Code Sandbox",
+    component: Iframe,
+    props: {
+      src: codeSandboxEmbedLink,
+      style: {
+        position: "absolute",
+        height: "100%",
+        width: "100%",
+        border: "none",
+      }
+    }
+  })
   const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const handleChangeIndex = (index) => {
-    setValue(index);
-  };
-
   return (
     codeShow ?
-      <Grid item sm={6}
-        className={`${classes.positionTopRight} ${classes.padding0}`}>
-        <Grid container
-          className={`${classes.codeFlyoutContainer}`} //${classes.padding20} 
-          style={{ height }}
-        >
-          <AppBar position="static" className={classes.maxHeight50}>
-            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-              {tabs.map((item, index) => {
-                return (
-                  <Tab label={index === 0 ? "Looker User Object" : "Code Sandbox"} {...a11yProps(index)} />
-                )
-              })}
-            </Tabs>
-          </AppBar>
-          {tabs.map((item, index) => {
-            return (
-              <TabPanel value={value} index={index}
+      <Grid container
+        sm={8}
+        className={`${classes.codeFlyoutContainer} ${classes.positionTopRight} ${classes.padding0}`}
+      >
+        <ClickAwayListener onClickAway={() => setCodeShow()}>
+          <Fade in={true}>
+            <div className={classes.root}>
+              <AppBar
+                position="static"
+                className={`${classes.maxHeight50}`}
+                style={{ backgroundColor: theme.palette.fill.main }}
               >
-                {index === 0 ?
-                  <CodeSnippet code={lookerUser} />
-                  :
-                  <iframe src={codeSandboxEmbedLink}
-                    style={{
-                      position: "absolute",
-                      height: "100%",
-                      border: "none"
-                    }} />
-                }
-              </TabPanel>)
-          })}
-        </Grid>
-      </Grid>
+                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example"
+                  variant="scrollable"
+                >
+                  {tabs.map((item, index) => {
+                    return (
+                      <Tab label={item.label} {...a11yProps(index)} />
+                    )
+                  })}
+                  <IconButton aria-label="close" className={classes.mlAuto} onClick={() => setCodeShow()} >
+                    <CloseIcon style={{ color: 'white', cursor: 'pointer' }} />
+                  </IconButton>
+                </Tabs>
+
+              </AppBar>
+              {tabs.map((item, index) => {
+                const ComponentToRender = item.component;
+                console.log({ ComponentToRender })
+                return (
+                  <TabPanel value={value}
+                    index={index}
+                    classes={classes}
+                  >
+                    <ComponentToRender {...item.props}></ComponentToRender>
+                  </TabPanel>)
+              })}
+            </div>
+          </Fade >
+        </ClickAwayListener >
+      </Grid >
       : ""
   )
 }
@@ -77,13 +84,21 @@ export const CodeFlyout = (props) => {
 function CodeSnippet(props) {
   const { code } = props
   return (
-    <SyntaxHighlighter language="json" style={dracula} showLineNumbers={true} >
+    <SyntaxHighlighter
+      language="json"
+      showLineNumbers={true} >
       {typeof code === "object" ? JSON.stringify(code, true, 4) : code}
     </SyntaxHighlighter>)
 }
 
+function Iframe(props) {
+  const { src, style } = props
+  return (
+    <iframe src={src} style={style} />)
+}
+
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, classes, ...other } = props;
 
   return (
     <div
@@ -94,7 +109,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
+        <Box >
           <Typography>{children}</Typography>
         </Box>
       )}

@@ -13,7 +13,7 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
   const classes = useStyles();
   const demoComponentType = type || 'code flyout';
 
-  console.log({ classes })
+  // console.log({ classes })
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
   })
