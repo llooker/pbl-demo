@@ -147,5 +147,5 @@ export const FlagsConent = {
       }
     }],
   "requiredPermissionLevel": 1,
-  "codeSandboxEmbedLink": "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light"
+  "codeSandboxEmbedLink": "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor"
 }
