@@ -36,11 +36,15 @@ export const CodeFlyout = (props) => {
 
   return (
     codeShow ?
-      <Grid container
-        sm={8}
-        className={`${classes.codeFlyoutContainer} ${classes.positionTopRight} ${classes.padding0}`}
-      >
-        <ClickAwayListener onClickAway={() => setCodeShow()}>
+
+      <ClickAwayListener onClickAway={() => {
+        setValue(0)
+        setCodeShow()
+      }}>
+        <Grid container
+          sm={8}
+          className={`${classes.codeFlyoutContainer} ${classes.positionTopRight} ${classes.padding0}`}
+        >
           <Fade in={true}>
             <div className={classes.root}>
               <AppBar
@@ -56,7 +60,10 @@ export const CodeFlyout = (props) => {
                       <Tab label={item.label} {...a11yProps(index)} />
                     )
                   })}
-                  <IconButton aria-label="close" className={classes.mlAuto} onClick={() => setCodeShow()} >
+                  <IconButton aria-label="close" className={classes.mlAuto} onClick={() => {
+                    setValue(0)
+                    setCodeShow()
+                  }} >
                     <CloseIcon style={{ color: 'white', cursor: 'pointer' }} />
                   </IconButton>
                 </Tabs>
@@ -64,7 +71,6 @@ export const CodeFlyout = (props) => {
               </AppBar>
               {tabs.map((item, index) => {
                 const ComponentToRender = item.component;
-                console.log({ ComponentToRender })
                 return (
                   <TabPanel value={value}
                     index={index}
@@ -75,8 +81,8 @@ export const CodeFlyout = (props) => {
               })}
             </div>
           </Fade >
-        </ClickAwayListener >
-      </Grid >
+        </Grid >
+      </ClickAwayListener >
       : ""
   )
 }

@@ -24,7 +24,7 @@ export const DocumentViewerContent = {
       "label": "EligibilityDocs",
       "isNext": false,
       "filters": [],
-      "url": "https://storage.cloud.google.com/gov_portal/1099_0_Brooke_Arnold.pdf"
+      "url": "https://storage.cloud.google.com/gov_portal/1099_0_Bryan_Reynolds.pdf"
     }],
   "schema": schema,
   "requiredPermissionLevel": 1
