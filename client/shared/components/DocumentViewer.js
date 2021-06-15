@@ -87,6 +87,7 @@ export const DocumentViewer = ({ staticContent, dynamicPadding }) => {
             classes={classes}
             lookerUser={lookerUser}
             height={height}
+            staticContent={staticContent}
           />
 
           {docToUse ?

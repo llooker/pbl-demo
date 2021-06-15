@@ -318,10 +318,11 @@ export default function ReportBuilder(props) {
                   spacing={3}
                   className={`${classes.noContainerScroll}`}>
 
-                  <CodeFlyout {...props}
+                  <CodeFlyout
                     classes={classes}
                     lookerUser={lookerUser}
                     height={height - expansionPanelHeight - additionalHeightForFlyout}
+                    staticContent={staticContent}
                   />
                   {tabContent.map((tabContentItem, tabContentItemIndex) => (
                     <TabPanel

@@ -4,10 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 const drawerWidth = 240;
 const topHeaderHeight = 64;
 const bottomHeaderHeight = 48;
-const topDrawerHeight = 54;
-const bottomPaddingBuffer = 15;
-export const topAndBottomHeaderSpacing = topHeaderHeight + bottomHeaderHeight - bottomPaddingBuffer
-export const topAndBottomHeaderPlusDrawerOpen = topAndBottomHeaderSpacing + topDrawerHeight;
+const topDrawerHeight = 52;
+const additionalPadding = 30;
+export const topAndBottomHeaderSpacing = topHeaderHeight + bottomHeaderHeight + additionalPadding;
+export const topAndBottomHeaderPlusDrawerOpen = 0;
 
 export const useStyles = makeStyles(theme => ({
   root: {

@@ -175,9 +175,9 @@ export const useStyles = makeStyles((theme) => ({
     padding: 20
   },
   codeFlyoutContainer: {
-    backgroundColor: 'rgb(40, 42, 54)',
     overflow: 'scroll',
-    borderRadius: '0 8px 8px 0'
+    borderRadius: '0 8px 8px 0',
+    backgroundColor: `rgb(240, 240, 240)`
   },
   height100Percent: {
     height: '100%'
@@ -185,11 +185,6 @@ export const useStyles = makeStyles((theme) => ({
   noContainerScroll: {
     width: '100%',
     margin: 0
-  },
-  lookerCardShadow: {
-    border: 'none',
-    borderRadius: '6px',
-    boxShadow: 'rgba(0, 0, 0, 0.11) 0px 2px 12px, rgba(0, 0, 0, 0.04) 0px 1px 4px'
   },
   maxHeight60: {
     maxHeight: 60,

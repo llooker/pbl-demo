@@ -31,7 +31,7 @@ export default function SalesCalendar(props) {
   const [expansionPanelHeight, setExpansionPanelHeight] = useState(0);
 
   const classes = useStyles();
-  const { staticContent: { lookerContent }, staticContent: { type }, activeTabValue, handleTabChange } = props;
+  const { staticContent, staticContent: { lookerContent }, staticContent: { type } } = props;
 
   //handle opening of modal for advanced and premium users
   const handleModalOpen = async ({ day }) => {
@@ -203,10 +203,11 @@ export default function SalesCalendar(props) {
                   spacing={3}
                   className={`${classes.noContainerScroll}`}>
 
-                  <CodeFlyout {...props}
+                  <CodeFlyout
                     classes={classes}
                     lookerUser={lookerUser}
                     height={height - expansionPanelHeight - additionalHeightForFlyout}
+                    staticContent={staticContent}
                   />
 
                   <Divider className={classes.divider} />

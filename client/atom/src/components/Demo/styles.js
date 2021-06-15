@@ -175,9 +175,9 @@ export const useStyles = makeStyles((theme) => ({
     padding: 20
   },
   codeFlyoutContainer: {
-    backgroundColor: 'rgb(40, 42, 54)',
     overflow: 'scroll',
-    borderRadius: '0 8px 8px 0'
+    borderRadius: '0 8px 8px 0',
+    backgroundColor: `rgb(240, 240, 240)`
   },
   height100Percent: {
     height: '100%'

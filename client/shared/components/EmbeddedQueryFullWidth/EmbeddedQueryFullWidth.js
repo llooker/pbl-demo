@@ -150,6 +150,7 @@ export const EmbeddedQueryFullWidth = ({ staticContent, dynamicPadding }) => {
             classes={classes}
             lookerUser={lookerUser}
             height={height}
+            staticContent={staticContent}
           />
         </Grid>
       </Card >

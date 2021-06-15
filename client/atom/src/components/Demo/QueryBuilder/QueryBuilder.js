@@ -107,11 +107,13 @@ export default function QueryBuilder(props) {
                   spacing={3}
                   className={`${classes.noContainerScroll}`}>
 
-                  <CodeFlyout {...props}
+                  <CodeFlyout
                     classes={classes}
                     lookerUser={lookerUser}
                     height={height - expansionPanelHeight - additionalHeightForFlyout}
+                    staticContent={staticContent}
                   />
+
                   <Divider className={classes.divider} />
                   <Grid item sm={12}>
                     <Box className={`${classes.w100}`} mt={2}>
