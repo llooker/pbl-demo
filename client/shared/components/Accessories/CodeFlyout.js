@@ -8,7 +8,7 @@ import { appContextMap } from '../../utils/tools';
 export const CodeFlyout = (props) => {
   const { codeShow, setCodeShow, theme } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { classes, lookerUser, height, staticContent } = props;
-  const codeSandboxEmbedLink = staticContent.codeSandboxEmbedLink || undefined;
+  const { codeFlyoutContent } = staticContent || undefined;
   const tabs = [{
     label: "Looker User Object",
     component: CodeSnippet,
@@ -16,19 +16,27 @@ export const CodeFlyout = (props) => {
       code: lookerUser
     }
   }]
-  if (codeSandboxEmbedLink) tabs.push({
-    label: "Code Sandbox",
-    component: Iframe,
-    props: {
-      src: codeSandboxEmbedLink,
-      style: {
-        position: "absolute",
-        height: "100%",
-        width: "100%",
-        border: "none",
-      }
-    }
-  })
+  if (codeFlyoutContent && typeof codeFlyoutContent === "string") {
+  } else if (codeFlyoutContent && typeof codeFlyoutContent === "object") {
+    codeFlyoutContent.map(({ label, link }) => {
+      tabs.push({
+        label: label,
+        component: Iframe,
+        props: {
+          src: link,
+          style: {
+            position: "absolute",
+            height: "100%",
+            width: "100%",
+            border: "none",
+          }
+        }
+      })
+    })
+  }
+
+  console.log({ tabs })
+
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);

@@ -100,5 +100,13 @@ export const TrendsContent = {
       "allowNativeFilters": true,
     }],
   "requiredPermissionLevel": 0,
-  "codeSandboxEmbedLink": "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor"
+  "codeFlyoutContent": [
+    {
+      link: "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor",
+      label: "Sample Embedded Dashboard"
+    }, {
+      link: "https://codesandbox.io/embed/simple-api-run-inline-query-50j8k?fontsize=14&hidenavigation=1&theme=light&view=editor",
+      label: "Sample Api Call"
+    }
+  ]
 }

@@ -87,5 +87,10 @@ export const HomeContent = {
       // }
     }],
   "requiredPermissionLevel": 0,
-  "codeSandboxEmbedLink": "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor"
+  "codeFlyoutContent": [
+    {
+      link: "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor",
+      label: "Sample Embedded Dashboard"
+    }
+  ]
 }
