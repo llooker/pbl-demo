@@ -3,7 +3,8 @@ import { Dashboard } from '@pbl-demo/components';
 import { EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
 import { handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
 import { SwitchTheme, CheckboxLabels, Dropdown, ChipList } from '@pbl-demo/components/Filters';
-
+import { codeSandboxes } from '@pbl-demo/utils';
+const { basic_dashboard } = codeSandboxes
 
 const themeFilter = {
   "label": "Show or hide custom filters",
@@ -108,9 +109,6 @@ export const WebAnalyticsContent = {
   ],
   "requiredPermissionLevel": 0,
   "codeFlyoutContent": [
-    {
-      link: "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor",
-      label: "Sample Embedded Dashboard"
-    }
+    basic_dashboard
   ]
 }

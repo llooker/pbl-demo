@@ -4,6 +4,8 @@ import { AutoComplete, MapFilter, RangeSlider, ToggleApi, ToggleButton } from '@
 import { CloudFunctionHighlight, ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
 import { SentimentDissatisfied, SentimentSatisfied, SentimentVerySatisfied } from '@material-ui/icons';
 import Usa from "@svg-maps/usa";
+import { codeSandboxes } from '@pbl-demo/utils';
+const { basic_dashboard } = codeSandboxes
 
 const productCategoryFilter = {
   "label": "Select Product Category",
@@ -201,9 +203,6 @@ export const SalesOverviewContent = {
     }],
   "requiredPermissionLevel": 0,
   "codeFlyoutContent": [
-    {
-      link: "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor",
-      label: "Sample Embedded Dashboard"
-    }
+    basic_dashboard
   ]
 }

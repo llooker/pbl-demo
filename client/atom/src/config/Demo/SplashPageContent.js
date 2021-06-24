@@ -1,8 +1,7 @@
 import HomeIcon from '@material-ui/icons/Home';
-import {
-  EmbeddedQuery, SplashPage, Welcome, SparkLine, PopularAnalysis
-  // , VectorThumbnail 
-} from '@pbl-demo/components'
+import { EmbeddedQuery, SplashPage, Welcome, SparkLine, PopularAnalysis } from '@pbl-demo/components'
+import { codeSandboxes } from '@pbl-demo/utils';
+const { api_run_query } = codeSandboxes
 
 const bestWorstAnalysis = {
   "id": "19",
@@ -264,5 +263,8 @@ export const SplashPageContent = {
     embeddedQuery,
     popularAnalysis
   ],
-  "requiredPermissionLevel": 0
+  "requiredPermissionLevel": 0,
+  "codeFlyoutContent": [
+    api_run_query
+  ]
 }

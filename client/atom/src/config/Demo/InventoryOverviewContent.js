@@ -3,7 +3,8 @@ import { handleTileToggle, handleVisColorToggle, handleThemeChange } from '@pbl-
 import { Dashboard } from '@pbl-demo/components';
 import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, Dropdown } from '@pbl-demo/components/Filters';
 import { CloudFunctionHighlight, ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
-
+import { codeSandboxes } from '@pbl-demo/utils';
+const { basic_dashboard } = codeSandboxes
 
 const productNameFilter = {
   "label": "Select Product Name",
@@ -162,10 +163,5 @@ export const InventoryOverivewContent = {
       "themeable": true
     }],
   "requiredPermissionLevel": 0,
-  "codeFlyoutContent": [
-    {
-      link: "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor",
-      label: "Sample Embedded Dashboard"
-    }
-  ]
+  "codeFlyoutContent": [basic_dashboard]
 }
