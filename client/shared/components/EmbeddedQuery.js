@@ -22,9 +22,9 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
   }, [])
 
   useEffect(() => {
-    console.log("useEffect outer");
-    console.log({ lookerUser });
-    console.log({ isReady });
+    // console.log("useEffect outer");
+    // console.log({ lookerUser });
+    // console.log({ isReady });
     if (isReady) {
       // console.log("useEffect inner");
       // fetchData();
@@ -33,9 +33,7 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
   }, [lookerUser, isReady])
 
   const idToUse = validIdHelper(`embedContainer-${lookerContentItem.type}-${lookerContentItem.id}`);
-  console.log({ idToUse })
   const fetchData = async () => {
-    console.log("fetchData")
     $(`#${idToUse}`).html('')
     setIFrame(0)
 
