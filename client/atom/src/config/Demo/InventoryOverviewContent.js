@@ -23,7 +23,7 @@ const productNameFilter = {
   "component": AutoComplete,
   "apiKey": "autocomplete",
   "highlightComponent": ApiHighlight,
-
+  "gridWidth": 12,
 }
 
 const tilesFilter = {
@@ -54,6 +54,7 @@ const tilesFilter = {
   "methodName": "handleTileToggle",
   "component": ToggleTile,
   "highlightComponent": EmbedMethodHighlight,
+  "gridWidth": 12,
 }
 
 const visConfigFilter = {
@@ -156,7 +157,7 @@ export const InventoryOverivewContent = {
       "isNext": false,
       "label": "Inventory Overview",
       "adjacentContainer": {
-        "gridWidth": 4,
+        "gridWidth": 3,
         "items": [productNameFilter, tilesFilter, visConfigFilter, themeColorFilter, themeFontFilter],
         "collapsable": true
       },

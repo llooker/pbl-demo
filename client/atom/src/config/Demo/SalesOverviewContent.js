@@ -34,7 +34,8 @@ const productCategoryFilter = {
   "resultFormat": "json",
   "component": AutoComplete,
   "apiKey": "autocomplete",
-  "highlightComponent": ApiHighlight
+  "highlightComponent": ApiHighlight,
+  "gridWidth": 12
 }
 
 const customUsa = {
@@ -129,7 +130,8 @@ const regionFilter = {
   "component": MapFilter,
   "apiKey": "mapfilter",
   "highlightComponent": EmbedMethodHighlight,
-  "map": customUsa
+  "map": customUsa,
+  "gridWidth": 12
 }
 
 const ageFilter = {
@@ -148,7 +150,8 @@ const ageFilter = {
   "resultFormat": "json",
   "component": RangeSlider,
   "apiKey": "rangeslider",
-  "highlightComponent": EmbedMethodHighlight
+  "highlightComponent": EmbedMethodHighlight,
+  "gridWidth": 12
 }
 
 // going to need this for atom refactor
@@ -177,6 +180,7 @@ const revenueTierFilter = {
   "apiKey": "togglebuttonapi",
   "highlightComponent": EmbedMethodHighlight,
   "options": lifetimeRevenueTierMap,
+  "gridWidth": 12
 }
 
 export const SalesOverviewContent = {
@@ -194,7 +198,7 @@ export const SalesOverviewContent = {
       "label": "Sales Overview",
       "isNext": true,
       "adjacentContainer": {
-        "gridWidth": 4,
+        "gridWidth": 3,
         "items": [productCategoryFilter, regionFilter, ageFilter,
           revenueTierFilter
         ],
