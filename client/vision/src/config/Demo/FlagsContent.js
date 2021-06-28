@@ -3,6 +3,8 @@ import { Dashboard } from '@pbl-demo/components';
 import { ModalButton, Dropdown, HiddenFilterValueText, NotesList, LinkText } from '@pbl-demo/components/Filters';
 import { addCaseNotes, changeCaseStatus } from '@pbl-demo/components/Dashboard/helpers'
 import { CloudFunctionHighlight, ApiHighlight } from '@pbl-demo/components/Accessories';
+import { codeSandboxes } from '@pbl-demo/utils';
+const { embedded_dashboard, api_run_query } = codeSandboxes
 
 const addCaseNotesModal = {
   "copy": {
@@ -148,12 +150,6 @@ export const FlagsConent = {
     }],
   "requiredPermissionLevel": 1,
   "codeFlyoutContent": [
-    {
-      link: "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor",
-      label: "Sample Embedded Dashboard"
-    }, {
-      link: "https://codesandbox.io/embed/simple-api-run-inline-query-50j8k?fontsize=14&hidenavigation=1&theme=light&view=editor",
-      label: "Sample Api Call"
-    }
+    embedded_dashboard, api_run_query
   ]
 }

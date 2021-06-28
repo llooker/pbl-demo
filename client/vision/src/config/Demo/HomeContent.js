@@ -2,6 +2,8 @@ import HomeIcon from '@material-ui/icons/Home';
 import { ApiHighlight } from '@pbl-demo/components/Accessories';
 import { Dashboard, TrendItem, InlineList } from '@pbl-demo/components';
 import { runInlineQuery } from '@pbl-demo/components/Dashboard/helpers';
+import { codeSandboxes } from '@pbl-demo/utils';
+const { embedded_dashboard } = codeSandboxes
 
 
 const countyTrends = {
@@ -80,17 +82,7 @@ export const HomeContent = {
       "label": "Trends",
       "isNext": false,
       "theme": "vision_light_arial",
-      // "adjacentContainer": {
-      //   "gridWidth": 12,
-      //   "items": [countyTrends],
-      //   "component": InlineList
-      // }
     }],
   "requiredPermissionLevel": 0,
-  "codeFlyoutContent": [
-    {
-      link: "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor",
-      label: "Sample Embedded Dashboard"
-    }
-  ]
+  "codeFlyoutContent": [embedded_dashboard]
 }

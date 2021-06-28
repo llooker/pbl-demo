@@ -3,7 +3,9 @@ import { Dashboard } from '@pbl-demo/components'
 import { Dropdown, HiddenFilterValueText, SwitchTheme } from '@pbl-demo/components/Filters';
 import { createCase } from '@pbl-demo/components/Dashboard/helpers'
 import { CloudFunctionHighlight, ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
-import { handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
+import { handleThemeChange } from '@pbl-demo/components/Dashboard/helpers';
+import { codeSandboxes } from '@pbl-demo/utils';
+const { embedded_dashboard, api_run_query } = codeSandboxes;
 
 const createCaseSelect = {
   "label": "Case type",
@@ -86,9 +88,7 @@ export const BeneficiaryContent = {
     }],
   "requiredPermissionLevel": 1,
   "codeFlyoutContent": [
-    {
-      link: "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor",
-      label: "Sample Embedded Dashboard"
-    }
+    embedded_dashboard,
+    api_run_query
   ]
 }

@@ -4,6 +4,8 @@ import { EmbeddedExplore } from "@pbl-demo/components";
 import { ToggleButton } from '@pbl-demo/components/Filters'
 import { createEmbeddedExplore } from '@pbl-demo/components/Explore/helpers'
 import { EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
+import { codeSandboxes } from '@pbl-demo/utils';
+const { embedded_explore } = codeSandboxes;
 
 const savedDefaultQueriesToggle = {
   // "label": "Starting Points:",
@@ -37,4 +39,7 @@ export const ExploreContent = {
       // }
     }],
   "requiredPermissionLevel": 1,
+  "codeFlyoutContent": [
+    embedded_explore
+  ]
 }

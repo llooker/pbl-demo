@@ -1,6 +1,7 @@
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import { EmbeddedQueryFullWidth } from '@pbl-demo/components'
-
+import { EmbeddedQueryFullWidth } from '@pbl-demo/components';
+import { codeSandboxes } from '@pbl-demo/utils';
+const { embedded_query } = codeSandboxes;
 
 export const AIMatchGroupsContent = {
   "type": "embedded query",
@@ -18,6 +19,7 @@ export const AIMatchGroupsContent = {
       "theme": "vision_arial_light"
     }
   ],
-  "requiredPermissionLevel": 0
+  "requiredPermissionLevel": 0,
+  "codeFlyoutContent": [embedded_query]
 }
 

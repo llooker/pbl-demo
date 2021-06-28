@@ -3,6 +3,8 @@ import { Dashboard } from '@pbl-demo/components';
 import { SwitchTheme, RangeSlider, CheckboxLabels, Dropdown, ToggleApi } from '@pbl-demo/components/Filters';
 import { EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
 import { handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
+import { codeSandboxes } from '@pbl-demo/utils';
+const { embedded_dashboard } = codeSandboxes
 
 const themeFilter = {
   "label": "Show or hide custom filters",
@@ -101,12 +103,6 @@ export const TrendsContent = {
     }],
   "requiredPermissionLevel": 0,
   "codeFlyoutContent": [
-    {
-      link: "https://codesandbox.io/embed/embedded-dashboard-iilew?fontsize=14&hidenavigation=1&theme=light&view=editor",
-      label: "Sample Embedded Dashboard"
-    }, {
-      link: "https://codesandbox.io/embed/simple-api-run-inline-query-50j8k?fontsize=14&hidenavigation=1&theme=light&view=editor",
-      label: "Sample Api Call"
-    }
+    embedded_dashboard
   ]
 }
