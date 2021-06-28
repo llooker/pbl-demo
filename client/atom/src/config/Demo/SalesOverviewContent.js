@@ -5,7 +5,8 @@ import { CloudFunctionHighlight, ApiHighlight, EmbedHighlight, EmbedMethodHighli
 import { SentimentDissatisfied, SentimentSatisfied, SentimentVerySatisfied } from '@material-ui/icons';
 import Usa from "@svg-maps/usa";
 import { codeSandboxes } from '@pbl-demo/utils';
-const { basic_dashboard } = codeSandboxes
+const { api_run_query, embedded_dashboard } = codeSandboxes;
+
 
 const productCategoryFilter = {
   "label": "Select Product Category",
@@ -207,6 +208,6 @@ export const SalesOverviewContent = {
     }],
   "requiredPermissionLevel": 0,
   "codeFlyoutContent": [
-    basic_dashboard
+    embedded_dashboard, api_run_query
   ]
 }

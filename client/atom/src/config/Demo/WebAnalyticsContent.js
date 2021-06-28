@@ -4,7 +4,7 @@ import { EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Acces
 import { handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
 import { SwitchTheme, CheckboxLabels, Dropdown, ChipList } from '@pbl-demo/components/Filters';
 import { codeSandboxes } from '@pbl-demo/utils';
-const { basic_dashboard } = codeSandboxes
+const { embedded_dashboard } = codeSandboxes
 
 const themeFilter = {
   "label": "Show or hide custom filters",
@@ -109,6 +109,6 @@ export const WebAnalyticsContent = {
   ],
   "requiredPermissionLevel": 0,
   "codeFlyoutContent": [
-    basic_dashboard
+    embedded_dashboard
   ]
 }

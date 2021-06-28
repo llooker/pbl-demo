@@ -1,6 +1,7 @@
 import SalesCalendar from '../../components/Demo/SalesCalendar/SalesCalendar'
 import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
-
+import { codeSandboxes } from '@pbl-demo/utils';
+const { api_run_query } = codeSandboxes;
 
 export const SalesCalendarContent = {
   "type": "custom vis",
@@ -34,5 +35,6 @@ export const SalesCalendarContent = {
       "resultFormat": "json"
     }
   ],
-  "requiredPermissionLevel": 0
+  "requiredPermissionLevel": 0,
+  "codeFlyoutContent": [api_run_query]
 }

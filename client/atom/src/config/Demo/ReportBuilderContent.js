@@ -1,7 +1,7 @@
 import ReportBuilder from '../../components/Demo/ReportBuilder/ReportBuilder'
 import LibraryBooksOutlinedIcon from '@material-ui/icons/LibraryBooksOutlined';
 import { codeSandboxes } from '@pbl-demo/utils';
-const { basic_explore } = codeSandboxes
+const { embedded_explore, embedded_look } = codeSandboxes
 
 export const ReportBuilderContent = {
   "type": "report builder",
@@ -24,6 +24,7 @@ export const ReportBuilderContent = {
   ],
   "requiredPermissionLevel": 1,
   "codeFlyoutContent": [
-    basic_explore
+    embedded_look,
+    embedded_explore
   ]
 }

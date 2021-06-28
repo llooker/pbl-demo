@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Typography, Grid, Fade, ClickAwayListener, AppBar, Tabs, Tab, Box, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { appContextMap } from '../../utils/tools';
+import { appContextMap, validIdHelper } from '../../utils/tools';
+
 
 export const CodeFlyout = (props) => {
   const { codeShow, setCodeShow, theme } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
@@ -35,8 +36,6 @@ export const CodeFlyout = (props) => {
     })
   }
 
-  console.log({ tabs })
-
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -60,12 +59,17 @@ export const CodeFlyout = (props) => {
                 className={`${classes.maxHeight50}`}
                 style={{ backgroundColor: theme.palette.fill.main }}
               >
-                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example"
+                <Tabs
+                  value={value}
+                  onChange={handleChange} aria-label="simple tabs example"
                   variant="scrollable"
                 >
                   {tabs.map((item, index) => {
                     return (
-                      <Tab label={item.label} {...a11yProps(index)} />
+                      <Tab
+                        key={validIdHelper(`${item.label}-tab-index`)}
+                        label={item.label}
+                        {...a11yProps(index)} />
                     )
                   })}
                   <IconButton aria-label="close" className={classes.mlAuto} onClick={() => {
@@ -80,7 +84,9 @@ export const CodeFlyout = (props) => {
               {tabs.map((item, index) => {
                 const ComponentToRender = item.component;
                 return (
-                  <TabPanel value={value}
+                  <TabPanel
+                    key={validIdHelper(`${item.label}-tabpanel-index`)}
+                    value={value}
                     index={index}
                     classes={classes}
                   >

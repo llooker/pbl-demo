@@ -4,7 +4,8 @@ import { Dashboard } from '@pbl-demo/components';
 import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, Dropdown } from '@pbl-demo/components/Filters';
 import { CloudFunctionHighlight, ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
 import { codeSandboxes } from '@pbl-demo/utils';
-const { basic_dashboard } = codeSandboxes
+const { api_run_query, embedded_dashboard } = codeSandboxes;
+
 
 const productNameFilter = {
   "label": "Select Product Name",
@@ -164,5 +165,5 @@ export const InventoryOverivewContent = {
       "themeable": true
     }],
   "requiredPermissionLevel": 0,
-  "codeFlyoutContent": [basic_dashboard]
+  "codeFlyoutContent": [embedded_dashboard, api_run_query]
 }

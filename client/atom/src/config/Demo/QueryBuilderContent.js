@@ -1,5 +1,7 @@
 import QueryBuilder from '../../components/Demo/QueryBuilder/QueryBuilder'
 import SearchIcon from '@material-ui/icons/Search';
+import { codeSandboxes } from '@pbl-demo/utils';
+const { api_run_query } = codeSandboxes;
 
 export const QueryBuilderContent = {
   "type": "query builder",
@@ -59,5 +61,6 @@ export const QueryBuilderContent = {
       }
     }
   ],
-  "requiredPermissionLevel": 0
+  "requiredPermissionLevel": 0,
+  "codeFlyoutContent": [api_run_query]
 }

@@ -1,20 +1,24 @@
 export const codeSandboxes = {
-  basic_dashboard: {
-    link: "https://codesandbox.io/embed/stupefied-smoke-7kyzt?fontsize=14&hidenavigation=1&initialpath=%2Fbasic_dashboard&module=%2Fsrc%2Fclient%2FEmbeddedDashboard.js&theme=light&view=editor",
-    label: "Sample Embedded Dashboard"
+  embedded_dashboard: {
+    link: "https://codesandbox.io/embed/stupefied-smoke-7kyzt?fontsize=14&hidenavigation=1&initialpath=%2Fembedded_dashboard&module=%2Fsrc%2Fclient%2FEmbeddedDashboard.js&theme=light&view=editor",
+    label: "Embedded Dashboard"
   },
-  basic_explore:
+  embedded_explore:
   {
-    link: "https://codesandbox.io/embed/stupefied-smoke-7kyzt?fontsize=14&hidenavigation=1&initialpath=%2Fbasic_explore&module=%2Fsrc%2Fclient%2FEmbeddedExplore.js&theme=light&view=editor",
-    label: "Sample Embedded Explore"
+    link: "https://codesandbox.io/embed/stupefied-smoke-7kyzt?fontsize=14&hidenavigation=1&initialpath=%2Fembedded_explore&module=%2Fsrc%2Fclient%2FEmbeddedExplore.js&theme=light&view=editor",
+    label: "Embedded Explore"
+  },
+  embedded_query: {
+    link: "https://codesandbox.io/embed/stupefied-smoke-7kyzt?fontsize=14&hidenavigation=1&initialpath=%2Fembedded_query&module=%2Fsrc%2Fclient%2FEmbeddedQuery.js&theme=light&view=editor",
+    label: "Embedded Query"
   },
   api_run_query:
   {
-    link: "https://codesandbox.io/embed/stupefied-smoke-7kyzt?fontsize=14&hidenavigation=1&initialpath=%2Frun_query&module=%2Fsrc%2Fclient%2FApiRunQuery.js&theme=light&view=editor",
-    label: "Run Query Api Call"
+    link: "https://codesandbox.io/embed/stupefied-smoke-7kyzt?fontsize=14&hidenavigation=1&initialpath=%2Flooker_api_run_query&module=%2Fsrc%2Fclient%2FApiRunQuery.js&theme=light&view=editor",
+    label: "Api Run Query "
   },
-  basic_query: {
-    link: "https://codesandbox.io/embed/stupefied-smoke-7kyzt?fontsize=14&hidenavigation=1&initialpath=%2Fbasic_query&module=%2Fsrc%2Fclient%2FEmbeddedQuery.js&theme=light&view=editor",
-    label: "Sample Embedded Query"
-  }
+  embedded_look: {
+    link: "https://codesandbox.io/embed/stupefied-smoke-7kyzt?fontsize=14&hidenavigation=1&initialpath=%2Fembedded_look&module=%2Fsrc%2Fclient%2FEmbeddedLook.js&theme=light&view=editor",
+    label: "Embedded Look"
+  },
 }
