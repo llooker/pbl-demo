@@ -12,9 +12,9 @@ import match from "autosuggest-highlight/match";
 const { validIdHelper } = require('../../utils/tools');
 
 export const AutoComplete = ({ filterItem, apiContent, classes, action, setDynamicSearch }) => {
-  // console.log("AutoComplete");
+  console.log("AutoComplete");
   // console.log({ filterItem })
-  // console.log({ apiContent })
+  console.log({ apiContent })
   // console.log({ action })
 
   const [open, setOpen] = useState(false)

@@ -19,6 +19,7 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
   // console.log('Dashboard');
   // console.log({ staticContent });
   // console.log({ dynamicPadding });
+
   const { clientSession, clientSession: { lookerUser }, sdk, corsApiCall, theme, isReady, selectedMenuItem, drawerOpen } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { lookerContent, type } = staticContent;
   const demoComponentType = type || 'code flyout';
@@ -40,14 +41,11 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true); //useState(hasLightDarkThemeToggle);
   const [customFiltersThemeToggle, setCustomFiltersThemeToggle] = useState(allowNativeFilters);
-
   const isThemeableDashboard = lookerContent[0].themeable;
-
   const darkThemeBackgroundColor = theme.palette.fill.secondary ? theme.palette.fill.secondary : theme.palette.fill.main;
   const classes = useStyles();
   const location = useLocation();
   let history = useHistory();
-
 
   //conditional theming for dark mode :D
   let paletteToUse = !lightThemeToggleValue && isThemeableDashboard ?
@@ -79,12 +77,9 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
       item: filterItem, lookerUser, sdk, //hack for trends drill for now
       packageName: process.env.REACT_APP_PACKAGE_NAME,
     })
-    // console.log({ helperResponseData })
     let { methodName, response, response: { message } } = helperResponseData; //dynamic
     setHelperResponse(response)
     setTimeout(() => { setHelperResponse(undefined) }, 10000)
-    // console.log({ methodName })
-    // console.log({ response })
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
       dashboardObj.setOptions(response);
     } else if (methodName === "handleLightDarkThemeChange") {
@@ -107,16 +102,12 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
     } else if (methodName === "runInlineQuery") {
       // console.log("inside this else if")
     }
-    // else if (methodName === "handleLifetimeRevenueTier") {
-    //   customFilterAction(filterItem.filterName, newValue)
-    // }
   }
 
   const performLookerApiCalls = (lookerContent, dynamicTheme) => {
     // console.log("performLookerApiCalls");
     // console.log({ lookerContent })
     // console.log({ dynamicTheme })
-
     setIFrame(0)
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
     lookerContent.map(async lookerContentItem => {
@@ -127,10 +118,6 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
         lookerContentItem.theme ?
           lookerContentItem.theme :
           'atom_fashion';
-
-      // let embeddedDashboard = await createEmbeddedDashboard({
-      //   dashboardId, themeToUse, demoComponentType
-      // })
 
       LookerEmbedSDK.createDashboardWithId(dashboardId)
         .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${dashboardId}`))
@@ -288,10 +275,15 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
   }, [lookerUser, isReady, selectedMenuItem])
 
   useEffect(() => {
+    initializeDashboardOptions();
+  }, [dashboardOptions]);
+
+  const initializeDashboardOptions = () => {
     if (Object.keys(dashboardOptions).length && Object.keys(dashboardObj).length
     ) {
-      let tileToggleFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Tiles" })
-      let visColorFilterItem = _.find(lookerContent[0].filters, { label: "Dynamic Vis Config" })
+      let filterItemsArr = lookerContent[0].adjacentContainer.items
+      let tileToggleFilterItem = _.find(filterItemsArr, { label: "Dynamic Tiles" })
+      let visColorFilterItem = _.find(filterItemsArr, { label: "Dynamic Vis Config" })
 
       let tileResponse, visColorResponse
       if (tileToggleFilterItem) {
@@ -299,7 +291,7 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
           newValue: tileToggleFilterItem.options[0],
           filterItem: tileToggleFilterItem,
           dashboardOptions: dashboardOptions
-        });
+        }).response;
       }
 
       if (visColorFilterItem) {
@@ -309,7 +301,7 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
           dashboardOptions: dashboardOptions,
           isThemeableDashboard: isThemeableDashboard,
           lightThemeToggleValue: lightThemeToggleValue
-        });
+        }).response;
       }
 
       dashboardObj.setOptions({
@@ -317,7 +309,7 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
         ...visColorResponse
       })
     }
-  }, [dashboardOptions]);
+  }
 
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));

@@ -4,10 +4,9 @@ import { EmbedHighlight } from "@pbl-demo/components/Accessories";
 import { appContextMap, validIdHelper } from '../../utils/tools';
 
 
-export default function EmbeddedDashboardContainer({ classes, lookerContent, type, height }) {
+export default function EmbeddedDashboardContainer({ classes, lookerContent, type, }) {
 
   // console.log("EmbeddedDashboardContainer")
-  // console.log({ height })
 
   const { theme } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
