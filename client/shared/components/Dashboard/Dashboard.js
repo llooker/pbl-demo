@@ -95,10 +95,6 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
     }
   }
 
-  useEffect(() => {
-    console.log({ nativeFiltersThemeToggle })
-  }, [nativeFiltersThemeToggle])
-
   const performLookerApiCalls = (lookerContent, dynamicTheme) => {
     // console.log("performLookerApiCalls");
     // console.log({ lookerContent })

@@ -25,8 +25,6 @@ export const EmbeddedExplore = ({ staticContent, dynamicPadding }) => {
   const demoComponentType = type;
   const classes = useStyles();
 
-  console.log({ height })
-
   useEffect(() => {
     window.addEventListener("resize", () => setHeight((window.innerHeight - dynamicTopBarBottomBarHeight)));
   })
