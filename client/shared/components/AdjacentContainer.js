@@ -16,22 +16,20 @@ export const AdjacentContainer = ({
   fontThemeSelectValue,
   handleRenderModal,
   hiddenFilterValue,
-  customFiltersThemeToggle
+  nativeFiltersThemeToggle
 }) => {
   // console.log("AdjacentContainer")
   // console.log({ hiddenFilterValue })
+  // console.log({ nativeFiltersThemeToggle })
 
   let { items } = container;
   let containerItemsToUse = _.filter(items, (item) => {
-    if (customFiltersThemeToggle) {
-      return item
-    } else {
+    if (nativeFiltersThemeToggle) {
       return item.alwaysShow
+    } else {
+      return item
     }
-    // return item //for now
   })
-  // console.log({ containerItemsToUse })
-
 
   return (
     <Grid item
@@ -129,7 +127,7 @@ export const AdjacentContainer = ({
                           handleRenderModal={handleRenderModal}
                           hiddenFilterValue={hiddenFilterValue}
                           container={container}
-                          customFiltersThemeToggle={customFiltersThemeToggle}
+                          nativeFiltersThemeToggle={nativeFiltersThemeToggle}
                         > {item.label}</ItemComponent>
                       </Grid>
                     )

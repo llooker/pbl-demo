@@ -76,7 +76,7 @@ export const handleVisColorToggle = ({ newValue, filterItem, dashboardOptions,
 }
 
 export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue, fontThemeSelectValue, packageName }) => {
-  // console.log("handleThemeChange")
+  console.log("handleThemeChange")
   // console.log({ newValue })
   // console.log({ filterItem })
   // console.log({ fontThemeSelectValue })
@@ -88,7 +88,7 @@ export const handleThemeChange = ({ newValue, filterItem, lightThemeToggleValue,
   } else if (filterItem.label === "Change font") {
     themeName = lightThemeToggleValue ? `${packageName}_light_${newValue}` : `${packageName}_dark_${newValue}`
   } else if (filterItem.label === "Show or hide custom filters") {
-    themeName = newValue ? `${packageName}_light_${fontThemeSelectValue}` : `${packageName}_light_${fontThemeSelectValue}_filters`
+    themeName = newValue ? `${packageName}_light_${fontThemeSelectValue}_filters` : `${packageName}_light_${fontThemeSelectValue}`;
   }
 
   return {

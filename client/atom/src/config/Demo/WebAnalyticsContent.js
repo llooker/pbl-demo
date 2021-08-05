@@ -7,13 +7,13 @@ import { codeSandboxes } from '@pbl-demo/utils';
 const { embedded_dashboard } = codeSandboxes
 
 const themeFilter = {
-  "label": "Show or hide custom filters",
+  "label": "Show or hide native filters",
   "method": handleThemeChange,
   "methodName": "handleFiltersThemeChange",
   "component": SwitchTheme,
   "highlightComponent": EmbedHighlight,
   "gridWidth": 12,
-  "options": { false: "Native filters", true: "Custom filters" },
+  "options": { true: "Native filters", false: "Native filters" },
   "alwaysShow": true
 }
 
@@ -100,7 +100,6 @@ export const WebAnalyticsContent = {
       "adjacentContainer": {
         "gridWidth": 2,
         "items": [themeFilter, browserFilter, dateFilter, trafficSourceFilter],
-        "label": "User Info",
         "collapsable": true
       },
       "themeable": true,
