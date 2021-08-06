@@ -34,7 +34,7 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
   const [helperResponse, setHelperResponse] = useState(undefined);
   const [fontThemeSelectValue, setFontThemeSelectValue] = useState("arial");
   const [lightThemeToggleValue, setLightThemeToggleValue] = useState(true); //useState(hasLightDarkThemeToggle);
-  const [nativeFiltersThemeToggle, setNativeFiltersThemeToggle] = useState(lookerContent[0].allowNativeFilters ? false : true);
+  const [nativeFiltersThemeToggle, setNativeFiltersThemeToggle] = useState(lookerContent[0].allowNativeFilters ? true : false);
   const isThemeableDashboard = lookerContent[0].themeable;
   const darkThemeBackgroundColor = theme.palette.fill.secondary ? theme.palette.fill.secondary : theme.palette.fill.main;
   const classes = useStyles();
@@ -242,21 +242,7 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
   }, [customFilterAction, location.search, lookerContent])
 
   useEffect(() => {
-
-    setLightThemeToggleValue(true);
-    setFontThemeSelectValue("arial");
-
-    setNativeFiltersThemeToggle(lookerContent[0].allowNativeFilters ? true : false)
-
-    if (isReady) {
-      let themeName = process.env.REACT_APP_PACKAGE_NAME;
-      themeName += '_light'
-      themeName += `_${fontThemeSelectValue}`;
-      themeName += lookerContent[0].allowNativeFilters ? '_filters' : '';
-      corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
-      setApiContent(undefined);
-      setMakeShiftDrawerOpen(lookerContent[0].allowNativeFilters ? false : true);
-    }
+    initializeToggles()
   }, [lookerUser, isReady, selectedMenuItem])
 
   useEffect(() => {
@@ -353,6 +339,30 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
       }
     }
   }, [hiddenFilterValue])
+
+
+  const initializeToggles = () => {
+    // console.log("initializeToggles")
+    // console.log("lookerContent[0].allowNativeFilters", lookerContent[0].allowNativeFilters)
+    setLightThemeToggleValue(true);
+    setFontThemeSelectValue("arial");
+    setNativeFiltersThemeToggle(lookerContent[0].allowNativeFilters ? true : false)
+  }
+
+  const configureThemeName = () => {
+    let themeName = process.env.REACT_APP_PACKAGE_NAME;
+    themeName += '_light'
+    themeName += `_${fontThemeSelectValue}`;
+    themeName += nativeFiltersThemeToggle ? '_filters' : '';
+    // console.log({ themeName })
+    corsApiCall(performLookerApiCalls, [[...lookerContent], themeName])
+    setApiContent(undefined);
+    setMakeShiftDrawerOpen(nativeFiltersThemeToggle ? false : true);
+  }
+
+  useEffect(() => {
+    configureThemeName();
+  }, [nativeFiltersThemeToggle])
 
   return (
     <div
