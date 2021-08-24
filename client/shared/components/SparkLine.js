@@ -54,7 +54,7 @@ export function SparkLine({ lookerContentItem, classes }) {
     return [dataObjForSparkline]
   }
   // console.log({ apiContent })
-  const changePercentage = apiContent && apiContent[0]
+  const changePercentage = apiContent && apiContent.length
     ? parseInt(apiContent[0].data[0].change * 100).toFixed(0)
     : 0;
 
@@ -85,7 +85,7 @@ export function SparkLine({ lookerContentItem, classes }) {
                   <Typography
                     variant="body2"
                     align="left"
-                    style={{ height: '2.6em', lineHeight: 1.2, textTransform: 'uppercase' }}
+                    style={{ minHeight: '2.8em', lineHeight: 1.2, textTransform: 'uppercase' }}
                   >
                     <b>{lookerContentItem.label}</b>
                   </Typography>
