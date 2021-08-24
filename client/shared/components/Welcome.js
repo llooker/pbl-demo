@@ -14,16 +14,6 @@ export function Welcome({ lookerContentItem, classes }) {
       style={{ maxHeight: lookerContentItem.height }}
     >
       <Typography variant="h4">Welcome back, {userProfile.givenName}!</Typography>
-      <br />
-      <>
-        {lookerContentItem.inlineQueries.map((inlineQuery, index) => (
-          <NaturalLanguage
-            key={`${validIdHelper('naturalLanguage-splashPage-' + index)}`}
-            {...{ lookerContentItem, inlineQuery, index, classes }}
-          />
-        )
-        )}
-      </>
     </div >
   );
 }
