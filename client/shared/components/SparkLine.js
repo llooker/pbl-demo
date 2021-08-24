@@ -3,6 +3,8 @@ import { ApiHighlight } from './Accessories/Highlight';
 import { Typography, Card, CircularProgress, Grid, Chip } from '@material-ui/core';
 import { ResponsiveLine } from '@nivo/line';
 import { validIdHelper, decodeHtml, appContextMap } from '../utils/tools';
+import DownArrow from '../images/down_arrow.svg';
+import UpArrow from '../images/up_arrow.svg';
 
 export function SparkLine({ lookerContentItem, classes }) {
   // console.log('SparkLine')
@@ -52,8 +54,11 @@ export function SparkLine({ lookerContentItem, classes }) {
     return [dataObjForSparkline]
   }
   // console.log({ apiContent })
-  const upOrDownArrow = apiContent && apiContent.length ? isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? `&uarr;` : `&darr;` : '';
-  /**
+  const changePercentage = apiContent && apiContent.length
+    ? parseInt(apiContent[0].data[0].change * 100).toFixed(0)
+    : 0;
+
+    /**
    * TO DO
    * convert to using rendered value the way single value does
    */
@@ -76,23 +81,42 @@ export function SparkLine({ lookerContentItem, classes }) {
           <React.Fragment>
             <ApiHighlight height={130} classes={classes} >
               <Grid container className={`${classes.textCenter} `}>
-                <Grid item sm={12}>
-                  <Typography variant="body2" align="left" color="secondary">
-                    {lookerContentItem.label}
+                <Grid item sm={8}>
+                  <Typography
+                    variant="body2"
+                    align="left"
+                    style={{ minHeight: '2.8em', lineHeight: 1.2, textTransform: 'uppercase' }}
+                  >
+                    <b>{lookerContentItem.label}</b>
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    align="left"
+                    style={{ fontSize: '2em', fontWeight: 300 }}
+                  >
+                    {labelText}
                   </Typography>
                 </Grid>
-                <Grid item sm={6}>
-                  <Typography variant="subtitle1" align="left">
-                    <b>{labelText}</b>
-                  </Typography>
-                </Grid>
-                <Grid item sm={6}>
-                  <Chip size="small"
-                    label={`${decodeHtml(upOrDownArrow)} ${parseInt(apiContent[0].data[0].change * 100).toFixed(0)}% `}
-                    className={isNaN((apiContent[0].data[0].change * 100).toFixed(2)) ? '' : parseInt((apiContent[0].data[0].change * 100).toFixed(0)) >= 0 ? classes.greenPos : classes.redNeg}
-                    display="inline"
-                    align="right"
-                  />
+                <Grid item sm={4}>
+                  <div className={classes.positionRelative}>
+                    <img
+                      src={(changePercentage >= 0) ? UpArrow : DownArrow}
+                      style={{ maxWidth: '100%', width: '70px' }}
+                    />
+                    <Typography
+                      variant="subtitle1"
+                      align="center"
+                      style={{
+                        color: 'white',
+                        left: 0,
+                        position: 'absolute',
+                        top: (changePercentage >= 0) ? '18%' : '40%',
+                        width: '100%',
+                      }}
+                    >
+                      {`${Math.abs(changePercentage)}%`}
+                    </Typography>
+                  </div>
                 </Grid>
               </Grid>
               <ResponsiveLine
