@@ -302,6 +302,7 @@ export const useStyles = makeStyles((theme) => ({
   padding15: { padding: 15 },
   padding10: { padding: 10 },
   padding5: { padding: 5 },
+  paddingB0: { paddingBottom: 0 },
   marginLR10: { margin: "0px 10px" },
   maxHeight250: {
     maxHeight: 250,

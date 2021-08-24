@@ -10,10 +10,15 @@ export function Welcome({ lookerContentItem, classes }) {
 
   return (
     <div
-      className={`${classes.overflowScroll} ${classes.padding15}`}
+      className={`${classes.padding15} ${classes.paddingB0}`}
       style={{ maxHeight: lookerContentItem.height }}
     >
-      <Typography variant="h4">Welcome back, {userProfile.givenName}!</Typography>
+      <Typography
+        variant="h4"
+        style={{ fontWeight: 300 }}
+      >
+        Welcome back, {userProfile.givenName}!
+      </Typography>
     </div >
   );
 }

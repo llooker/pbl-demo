@@ -54,7 +54,9 @@ export function SparkLine({ lookerContentItem, classes }) {
     return [dataObjForSparkline]
   }
   // console.log({ apiContent })
-  const changePercentage = parseInt(apiContent[0].data[0].change * 100).toFixed(0);
+  const changePercentage = apiContent && apiContent[0]
+    ? parseInt(apiContent[0].data[0].change * 100).toFixed(0)
+    : 0;
 
     /**
    * TO DO
@@ -79,23 +81,37 @@ export function SparkLine({ lookerContentItem, classes }) {
           <React.Fragment>
             <ApiHighlight height={130} classes={classes} >
               <Grid container className={`${classes.textCenter} `}>
-                <Grid item sm={6}>
-                  <Typography variant="body2" align="left" style={{height: '2.6em', lineHeight: '1.2', textTransform: 'uppercase'}}>
+                <Grid item sm={8}>
+                  <Typography
+                    variant="body2"
+                    align="left"
+                    style={{ height: '2.6em', lineHeight: 1.2, textTransform: 'uppercase' }}
+                  >
                     <b>{lookerContentItem.label}</b>
                   </Typography>
-                  <Typography variant="body1" align="left" style={{fontSize: '2em', fontWeight: '300'}}>
+                  <Typography
+                    variant="body1"
+                    align="left"
+                    style={{ fontSize: '2em', fontWeight: 300 }}
+                  >
                     {labelText}
                   </Typography>
                 </Grid>
-                <Grid item sm={6}>
-                  <div style={{position: 'relative'}}>
-                    <img src={(changePercentage >= 0) ? UpArrow : DownArrow} />
+                <Grid item sm={4}>
+                  <div className={classes.positionRelative}>
+                    <img
+                      src={(changePercentage >= 0) ? UpArrow : DownArrow}
+                      style={{ maxWidth: '100%', width: '70px' }}
+                    />
                     <Typography
-                      variant="subtitle2"
+                      variant="subtitle1"
                       align="center"
                       style={{
                         color: 'white',
-                        marginTop: (changePercentage >= 0) ? '-45px' : '-35px',
+                        left: 0,
+                        position: 'absolute',
+                        top: (changePercentage >= 0) ? '18%' : '40%',
+                        width: '100%',
                       }}
                     >
                       {`${Math.abs(changePercentage)}%`}
