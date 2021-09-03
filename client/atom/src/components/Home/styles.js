@@ -1,7 +1,7 @@
 import { packageNameTheme } from '../../config/theme.js'
 import { makeStyles } from '@material-ui/core/styles';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 const topHeaderHeight = 64;
 const bottomHeaderHeight = 48;
 const topDrawerHeight = 52;
@@ -80,15 +80,18 @@ export const useStyles = makeStyles(theme => ({
     marginLeft: '10px',
   },
   menuListItem: {
-    backgroundColor: '#eff2fb',
+    backgroundColor: '#EFF2F8',
     borderRadius: '100px',
     display: 'inline-flex',
     padding: '2px 22px 2px 12px',
     width: 'auto',
+    color: "#418CDD"
   },
   menuListItemIcon: {
     minWidth: '36px',
+    color: "#418CDD"
   },
+  vectorThumbnail: {maxHeight: "72px",overflow: "hidden", margin: "12px 0", borderRadius: ".5rem", border: "0.5px solid #418CDD"},
   //top drawer
   topDrawer: {
     // width: '100%',

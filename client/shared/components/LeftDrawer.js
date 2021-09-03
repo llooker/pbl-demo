@@ -3,11 +3,10 @@ import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
 import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
 import { ChevronLeft } from '@material-ui/icons';
+import {VectorThumbnail} from "./VectorThumbnail"
 const { validIdHelper, appContextMap } = require('../utils/tools');
 
 export const LeftDrawer = ({ DemoComponentsContentArr, classes }) => {
-  // console.log('LeftDrawer');
-
   const { drawerOpen, setDrawerOpen, } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
 
   return (
@@ -38,7 +37,6 @@ export const LeftDrawer = ({ DemoComponentsContentArr, classes }) => {
 }
 
 function MenuList({ classes, DemoComponentsContentArr }) {
-  // console.log("MenuList")
   const { clientSession, selectedMenuItem } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { packageName } = clientSession;
 
@@ -84,21 +82,28 @@ function MenuList({ classes, DemoComponentsContentArr }) {
             key={`${validIdHelper(outerItem + '-innerList-' + outerIndex)}`}>
             {orderedDemoComponentsForMenuObj[outerItem].map((item, innerIndex) => {
               const MatchingIconComponent = item.icon
+              
+              const to = validIdHelper(_.lowerCase(item.label))
+              const selected = to === selectedMenuItem
+
               return (
+                <>
                 <ListItem
                   button
                   className={`${classes.menuListItem}`}
                   key={`${validIdHelper(outerItem + '-innerListItem-' + innerIndex)}`}
-                  selected={validIdHelper(_.lowerCase(item.label)) === selectedMenuItem}
+                  selected={selected}
                   component={Link}
-                  to={validIdHelper(_.lowerCase(item.label))}
+                  to={to}
                 >
-                  <ListItemIcon className={classes.menuListItemIcon}>
+                  <ListItemIcon className={classes.menuListItemIcon} color="red">
                     {MatchingIconComponent ? <MatchingIconComponent /> : <></>}
                   </ListItemIcon>
                   <ListItemText primary={_.capitalize(item.label)} />
                 </ListItem>
-              )
+                {item.thumbnail && <VectorThumbnail classes={classes} {...item.thumbnail}/>}
+                </>
+                )
             })}
           </List>
         </React.Fragment>
