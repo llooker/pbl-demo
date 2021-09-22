@@ -11,6 +11,7 @@ export const handleTileToggle = ({ newValue, filterItem, dashboardOptions }) => 
       ...dashboardOptions.layouts[0],
       dashboard_layout_components: filteredLayout
     }
+    console.log({ newDashboardLayout })
     return {
       "methodName": filterItem.methodName,
       "response": {

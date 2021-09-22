@@ -69,6 +69,7 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
       packageName: process.env.REACT_APP_PACKAGE_NAME,
     })
     let { methodName, response, response: { message } } = helperResponseData; //dynamic
+    console.log({ response })
     setHelperResponse(response)
     setTimeout(() => { setHelperResponse(undefined) }, 10000)
     if (methodName === "handleTileToggle" || methodName === "handleVisColorToggle") {
@@ -184,9 +185,9 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const customFilterAction = useCallback((filterName, newFilterValue) => {
-    // console.log("customFilterAction")
-    // console.log({ filterName })
-    // console.log({ newFilterValue })
+    console.log("customFilterAction")
+    console.log({ filterName })
+    console.log({ newFilterValue })
     if (Object.keys(dashboardObj).length) {
       dashboardObj.updateFilters({ [filterName]: newFilterValue })
       dashboardObj.run()
@@ -292,6 +293,8 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
           lightThemeToggleValue: lightThemeToggleValue
         }).response;
       }
+
+      console.log({ tileResponse })
 
       dashboardObj.setOptions({
         ...tileResponse,

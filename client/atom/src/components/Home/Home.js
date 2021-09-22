@@ -37,6 +37,7 @@ export default function Home(props) {
   const { lookerUser: { user_attributes: { permission_level } } = { user_attributes: 'No match' } } = clientSession;
   const currentPermissionLevel = Object.keys(permissionLevels).indexOf(permission_level);
   const demoComponentsContentArr = _.filter(DemoComponentsContentArr, demoComponent => demoComponent.requiredPermissionLevel <= currentPermissionLevel);
+  console.log({ demoComponentsContentArr })
   let topBarContent = { ...TopBarContent };
   if (topBarContent.autocomplete && currentPermissionLevel < topBarContent.autocomplete.correspondingComponentContent.requiredPermissionLevel) {
     delete topBarContent.autocomplete
