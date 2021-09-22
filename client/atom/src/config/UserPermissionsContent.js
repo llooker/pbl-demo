@@ -59,7 +59,8 @@ export const initialUser = {
   "permissions":
     permissionLevels[Object.keys(permissionLevels)[0]],
   "models": [
-    "atom_fashion"
+    "atom_fashion",
+    "query-builder"
   ],
   "user_attributes": {
     "locale": "en_US",
