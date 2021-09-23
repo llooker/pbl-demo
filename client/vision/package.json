@@ -1,7 +1,6 @@
 {
-  "name": "client",
+  "name": "@pbl-demo/vision",
   "version": "0.1.0",
-  "private": true,
   "proxy": "http://embed.demo.com:5000/",
   "dependencies": {
     "@craco/craco": "^6.0.0",
