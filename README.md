@@ -20,8 +20,11 @@ Go to https://nodejs.org/en/download/ and install for your OS
 
 ### install packages with Yarn 2
 
-Setup Yarn 2, following these instructions:
-https://yarnpkg.com/getting-started/migration
+Install the latest version of Yarn
+
+```
+npm install -g yarn
+```
 
 In the root directory run
 
