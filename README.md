@@ -18,15 +18,15 @@ Reach out to Elliot Glasenk for the contents of these files
 Go to https://nodejs.org/en/download/ and install for your OS
 ```
 
-### install packages
+### install packages with Yarn 2
+
+Install the latest version of Yarn
+
+```
+npm install -g yarn
+```
 
 In the root directory run
-
-```
-yarn install
-```
-
-In the client directory run
 
 ```
 yarn install
@@ -64,7 +64,7 @@ Add
 Run in root directory
 
 ```
-yarn atom start
+yarn run atom
 ```
 
 Go to http://embed.demo:8080
