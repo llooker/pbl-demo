@@ -342,10 +342,10 @@ export const useStyles = makeStyles((theme) => ({
   },
   categoryfilteritemChange: {
     position: "absolute",
-    top: "54%",
+    top: "75%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    fontSize: "1.4rem",
+    fontSize: "1rem",
     fontWeight: "700",
   }
   

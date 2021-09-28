@@ -177,8 +177,8 @@ function CategoryFilter({ lookerContentItem, onSelect, classes }) {
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Typography variant="h6">
+      <div style={{ display: "flex", alignItems: "center", paddingBottom:"2rem" }}>
+        <Typography variant="h6" style={{textTransform:"uppercase", fontWeight:600}}>
           Regional Weekly Performance by Category
         </Typography>
         <SortOrderButton
@@ -259,7 +259,7 @@ function CategoryFilterItem(props) {
           </>
         )}
       </div>
-      <div style={{ textAlign: "center" }}>{label}</div>
+      <div style={{ textAlign: "center", fontWeight:"550" }}>{label}</div>
     </div>
   );
 }
