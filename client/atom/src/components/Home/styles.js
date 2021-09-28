@@ -1,7 +1,7 @@
 import { packageNameTheme } from '../../config/theme.js'
 import { makeStyles } from '@material-ui/core/styles';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 const topHeaderHeight = 64;
 const bottomHeaderHeight = 48;
 const topDrawerHeight = 52;
@@ -12,7 +12,7 @@ export const topAndBottomHeaderPlusDrawerOpen = 0;
 export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    backgroundColor: 'rgb(229, 229, 229)'
+    backgroundColor: '#efefef'
   },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
@@ -42,8 +42,9 @@ export const useStyles = makeStyles(theme => ({
   },
   leftDrawerPaper: {
     width: drawerWidth,
-    borderRight: 'none',
-    backgroundColor: 'transparent'
+    borderRight: '1px solid #e1dedf',
+    backgroundColor: 'white',
+    padding: '0 20px 20px',
   },
   leftContent: {
     flexGrow: 1,
@@ -61,6 +62,36 @@ export const useStyles = makeStyles(theme => ({
     }),
     marginLeft: 0,
   },
+  menuHeaderListItem: {
+    alignItems: 'flex-end',
+    display: 'flex',
+    marginLeft: '-15px',
+    marginTop: '20px',
+  },
+  menuHeaderListItemText: {
+    fontSize: '0.9em',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
+  menuHeaderListItemFiller: {
+    borderBottom: '1px solid #bbbbbb',
+    flex: 1,
+    marginBottom: '5px',
+    marginLeft: '10px',
+  },
+  menuListItem: {
+    backgroundColor: '#EFF2F8',
+    borderRadius: '100px',
+    display: 'inline-flex',
+    padding: '2px 22px 2px 12px',
+    width: 'auto',
+    color: "#418CDD"
+  },
+  menuListItemIcon: {
+    minWidth: '36px',
+    color: "#418CDD"
+  },
+  vectorThumbnail: {maxHeight: "72px",overflow: "hidden", margin: "12px 0", borderRadius: ".5rem", border: "0.5px solid #418CDD"},
   //top drawer
   topDrawer: {
     // width: '100%',
@@ -178,13 +209,11 @@ export const useStyles = makeStyles(theme => ({
   appBarBottom: {
     top: 'auto',
     bottom: 0,
-    backgroundColor: '#fff'
+    backgroundColor: '#343d4e',
+    zIndex: 1300,
   },
   hidden: {
     visibility: 'hidden'
-  },
-  rightRoundedTab: {
-    borderRadius: '0 100px 100px 0'
   },
   roundedTab: {
     borderRadius: '100px'

@@ -1,5 +1,4 @@
 export { Welcome } from "./Welcome";
-export { PopularAnalysis } from "./PopularAnalysis";
 export { EmbeddedQuery } from "./EmbeddedQuery";
 export { EmbeddedExplore } from "./Explore/EmbeddedExplore";
 export { TopBar } from "./TopBar";

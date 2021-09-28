@@ -36,21 +36,6 @@ const dateFilter = {
   "showOnlyCustomFilters": true,
 }
 
-//doesn't work anyways
-// const attributionSourceFilter = {
-//   "label": "Attribution Source",
-//   "filterName": "Attribution Source",
-//   "component": CheckboxLabels,
-//   "highlightComponent": EmbedMethodHighlight,
-//   "gridWidth": 12,
-//   "options": [
-//     { "value": "First Touch", "label": "First Touch" },
-//     { "value": "Last Touch", "label": "Last Touch" },
-//     { "value": "Multi-Touch Linear", "label": "Multi-Touch Linear" }
-//   ],
-//   "showOnlyCustomFilters": true
-// }
-
 const browserFilter = {
   "label": "Browser",
   "filterName": "Browser",
@@ -89,6 +74,10 @@ export const WebAnalyticsContent = {
   "icon": ShowChartIcon,
   "description": "Overview of all your web traffic",
   "component": Dashboard,
+  "thumbnail": {
+    id: "9",
+    url: "webanalytics"
+  },
   "lookerContent": [
     {
       "type": "dashboard",

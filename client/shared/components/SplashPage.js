@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Grid, Card } from '@material-ui/core'
+import { Box, Grid } from '@material-ui/core'
 import { Loader, CodeFlyout } from './Accessories'
 import { appContextMap, validIdHelper } from '../utils/tools';
 import { useStyles } from './styles.js';
@@ -27,7 +27,7 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
       className={`${classes.root} ${classes.positionRelative}`}
       style={{ height }}
     >
-      <Card elevation={1}
+      <div
         className={`${classes.height100Percent} 
         ${classes.overflowScroll}
         ${classes.padding15}`}
@@ -72,7 +72,7 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
             </Grid>
           </Box >
         </Grid >
-      </Card >
+      </div >
     </div >
   )
 }

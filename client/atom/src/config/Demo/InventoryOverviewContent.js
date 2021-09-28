@@ -2,7 +2,7 @@ import TableChartOutlinedIcon from '@material-ui/icons/TableChartOutlined';
 import { handleTileToggle, handleVisColorToggle, handleThemeChange } from '@pbl-demo/components/Dashboard/helpers'
 import { Dashboard } from '@pbl-demo/components';
 import { AutoComplete, ToggleTile, ToggleVisColor, SwitchTheme, Dropdown } from '@pbl-demo/components/Filters';
-import { CloudFunctionHighlight, ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
+import { ApiHighlight, EmbedHighlight, EmbedMethodHighlight } from '@pbl-demo/components/Accessories';
 import { codeSandboxes } from '@pbl-demo/utils';
 const { api_run_query, embedded_dashboard } = codeSandboxes;
 
@@ -150,6 +150,10 @@ export const InventoryOverivewContent = {
   "menuCategory": "operations",
   "icon": TableChartOutlinedIcon,
   "component": Dashboard,
+  "thumbnail": {
+    id: "1",
+    url: "inventoryoverview",
+  },
   "lookerContent": [
     {
       "type": "dashboard",

@@ -69,9 +69,7 @@ export function SparkLine({ lookerContentItem, classes }) {
       }% `
       : '';
   return (
-    <Card className={`${classes.padding15} ${classes.overflowHidden} `}
-      elevation={0}
-    >
+    <div className={`${classes.padding15} ${classes.overflowHidden} `}>
       <div
         style={{
           height: lookerContentItem.height,
@@ -158,6 +156,6 @@ export function SparkLine({ lookerContentItem, classes }) {
           </Grid>
         }
       </div >
-    </Card >
+    </div >
   );
 }

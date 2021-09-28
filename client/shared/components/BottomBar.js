@@ -15,6 +15,7 @@ export const BottomBar = ({ classes }) => {
       <Toolbar variant="dense">
         <Button
           className={`${classes.mlAuto} ${classes.borderRadius100} ${classes.noBorder}`}
+          color="secondary"
           display="inline"
           startIcon={<HighlightOutlined />}
           onClick={() => {
@@ -25,6 +26,7 @@ export const BottomBar = ({ classes }) => {
     </Button>
         <Button
           className={`${classes.ml12} ${classes.borderRadius100} ${classes.noBorder}`}
+          color="secondary"
           display="inline"
           startIcon={<Code />}
           onClick={() => {
