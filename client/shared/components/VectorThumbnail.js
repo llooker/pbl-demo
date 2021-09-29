@@ -31,18 +31,16 @@ export function VectorThumbnail({ classes, id, url }) {
   }
 
   return svg ? (
-    <div className={classes.vectorThumbnail}>
-      <Grid container
-        className={`${classes.cursorPointer}`}
-        spacing={3}
-        
-      >
-        <ApiHighlight classes={classes}>
+    <ApiHighlight classes={classes}>
+      <div className={classes.vectorThumbnail}>
+        <Grid container
+          className={`${classes.cursorPointer}`}
+          spacing={3}>
           <div className={` ${classes.maxHeight60} ${classes.cursorPointer} ${classes.overflowHidden}`}>
             <img src={svg}/>
           </div>
-        </ApiHighlight>
-      </Grid >
-    </div>
+        </Grid >
+      </div>
+    </ApiHighlight>
   ) : null;
 }
