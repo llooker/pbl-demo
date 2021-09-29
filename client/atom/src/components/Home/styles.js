@@ -66,7 +66,6 @@ export const useStyles = makeStyles(theme => ({
     alignItems: 'flex-end',
     display: 'flex',
     marginLeft: '-15px',
-    marginTop: '20px',
   },
   menuHeaderListItemText: {
     fontSize: '0.9em',
@@ -85,13 +84,29 @@ export const useStyles = makeStyles(theme => ({
     display: 'inline-flex',
     padding: '2px 22px 2px 12px',
     width: 'auto',
-    color: "#418CDD"
+    color: "#418CDD",
+    marginBottom: "1rem"
+  },
+  menuListItemThumbnailContainer:{
+    border: ".5px solid #418CDD", 
+    borderRadius: "5px", 
+    overflow: "hidden", 
+    marginBottom: "1rem"
+  },
+  menuListItemThumbnailHeader: {
+    display: "flex", 
+    alignItems: "center", 
+    margin: ".25rem .5rem", 
+    cursor: "pointer"
   },
   menuListItemIcon: {
     minWidth: '36px',
     color: "#418CDD"
   },
-  vectorThumbnail: {maxHeight: "72px",overflow: "hidden", margin: "12px 0", borderRadius: ".5rem", border: "0.5px solid #418CDD"},
+  vectorThumbnail: {
+    maxHeight: "72px",
+    overflow: "hidden"
+  },
   //top drawer
   topDrawer: {
     // width: '100%',

@@ -35,8 +35,7 @@ export function VectorThumbnail({ classes, id, url }) {
       <Grid container
         className={`${classes.cursorPointer}`}
         spacing={3}
-        component={Link}
-        to={url}
+        
       >
         <ApiHighlight classes={classes}>
           <div className={` ${classes.maxHeight60} ${classes.cursorPointer} ${classes.overflowHidden}`}>
