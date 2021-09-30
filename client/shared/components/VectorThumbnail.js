@@ -4,7 +4,7 @@ import { Grid } from '@material-ui/core';
 import { ApiHighlight } from './Accessories/Highlight';
 import { appContextMap } from '../utils/tools';
 
-export function VectorThumbnail({ classes, id, url }) {
+export function VectorThumbnail({ classes, id, offset}) {
   const [svg, setSvg] = useState(null)
   const { clientSession, sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const {lookerUser } = clientSession;
@@ -30,20 +30,22 @@ export function VectorThumbnail({ classes, id, url }) {
     return url;
   }
 
+  const imgStyle = offset ? {
+    objectPosition: offset, 
+    objectFit: 'cover'
+  } : {};
+
   return svg ? (
-    <div className={classes.vectorThumbnail}>
-      <Grid container
-        className={`${classes.cursorPointer}`}
-        spacing={3}
-        component={Link}
-        to={url}
-      >
-        <ApiHighlight classes={classes}>
+    <ApiHighlight classes={classes}>
+      <div className={classes.vectorThumbnail}>
+        <Grid container
+          className={`${classes.cursorPointer}`}
+          spacing={3}>
           <div className={` ${classes.maxHeight60} ${classes.cursorPointer} ${classes.overflowHidden}`}>
-            <img src={svg}/>
+            <img src={svg} style={imgStyle}/>
           </div>
-        </ApiHighlight>
-      </Grid >
-    </div>
+        </Grid >
+      </div>
+    </ApiHighlight>
   ) : null;
 }

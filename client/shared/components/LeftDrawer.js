@@ -86,7 +86,20 @@ function MenuList({ classes, DemoComponentsContentArr }) {
               const to = validIdHelper(_.lowerCase(item.label))
               const selected = to === selectedMenuItem
 
-              return (
+
+              return item.thumbnail ?
+                <Link to={to} style={{textDecoration: "none"}}>
+                  <div className={classes.menuListItemThumbnailContainer}>
+                    <div className={classes.menuListItemThumbnailHeader}>
+                      <ListItemIcon className={classes.menuListItemIcon} >
+                        {MatchingIconComponent ? <MatchingIconComponent /> : <></>}
+                      </ListItemIcon>
+                      <ListItemText primary={_.capitalize(item.label)} style={{color: "#418CDD"}}/>
+                    </div>
+                    {item.thumbnail && <VectorThumbnail classes={classes} {...item.thumbnail}/>}
+                  </div>
+                </Link>
+              :(
                 <>
                 <ListItem
                   button
@@ -101,7 +114,6 @@ function MenuList({ classes, DemoComponentsContentArr }) {
                   </ListItemIcon>
                   <ListItemText primary={_.capitalize(item.label)} />
                 </ListItem>
-                {item.thumbnail && <VectorThumbnail classes={classes} {...item.thumbnail}/>}
                 </>
                 )
             })}
