@@ -322,5 +322,31 @@ export const useStyles = makeStyles((theme) => ({
   },
   padding0: {
     padding: `0 !important`
+  },
+  sortorderbutton: {
+    cursor: "pointer",
+    background: "none",
+    border: "none",
+    height: "fit-content",
+  },
+  categoryfilteritem: {
+    backgroundSize: "cover",
+    borderRadius: "50%",
+    width: "85px",
+    height: "85px",
+    backgroundPosition: "center",
+    position: "relative",
+    textAlign: "center",
+    cursor: "pointer",
+    overflow: "hidden",
+  },
+  categoryfilteritemChange: {
+    position: "absolute",
+    top: "75%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    fontSize: "1rem",
+    fontWeight: "700",
   }
+  
 }));

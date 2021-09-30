@@ -68,7 +68,8 @@ export function ApiHighlight({ ...props }) {
         top: '0px',
         right: '0px',
         position: 'absolute',
-        borderRadius: '0px 0px 0px 8px'
+        borderRadius: '0px 0px 0px 8px',
+        zIndex: 1000
       }}
     />
     {children}
