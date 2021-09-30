@@ -160,8 +160,6 @@ export default function Home(props) {
             staticContent={ActiveDemoComponentContent}
             dynamicPadding={drawerOpen && packageName === "vision" ? topAndBottomHeaderPlusDrawerOpen : topAndBottomHeaderSpacing} /> : ''}
         </main>
-
-        <BottomBar classes={classes} />
       </AppContext.Provider>
     </div>
   )

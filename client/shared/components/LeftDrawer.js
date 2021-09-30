@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import React, { useContext } from 'react';
 import { Link } from "react-router-dom";
-import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
-import { ChevronLeft } from '@material-ui/icons';
+import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Button } from '@material-ui/core/';
+import { ChevronLeft, HighlightOutlined } from '@material-ui/icons';
 import {VectorThumbnail} from "./VectorThumbnail"
 const { validIdHelper, appContextMap } = require('../utils/tools');
 
@@ -122,6 +122,34 @@ function MenuList({ classes, DemoComponentsContentArr }) {
       )
     }) : ''
     }
+    <SourceCode classes={classes}/>
   </List >
   )
+}
+
+
+function SourceCode({classes}) {
+  const { highlightShow, setHighlightShow,
+    codeShow, setCodeShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
+
+  return (
+    <ListItem selected={highlightShow, codeShow}>
+      <ListItemIcon className={classes.menuListItemIcon}></ListItemIcon>
+      <Button
+        className={`${classes.mlAuto} ${classes.borderRadius100} ${classes.noBorder}`}
+        color="secondary"
+        display="inline"
+        startIcon={<HighlightOutlined />}
+        onClick={() => {
+          if (codeShow) setCodeShow(!codeShow);
+          setHighlightShow(!highlightShow);
+
+          if (highlightShow) setHighlightShow(!highlightShow)
+            setCodeShow(!codeShow)
+        }}
+      >
+        <ListItemText primary={"Source & Code"} />
+      </Button>
+    </ListItem>
+  );
 }
