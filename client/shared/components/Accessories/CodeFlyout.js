@@ -50,14 +50,25 @@ export const CodeFlyout = (props) => {
       }}>
         <Grid container
           sm={8}
-          className={`${classes.codeFlyoutContainer} ${classes.positionTopRight} ${classes.padding0}`}
+          //className={`${classes.codeFlyoutContainer} ${classes.positionTopRight} ${classes.padding0}`}
+          className={`${classes.codeFlyoutContainer}`}
         >
           <Fade in={true}>
             <div className={classes.root}>
+              <div style={{display: "flex", alignItems: "center"}}>
+                <Typography variant="h4">Source & Code</Typography>
+                <div>API Embed</div>
+                <IconButton aria-label="close" className={classes.mlAuto} onClick={() => {
+                      setValue(0)
+                      setCodeShow()
+                    }} >
+                      <CloseIcon style={{ color: 'black', cursor: 'pointer' }} />
+                    </IconButton>
+              </div>
               <AppBar
                 position="static"
                 className={`${classes.maxHeight50}`}
-                style={{ backgroundColor: theme.palette.fill.main }}
+                style={{ backgroundColor: "white", color: "#418CDD" }}
               >
                 <Tabs
                   value={value}
@@ -72,12 +83,6 @@ export const CodeFlyout = (props) => {
                         {...a11yProps(index)} />
                     )
                   })}
-                  <IconButton aria-label="close" className={classes.mlAuto} onClick={() => {
-                    setValue(0)
-                    setCodeShow()
-                  }} >
-                    <CloseIcon style={{ color: 'white', cursor: 'pointer' }} />
-                  </IconButton>
                 </Tabs>
 
               </AppBar>
@@ -104,11 +109,14 @@ export const CodeFlyout = (props) => {
 function CodeSnippet(props) {
   const { code } = props
   return (
-    <SyntaxHighlighter
-      language="json"
-      showLineNumbers={true} >
-      {typeof code === "object" ? JSON.stringify(code, true, 4) : code}
-    </SyntaxHighlighter>)
+    <div style={{backgroundColor: "pink", paddingLeft: "1.5rem", overflow: "auto"}}>
+      <SyntaxHighlighter
+        language="json"
+        style={{backgroundColor: "white"}}
+        showLineNumbers={true} >
+        {typeof code === "object" ? JSON.stringify(code, true, 4) : code}
+      </SyntaxHighlighter>
+    </div>)
 }
 
 function Iframe(props) {

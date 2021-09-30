@@ -25,6 +25,9 @@ export const useStyles = makeStyles((theme) => ({
     backgroundColor: 'white',
     color: '#6c757d'
   },
+  badge: {
+    color: "pink"
+  },
   dNone: {
     display: 'none'
   },
@@ -156,7 +159,13 @@ export const useStyles = makeStyles((theme) => ({
   codeFlyoutContainer: {
     overflow: 'scroll',
     borderRadius: '0 8px 8px 0',
-    backgroundColor: `rgb(240, 240, 240)`
+    backgroundColor: "#ffffff", //`rgb(240, 240, 240)`
+    position: 'fixed',
+    right: '0',
+    top: '5rem',
+    height: '80vh',
+    overflow: "hidden",
+    zIndex: 2000
   },
   height100Percent: {
     height: '100%'
