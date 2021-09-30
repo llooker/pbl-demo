@@ -76,7 +76,6 @@ export const WebAnalyticsContent = {
   "component": Dashboard,
   "thumbnail": {
     id: "9",
-    url: "webanalytics"
   },
   "lookerContent": [
     {
