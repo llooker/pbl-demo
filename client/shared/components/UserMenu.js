@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, } from "react-router-dom";
 import { IconButton, Menu, MenuItem, Typography, Divider, TextField, Avatar } from '@material-ui/core';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { appContextMap, validIdHelper, endSession } from '../utils'
 
@@ -43,6 +44,9 @@ export const UserMenu = ({ classes, content }) => {
     setSelectedBrand(clientSession.lookerUser.user_attributes.brand || '')
   }, [clientSession.lookerUser]);
 
+  const level = typeof clientSession.lookerUser.user_attributes.permission_level === 'string' ?
+  `${_.capitalize(clientSession.lookerUser.user_attributes.permission_level)} Account` : '';
+  
   return (
     <div className={`${classes.zIndex1500}`}>
       <IconButton
@@ -52,12 +56,12 @@ export const UserMenu = ({ classes, content }) => {
         onClick={handleClick}
         color="inherit"
       >
-        <Avatar alt={clientSession.userProfile.name} src={clientSession.userProfile.imageUrl} className={classes.mr12} />
-
-        <Typography>
-          {typeof clientSession.lookerUser.user_attributes.permission_level === 'string' ?
-            clientSession.lookerUser.user_attributes.permission_level.charAt(0).toUpperCase() + clientSession.lookerUser.user_attributes.permission_level.substring(1) : ''}
-        </Typography>
+        <div style={{textAlign: "right", marginLeft: "1rem"}}>
+          <Typography style={{color:"#9BA3B2"}}>{clientSession.userProfile.name}</Typography>
+          <Typography>{level}</Typography>
+        </div>
+        <ChevronRightIcon style={{alignSelf: "flex-end", transform: "rotate(90deg)"}}/>
+        <Avatar alt={clientSession.userProfile.name} src={clientSession.userProfile.imageUrl} className={`${classes.mr12} ${classes.ml12}`} />
       </IconButton>
       <Menu
         id="simple-menu"
