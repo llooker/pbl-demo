@@ -105,9 +105,7 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
           <Grid
             container
             spacing={0}
-            alignItems="center"
-            alignContent="center"
-            justify="center"
+            
           >
             {lookerContentItem.categoryFilter && (
               <CategoryFilter
@@ -176,7 +174,7 @@ function CategoryFilter({ lookerContentItem, onSelect, classes }) {
   useEffect(() => onSelect(selectedItem), [selectedItem]);
 
   return (
-    <div>
+    <>
       <div style={{ display: "flex", alignItems: "center", paddingBottom:"2rem" }}>
         <Typography variant="h6" style={{textTransform:"uppercase", fontWeight:600}}>
           Regional Weekly Performance by Category
@@ -202,8 +200,9 @@ function CategoryFilter({ lookerContentItem, onSelect, classes }) {
           <div
             style={{
               display: "flex",
-              overflowX: "auto",
-              maxWidth: "850px",
+              overflow: "auto",
+              // I'm fighting with the combination material ui grids + overflow custom categoryItemFilters. This needs an absolute width, because otherwise the items will overflow and cause the page to appear wider than it is. I'm sure there's some flexbox magic that I can do somehwere in this component or higher up, but this looks good enough on a standard 13inch screen with 100% zoom, can take this on later. 
+              maxWidth: "1000px",
             }}
           >
             {sorted.map((d) => (
@@ -220,7 +219,7 @@ function CategoryFilter({ lookerContentItem, onSelect, classes }) {
           </div>
         </ApiHighlight>
       )}
-    </div>
+    </>
   );
 }
 function CategoryFilterItem(props) {
