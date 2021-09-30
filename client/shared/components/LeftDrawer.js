@@ -129,27 +129,29 @@ function MenuList({ classes, DemoComponentsContentArr }) {
 
 
 function SourceCode({classes}) {
-  const { highlightShow, setHighlightShow,
-    codeShow, setCodeShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
+  const { 
+    highlightShow, 
+    setHighlightShow,
+    codeShow, 
+    setCodeShow 
+  } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
 
+  function toggle() {
+    const show = !(codeShow || highlightShow);
+    setCodeShow(show);
+    setHighlightShow(show);
+  }
   return (
-    <ListItem selected={highlightShow, codeShow}>
-      <ListItemIcon className={classes.menuListItemIcon}></ListItemIcon>
+    <>
       <Button
-        className={`${classes.mlAuto} ${classes.borderRadius100} ${classes.noBorder}`}
-        color="secondary"
-        display="inline"
-        startIcon={<HighlightOutlined />}
-        onClick={() => {
-          if (codeShow) setCodeShow(!codeShow);
-          setHighlightShow(!highlightShow);
-
-          if (highlightShow) setHighlightShow(!highlightShow)
-            setCodeShow(!codeShow)
-        }}
+        className={`${classes.borderRadius100} ${classes.noBorder} ${classes.menuListItemThumbnailContainer}`}
+        onClick={toggle}
       >
+        <div className={classes.menuListItemThumbnailHeader} style={{color: "#418CDD",}}>
+        <HighlightOutlined />
         <ListItemText primary={"Source & Code"} />
+        </div>
       </Button>
-    </ListItem>
+    </>
   );
 }
