@@ -191,10 +191,6 @@ export const SalesOverviewContent = {
   "description": "Overview of all your sales!",
   "icon": VisibilityOutlinedIcon,
   "component": Dashboard,
-  "thumbnail": {
-    id: "9",
-    offset: "0 -200px",
-  },
   "lookerContent": [
     {
       "type": "dashboard",
