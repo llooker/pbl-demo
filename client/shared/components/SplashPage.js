@@ -43,32 +43,34 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
             height={height} />
 
           <Box className={iFrameExists ? `` : `${classes.hidden}`}>
-            <Grid container
-              spacing={3}
-              key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
-              className={`${classes.overflowScroll}`}
-            >
+            <Grid container>
+              <Grid item xs={10}>
+                <Grid container
+                  spacing={3}
+                  key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
+                  className={`${classes.overflowScroll}`}
+                >
+                  <CodeFlyout
+                    classes={classes}
+                    lookerUser={lookerUser}
+                    height={height}
+                    staticContent={staticContent}
+                  />
 
-
-              <CodeFlyout
-                classes={classes}
-                lookerUser={lookerUser}
-                height={height}
-                staticContent={staticContent}
-              />
-
-              {lookerContent.map((lookerContentItem, innerIndex) => {
-                const ComponentToRender = lookerContentItem.component
-                return (
-                  <Grid
-                    key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
-                    item
-                    sm={parseInt(lookerContentItem.gridWidth)}
-                  >
-                    {ComponentToRender ? <ComponentToRender {...{ lookerContentItem, classes, demoComponentType, lookerHost }} /> : ""}
-                  </Grid>
-                )
-              })}
+                  {lookerContent.map((lookerContentItem, innerIndex) => {
+                    const ComponentToRender = lookerContentItem.component
+                    return (
+                      <Grid
+                        key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
+                        item
+                        sm={parseInt(lookerContentItem.gridWidth)}
+                      >
+                        {ComponentToRender ? <ComponentToRender {...{ lookerContentItem, classes, demoComponentType, lookerHost }} /> : ""}
+                      </Grid>
+                    )
+                  })}
+                </Grid>
+                </Grid>
             </Grid>
           </Box >
         </Grid >

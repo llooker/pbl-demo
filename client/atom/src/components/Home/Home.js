@@ -15,11 +15,12 @@ import { TopBar, BottomBar, LeftDrawer, TopDrawer } from "@pbl-demo/components";
 import { errorHandler } from '@pbl-demo/utils'
 import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from './styles.js';
 
+import Hero from "@pbl-demo/client/shared/images/atomly-hero01-bg.jpeg"
+
 const { validIdHelper } = require('../../tools');
 
 
 export default function Home(props) {
-  // console.log("Home")
   let { setClientSession, clientSession, clientSession: { packageName }, sdk, setSdk, isReady, setIsReady, theme } = useContext(AppContext)
   let { democomponent } = useParams();
   let history = useHistory();
@@ -154,7 +155,7 @@ export default function Home(props) {
             [classes.leftContentShift]: drawerOpen,
           })}
         >
-
+          {packageName === "atom" && <img src={Hero} className={clsx(classes.hero)}></img>}
           <div className={classes.drawerHeader} />
           {ActiveDemoComponent ? <ActiveDemoComponent
             staticContent={ActiveDemoComponentContent}
