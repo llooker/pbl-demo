@@ -196,7 +196,7 @@ function CategoryFilter({ lookerContentItem, onSelect, classes }) {
         </SortOrderButton>
       </div>
       {!loading && !error && sorted && (
-        <ApiHighlight classes={{ classes }}>
+        <ApiHighlight classes={classes}>
           <div
             style={{
               display: "flex",

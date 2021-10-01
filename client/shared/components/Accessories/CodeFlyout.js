@@ -4,10 +4,11 @@ import { Typography, Grid, Fade, ClickAwayListener, AppBar, Tabs, Tab, Box, Icon
 import CloseIcon from '@material-ui/icons/Close';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { appContextMap, validIdHelper } from '../../utils/tools';
+import {API_COLOR, API_BACKGROUND_COLOR, EMBED_COLOR, EMBED_BACKGROUND_COLOR} from "./Highlight";
 
 
 export const CodeFlyout = (props) => {
-  const { codeShow, setCodeShow, theme } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  const { codeShow, setCodeShow, setHighlightShow, theme } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { classes, lookerUser, height, staticContent } = props;
   const { codeFlyoutContent } = staticContent || undefined;
   const tabs = [{
@@ -41,23 +42,35 @@ export const CodeFlyout = (props) => {
     setValue(newValue);
   };
 
+  function close() {
+    setValue(0)
+    setCodeShow(false)
+    setHighlightShow(false)
+  }
+
   return (
     codeShow ?
 
-      <ClickAwayListener onClickAway={() => {
-        setValue(0)
-        setCodeShow()
-      }}>
+      <ClickAwayListener onClickAway={close}>
         <Grid container
-          sm={8}
-          className={`${classes.codeFlyoutContainer} ${classes.positionTopRight} ${classes.padding0}`}
+          sm={5}
+          //className={`${classes.codeFlyoutContainer} ${classes.positionTopRight} ${classes.padding0}`}
+          className={`${classes.codeFlyoutContainer}`}
         >
           <Fade in={true}>
             <div className={classes.root}>
+              <div style={{display: "flex", alignItems: "center"}}>
+                <Typography variant="h4">Source & Code</Typography>
+                <BoxLabels/>
+
+                <IconButton aria-label="close" className={classes.mlAuto} onClick={close} >
+                  <CloseIcon style={{ color: 'black', cursor: 'pointer' }} />
+                </IconButton>
+              </div>
               <AppBar
                 position="static"
                 className={`${classes.maxHeight50}`}
-                style={{ backgroundColor: theme.palette.fill.main }}
+                style={{ backgroundColor: "white", color: "#418CDD", borderTop: "none" }}
               >
                 <Tabs
                   value={value}
@@ -72,12 +85,6 @@ export const CodeFlyout = (props) => {
                         {...a11yProps(index)} />
                     )
                   })}
-                  <IconButton aria-label="close" className={classes.mlAuto} onClick={() => {
-                    setValue(0)
-                    setCodeShow()
-                  }} >
-                    <CloseIcon style={{ color: 'white', cursor: 'pointer' }} />
-                  </IconButton>
                 </Tabs>
 
               </AppBar>
@@ -104,11 +111,14 @@ export const CodeFlyout = (props) => {
 function CodeSnippet(props) {
   const { code } = props
   return (
-    <SyntaxHighlighter
-      language="json"
-      showLineNumbers={true} >
-      {typeof code === "object" ? JSON.stringify(code, true, 4) : code}
-    </SyntaxHighlighter>)
+    <div style={{backgroundColor: "white", paddingLeft: "1.5rem", overflow: "auto"}}>
+      <SyntaxHighlighter
+        language="json"
+        style={{backgroundColor: "white"}}
+        showLineNumbers={true} >
+        {typeof code === "object" ? JSON.stringify(code, true, 4) : code}
+      </SyntaxHighlighter>
+    </div>)
 }
 
 function Iframe(props) {
@@ -148,4 +158,33 @@ function a11yProps(index) {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
+}
+
+function BoxLabels() {
+  return (<div style={{display: "flex", alignItems: "center", gridGap: ".5rem", marginLeft: "1rem"}}>
+    <APISquare/>
+    <Typography style={{fontWeight:600}}>API</Typography>
+    <EmbedSquare/>
+    <Typography style={{fontWeight:600}}>Embed</Typography>
+  </div>)
+}
+
+function APISquare() {
+  return <Square bg={API_BACKGROUND_COLOR} border={API_COLOR}/>;
+}
+
+function EmbedSquare() {
+  return <Square bg={EMBED_BACKGROUND_COLOR} border={EMBED_COLOR}/>;
+}
+
+function Square({bg, border}) {
+  return <div style={{
+    display: "inline",
+    width: "18px",
+    height: "18px",
+    backgroundColor: bg,
+    borderWidth: "2px",
+    borderStyle: "solid",
+    borderColor: border,
+  }}></div>
 }
