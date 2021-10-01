@@ -12,7 +12,7 @@ export const topAndBottomHeaderPlusDrawerOpen = 0;
 export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    backgroundColor: '#efefef'
+    backgroundColor: '#e9ecef'
   },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {

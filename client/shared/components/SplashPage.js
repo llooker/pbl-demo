@@ -3,6 +3,7 @@ import { Box, Grid } from '@material-ui/core'
 import { Loader, CodeFlyout } from './Accessories'
 import { appContextMap, validIdHelper } from '../utils/tools';
 import { useStyles } from './styles.js';
+import Hero from "@pbl-demo/client/shared/images/atomly-hero01-bg.jpeg"
 
 export const SplashPage = ({ staticContent, dynamicPadding }) => {
   const { clientSession: { lookerUser, lookerHost, drawerOpen } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
@@ -43,32 +44,39 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
             height={height} />
 
           <Box className={iFrameExists ? `` : `${classes.hidden}`}>
-            <Grid container
-              spacing={3}
-              key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
-              className={`${classes.overflowScroll}`}
-            >
+            <Grid container>
+              <Grid item xs={8}>
+                <Grid container
+                  spacing={3}
+                  key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
+                  className={`${classes.overflowScroll}`}
+                >
+                  <CodeFlyout
+                    classes={classes}
+                    lookerUser={lookerUser}
+                    height={height}
+                    staticContent={staticContent}
+                  />
 
-
-              <CodeFlyout
-                classes={classes}
-                lookerUser={lookerUser}
-                height={height}
-                staticContent={staticContent}
-              />
-
-              {lookerContent.map((lookerContentItem, innerIndex) => {
-                const ComponentToRender = lookerContentItem.component
-                return (
-                  <Grid
-                    key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
-                    item
-                    sm={parseInt(lookerContentItem.gridWidth)}
-                  >
-                    {ComponentToRender ? <ComponentToRender {...{ lookerContentItem, classes, demoComponentType, lookerHost }} /> : ""}
-                  </Grid>
-                )
-              })}
+                  {lookerContent.map((lookerContentItem, innerIndex) => {
+                    const ComponentToRender = lookerContentItem.component
+                    return (
+                      <Grid
+                        key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
+                        item
+                        sm={parseInt(lookerContentItem.gridWidth)}
+                      >
+                        {ComponentToRender ? <ComponentToRender {...{ lookerContentItem, classes, demoComponentType, lookerHost }} /> : ""}
+                      </Grid>
+                    )
+                  })}
+                </Grid>
+                </Grid>
+              <Grid item xs={1}>
+              <div>
+                <img src={Hero} style={{objectFit: "cover", objectPosition: "-9rem 0"}}></img>
+              </div>
+            </Grid>
             </Grid>
           </Box >
         </Grid >
