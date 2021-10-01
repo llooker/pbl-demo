@@ -341,6 +341,45 @@ export const useStyles = makeStyles((theme) => ({
     border: "none",
     height: "fit-content",
   },
+  categoryfiltercontainer: {
+    maxWidth: "380px",
+    '@media (min-width: 900px)': {
+      maxWidth: "500px"
+    },
+    '@media (min-width: 1000px)': {
+      maxWidth: "620px"
+    },
+    '@media (min-width: 1100px)': {
+      maxWidth: "740px"
+    },
+    '@media (min-width: 1250px)': {
+      maxWidth: "860px"
+    },
+    '@media (min-width: 1350px)': {
+      maxWidth: "980px"
+    },
+    '@media (min-width: 1450px)': {
+      maxWidth: "1130px"
+    },
+    '@media (min-width: 1600px)': {
+      maxWidth: "1250px"
+    },
+    '@media (min-width: 1720px)': {
+      maxWidth: "1380px"
+    },
+    '@media (min-width: 1840px)': {
+      maxWidth: "1500px"
+    },
+    '@media (min-width: 1960px)': {
+      maxWidth: "1620px"
+    },
+    '@media (min-width: 2080px)': {
+      maxWidth: "1740px"
+    },
+    '@media (min-width: 2200px)': {
+      maxWidth: "1860px"
+    },
+  },
   categoryfilteritem: {
     backgroundSize: "cover",
     borderRadius: "50%",

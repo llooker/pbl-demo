@@ -10,10 +10,6 @@ export const QueryBuilderContent = {
   "description": "Enable business users to self serve on data and answer their own questions",
   "icon": SearchIcon,
   "component": QueryBuilder,
-  "thumbnail": {
-    id: "1",
-    offset: "0 -72px",
-  },
   "lookerContent": [
     {
       "type": "explorelite",
