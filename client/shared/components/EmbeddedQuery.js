@@ -175,7 +175,7 @@ function CategoryFilter({ lookerContentItem, onSelect, classes }) {
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", paddingBottom:"2rem" }}>
+      <div style={{ display: "flex", alignItems: "center", paddingBottom:"2rem", width:"100%" }}>
         <Typography variant="h6" style={{textTransform:"uppercase", fontWeight:600}}>
           Regional Weekly Performance by Category
         </Typography>
