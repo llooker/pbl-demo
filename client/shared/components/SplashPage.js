@@ -3,7 +3,6 @@ import { Box, Grid } from '@material-ui/core'
 import { Loader, CodeFlyout } from './Accessories'
 import { appContextMap, validIdHelper } from '../utils/tools';
 import { useStyles } from './styles.js';
-import Hero from "@pbl-demo/client/shared/images/atomly-hero01-bg.jpeg"
 
 export const SplashPage = ({ staticContent, dynamicPadding }) => {
   const { clientSession: { lookerUser, lookerHost, drawerOpen } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
@@ -45,7 +44,7 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
 
           <Box className={iFrameExists ? `` : `${classes.hidden}`}>
             <Grid container>
-              <Grid item xs={8}>
+              <Grid item xs={10}>
                 <Grid container
                   spacing={3}
                   key={`${validIdHelper(demoComponentType + '-outerFragment')}`}
@@ -72,11 +71,6 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
                   })}
                 </Grid>
                 </Grid>
-              <Grid item xs={1}>
-              <div>
-                <img src={Hero} style={{objectFit: "cover", objectPosition: "-9rem 0"}}></img>
-              </div>
-            </Grid>
             </Grid>
           </Box >
         </Grid >
