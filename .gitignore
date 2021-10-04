@@ -4,6 +4,7 @@ looker.ini
 .DS_Store
 .env*
 *.yaml*
+*.lock
 *.eslintcache
 *auth.json
 .yarn/*
