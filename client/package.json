@@ -1,5 +1,5 @@
 {
-  "name": "@pbl-demo/client",
+  "name": "pbl-demo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,10 +8,11 @@
   },
   "author": "",
   "license": "ISC",
+  "private": "true",
   "workspaces": [
-    "atom",
-    "vision",
-    "shared/*"
+    "atom/**",
+    "vision/**",
+    "shared/**"
   ],
   "dependencies": {
     "@material-ui/styles": "^4.0.0"

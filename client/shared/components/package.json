@@ -10,8 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "@looker/sdk": "^0.3.4-beta.2",
-    "react": "latest",
-    "react-dom": "latest"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "module": "index.js"
 }

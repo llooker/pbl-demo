@@ -15,7 +15,7 @@ import { TopBar, BottomBar, LeftDrawer, TopDrawer } from "@pbl-demo/components";
 import { errorHandler } from '@pbl-demo/utils'
 import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from './styles.js';
 
-import Hero from "@pbl-demo/client/shared/images/atomly-hero01-bg.jpeg"
+import Hero from "@pbl-demo/images/atomly-hero01-bg.jpeg"
 
 const { validIdHelper } = require('../../tools');
 

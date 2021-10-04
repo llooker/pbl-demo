@@ -4,12 +4,6 @@ looker.ini
 .DS_Store
 .env*
 *.yaml*
+*.lock
 *.eslintcache
 *auth.json
-.yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions

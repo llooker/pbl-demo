@@ -1,5 +1,5 @@
 {
-  "name": "pbl-demo",
+  "name": "looker-embed",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -33,9 +33,5 @@
     "pg": "^8.5.0",
     "querystring": "^0.2.0",
     "request-promise": "^4.2.6"
-  },
-  "workspaces": [
-    "client"
-  ],
-  "packageManager": "yarn@3.0.2"
+  }
 }
