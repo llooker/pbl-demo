@@ -30,8 +30,16 @@ export const LeftDrawer = ({ DemoComponentsContentArr, classes }) => {
 
       <MenuList
         classes={classes}
+        style={{paddingBottom: "2rem"}}
         DemoComponentsContentArr={DemoComponentsContentArr} />
-
+      <div style={{
+          borderTop: "1px solid #dedede", 
+          height: "2rem",
+          paddingBottom: "1rem",
+          width: "100%"
+          }}>
+          <SourceCode classes={classes}/>
+        </div>
     </Drawer>
   )
 }
@@ -122,7 +130,6 @@ function MenuList({ classes, DemoComponentsContentArr }) {
       )
     }) : ''
     }
-    <SourceCode classes={classes}/>
   </List >
   )
 }
@@ -147,9 +154,10 @@ function SourceCode({classes}) {
         className={`${classes.borderRadius100} ${classes.noBorder} ${classes.menuListItemThumbnailContainer}`}
         onClick={toggle}
       >
-        <div className={classes.menuListItemThumbnailHeader} style={{color: "#418CDD",}}>
-        <HighlightOutlined />
-        <ListItemText primary={"Source & Code"} />
+        <div className={classes.menuListItemThumbnailHeader} style={{color: "#418CDD"}}>
+          <div style={{border: "1px solid #418CDD", borderRadius: "50%", width: "2rem", height: "2rem", marginRight: ".75rem"}}><HighlightOutlined />
+          </div>
+          <ListItemText primary={"Source & Code"} />
         </div>
       </Button>
     </>

@@ -28,9 +28,10 @@ export const CodeFlyout = (props) => {
           src: link,
           style: {
             position: "absolute",
-            height: "100%",
+            height: "75vh",
             width: "100%",
             border: "none",
+            paddingRight: "2rem"
           }
         }
       })
