@@ -231,7 +231,7 @@ export default function ReportBuilder(props) {
             .build()
             .connect()
             .then((explore) => {
-              setShowLoader(1)
+              setShowLoader(0)
               setIFrame(1)
               setExploreObj(explore)
 
