@@ -10,10 +10,6 @@ export const SalesCalendarContent = {
   "description": "Ayeeeeeee",
   "icon": DateRangeOutlinedIcon,
   "component": SalesCalendar,
-  "thumbnail": {
-    id: "5",
-    url: "salesoverview"
-  },
   "lookerContent": [
     {
       "type": "custom vis",

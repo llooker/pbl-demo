@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
 import { Grid } from '@material-ui/core';
-import { ApiHighlight } from './Accessories/Highlight';
 import { appContextMap } from '../utils/tools';
 
 export function VectorThumbnail({ classes, id, url }) {
@@ -31,7 +30,6 @@ export function VectorThumbnail({ classes, id, url }) {
   }
 
   return svg ? (
-    <ApiHighlight classes={classes}>
       <div className={classes.vectorThumbnail}>
         <Grid container
           className={`${classes.cursorPointer}`}
@@ -41,6 +39,5 @@ export function VectorThumbnail({ classes, id, url }) {
           </div>
         </Grid >
       </div>
-    </ApiHighlight>
   ) : null;
 }
