@@ -64,9 +64,15 @@ export default function ReportBuilder(props) {
     // console.log({ qid })
 
     if (secondaryAction === 'edit' || secondaryAction === 'explore') {
-      //save qid to state and use in perform looker api calls
-      setQid(qid);
-      handleChange('edit', 1)
+      if(!qid) {
+        // if there is no qid, the look needs to be loaded first
+        corsApiCall(performLookerApiCalls, [lookerContent, 0, contentId, contentType, 1])
+        setIFrame(0)
+      } else {
+        // save qid to state and use in perform looker api call
+        setQid(qid);
+        handleChange('edit', 1)
+      }
     } else if (secondaryAction === 'delete') {
 
       let lookerResponse = await sdk.ok(sdk.delete_look(contentId));
@@ -77,10 +83,12 @@ export default function ReportBuilder(props) {
     }
   }
 
-  const performLookerApiCalls = function (lookerContent, animateLoad, contentId, contentType) {
+  //TODO: seperate Look loading logic from the dashboard + explore loading logic
+  const performLookerApiCalls = function (lookerContent, animateLoad, contentId, contentType, callbackExplore) {
     // console.log("performLookerApiCalls")
     // console.log({ lookerContent })
     // console.log({ animateLoad })
+    let selectedLookQid = null
 
     // clear iFrame
     $(`.embedContainer.${validIdHelper(demoComponentType)}:visible`).html('')
@@ -98,7 +106,7 @@ export default function ReportBuilder(props) {
       setApiContent([])
     }
 
-    // if it's a collection of save reports
+    // if it's a collection of saved reports
     lookerContent.map(async lookerContent => {
       if (exploreMode === 0 &&
         lookerContent.type === 'folder') {
@@ -115,6 +123,7 @@ export default function ReportBuilder(props) {
             let look = await sdk.ok(sdk.look(sharedFolder.looks[h].id))
             let clientId = look.query.client_id;
             sharedFolder.looks[h].client_id = clientId;
+            selectedLookQid = clientId;
           }
         }
 
@@ -133,6 +142,7 @@ export default function ReportBuilder(props) {
                 let look = await sdk.ok(sdk.look(embeddedUserFolder.looks[i].id));
                 let clientId = look.query.client_id;
                 embeddedUserFolder.looks[i].client_id = clientId;
+                selectedLookQid = clientId;
               }
             }
           }
@@ -156,7 +166,9 @@ export default function ReportBuilder(props) {
           dashboards: dashboardsToUse
         }
 
-        if (objToUse.reports.length) {
+        if (callbackExplore) return action(contentType, contentId, 'explore', selectedLookQid);
+
+        if (objToUse.reports.length && !callbackExplore) {
           objToUse.reports.map((item, index) => {
             let lookId = item.id;
 
@@ -183,7 +195,7 @@ export default function ReportBuilder(props) {
           })
         }
 
-        if (objToUse.dashboards.length) {
+        if (objToUse.dashboards.length && !callbackExplore) {
           objToUse.dashboards.map((item, index) => {
             let dashboardId = item.id
 
@@ -218,7 +230,7 @@ export default function ReportBuilder(props) {
         
         let exploreId = lookerContent.id;
         $(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`)).html('');
-        //separate logic for embedding explore with qid vs. no qid
+        // separate logic for embedding explore with qid vs. no qid
         if (qid) {
           LookerEmbedSDK.createExploreWithId(exploreId)
             .appendTo(validIdHelper(`#embedContainer-${demoComponentType}-${lookerContent.id}`))
