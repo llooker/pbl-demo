@@ -168,7 +168,6 @@ export const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     zIndex: 2000,
     boxShadow: "-4px 4px 6px 3px rgba(0, 0, 0, 0.13)"
-
   },
   height100Percent: {
     height: '100%'
