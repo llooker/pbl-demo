@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Button } from '@material-ui/core/';
 import { ChevronLeft, HighlightOutlined } from '@material-ui/icons';
 import {VectorThumbnail} from "./VectorThumbnail"
+import { ApiHighlight } from './Accessories/Highlight';
 const { validIdHelper, appContextMap } = require('../utils/tools');
 
 export const LeftDrawer = ({ DemoComponentsContentArr, classes }) => {
@@ -32,14 +33,6 @@ export const LeftDrawer = ({ DemoComponentsContentArr, classes }) => {
         classes={classes}
         style={{paddingBottom: "2rem"}}
         DemoComponentsContentArr={DemoComponentsContentArr} />
-      <div style={{
-          borderTop: "1px solid #dedede", 
-          height: "2rem",
-          paddingBottom: "1rem",
-          width: "100%"
-          }}>
-          <SourceCode classes={classes}/>
-        </div>
     </Drawer>
   )
 }
@@ -98,6 +91,7 @@ function MenuList({ classes, DemoComponentsContentArr }) {
               return item.thumbnail ?
                 <Link to={to} style={{textDecoration: "none"}}>
                   <div className={classes.menuListItemThumbnailContainer}>
+                  <ApiHighlight classes={classes}>
                     <div className={classes.menuListItemThumbnailHeader}>
                       <ListItemIcon className={classes.menuListItemIcon} >
                         {MatchingIconComponent ? <MatchingIconComponent /> : <></>}
@@ -105,6 +99,7 @@ function MenuList({ classes, DemoComponentsContentArr }) {
                       <ListItemText primary={_.capitalize(item.label)} style={{color: "#418CDD"}}/>
                     </div>
                     {item.thumbnail && <VectorThumbnail classes={classes} {...item.thumbnail}/>}
+                    </ApiHighlight>
                   </div>
                 </Link>
               :(
@@ -132,34 +127,4 @@ function MenuList({ classes, DemoComponentsContentArr }) {
     }
   </List >
   )
-}
-
-
-function SourceCode({classes}) {
-  const { 
-    highlightShow, 
-    setHighlightShow,
-    codeShow, 
-    setCodeShow 
-  } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
-
-  function toggle() {
-    const show = !(codeShow || highlightShow);
-    setCodeShow(show);
-    setHighlightShow(show);
-  }
-  return (
-    <>
-      <Button
-        className={`${classes.borderRadius100} ${classes.noBorder} ${classes.menuListItemThumbnailContainer}`}
-        onClick={toggle}
-      >
-        <div className={classes.menuListItemThumbnailHeader} style={{color: "#418CDD"}}>
-          <div style={{border: "1px solid #418CDD", borderRadius: "50%", width: "2rem", height: "2rem", marginRight: ".75rem"}}><HighlightOutlined />
-          </div>
-          <ListItemText primary={"Source & Code"} />
-        </div>
-      </Button>
-    </>
-  );
 }

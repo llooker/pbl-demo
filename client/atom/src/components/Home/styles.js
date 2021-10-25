@@ -232,8 +232,14 @@ export const useStyles = makeStyles(theme => ({
   appBarBottom: {
     top: 'auto',
     bottom: 0,
-    backgroundColor: '#343d4e',
+    backgroundColor: 'white',
+    color: '#418CDD',
     zIndex: 1300,
+    boxShadow: '0px 0px 4px 2px rgba(0, 0, 0, 0.12)'
+  },
+  appBarBottomButtonSelected: {
+    color: "#9295B0",
+    background: "#EFF2F8"
   },
   hidden: {
     visibility: 'hidden'

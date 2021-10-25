@@ -14,8 +14,8 @@ export const BottomBar = ({ classes }) => {
     <AppBar position="fixed" color="transparent" className={classes.appBarBottom} >
       <Toolbar variant="dense">
         <Button
-          className={`${classes.mlAuto} ${classes.borderRadius100} ${classes.noBorder}`}
-          color="secondary"
+          className={`${classes.mlAuto} ${classes.borderRadius100} ${classes.noBorder} ${highlightShow ? classes.appBarBottomButtonSelected : ""}`}
+          color="inherit"
           display="inline"
           startIcon={<HighlightOutlined />}
           onClick={() => {
@@ -25,8 +25,8 @@ export const BottomBar = ({ classes }) => {
           }>Source
     </Button>
         <Button
-          className={`${classes.ml12} ${classes.borderRadius100} ${classes.noBorder}`}
-          color="secondary"
+          className={`${classes.ml12} ${classes.borderRadius100} ${classes.noBorder} ${codeShow ? classes.appBarBottomButtonSelected : ""}`}
+          color="inherit" 
           display="inline"
           startIcon={<Code />}
           onClick={() => {

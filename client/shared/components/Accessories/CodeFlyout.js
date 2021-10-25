@@ -8,7 +8,7 @@ import {API_COLOR, API_BACKGROUND_COLOR, EMBED_COLOR, EMBED_BACKGROUND_COLOR} fr
 
 
 export const CodeFlyout = (props) => {
-  const { codeShow, setCodeShow, setHighlightShow, theme } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  const { codeShow, setCodeShow, theme } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { classes, lookerUser, height, staticContent } = props;
   const { codeFlyoutContent } = staticContent || undefined;
   const tabs = [{
@@ -46,7 +46,6 @@ export const CodeFlyout = (props) => {
   function close() {
     setValue(0)
     setCodeShow(false)
-    setHighlightShow(false)
   }
 
   return (
