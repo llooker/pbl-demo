@@ -6,7 +6,7 @@ import { useStyles } from './styles.js';
 
 export const SplashPage = ({ staticContent, dynamicPadding }) => {
   const { clientSession: { lookerUser, lookerHost, drawerOpen } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
-  const dynamicTopBarBottomBarHeight = dynamicPadding;
+  const dynamicTopBarBottomBarHeight = dynamicPadding - 400;
   const [iFrameExists] = useState(1);
   const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
   const { lookerContent, type } = staticContent;
