@@ -19,10 +19,8 @@ export const TreeSideBar = ({ staticContent, staticContent: { lookerContent }, c
   const [expanded, setExpanded] = useState(expandedArr);
 
   useEffect(() => {
-    // console.log("useEffect");
-    // console.log({ apiContent })
-    setExpanded(expandedArr);
-    setSelected("2")
+    setExpanded(expandedArr)
+    setSelected(selected)
   }, [apiContent]);
 
   return (
