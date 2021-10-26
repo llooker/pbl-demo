@@ -23,6 +23,10 @@ export const codeSandboxes = {
   },
   component_sparkline: {
     link: "https://codesandbox.io/embed/ecstatic-volhard-87zof?fontsize=14&hidenavigation=1&initialpath=%2Fcomponent_sparkline&module=%2Fsrc%2Fclient%2FComponentSparkline.js&theme=light&view=editor",
-    label: "Embedded Look"
+    label: "Component Sparkline"
+  },
+  embedded_extension: {
+    link: "https://codesandbox.io/embed/ecstatic-volhard-87zof?fontsize=14&hidenavigation=1&initialpath=%2Fembedded_extension&module=%2Fsrc%2Fclient%2FEmbeddedExtension.js&theme=light&view=editor",
+    label: "Embedded Extension"
   },
 }

@@ -4,6 +4,7 @@ export const createEmbeddedExtension = async ({ LookerEmbedSDK, lookerContentIte
   // console.log({ lookerContentItem })
   // console.log({ containerId })
   let extensionId = lookerContentItem.id;
+  console.log({ extensionId })
 
   let returnObj = await LookerEmbedSDK.createExtensionWithId(extensionId)
     .appendTo(containerId)

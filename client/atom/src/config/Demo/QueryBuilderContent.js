@@ -3,7 +3,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import { codeSandboxes } from '@pbl-demo/utils';
 import { EmbeddedExtension } from '@pbl-demo/components';
 
-const { api_run_query } = codeSandboxes;
+const { api_run_query, embedded_extension } = codeSandboxes;
+
 
 export const QueryBuilderContent = {
   "type": "query builder",
@@ -21,6 +22,6 @@ export const QueryBuilderContent = {
   ],
   "requiredPermissionLevel": 0,
   "codeFlyoutContent": [
-    api_run_query
+    api_run_query, embedded_extension
   ]
 }

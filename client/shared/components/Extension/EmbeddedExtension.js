@@ -10,16 +10,13 @@ import { useStyles } from '../styles.js';
 
 const { validIdHelper, appContextMap, validateContent } = require('@pbl-demo/utils/tools');
 
-// export const EmbeddedExplore = ({ staticContent: { lookerContent, type, schema, dynamicPadding } }) => {
 export const EmbeddedExtension = ({ staticContent, dynamicPadding }) => {
-  console.log("EmbeddedExtension")
-  // console.log("EmbeddedExplore")
+  // console.log("EmbeddedExtension")
   const { clientSession, clientSession: { lookerUser, lookerHost }, isReady, sdk, corsApiCall, selectedMenuItem, drawerOpen } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { lookerContent, type } = staticContent;
   const dynamicTopBarBottomBarHeight = dynamicPadding;
   const [iFrameExists, setIFrame] = useState(1);
   const [apiContent, setApiContent] = useState(undefined);
-  // const [exploreObj, setExploreObj] = useState({});
   const [extensionObj, setExtensionObj] = useState({});
   const [height, setHeight] = useState((window.innerHeight - dynamicTopBarBottomBarHeight));
 
@@ -60,9 +57,9 @@ export const EmbeddedExtension = ({ staticContent, dynamicPadding }) => {
           containerId: validIdHelper(`#embedContainer-${demoComponentType}-${lookerContentItem.id}`),
           clientSession
         });
-        console.log({ embeddedExtension })
-        // setIFrame(embeddedExtension.iframe);
-        // setExploreObj(embeddedExtension.exploreObj)
+        setIFrame(embeddedExtension.iframe);
+        setExtensionObj(embeddedExtension.extensionObj)
+
       }
     })
   }
