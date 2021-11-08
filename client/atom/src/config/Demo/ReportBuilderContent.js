@@ -1,4 +1,4 @@
-import ReportBuilder from '../../components/Demo/ReportBuilder/ReportBuilder'
+import { ReportBuilder } from '@pbl-demo/components';
 import LibraryBooksOutlinedIcon from '@material-ui/icons/LibraryBooksOutlined';
 import { codeSandboxes } from '@pbl-demo/utils';
 const { embedded_explore, embedded_look } = codeSandboxes

@@ -3,18 +3,17 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AppBar, Tabs, Tab, Box, Grid, Card } from '@material-ui/core'
 import { Lock, Add } from '@material-ui/icons';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
-import { TabPanel, a11yProps } from './helpers.js';
-import '../../Home.css';
-import AppContext from '../../../contexts/AppContext';
-import { Loader, ApiHighlight, EmbedHighlight, CodeFlyout } from "@pbl-demo/components/Accessories";
+import { TabPanel } from './helpers.js';
+import { appContextMap, validIdHelper } from "../../utils/tools";
+import { Loader, ApiHighlight, EmbedHighlight, CodeFlyout } from "../Accessories";
 import { useStyles, topBarBottomBarHeight, additionalHeightForFlyout } from '../styles.js';
 import { TreeSideBar } from './TreeSideBar'
-const { validIdHelper } = require('../../../tools');
 
 //start of ReportBuilder Component
-export default function ReportBuilder(props) {
-
-  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(AppContext)
+export function ReportBuilder(props) {
+  const { clientSession, setPaywallModal, show, codeShow, sdk, corsApiCall, isReady } = useContext(
+    appContextMap[process.env.REACT_APP_PACKAGE_NAME]
+  )
   const { userProfile, lookerUser, lookerHost } = clientSession;
 
   const dynamicTopBarBottomBarHeight = process.env.REACT_APP_PACKAGE_NAME === "vision" ? 0 : topBarBottomBarHeight;

@@ -6,6 +6,9 @@ const redLight = red[100];
 const greenLight = green[100];
 const lightGrey = grey[200];
 
+export const topBarBottomBarHeight = 140;
+export const additionalHeightForFlyout = 15;
+
 export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -397,5 +400,4 @@ export const useStyles = makeStyles((theme) => ({
     fontSize: "1rem",
     fontWeight: "700",
   }
-
 }));
