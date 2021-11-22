@@ -20,7 +20,7 @@ export const QueryBuilderContent = {
       "label": "Query Builder EF"
     },
   ],
-  "requiredPermissionLevel": 0,
+  "requiredPermissionLevel": 1,
   "codeFlyoutContent": [
     api_run_query, embedded_extension
   ]
