@@ -3,14 +3,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Grid, Button } from '@material-ui/core'
 import { TreeView, TreeItem } from '@material-ui/lab';
 import { ExpandMore, ChevronRight, Lock, Folder } from '@material-ui/icons';
-import '../../Home.css';
-import AppContext from '../../../contexts/AppContext';
-
-const { validIdHelper } = require('../../../tools');
+import { appContextMap, validIdHelper } from "../../utils/tools";
 
 export const TreeSideBar = ({ staticContent, staticContent: { lookerContent }, classes, demoComponentType, tabContent, tabContentItemIndex, action, apiContent }) => {
-
-  const { clientSession, setPaywallModal, } = useContext(AppContext)
+  const { clientSession, setPaywallModal } = useContext(
+    appContextMap[process.env.REACT_APP_PACKAGE_NAME]
+  );
   const { lookerUser } = clientSession
   const sharedFolderId = lookerContent[0].type === 'folder' ? lookerContent[0].id : '';
   let treeCounter = 0;
