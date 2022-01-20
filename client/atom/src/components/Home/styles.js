@@ -303,5 +303,8 @@ export const useStyles = makeStyles(theme => ({
   },
   noBorder: {
     border: "1px solid transparent"
+  },
+  verticalAlignMiddle: {
+    verticalAlign: 'middle'
   }
 }), { index: 1 });

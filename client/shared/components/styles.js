@@ -399,5 +399,8 @@ export const useStyles = makeStyles((theme) => ({
     transform: "translate(-50%, -50%)",
     fontSize: "1rem",
     fontWeight: "700",
+  },
+  verticalAlignMiddle: {
+    verticalAlign: 'middle'
   }
 }));

@@ -28,6 +28,7 @@ module.exports.writeSession = async (req, res, next) => {
   session.lookerBaseUrl = process.env.LOOKERSDK_BASE_URL;
   session.packageName = process.env.PACKAGE_NAME;
   session.cloudFunctionSecret = process.env.CLOUD_FUNCTION_SECRET;
+  session.lookerInstance = process.env.LOOKER_INSTANCE_URL;
 
   // listBuckets()
 

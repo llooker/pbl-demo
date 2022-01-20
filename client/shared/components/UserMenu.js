@@ -1,10 +1,11 @@
 import _ from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, } from "react-router-dom";
-import { IconButton, Menu, MenuItem, Typography, Divider, TextField, Avatar } from '@material-ui/core';
+import { IconButton, Menu, MenuItem, Typography, Divider, TextField, Avatar, Link } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { appContextMap, validIdHelper, endSession } from '../utils'
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 
 export const UserMenu = ({ classes, content }) => {
@@ -13,11 +14,11 @@ export const UserMenu = ({ classes, content }) => {
 
   let history = useHistory();
   let { setPaywallModal, clientSession, setClientSession, handleSwitchLookerUser, setIsReady, setSdk } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
+  const {lookerUser} = clientSession;
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedBrand, setSelectedBrand] = useState(clientSession.lookerUser.user_attributes.brand || '');
+  const [selectedBrand, setSelectedBrand] = useState(lookerUser.user_attributes.brand || '');
   const { permissionLevels, rowLevelAttribute } = content
-
-
+  const isGoogleEmployee = lookerUser.external_user_id.match(/^[A-Za-z0-9._%+-]+@google.com$/)
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -83,7 +84,16 @@ export const UserMenu = ({ classes, content }) => {
         <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
         <Divider className={classes.divider} />
         {content.allowModal ?
-          <MenuItem onClick={() => handleClose('modal')}>Show Monetization Modal</MenuItem> : ""}
+          <MenuItem onClick={() => handleClose('modal')}>Show Monetization Modal</MenuItem> 
+          : ""}
+        {isGoogleEmployee ?
+        <MenuItem >
+
+          <Link href={clientSession.lookerInstance}>Access Looker Instance 
+          <OpenInNewIcon className={`${classes.ml12} ${classes.verticalAlignMiddle}`}/>
+          </Link>
+        </MenuItem>
+        : ""}
         {Object.keys(rowLevelAttribute).length ? <div>
           <Divider className={classes.divider} />
           <MenuItem>{rowLevelAttribute.menuItemLabel}: {selectedBrand}</MenuItem>
