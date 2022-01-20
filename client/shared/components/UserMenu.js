@@ -89,7 +89,7 @@ export const UserMenu = ({ classes, content }) => {
         {isGoogleEmployee ?
         <MenuItem >
 
-          <Link href={clientSession.lookerInstance}>Access Looker Instance 
+          <Link href={clientSession.lookerInstance} target="_blank">Access Looker Instance 
           <OpenInNewIcon className={`${classes.ml12} ${classes.verticalAlignMiddle}`}/>
           </Link>
         </MenuItem>
