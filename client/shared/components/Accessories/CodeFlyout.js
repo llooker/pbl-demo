@@ -33,7 +33,8 @@ export const CodeFlyout = (props) => {
             width: "100%",
             border: "none",
             paddingRight: "2rem",
-            paddingBottom: "2rem"
+            paddingBottom: "2rem", 
+            zIndex: "1202"
           }
         }
       })

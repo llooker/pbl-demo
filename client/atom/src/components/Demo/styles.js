@@ -183,7 +183,7 @@ export const useStyles = makeStyles((theme) => ({
     right: '0',
     top: '4.5rem',
     height: 'calc(100vh - 4.5rem)',
-    zIndex: 1000,
+    zIndex: 1202,
     boxShadow: "-4px 4px 6px 3px rgba(0, 0, 0, 0.13)"
   },
   height100Percent: {
