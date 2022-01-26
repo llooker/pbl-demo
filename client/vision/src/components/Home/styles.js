@@ -1,7 +1,7 @@
 import { packageNameTheme } from '../../config/theme.js'
 import { makeStyles } from '@material-ui/core/styles';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 const topHeaderHeight = 64;
 const bottomHeaderHeight = 48;
 const topDrawerHeight = 52;
@@ -12,7 +12,15 @@ export const topAndBottomHeaderPlusDrawerOpen = 0;
 export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    backgroundColor: 'rgb(229, 229, 229)'
+  },
+  hero: {
+    position: 'absolute',
+    top: '100px',
+    right: '-160px',
+    '@media (min-height: 855px)': {
+      top: 'auto',
+      bottom: 0,
+    },
   },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
@@ -42,8 +50,9 @@ export const useStyles = makeStyles(theme => ({
   },
   leftDrawerPaper: {
     width: drawerWidth,
-    borderRight: 'none',
-    backgroundColor: 'transparent'
+    borderRight: '1px solid #e1dedf',
+    backgroundColor: 'white',
+    padding: '0 20px 20px',
   },
   leftContent: {
     flexGrow: 1,
@@ -60,6 +69,51 @@ export const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginLeft: 0,
+  },
+  menuHeaderListItem: {
+    alignItems: 'flex-end',
+    display: 'flex',
+    marginLeft: '-15px',
+  },
+  menuHeaderListItemText: {
+    fontSize: '0.9em',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
+  menuHeaderListItemFiller: {
+    borderBottom: '1px solid #bbbbbb',
+    flex: 1,
+    marginBottom: '5px',
+    marginLeft: '10px',
+  },
+  menuListItem: {
+    backgroundColor: '#EFF2F8',
+    borderRadius: '100px',
+    display: 'inline-flex',
+    padding: '2px 22px 2px 12px',
+    width: 'auto',
+    color: "#418CDD",
+    marginBottom: "1rem"
+  },
+  menuListItemThumbnailContainer:{
+    border: ".5px solid #418CDD", 
+    borderRadius: "5px", 
+    overflow: "hidden", 
+    marginBottom: "1rem"
+  },
+  menuListItemThumbnailHeader: {
+    display: "flex", 
+    alignItems: "center", 
+    margin: ".25rem .5rem", 
+    cursor: "pointer"
+  },
+  menuListItemIcon: {
+    minWidth: '36px',
+    color: "#418CDD"
+  },
+  vectorThumbnail: {
+    maxHeight: "72px",
+    overflow: "hidden"
   },
   //top drawer
   topDrawer: {
@@ -178,13 +232,17 @@ export const useStyles = makeStyles(theme => ({
   appBarBottom: {
     top: 'auto',
     bottom: 0,
-    backgroundColor: '#fff'
+    backgroundColor: 'white',
+    color: '#418CDD',
+    zIndex: 1300,
+    boxShadow: '0px 0px 4px 2px rgba(0, 0, 0, 0.12)'
+  },
+  appBarBottomButtonSelected: {
+    color: "#9295B0",
+    background: "#EFF2F8"
   },
   hidden: {
     visibility: 'hidden'
-  },
-  rightRoundedTab: {
-    borderRadius: '0 100px 100px 0'
   },
   roundedTab: {
     borderRadius: '100px'
@@ -245,5 +303,8 @@ export const useStyles = makeStyles(theme => ({
   },
   noBorder: {
     border: "1px solid transparent"
+  },
+  verticalAlignMiddle: {
+    verticalAlign: 'middle'
   }
 }), { index: 1 });

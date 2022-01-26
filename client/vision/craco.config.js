@@ -5,7 +5,7 @@ const absolutePath = path.join(__dirname, "../shared");
 module.exports = {
   webpack: {
     alias: {
-      react: path.resolve('./node_modules/react')
+      react: path.resolve('../node_modules/react')
     },
     plugins: [],
     configure: (webpackConfig, { env, paths }) => {
@@ -23,3 +23,4 @@ module.exports = {
     }
   }
 };
+

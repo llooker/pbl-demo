@@ -15,11 +15,12 @@ import { TopBar, BottomBar, LeftDrawer, TopDrawer } from "@pbl-demo/components";
 import { errorHandler } from '@pbl-demo/utils'
 import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from './styles.js';
 
+import Hero from "@pbl-demo/images/atomly-hero01-bg.jpeg"
+
 const { validIdHelper } = require('../../tools');
 
 
 export default function Home(props) {
-  // console.log("Home")
   let { setClientSession, clientSession, clientSession: { packageName }, sdk, setSdk, isReady, setIsReady, theme } = useContext(AppContext)
   let { democomponent } = useParams();
   let history = useHistory();
@@ -36,6 +37,7 @@ export default function Home(props) {
   const { lookerUser: { user_attributes: { permission_level } } = { user_attributes: 'No match' } } = clientSession;
   const currentPermissionLevel = Object.keys(permissionLevels).indexOf(permission_level);
   const demoComponentsContentArr = _.filter(DemoComponentsContentArr, demoComponent => demoComponent.requiredPermissionLevel <= currentPermissionLevel);
+  console.log({ demoComponentsContentArr })
   let topBarContent = { ...TopBarContent };
   if (topBarContent.autocomplete && currentPermissionLevel < topBarContent.autocomplete.correspondingComponentContent.requiredPermissionLevel) {
     delete topBarContent.autocomplete
@@ -71,7 +73,6 @@ export default function Home(props) {
     //decorator approach??
     try {
       let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in || Date.now() - 1000);
-
       //new method of signing user out
       if (checkTokenRsp.status === 'expired') {
         setIsReady(false);
@@ -155,12 +156,13 @@ export default function Home(props) {
             [classes.leftContentShift]: drawerOpen,
           })}
         >
-
+          {packageName === "atom" && <img src={Hero} className={clsx(classes.hero)}></img>}
           <div className={classes.drawerHeader} />
           {ActiveDemoComponent ? <ActiveDemoComponent
             staticContent={ActiveDemoComponentContent}
             dynamicPadding={drawerOpen && packageName === "vision" ? topAndBottomHeaderPlusDrawerOpen : topAndBottomHeaderSpacing} /> : ''}
         </main>
+        <BottomBar classes={classes} />
       </AppContext.Provider>
     </div>
   )

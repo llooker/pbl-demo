@@ -22,19 +22,19 @@ function App(props) {
   //onload
   useEffect(() => {
     async function fetchSession() {
-      console.log("fetchSession")
+      // console.log("fetchSession")
       const { session, session: { userProfile, lookerBaseUrl, lookerApiToken } } = await checkForExistingSession();
-      console.log({ session })
-      console.log({ userProfile })
-      console.log({ lookerBaseUrl })
-      console.log({ lookerApiToken })
+      // console.log({ session })
+      // console.log({ userProfile })
+      // console.log({ lookerBaseUrl })
+      // console.log({ lookerApiToken })
       //existing session only, i.e. < 60 minutes
       if (userProfile && lookerBaseUrl && lookerApiToken) {
-        console.log("inside this ifff")
+        // console.log("inside this ifff")
         const { status, sdk, err } = createSdkHelper({ accessToken: lookerApiToken.api_user_token, lookerBaseUrl })
-        console.log({ status })
-        console.log({ sdk })
-        console.log({ err })
+        // console.log({ status })
+        // console.log({ sdk })
+        // console.log({ err })
         if (status === "success") {
           setClientSession(session)
           //revalidate sdk
@@ -49,22 +49,22 @@ function App(props) {
           setClientSession({})
           errorHandler.report(err)
         }
-      } else console.log('else')
+      } //else console.log('else')
     }
     fetchSession(); //make async call
   }, [])
 
   useEffect(() => {
-    console.log("useEffect clientSession, sdk")
+    // console.log("useEffect clientSession, sdk")
     if (clientSession && sdk) { setIsReady(true) }
     else if (clientSession.userProfile) { //from signIn / write newSession
       const lookerBaseUrl = clientSession.lookerBaseUrl ? clientSession.lookerBaseUrl : '';
       const accessToken = clientSession.lookerApiToken ? clientSession.lookerApiToken.api_user_token : '';
       const { status, sdk, err } = createSdkHelper({ accessToken, lookerBaseUrl })
 
-      console.log({ status })
-      console.log({ sdk })
-      console.log({ err })
+      // console.log({ status })
+      // console.log({ sdk })
+      // console.log({ err })
 
       if (status === "success") {
         setSdk(sdk)
@@ -74,13 +74,13 @@ function App(props) {
         setClientSession({})
         errorHandler.report(err)
       }
-    } else console.log("else")
+    } //else console.log("else")
   }, [clientSession, sdk])
 
 
-  console.log({ clientSession })
-  console.log({ sdk })
-  console.log(clientSession.lookerApiToken && sdk ? clientSession.lookerApiToken.api_user_token.access_token === sdk.authSession.accessToken.access_token : "doesn't exist");
+  // console.log({ clientSession })
+  // console.log({ sdk })
+  // console.log(clientSession.lookerApiToken && sdk ? clientSession.lookerApiToken.api_user_token.access_token === sdk.authSession.accessToken.access_token : "doesn't exist");
 
 
   return (

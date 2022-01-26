@@ -1,5 +1,5 @@
 {
-  "name": "@pbl-demo/vision",
+  "name": "@pbl-demo/atom",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://embed.demo.com:5000/",
