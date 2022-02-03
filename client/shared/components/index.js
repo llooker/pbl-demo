@@ -18,4 +18,5 @@ export { InlineList } from "./InlineList";
 export { EmbeddedQueryFullWidth } from "./EmbeddedQueryFullWidth/EmbeddedQueryFullWidth";
 export { EmbeddedExtension } from "./Extension/EmbeddedExtension";
 export { ReportBuilder } from "./ReportBuilder/ReportBuilder";
+export { VisualizationComponent } from "./VisualizationComponent";
 

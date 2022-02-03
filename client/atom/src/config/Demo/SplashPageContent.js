@@ -1,5 +1,5 @@
 import HomeIcon from '@material-ui/icons/Home';
-import { EmbeddedQuery, SplashPage, Welcome, SparkLine } from '@pbl-demo/components'
+import { EmbeddedQuery, SplashPage, Welcome, SparkLine, VisualizationComponent } from '@pbl-demo/components'
 import { codeSandboxes } from '@pbl-demo/utils';
 const { api_run_query, embedded_query } = codeSandboxes
 
@@ -69,7 +69,7 @@ const bestWorstAnalysis = {
 }
 
 
-const revenueByWeek = {
+const revenueByWeek_OG = {
   "id": "18",
   "gridWidth": 3,
   "type": "spark line",
@@ -100,7 +100,7 @@ const revenueByWeek = {
   "component": SparkLine
 }
 
-const visitsByWeek =
+const visitsByWeek_OG =
 {
   "id": "20",
   "gridWidth": 3,
@@ -132,7 +132,7 @@ const visitsByWeek =
   "component": SparkLine
 }
 
-const bounceRateByWeek =
+const bounceRateByWeek_OG =
 {
   "id": "21",
   "gridWidth": 3,
@@ -165,7 +165,7 @@ const bounceRateByWeek =
   "component": SparkLine
 }
 
-const averageTimeByWeek =
+const averageTimeByWeek_OG =
 {
   "id": "22",
   "gridWidth": 3,
@@ -197,6 +197,26 @@ const averageTimeByWeek =
   "visColor": "#65AB5A",
   "chipFormat": "integer",
   "component": SparkLine
+}
+const averageTimeByWeek = {
+  "component": VisualizationComponent,
+  "qid": "mExxxEZYtugfRkQwPr97c2",
+  "id": "2047",
+  "height": 120,
+  "gridWidth": 3,
+  "config": {
+    "type": "line", 
+    "legend": "false",
+    "y_axis": [{ gridlines: false, label: false, values: false }],
+    "x_axis": [{ gridlines: false, label: false, values: false }],
+    "series": {
+      "sessions.average_duration": {
+        "color": "#343D4E",
+        "label": false
+      }
+    }
+
+  }
 }
 
 const embeddedQuery = {
@@ -265,10 +285,12 @@ export const SplashPageContent = {
   "component": SplashPage,
   "lookerContent": [
     bestWorstAnalysis,
-    revenueByWeek,
-    visitsByWeek,
-    bounceRateByWeek,
-    averageTimeByWeek,
+
+    revenueByWeek_OG,
+    visitsByWeek_OG,
+    bounceRateByWeek_OG,
+    averageTimeByWeek_OG,
+    // averageTimeByWeek,
     embeddedQuery,
   ],
   "requiredPermissionLevel": 0,

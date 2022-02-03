@@ -16,6 +16,8 @@ export const EMBED_METHOD_COLOR = '#297AF4'
 export const EMBED_METHOD_BACKGROUND_COLOR = 'rgba(41, 122, 244, 0.1)'
 export const CLOUD_FUNCTION_COLOR = '#f4a328'
 export const CLOUD_FUNCTION_BACKGROUND_COLOR = 'rgba(244,163,40, 0.1)'
+export const VIS_COMPONENT_COLOR = '#f42879'
+export const VIS_COMPONENT_BACKGROUND_COLOR = 'rgba(244,40,121 0.1)'
 
 function Highlight({ children, color, height, width, margin, id, backgroundColor, ...props }) {
   const { highlightShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
@@ -63,7 +65,7 @@ export function ApiHighlight({ ...props }) {
       display="inline"
       align="right"
       style={{
-        backgroundColor: "#A142F4",
+        backgroundColor: API_COLOR,
         color: '#fff',
         top: '0px',
         right: '0px',
@@ -120,7 +122,7 @@ export function EmbedMethodHighlight({ ...props }) {
       display="inline"
       align="right"
       style={{
-        backgroundColor: "#297AF4",
+        backgroundColor: EMBED_METHOD_COLOR,
         color: '#fff',
         top: '0px',
         right: '0px',
@@ -146,7 +148,33 @@ export function CloudFunctionHighlight({ ...props }) {
       display="inline"
       align="right"
       style={{
-        backgroundColor: "#f4a328",
+        backgroundColor: CLOUD_FUNCTION_COLOR,
+        color: '#fff',
+        top: '0px',
+        right: '0px',
+        position: 'absolute',
+        borderRadius: '0px 0px 0px 8px'
+      }}
+    />
+    {children}
+
+  </Highlight>
+}
+
+export function VisComponentHightlight({ ...props }) {
+  const { highlightShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]); //useContext(AppContext)
+  const { classes } = props
+  const { children } = props
+
+  return <Highlight {...props} color={VIS_COMPONENT_COLOR} backgroundColor={VIS_COMPONENT_BACKGROUND_COLOR}>
+
+    <Chip size="small"
+      label={"Visualization Component"}
+      className={highlightShow ? 'test' : `${classes.hidden}`}
+      display="inline"
+      align="right"
+      style={{
+        backgroundColor: VIS_COMPONENT_COLOR,
         color: '#fff',
         top: '0px',
         right: '0px',

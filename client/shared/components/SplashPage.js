@@ -63,7 +63,7 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
                       <Grid
                         key={`${validIdHelper(demoComponentType + '-innerFragment-' + innerIndex)}`}
                         item
-                        sm={parseInt(lookerContentItem.gridWidth)}
+                        sm={parseInt(lookerContentItem.gridWidth) || "auto"}
                       >
                         {ComponentToRender ? <ComponentToRender {...{ lookerContentItem, classes, demoComponentType, lookerHost }} /> : ""}
                       </Grid>
