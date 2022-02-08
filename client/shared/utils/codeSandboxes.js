@@ -29,4 +29,8 @@ export const codeSandboxes = {
     link: "https://codesandbox.io/embed/ecstatic-volhard-87zof?fontsize=14&hidenavigation=1&initialpath=%2Fembedded_extension&module=%2Fsrc%2Fclient%2FEmbeddedExtension.js&theme=light&view=editor",
     label: "Embedded Extension"
   },
+  visualization_component: {
+    link: "https://codesandbox.io/embed/ecstatic-volhard-87zof?fontsize=14&hidenavigation=1&intialpath=visualization_component&module=%2Fsrc%2Fclient%2FVisualizationComponent.js&theme=light&view=editor",
+    label: "Visualization Component"
+  }
 }

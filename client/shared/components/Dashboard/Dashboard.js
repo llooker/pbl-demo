@@ -294,7 +294,7 @@ export const Dashboard = ({ staticContent, dynamicPadding }) => {
         }).response;
       }
 
-      console.log({ tileResponse })
+      // console.log({ tileResponse })
 
       dashboardObj.setOptions({
         ...tileResponse,

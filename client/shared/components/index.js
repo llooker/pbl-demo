@@ -4,7 +4,6 @@ export { EmbeddedExplore } from "./Explore/EmbeddedExplore";
 export { TopBar } from "./TopBar";
 export { UserMenu } from "./UserMenu";
 export { BottomBar } from "./BottomBar";
-export { SparkLine } from "./SparkLine";
 export { SingleValue } from "./SingleValue";
 export { SplashPage } from "./SplashPage";
 export { SignIn } from "./SignIn";
@@ -19,4 +18,5 @@ export { EmbeddedQueryFullWidth } from "./EmbeddedQueryFullWidth/EmbeddedQueryFu
 export { EmbeddedExtension } from "./Extension/EmbeddedExtension";
 export { ReportBuilder } from "./ReportBuilder/ReportBuilder";
 export { VisualizationComponent } from "./VisualizationComponent";
+export { Sparkline } from "./Sparkline";
 

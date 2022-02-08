@@ -1,11 +1,11 @@
 const { validIdHelper, appContextMap, validateContent } = require('../../utils/tools');
 
 export const createEmbeddedExplore = async ({ LookerEmbedSDK, lookerContentItem, containerId, clientSession, history }) => {
-  console.log("createEmbeddedExplore")
+  // console.log("createEmbeddedExplore")
   // console.log({ LookerEmbedSDK })
   // console.log({ lookerContentItem })
   // console.log({ containerId })
-  console.log({ history })
+  // console.log({ history })
 
   const idToUse = validIdHelper(`embedContainer-${lookerContentItem.type}-${lookerContentItem.id}`);
 
