@@ -30,7 +30,7 @@ export const codeSandboxes = {
     label: "Embedded Extension"
   },
   visualization_component: {
-    link: "https://codesandbox.io/embed/ecstatic-volhard-87zof?fontsize=14&hidenavigation=1&intialpath=visualization_component&module=%2Fsrc%2Fclient%2FVisualizationComponent.js&theme=light&view=editor",
+    link: "https://codesandbox.io/embed/ecstatic-volhard-87zof?fontsize=14&hidenavigation=1&initialpath=%2Fvisualization_component&module=%2Fsrc%2Fclient%2FVisualizationComponent.js&theme=light&view=editor",
     label: "Visualization Component"
   }
 }
