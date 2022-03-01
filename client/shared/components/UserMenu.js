@@ -7,7 +7,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { appContextMap, validIdHelper, endSession } from '../utils'
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
-
 export const UserMenu = ({ classes, content }) => {
   // console.log("UserMenu");
   // console.log({ content })
@@ -17,7 +16,7 @@ export const UserMenu = ({ classes, content }) => {
   const {lookerUser} = clientSession;
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(lookerUser.user_attributes.brand || '');
-  const { permissionLevels, rowLevelAttribute } = content
+  const { permissionLevels, rowLevelAttribute, backgroundImageStyle, backgroundImage } = content
   const isGoogleEmployee = lookerUser.external_user_id.match(/^[A-Za-z0-9._%+-]+@google.com$/)
 
   const handleClick = (event) => {
@@ -32,10 +31,18 @@ export const UserMenu = ({ classes, content }) => {
       setClientSession({})
       setSdk()
       history.push("/");
-    } else if (newValue === 'modal') {
+    } else if (newValue === 'paywallModal') {
       setPaywallModal({
         'show': true,
         'permissionNeeded': 'explore'
+      })
+    } else if (newValue === 'architectureModal') {
+      // console.log("test test test")
+      setPaywallModal({
+        'show': true,
+        'permissionNeeded': null,
+        "src": backgroundImage,
+        "backgroundImageStyle": backgroundImageStyle
       })
     } else if (typeof newValue === 'string') {
       handleSwitchLookerUser(newValue, property)
@@ -84,7 +91,10 @@ export const UserMenu = ({ classes, content }) => {
         <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
         <Divider className={classes.divider} />
         {content.allowModal ?
-          <MenuItem onClick={() => handleClose('modal')}>Show Monetization Modal</MenuItem> 
+        <>
+          <MenuItem onClick={() => handleClose('paywallModal')}>Show Monetization Modal</MenuItem> 
+          <MenuItem onClick={() => handleClose('architectureModal')}>Show Architecture Diagram</MenuItem>
+          </>
           : ""}
         {isGoogleEmployee ?
         <MenuItem >
