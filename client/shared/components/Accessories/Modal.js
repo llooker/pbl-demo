@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React, { useState, useEffect, useContext } from 'react';
+import React, {useContext } from 'react';
 import { Modal as MaterialModal, Fade, Grid, Card, CardContent, CardActions, Button, Typography, Divider, List, ListItem, ListItemText } from '@material-ui/core';
 import { Rating } from '@material-ui/lab'
 import { ListItemIcon } from '@material-ui/core'; //already declared
@@ -19,7 +19,7 @@ function getModalStyle() {
 
 export const Modal = ({ content, classes }) => {
   // console.log({ content })
-  const { clientSession, payWallModal, setPaywallModal } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  const { payWallModal, setPaywallModal } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const [modalStyle] = React.useState(getModalStyle);
   const {src, backgroundImageStyle} = payWallModal
   return (
@@ -36,8 +36,7 @@ export const Modal = ({ content, classes }) => {
           <Grid container
             spacing={3}>
               {src ?  
-              <img src={src}  
-              style={backgroundImageStyle || {}}/> :
+              <ArchitectureDiagram src={src} style={backgroundImageStyle || {}}/> :
               
               <PermissionsTable content={content} classes={classes}/>
             }
@@ -123,4 +122,11 @@ const PermissionsTable = ({ content, classes }) => {
       )
     })
 )
+}
+
+const ArchitectureDiagram = ({src, style}) => {
+  return (
+    <img src={src}  
+    style={style}/>
+  )
 }
