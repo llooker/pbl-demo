@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Chip } from '@material-ui/core';
+import { OpenInNew } from '@material-ui/icons';
 import { appContextMap } from '../../utils/tools';
 
 export const API_COLOR = '#A142F4'
@@ -13,6 +14,10 @@ export const CLOUD_FUNCTION_BACKGROUND_COLOR = 'rgba(244,163,40, 0.1)'
 export const VIS_COMPONENT_COLOR = '#f42879'
 export const VIS_COMPONENT_BACKGROUND_COLOR = 'rgba(244,40,121 0.1)'
 
+const apiDocsLink = "https://docs.looker.com/reference/api-and-integration/api-getting-started";
+const embedDocsLink = "https://docs.looker.com/reference/embed-sdk/embed-sdk-intro";
+const visComponentDocsLink = "https://docs.looker.com/data-modeling/extension-framework/vis-components";
+
 function Highlight({ children, 
   color, 
   height, 
@@ -21,7 +26,8 @@ function Highlight({ children,
   id, 
   transparentColor, 
   label,
-  classes, ...props }) {
+  classes,
+  link, ...props }) {
 
   const { highlightShow } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   var style = {};
@@ -46,7 +52,8 @@ function Highlight({ children,
   if (width) { style['width'] = width }
   if (margin) { style['margin'] = margin }
   return (
-    <div style={style}>
+    <div style={style}
+    >
     <Chip size="small"
       label={label}
       className={highlightShow ? 'test' : `${classes.hidden}`}
@@ -57,8 +64,14 @@ function Highlight({ children,
         position: 'absolute',
         borderRadius: '0px 0px 8px 0px',
         backgroundColor: color,
-        zIndex: 1000
+        zIndex: 1000,
+        cursor: 'pointer'
       }}
+      icon={link ? <OpenInNew 
+        style={{ color: '#fff'}}/> : ""}
+      onClick={() => {link ? 
+        window.open(link,'_blank')
+        : ""}}
     />
       {children}
     </div>
@@ -71,7 +84,9 @@ export function ApiHighlight({ ...props }) {
   return <Highlight {...props} 
     color={API_COLOR} 
     transparentColor={API_BACKGROUND_COLOR}
-    label="API">
+    label="API"
+    link={apiDocsLink}
+    >
     {children}
   </Highlight>
 }
@@ -83,6 +98,7 @@ export function EmbedHighlight({ ...props }) {
     color={EMBED_COLOR}
     transparentColor={EMBED_BACKGROUND_COLOR}
     label="Embed"
+    link={embedDocsLink}
   >
     {children}
   </ Highlight>
@@ -94,7 +110,9 @@ export function EmbedMethodHighlight({ ...props }) {
   return <Highlight {...props} 
     color={EMBED_METHOD_COLOR} 
     transparentColor={EMBED_METHOD_BACKGROUND_COLOR}
-    label="Embed Method">
+    label="Embed Method"
+    link={embedDocsLink}
+    >
     {children}
   </Highlight>
 }
@@ -114,7 +132,9 @@ export function VisComponentHightlight({ ...props }) {
   return <Highlight {...props} 
     color={VIS_COMPONENT_COLOR} 
     transparentColor={VIS_COMPONENT_BACKGROUND_COLOR}
-    label="Vis Component">
+    label="Vis Component"
+    link={visComponentDocsLink}
+    >
     {children}
   </Highlight>
 }

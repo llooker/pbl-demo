@@ -21,7 +21,7 @@ export const Modal = ({ content, classes }) => {
   // console.log({ content })
   const { payWallModal, setPaywallModal } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const [modalStyle] = React.useState(getModalStyle);
-  const {src, backgroundImageStyle} = payWallModal
+  const {src, imageStyle} = payWallModal
   return (
     < MaterialModal
       className={`${classes.modal} `}
@@ -36,8 +36,7 @@ export const Modal = ({ content, classes }) => {
           <Grid container
             spacing={3}>
               {src ?  
-              <ArchitectureDiagram src={src} style={backgroundImageStyle || {}}/> :
-              
+              <ArchitectureDiagram src={src} style={imageStyle || {}}/> :
               <PermissionsTable content={content} classes={classes}/>
             }
           </Grid>

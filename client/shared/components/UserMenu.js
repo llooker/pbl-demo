@@ -16,7 +16,7 @@ export const UserMenu = ({ classes, content }) => {
   const {lookerUser} = clientSession;
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(lookerUser.user_attributes.brand || '');
-  const { permissionLevels, rowLevelAttribute, backgroundImageStyle, backgroundImage } = content
+  const { permissionLevels, rowLevelAttribute, src, imageStyle } = content
   const isGoogleEmployee = lookerUser.external_user_id.match(/^[A-Za-z0-9._%+-]+@google.com$/)
 
   const handleClick = (event) => {
@@ -41,8 +41,8 @@ export const UserMenu = ({ classes, content }) => {
       setPaywallModal({
         'show': true,
         'permissionNeeded': null,
-        "src": backgroundImage,
-        "backgroundImageStyle": backgroundImageStyle
+        "src": src,
+        "imageStyle": imageStyle
       })
     } else if (typeof newValue === 'string') {
       handleSwitchLookerUser(newValue, property)
@@ -91,10 +91,10 @@ export const UserMenu = ({ classes, content }) => {
         <MenuItem onClick={() => handleClose(null)}>Sign Out</MenuItem>
         <Divider className={classes.divider} />
         {content.allowModal ?
-        <>
-          <MenuItem onClick={() => handleClose('paywallModal')}>Show Monetization Modal</MenuItem> 
-          <MenuItem onClick={() => handleClose('architectureModal')}>Show Architecture Diagram</MenuItem>
-          </>
+          <div>
+            <MenuItem onClick={() => handleClose('paywallModal')}>Show Monetization Modal</MenuItem> 
+            <MenuItem onClick={() => handleClose('architectureModal')}>Show Architecture Diagram</MenuItem>
+          </div>
           : ""}
         {isGoogleEmployee ?
         <MenuItem >

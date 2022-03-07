@@ -36,7 +36,9 @@ export function Sparkline({ lookerContentItem, classes }) {
 
             {lookerContentItem.queries.map((item) => {
               return (
-                <Grid item sm={item.gridWidth}>
+                <Grid item sm={item.gridWidth}
+                  key={validIdHelper(item.id || item.qid)}
+                >
                   <VisualizationComponent item={item} />
                 </Grid>
               )
