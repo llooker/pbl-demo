@@ -31,7 +31,7 @@
     "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "latest",
     "react-google-login": "^5.1.22",
-    "react-router-dom": "latest",
+    "react-router-dom": "5.2.1",
     "react-scripts": "4.0.1",
     "react-svg-map": "^2.1.2",
     "react-syntax-highlighter": "^12.2.1",

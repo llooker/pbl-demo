@@ -64,7 +64,7 @@ Add
 Run in root directory
 
 ```
-yarn atom start
+yarn run atom
 ```
 
 Go to http://embed.demo:8080
