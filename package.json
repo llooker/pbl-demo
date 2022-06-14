@@ -14,7 +14,9 @@
     "atom_client": "cd client/atom && yarn start",
     "atom_client_build": "cd client/atom && yarn serve -s build",
     "vision": "concurrently --kill-others-on-fail \"yarn run server\" \"yarn run vision_client\"",
-    "vision_client": "cd client/vision && yarn start"
+    "vision_build": "concurrently --kill-others-on-fail \"yarn run server\" \"yarn run vision_client_build\"",
+    "vision_client": "cd client/vision && yarn start",
+    "vision_client_build": "cd client/vision && yarn serve -s build"
   },
   "author": "",
   "license": "ISC",

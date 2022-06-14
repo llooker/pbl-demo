@@ -4,7 +4,7 @@ const backgroundImage = require(`../images/background${backgroundImageInt}.jpg`)
 
 export const SignInContent = {
   "copyHeader": "Vision Claims AI",
-  "copyBody": "Fraud detection and analysis application",
+  "copyBody": "Fraud detection and analysis applicationnn",
   "copyFooter": "For technical inquiries contact the Gov Portal admin team at admin@govportal.io",
   "logo": logo,
   "logoStyle": {
