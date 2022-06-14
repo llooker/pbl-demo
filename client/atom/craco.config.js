@@ -13,6 +13,9 @@ module.exports = {
         webpackConfig,
         loaderByName("babel-loader")
       );
+
+      webpackConfig.target = "web"
+
       if (isFound) {
         const include = Array.isArray(match.loader.include)
           ? match.loader.include

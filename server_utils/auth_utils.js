@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+// Object.defineProperty(exports, "__esModule", { value: true });
 var createHmac = require("create-hmac");
 function stringify(params) {
   var result = [];
@@ -108,4 +108,5 @@ function createSignedUrl(src, user, host, secret, nonce) {
   Object.assign(params, { signature: signature });
   return "https://" + host + embedPath + "?" + stringify(params);
 }
-exports.createSignedUrl = createSignedUrl;
+// exports.createSignedUrl = createSignedUrl;
+module.exports.createSignedUrl = createSignedUrl;
