@@ -34,7 +34,7 @@ export class PblSession extends AuthSession {
         ...props.headers,
         Authorization: `Bearer ${this.activeToken.access_token}`
       };
-      console.log("Props: ", props)
+      // console.log("Props: ", props)
     }
     return props;
   }

@@ -27,7 +27,7 @@ export const writeNewSession = async (newSession) => {
   })
   if (newSessionResponse.status === 200) {
     const newSessionResponseData = await newSessionResponse.json();
-    console.log("Session: ", newSessionResponseData.session)
+    // console.log("Session: ", newSessionResponseData.session)
     return { status: newSessionResponse.status, session: newSessionResponseData.session };
   } else if (newSessionResponse.status === 307) {
     return { status: newSessionResponse.status };
