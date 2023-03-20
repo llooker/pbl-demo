@@ -16,14 +16,14 @@ export const SignIn = ({ content, initialUser }) => {
 
   const responseGoogle = async (response) => {
     const decodedUser = jwt_decode(response.credential)
-    console.log("client session: ",clientSession)
+    // console.log("client session: ",clientSession)
     try {
       let { session, status } = await writeNewSession({
         ...clientSession,
         userProfile: decodedUser,
         lookerUser: initialUser
       })
-      console.log("session, signin: ", session)
+      // console.log("session, signin: ", session)
       if (status === 200) {
         setClientSession(session)
       }
