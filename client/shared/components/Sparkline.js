@@ -1,20 +1,19 @@
-import React, { useState,  useContext } from 'react';
+import React, { useContext } from 'react';
 import { appContextMap, validIdHelper } from '../utils/tools';
 import { VisComponentHightlight } from './Accessories/Highlight';
 import { Grid, Typography, Card } from '@material-ui/core';
 import {  VisualizationComponent } from '@pbl-demo/components'
 
 export function Sparkline({ lookerContentItem, classes }) {
-  // console.log("Sparkline")
-  // console.log({lookerContentItem, classes})
 
-  const {  sdk} = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
+  const { sdk} = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   let { height, label} = lookerContentItem
 
   return (
     <Card 
     className={`${classes.padding15} ${classes.overflowHidden} `}
-    elevation={0}
+    // elevation={2}
+    variant="outlined"
     >
       <div
         style={{

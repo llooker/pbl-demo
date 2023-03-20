@@ -103,6 +103,7 @@ export const EmbeddedExtension = ({ staticContent, dynamicPadding }) => {
             <Box className={`${classes.w100} `}>
               <EmbedHighlight classes={classes}>
                 <div
+                  style={{backgroundColor:'transparent'}}
                   className={`embedContainer ${validIdHelper(type)}`}
                   id={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
                   key={validIdHelper(`embedContainer-${demoComponentType}-${lookerContent[0].id}`)}
@@ -152,7 +153,7 @@ export const EmbeddedExtension = ({ staticContent, dynamicPadding }) => {
             staticContent={staticContent}
           />
         </Grid>
-      </Card >
-    </div >
+      </Card>
+    </div>
   )
 }

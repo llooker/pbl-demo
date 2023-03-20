@@ -1,10 +1,8 @@
 import React, { useContext } from 'react';
 import { Typography } from '@material-ui/core';
-import { NaturalLanguage } from './NaturalLanguage';
-import { validIdHelper, appContextMap } from '../utils/tools';
+import { appContextMap } from '../utils/tools';
 
 export function Welcome({ lookerContentItem, classes }) {
-  // console.log('Welcome')
   const { clientSession } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { userProfile } = clientSession
 
@@ -17,8 +15,8 @@ export function Welcome({ lookerContentItem, classes }) {
         variant="h4"
         style={{ fontWeight: 300 }}
       >
-        Welcome back, {userProfile.givenName}!
+        Welcome back, {userProfile.given_name}!
       </Typography>
-    </div >
+    </div>
   );
 }

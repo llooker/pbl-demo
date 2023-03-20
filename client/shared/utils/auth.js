@@ -27,6 +27,7 @@ export const writeNewSession = async (newSession) => {
   })
   if (newSessionResponse.status === 200) {
     const newSessionResponseData = await newSessionResponse.json();
+    console.log("Session: ", newSessionResponseData.session)
     return { status: newSessionResponse.status, session: newSessionResponseData.session };
   } else if (newSessionResponse.status === 307) {
     return { status: newSessionResponse.status };
@@ -47,12 +48,9 @@ export const endSession = async () => {
 }
 
 export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
-  // console.log('createSdkHelper')
-  // console.log({ accessToken })
-  // console.log({ lookerBaseUrl })
   try {
     const pblsession = new PblSessionEmbed({
-      ...DefaultSettings(),
+      ...DefaultSettings,
       base_url: lookerBaseUrl,
       accessToken
     });
@@ -66,9 +64,6 @@ export const createSdkHelper = ({ accessToken, lookerBaseUrl }) => {
 }
 
 export const checkToken = async (expires_in) => {
-  // console.log('checkToken');
-  // console.log({ expires_in });
-
   if ((Date.now()) > expires_in) {
     return { status: "expired" }
 

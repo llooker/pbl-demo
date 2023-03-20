@@ -23,6 +23,7 @@
     "autosuggest-highlight": "^3.1.1",
     "date-fns": "^2.16.1",
     "jquery": "^3.5.1",
+    "jwt-decode": "^3.1.2",
     "lodash": "^4.17.20",
     "marked": "^0.8.2",
     "moment": "^2.29.1",

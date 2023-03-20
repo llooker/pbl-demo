@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { ApiHighlight } from './Accessories/Highlight';
-import { Typography, Card, CircularProgress, Grid, Chip } from '@material-ui/core';
-import { ResponsiveLine } from '@nivo/line';
-import { validIdHelper, decodeHtml, appContextMap } from '../utils/tools';
+import { Typography, Card, CircularProgress, Grid } from '@material-ui/core';
+import { appContextMap } from '../utils/tools';
 
 export function SingleValue({ lookerContentItem, classes }) {
-  // console.log('SingleValue')
+  
   const [apiContent, setApiContent] = useState(undefined);
   const { clientSession, sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME]);
   const { userProfile, lookerUser } = clientSession;
@@ -25,14 +24,11 @@ export function SingleValue({ lookerContentItem, classes }) {
   }, [lookerUser, isReady])
 
   const runInlineQuery = async () => {
-
-    // setApiContent(undefined)
     let { inlineQuery } = lookerContentItem;
     let lookerResponseData = await sdk.ok(sdk.run_inline_query({ result_format: lookerContentItem.resultFormat || 'json', body: inlineQuery }));
+    // console.log("Sparkline Res: ", lookerResponseData)
     return lookerResponseData
   }
-
-  // console.log({ apiContent })
 
   const labelText = apiContent && apiContent.data.length ? apiContent.data[0][lookerContentItem.inlineQuery.fields[0]].rendered : "";
 
@@ -70,7 +66,7 @@ export function SingleValue({ lookerContentItem, classes }) {
               style={{ color: `${lookerContentItem.visColor} ` }} />
           </Grid>
         }
-      </div >
-    </Card >
+      </div>
+    </Card>
   );
 }

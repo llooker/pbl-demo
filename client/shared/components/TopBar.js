@@ -2,7 +2,7 @@ import _ from 'lodash'
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, Link } from "react-router-dom";
 import clsx from 'clsx';
-import { AppBar, Toolbar, Badge, Avatar, IconButton, Grid, Typography, Container, Box } from '@material-ui/core';
+import { AppBar, Toolbar, Badge, Avatar, IconButton, Grid, Typography } from '@material-ui/core';
 import { AddAlert, ChevronLeft, KeyboardArrowDown, Menu } from '@material-ui/icons';
 import { UserMenu } from './UserMenu';
 import { AutoComplete } from './Filters';
@@ -10,12 +10,7 @@ import { appContextMap } from '../utils/tools';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 export const TopBar = ({ content, theme, classes }) => {
-  // console.log("TopBar")
-  // console.log({ theme })
-  // console.log({ content })
-
   let history = useHistory();
-
   const { clientSession, clientSession: { packageName }, setClientSession, drawerOpen, setDrawerOpen,
     sdk, corsApiCall, isReady } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const { userProfile, lookerUser } = clientSession;
@@ -125,7 +120,7 @@ export const TopBar = ({ content, theme, classes }) => {
           <UserMenu classes={classes} content={content.usermenu} />
         </Toolbar>
       </AppBar>
-    </ThemeProvider >
+    </ThemeProvider>
   )
 }
 

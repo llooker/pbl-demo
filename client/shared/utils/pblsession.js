@@ -4,7 +4,6 @@ import {
   AuthToken,
   DefaultSettings
 } from "@looker/sdk-rtl";
-import { Looker40SDK } from "@looker/sdk";
 
 export class PblSession extends AuthSession {
   fetchToken() {
@@ -35,6 +34,7 @@ export class PblSession extends AuthSession {
         ...props.headers,
         Authorization: `Bearer ${this.activeToken.access_token}`
       };
+      console.log("Props: ", props)
     }
     return props;
   }
