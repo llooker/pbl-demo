@@ -8,8 +8,6 @@ import { appContextMap, validIdHelper, endSession } from '../utils'
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 export const UserMenu = ({ classes, content }) => {
-  // console.log("UserMenu");
-  // console.log({ content })
 
   let history = useHistory();
   let { setPaywallModal, clientSession, setClientSession, handleSwitchLookerUser, setIsReady, setSdk } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
@@ -69,7 +67,7 @@ export const UserMenu = ({ classes, content }) => {
           <Typography>{level}</Typography>
         </div>
         <ChevronRightIcon style={{alignSelf: "flex-end", transform: "rotate(90deg)"}}/>
-        <Avatar alt={clientSession.userProfile.name} src={clientSession.userProfile.imageUrl} className={`${classes.mr12} ${classes.ml12}`} />
+        <Avatar alt={clientSession.userProfile.name} src={clientSession.userProfile.picture} className={`${classes.mr12} ${classes.ml12}`} />
       </IconButton>
       <Menu
         id="simple-menu"

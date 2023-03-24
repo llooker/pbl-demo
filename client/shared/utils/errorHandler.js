@@ -3,7 +3,7 @@ import StackdriverErrorReporter from 'stackdriver-errors-js';
 
 export let errorHandler;
 
-if (window.location.origin !== "https://embed.demo.com:8080") {
+if (window.location.origin !== `https://embed.demo.com:${process.env.REACT_APP_PORT}`) {
   // console.log("inside ifff")
   errorHandler = new StackdriverErrorReporter();
   errorHandler.start({

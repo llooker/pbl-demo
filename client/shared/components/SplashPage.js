@@ -5,8 +5,6 @@ import { appContextMap, validIdHelper } from '../utils/tools';
 import { useStyles } from './styles.js';
 
 export const SplashPage = ({ staticContent, dynamicPadding }) => {
-  // console.log("SplashPage")
-  // console.log({staticContent})
   const { clientSession: { lookerUser, lookerHost, drawerOpen } } = useContext(appContextMap[process.env.REACT_APP_PACKAGE_NAME])
   const dynamicTopBarBottomBarHeight = dynamicPadding - 400;
   const [iFrameExists] = useState(1);
@@ -27,10 +25,11 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
   return (
     <div
       className={`${classes.root} ${classes.positionRelative}`}
-      style={{ height }}
+      // style={{ height }}
     >
       <div
-        className={`${classes.height100Percent} 
+        className={`
+        ${classes.height100Percent} 
         ${classes.overflowScroll}
         ${classes.padding15}`}
       >
@@ -74,9 +73,9 @@ export const SplashPage = ({ staticContent, dynamicPadding }) => {
                 </Grid>
                 </Grid>
             </Grid>
-          </Box >
-        </Grid >
-      </div >
-    </div >
+          </Box>
+        </Grid>
+      </div>
+    </div>
   )
 }

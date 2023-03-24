@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import AppContext from '../../contexts/AppContext';
 import { LookerEmbedSDK } from '@looker/embed-sdk'
 import { CssBaseline } from '@material-ui/core/';
@@ -14,11 +14,10 @@ import { Modal } from "@pbl-demo/components/Accessories";
 import { TopBar, BottomBar, LeftDrawer, TopDrawer } from "@pbl-demo/components";
 import { errorHandler } from '@pbl-demo/utils'
 import { useStyles, topAndBottomHeaderPlusDrawerOpen, topAndBottomHeaderSpacing } from './styles.js';
-
-import Hero from "@pbl-demo/images/atomly-hero01-bg.jpeg"
+import Lottie from 'react-lottie';
+import animationData from "@pbl-demo/images/atomfashion.json";
 
 const { validIdHelper } = require('../../tools');
-
 
 export default function Home(props) {
   let { setClientSession, clientSession, clientSession: { packageName }, sdk, setSdk, isReady, setIsReady, theme } = useContext(AppContext)
@@ -26,6 +25,7 @@ export default function Home(props) {
   let history = useHistory();
   const classes = useStyles();
   const didMountRef = useRef(false)
+  let location = useLocation();
 
   const [drawerOpen, setDrawerOpen] = useState(window.innerWidth > 768 ? true : false);
 
@@ -37,7 +37,6 @@ export default function Home(props) {
   const { lookerUser: { user_attributes: { permission_level } } = { user_attributes: 'No match' } } = clientSession;
   const currentPermissionLevel = Object.keys(permissionLevels).indexOf(permission_level);
   const demoComponentsContentArr = _.filter(DemoComponentsContentArr, demoComponent => demoComponent.requiredPermissionLevel <= currentPermissionLevel);
-  // console.log({ demoComponentsContentArr })
   let topBarContent = { ...TopBarContent };
   if (topBarContent.autocomplete && currentPermissionLevel < topBarContent.autocomplete.correspondingComponentContent.requiredPermissionLevel) {
     delete topBarContent.autocomplete
@@ -69,7 +68,6 @@ export default function Home(props) {
 
 
   const corsApiCall = async (func, args = []) => {
-    // console.log("corsApiCall");
     //decorator approach??
     try {
       let checkTokenRsp = await checkToken(clientSession.lookerApiToken.expires_in || Date.now() - 1000);
@@ -86,14 +84,10 @@ export default function Home(props) {
       }
     } catch (err) {
       errorHandler.report(err)
-      // endSession();
-      // setClientSession({})
-      // history.push("/");
     }
   }
 
   useEffect(() => {
-
     let modifiedBaseUrl = clientSession.lookerBaseUrl.substring(0, clientSession.lookerBaseUrl.lastIndexOf(":"));
     LookerEmbedSDK.init(modifiedBaseUrl, '/auth')
 
@@ -121,9 +115,16 @@ export default function Home(props) {
 
 
 
+  // testing out lottie animation
+  const defaultOptions = {
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice"
+    }
+  };
+
   return (
     <div className={classes.root} >
-
       <AppContext.Provider value={{
         clientSession, setClientSession,
         payWallModal, setPaywallModal,
@@ -156,7 +157,23 @@ export default function Home(props) {
             [classes.leftContentShift]: drawerOpen,
           })}
         >
-          {packageName === "atom" && <img src={Hero} className={clsx(classes.hero)}></img>}
+        <div className={clsx(classes.hero)}>
+            {location.pathname === '/analytics/home' ?
+            <Lottie 
+              options={{...defaultOptions, loop: true, autoplay: true}}
+              height="auto"
+              width="100%"
+            />
+            :
+            <Lottie 
+              options={{...defaultOptions, loop: false, autoplay: false}}
+              height="auto"
+              width="100%"
+            />
+            }
+          </div>
+          {/* {packageName === "atom" && 
+          <img src={Hero} className={clsx(classes.hero)} width="1200" height="auto"></img>} */}
           <div className={classes.drawerHeader} />
           {ActiveDemoComponent ? <ActiveDemoComponent
             staticContent={ActiveDemoComponentContent}

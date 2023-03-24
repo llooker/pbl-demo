@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from "react-router-dom";
 import { Grid } from '@material-ui/core';
 import { appContextMap } from '../utils/tools';
 
@@ -37,7 +36,7 @@ export function VectorThumbnail({ classes, id, url }) {
           <div className={` ${classes.maxHeight60} ${classes.cursorPointer} ${classes.overflowHidden}`}>
             <img src={svg}/>
           </div>
-        </Grid >
+        </Grid>
       </div>
   ) : null;
 }

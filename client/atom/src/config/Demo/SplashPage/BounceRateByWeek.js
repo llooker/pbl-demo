@@ -9,7 +9,7 @@ export  const bounceRateByWeek = {
   "label": "Bounce Rate by Week",
   "queries": [
     {
-      "qid": NODE_ENV === "development" ? "RmvV6yjtQRg9FgEWipkblO" : "4tnuH4rWFERYpwV2PAB8K5",
+      "qid": NODE_ENV === "local" ? "RmvV6yjtQRg9FgEWipkblO" : "4tnuH4rWFERYpwV2PAB8K5",
       "height": 30,
       "gridWidth": 6,
       "config": {
@@ -21,7 +21,7 @@ export  const bounceRateByWeek = {
         }
     },
     {
-      "qid": NODE_ENV==="development" ? "VlE0ZeqBxKPlxaOI0nkXTU" : "Ha6D52aPiAo2MYIvX7wtOj",
+      "qid": NODE_ENV==="local" ? "VlE0ZeqBxKPlxaOI0nkXTU" : "Ha6D52aPiAo2MYIvX7wtOj",
       "height": 80,
       "gridWidth": 12,
       "config": {

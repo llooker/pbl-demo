@@ -22,19 +22,11 @@ function App(props) {
   //onload
   useEffect(() => {
     async function fetchSession() {
-      // console.log("fetchSession")
       const { session, session: { userProfile, lookerBaseUrl, lookerApiToken } } = await checkForExistingSession();
-      // console.log({ session })
-      // console.log({ userProfile })
-      // console.log({ lookerBaseUrl })
-      // console.log({ lookerApiToken })
       //existing session only, i.e. < 60 minutes
       if (userProfile && lookerBaseUrl && lookerApiToken) {
-        // console.log("inside this ifff")
         const { status, sdk, err } = createSdkHelper({ accessToken: lookerApiToken.api_user_token, lookerBaseUrl })
-        // console.log({ status })
-        // console.log({ sdk })
-        // console.log({ err })
+        
         if (status === "success") {
           setClientSession(session)
           //revalidate sdk
@@ -62,10 +54,6 @@ function App(props) {
       const accessToken = clientSession.lookerApiToken ? clientSession.lookerApiToken.api_user_token : '';
       const { status, sdk, err } = createSdkHelper({ accessToken, lookerBaseUrl })
 
-      // console.log({ status })
-      // console.log({ sdk })
-      // console.log({ err })
-
       if (status === "success") {
         setSdk(sdk)
       } else if (status === "error") {
@@ -77,14 +65,8 @@ function App(props) {
     } //else console.log("else")
   }, [clientSession, sdk])
 
-
-  // console.log({ clientSession })
-  // console.log({ sdk })
-  // console.log(clientSession.lookerApiToken && sdk ? clientSession.lookerApiToken.api_user_token.access_token === sdk.authSession.accessToken.access_token : "doesn't exist");
-
-
   return (
-    < Router >
+    <Router>
       <AppContext.Provider value={{
         clientSession, setClientSession,
         sdk, setSdk,
@@ -118,7 +100,7 @@ function App(props) {
           </Switch>
         </ThemeProvider>
       </AppContext.Provider>
-    </Router >
+    </Router>
   )
 }
 

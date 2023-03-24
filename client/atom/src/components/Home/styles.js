@@ -15,12 +15,13 @@ export const useStyles = makeStyles(theme => ({
   },
   hero: {
     position: 'absolute',
-    top: '100px',
-    right: '-160px',
-    '@media (min-height: 855px)': {
-      top: 'auto',
-      bottom: 0,
-    },
+    top: '25rem',
+    right: '-10rem',
+    bottom:0
+    // '@media (min-height: 855px)': {
+    //   top: '1rem',
+    //   // bottom: 0,
+    // },
   },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {
@@ -46,6 +47,7 @@ export const useStyles = makeStyles(theme => ({
   },
   leftDrawer: {
     width: drawerWidth,
+    height: 20,
     flexShrink: 0,
   },
   leftDrawerPaper: {

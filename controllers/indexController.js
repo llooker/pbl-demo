@@ -38,8 +38,8 @@ module.exports.writeSession = async (req, res, next) => {
   let lookerUser = {
     ...req.body.lookerUser,
     external_user_id: userProfile.email,
-    first_name: userProfile.givenName,
-    last_name: userProfile.familyName
+    first_name: userProfile.given_name,
+    last_name: userProfile.family_name
   }
   session.lookerUser = lookerUser;
   // this is going to call createSignedUrl via tokenHelper

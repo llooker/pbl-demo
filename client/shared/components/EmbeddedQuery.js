@@ -89,7 +89,9 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
   return (
     <Card
       className={`${classes.padding15} ${classes.overflowHidden}`}
-      elevation={0}
+      style={{height: "70%"}}
+      // elevation={2}
+      variant="outlined"
     >
       <Loader
         hide={iFrameExists}
@@ -118,7 +120,7 @@ export function EmbeddedQuery({ lookerContentItem, classes, id }) {
               <EmbedHighlight classes={classes}>
                 <div
                   className={`embedContainer embedContainerNoHeader splashPage 
-                 ${classes.overflowHidden} ${classes.maxHeight80Percent}`}
+                  ${classes.overflowHidden} ${classes.maxHeight80Percent}`}
                   id={idToUse}
                   key={idToUse}
                 ></div>

@@ -1,10 +1,13 @@
 import _ from 'lodash'
-import React, { useContext, useEffect } from 'react';
-import { GoogleLogin } from 'react-google-login';
-import { Card, CardContent, CardFooter, Typography } from '@material-ui/core'
+import React, { useContext } from 'react';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { Card, CardContent, Typography } from '@material-ui/core'
 import { writeNewSession } from '../utils'
+import jwt_decode from "jwt-decode"
 const { validIdHelper, appContextMap, validateContent, errorHandler } = require('../utils');
 import { useStyles } from './styles.js';
+import Lottie from 'react-lottie';
+import animationData from "@pbl-demo/images/ecommm-people.json";
 
 export const SignIn = ({ content, initialUser }) => {
 
@@ -12,13 +15,15 @@ export const SignIn = ({ content, initialUser }) => {
   const { logo, logoStyle, backgroundImageStyle } = content
 
   const responseGoogle = async (response) => {
+    const decodedUser = jwt_decode(response.credential)
+    // console.log("client session: ",clientSession)
     try {
       let { session, status } = await writeNewSession({
         ...clientSession,
-        userProfile: response.profileObj,
+        userProfile: decodedUser,
         lookerUser: initialUser
       })
-
+      // console.log("session, signin: ", session)
       if (status === 200) {
         setClientSession(session)
       }
@@ -29,16 +34,31 @@ export const SignIn = ({ content, initialUser }) => {
   const googleClientId = `${process.env.REACT_APP_GOOGLE_CLIENT_ID}.apps.googleusercontent.com`;
   const classes = useStyles();
 
+  const defaultOptions = {
+      loop: true,
+      autoplay: true,
+      animationData: animationData,
+      rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice"
+      }
+    };
+
   return (
-    <div className={`${classes.root} `}
+    <div className={`${classes.rootSignIn} `}
       style={backgroundImageStyle ? backgroundImageStyle : ''}>
-      <Card className={classes.signInCard}>
+       {process.env.REACT_APP_PACKAGE_NAME === 'atom' &&
+      <div style={{width: "100%", height:"100%"}}>
+            <Lottie 
+              options={defaultOptions}
+            />
+      </div>}
+      <Card raised className={classes.signInCard} elevation={6}>
         <div className={classes.signInCardCopy}>
           <img
             src={logo}
             style={logoStyle ? logoStyle : ''}
           />
-          <CardContent >
+          <CardContent>
             {content.copyHeader ?
               <Typography variant="h4" gutterBottom>
                 {content.copyHeader}
@@ -47,15 +67,14 @@ export const SignIn = ({ content, initialUser }) => {
               <Typography variant="subtitle1" gutterBottom>
                 {content.copyBody}
               </Typography> : ""}
-
+            <div style={{display:"flex",justifyContent:"center", paddingTop: '2rem'}}>
+            <GoogleOAuthProvider clientId={googleClientId}>
             <GoogleLogin
-              clientId={googleClientId}
-              buttonText="Login"
               onSuccess={responseGoogle}
-              onFailure={responseGoogle}
-              cookiePolicy={'single_host_origin'}
-              className={classes.mb12}
+              onError={responseGoogle}
             />
+            </GoogleOAuthProvider>
+            </div>  
             {content.copyFooter ?
               <Typography variant="body2" color="textSecondary">
                 {content.copyFooter}
@@ -63,6 +82,6 @@ export const SignIn = ({ content, initialUser }) => {
           </CardContent>
         </div>
       </Card>
-    </div >
+    </div>
   )
 }

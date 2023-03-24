@@ -13,6 +13,11 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     overflow: 'scroll !important',
+    height: '100%'
+  },
+  rootSignIn: {
+    flexGrow: 1,
+    height: '100%'
   },
   flexCentered: {
     display: 'flex',

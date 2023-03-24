@@ -9,18 +9,19 @@ export  const averageTimeByWeek = {
   "label": "Average Time on Site by Week",
   "queries": [
     {
-      "qid": NODE_ENV === "development" ? "mGmaPsZvhj6k7rTz8jnrn0" : "eORQJoOqyMFboV1yefPZG0",
+      "qid": NODE_ENV === "local" ? "mGmaPsZvhj6k7rTz8jnrn0" : "eORQJoOqyMFboV1yefPZG0",
       "height": 30,
       "gridWidth": 6,
       "config": {
         "type": "single_value", 
+        // "value_format":"#,##0.0+\"sec\"",
         "series": [{
           "color": "#343D4E",
         }]
         }
     },
     {
-      "id": NODE_ENV === "development" ? "2047" : "FFpbdqCrAHlXAEmR1qMm1z",
+      "id": NODE_ENV === "local" ? "2047" : "FFpbdqCrAHlXAEmR1qMm1z",
       "height": 80,
       "gridWidth": 12,
       "config": {

@@ -9,18 +9,19 @@ export  const revenueByWeek = {
   "label": "Revenue by Week",
   "queries": [
     {
-      "qid": NODE_ENV === "development" ? "dxwz50eER84k65PVoDGgdM" : "h2q8rf6DCBCJHnIvhk5VGe",
+      "qid": NODE_ENV === "local" ? "dxwz50eER84k65PVoDGgdM" : "h2q8rf6DCBCJHnIvhk5VGe",
       "height": 30,
       "gridWidth": 6,
       "config": {
         "type": "single_value", 
+        // "value_format":"$0.00,+\"K\"",
         "series": [{
           "color": "#343D4E",
         }]
         }
     },
     {
-      "qid": NODE_ENV === "development" ? "A0Lt4NhsSi74DSGeIpomf0" : "LY6uiwtZrcfcREdOEnexBx",
+      "qid": NODE_ENV === "local" ? "A0Lt4NhsSi74DSGeIpomf0" : "LY6uiwtZrcfcREdOEnexBx",
       "height": 80,
       "gridWidth": 12,
       "config": {
