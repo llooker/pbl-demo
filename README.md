@@ -9,7 +9,7 @@ This is a react/node app featuring Looker's all new embed SDK to showcase PBL de
 ### Setup Env files
 
 ```
-Reach out to Elliot Glasenk for the contents of these files
+Reach out to Luka Fontanilla for the contents of these files
 ```
 
 ### install node
@@ -73,4 +73,4 @@ First time it will need to build alot of files to be patient!
 
 ## More
 
-Questions, comments, concerns? Reach out to Elliot Glasenk
+Questions, comments, concerns? Reach out to Luka Fontanilla
